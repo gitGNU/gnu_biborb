@@ -41,6 +41,8 @@
 
             userA can add (a), delete (d) or modify (m) references
             userB can only add new references.
+
+    Lines starting with # are considered as comments
 */
 
 /**
@@ -65,9 +67,12 @@ class Auth
     function is_valid_user($user,$pass){
         $content = file($this->f_users);
         foreach($content as $line){
-            if(preg_match("/\s*(\w*)\s*:\s*(\w*)\s*/",$line,$match)){
-                if($match[1] == $user){
-                    return (crypt($pass,$match[2]) == $match[2]);
+            $line = trim($line);
+            if($line != '' && $line[0] != '#'){
+                if(preg_match("/(\w*)\s*:\s*(\w*)/",$line,$match)){
+                    if($match[1] == $user){
+                        return (crypt($pass,$match[2]) == $match[2]);
+                    }
                 }
             }
         }
@@ -81,9 +86,12 @@ class Auth
     function is_admin_user($user){
         $content = file($this->f_users);
         foreach($content as $line){
-            if(preg_match("/\s*(\w*)\s*:\s*\w*\s*,\s*(\w)\s*/",$line,$match)){
-                if($match[1] == $user){
-                    return ($match[2] == '1');
+            $line = trim($line);
+            if($line != '' && $line[0] != '#'){
+                if(preg_match("/(\w*)\s*:\s*\w*\s*,\s*(\w)/",$line,$match)){
+                    if($match[1] == $user){
+                        return ($match[2] == '1');
+                    }
                 }
             }
         }
@@ -127,12 +135,24 @@ class Auth
         $content = file($this->f_access);
         $users = array();
         foreach($content as $line){
-            if(preg_match("/\s*(.*)\s*:(.*)/",$line,$match)){
-                if($match[1] == $bibname){
-                    $data = explode(',',$match[2]);
+            $line = trim($line);
+            if($line != '' && $line[0] != '#'){
+                //match for all bibliographies
+                if(preg_match("/:(.*)/",$line,$match)){
+                    $data = explode(',',$match[1]);
                     foreach($data as $user){
                         $tab = explode('*',$user);
                         $users[$tab[0]] = $tab[1];
+                    }
+                }
+                // match for a given bibliography
+                else if(preg_match("/(.*)\s*:(.*)/",$line,$match)){
+                    if($match[1] == $bibname){
+                        $data = explode(',',$match[2]);
+                        foreach($data as $user){
+                            $tab = explode('*',$user);
+                            $users[$tab[0]] = $tab[1];
+                        }
                     }
                 }
             }
