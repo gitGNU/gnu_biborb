@@ -158,21 +158,30 @@ links */
 /* style for "add all entries to basket */
 .addtobasket {
     color:navy;
-    text-align:right;    
+    text-align:right;
+    float:right;
 }
 .addtobasket a,.addtobasket a:hover,.addtobasket a:active,.addtobasket a:visited,.addtobasket a:focus {
     text-decoration:none;
     color:navy;
     font-family:serif;
+    display:inline;
 }
 
 /* look when entry present in basket */
 .inbasket {
-	//background-color: #f98;
 	background-color: f7f3b6;
 }
 
-#bibtex_table .highlight {
-	color:red;
-	background-color:black;
+.sort fieldset {
+    margin:0;
+    padding:0;
+    border:none;
+    vertical-align:middle;
+    display:inline;
+}
+
+.sort form {
+    display:inline;
+    border:none;
 }

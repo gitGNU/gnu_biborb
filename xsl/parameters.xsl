@@ -99,5 +99,8 @@
 
 	<!-- Which page to generate (welcome, groups...)  -->
 	<xsl:param name="bibindex_mode"/>
+    
+    <!-- Sort -->
+    <xsl:param name="sort"/>
 	
 </xsl:stylesheet>

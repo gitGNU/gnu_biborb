@@ -131,12 +131,17 @@ if($abst==null){
     $abst = $GLOBALS['display_abstract'];
 } 
 
+$sort = 'ID';
+if(array_key_exists('sort',$_GET)){
+    $sort = $_GET['sort'];
+}
 $xslparam = array('bibname' => $_SESSION['bibdb']->name(),
 				  'bibnameurl' => $_SESSION['bibdb']->xml_file(),
 				  'display_images' => $GLOBALS['display_images'],
 				  'display_text' => $GLOBALS['display_text'],
 				  'abstract' => $abst,
-				  'display_add_all'=> 'true');
+				  'display_add_all'=> 'true',
+                  'sort' => $sort);
 
 /**
  *  If the basket doesn't exists, create it.
@@ -257,6 +262,7 @@ if(isset($_POST['action'])){
 		case 'add': 
 			$res = $_SESSION['bibdb']->add_new_entry($_POST);
 			if($res['added']){
+                $xslparam['sort'] = null;
 				$message = "The following entry was added:<br/>";
 				$entry = $_SESSION['bibdb']->entry_with_id($res['id']);
 				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -266,6 +272,7 @@ if(isset($_POST['action'])){
 				$param['mode'] = "user";
 				$message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
 				$xsltp->free();
+                
 			}
 			else{
 				$error = $res['message'];
@@ -276,6 +283,7 @@ if(isset($_POST['action'])){
 		case 'update':
 			$res = $_SESSION['bibdb']->update_entry($_POST);
 			if($res['updated']){
+                $xslparam['sort'] = null;
 				$message = "The following entry was updated:<br/>";
 				$entry = $_SESSION['bibdb']->entry_with_id($res['id']);
 				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");

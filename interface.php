@@ -674,37 +674,57 @@ function bibindex_display_search(){
     if($searchvalue){
 		$fields =array();
         $extra_param ="search=$searchvalue";
+        $val = "<input type='hidden' name='search' value='$searchvalue'/>";
 		if(array_key_exists('author',$_GET)){
 			array_push($fields,'author');
             $extra_param .= "&author=1";
+            $val .= "<input type='hidden' name='author' value='1'/>";
 		}
 		if(array_key_exists('title',$_GET)){
 			array_push($fields,'title');
             $extra_param .= "&title=1";
+            $val .= "<input type='hidden' name='title' value='1'/>";
 		}
 		if(array_key_exists('keywords',$_GET)){
 			array_push($fields,'keywords');
             $extra_param .= "&keywords=1";
+            $val .= "<input type='hidden' name='keywords' value='1'/>";
 		}
 		if(array_key_exists('editor',$_GET)){
 			array_push($fields,'editor');
             $extra_param .= "&editor=1";
+            $val .= "<input type='hidden' name='editor' value='1'/>";
 		}
 		if(array_key_exists('journal',$_GET)){
 			array_push($fields,'journal');
             $extra_param .= "&journal=1";
+            $val .= "<input type='hidden' name='journal' value='1'/>";
 		}
 		if(array_key_exists('year',$_GET)){
 			array_push($fields,'year');
             $extra_param .= "&year=1";
+            $val .= "<input type='hidden' name='year' value='1'/>";
 		}
 		$entries = $_SESSION['bibdb']->search_entries($searchvalue,$fields);
 		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
 		$param = $GLOBALS['xslparam'];
 		$param['bibindex_mode'] = $_GET['mode'];
 		$param['basketids'] = $_SESSION['basket']->items_to_string();
+        $valtoreplace = '<input type="submit" value="sort"/>';
+        $val .= '<input type="submit" value="sort"/>';
         $param['extra_get_param'] = $extra_param;
-		$main_content .= $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+        if($nb==1){
+            $main_content .= "One match for $searchvalue.";
+            $main_content .= str_replace($valtoreplace,$val,$xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+        }
+        else if($nb>1) {
+            $main_content .= "$nb match for $searchvalue.";
+            $main_content .= str_replace($valtoreplace,$val,$xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+        }
+        else{
+            $main_content .= "No match for $searchvalue.";
+        }
     }
     $html .= main($title,$main_content);
     $html .= html_close();
