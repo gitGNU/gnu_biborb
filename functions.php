@@ -40,6 +40,59 @@ require_once("config.php");
 require_once("utilities.php");
 
 /**
+ * format bibtex data to xml
+ */
+function format_bibtex_data($field,$data){
+    $res = null;
+    if($field == 'groups'){
+        //remove line breaks, spaces, curly brackets, quotes...
+        $pattern = array("\s+","\n","\r");
+        $data = trim(str_replace($pattern," ",$data));
+        if(preg_match("/{(.*)}(\s*,|\s*}|\s*)/",$data,$matches) ||
+           preg_match("/\"(.*)\"(\s*,|\s*}|\s*)/",$data,$matches)){
+            $data = $matches[1];
+        }
+        else if(preg_match("/(.*),/",$data,$matches)){
+            $data = $matches[1];
+        }
+        // split groups in several group tag
+        $res = "<bibtex:groups>\n";
+        $group_array = split(',',$data);
+        foreach($group_array as $gr){
+            if(trim($gr) != ''){
+                $res .= bibfield("group",trim($gr));
+            }
+        }
+        $res .= "</bibtex:groups>\n";
+    }
+    else if($field == 'abstract'){
+        if($data[strlen($data)-1] == ','){
+            $data = substr($data,0,strlen($data)-1);
+        }
+        if(strpos($data,"{") == 0 && strpos($data,"}") == strlen($data)-1){
+            $data = substr($data,1,strlen($data)-2);
+        }
+        else if(strpos($data,"\"") == 0 && strpos($data,"\"") == strlen($data)-1){
+            $data = substr($data,1,strlen($data)-2);
+        }
+        $res .= bibfield($field,trim($data));
+    }
+    else{
+        //remove line breaks, spaces, curly brackets, quotes...
+        $pattern = array("\s+","\n","\r");
+        $data = trim(str_replace($pattern," ",$data));
+        if(preg_match("/{(.*)}(\s*,|\s*}|)/",$data,$matches) ||
+         preg_match("/\"(.*)\"(\s*,|\s*}|)/",$data,$matches)){
+            $data = $matches[1];
+        }
+        else if(preg_match("/(.*),/",$data,$matches)){
+            $data = $matches[1];
+        }
+        $res .= bibfield($field,trim($data));
+    }
+    return $res;
+}
+/**
  * bibtex2xml
  * Transform a BibTeX string into an XML string
  */
@@ -55,115 +108,77 @@ function bibtex2xml($bibtext,$group=NULL){
     $type = null;                       // type of the bibtex entry being analyzed
 	$entries_count = 0;
 	$ids = array();
+    $data = null;
 
 	$xml_content = "<?xml version='1.0' encoding='ISO-8859-1'?>";
 	$xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/'>";
 	
 	// remove uneeded spaces
-	for($i=0;$i<sizeof($content);$i++){
-		$content = preg_replace("/\s+/"," ",$content);
-	}
-	
+    $content = preg_replace("/\s+/"," ",$content);
+    // recode &, <, > and strip slashes
     for($i=0;$i<sizeof($content);$i++){
         // recode &, <, >
         $patterns = array('&','<','>');
         $replace = array('&amp;','&lt;','&gt;');    
-        $line = stripslashes(str_replace($patterns,$replace,$content[$i]));
-	
+        $content[$i] = trim(stripslashes(str_replace($patterns,$replace,$content[$i])));
+    }
+    
+    $i = 0;
+    while($i < sizeof($content)){
+        $line = $content[$i];
         //new entry @(alphanum){(anychar),
         if(preg_match("/@\s?(\w*)\s?{(.*),/",$line,$matches)){
 			$entries_count++;
 			array_push($ids,trim($matches[2]));
 			// If it isn't the first entry, close the previous one
             if($first==0){
+                if($key){
+                    // get the last curly bracket in data end remove it
+                    $k = strrpos($data,"}");
+                    $xml_content .= format_bibtex_data($key,substr($data,0,$k));
+                    $key = null;
+                }
                 $xml_content .= end_bibentry($type);
             }
 			// save the type to add the good closing tag
             $type = $matches[1];
-			
+			// create the xml start tag
             $xml_content .= new_bibentry($type,trim($matches[2]));
 			
-            if($group!=NULL){
-                $xml_content .= bibfield("group",$group);	
-            }
-
             $first = 0;
         }
-		// detect a line defining a field
-        else if(!$openfield && 
-				(preg_match("/\s?(\w*)\s?=\s?{(.*)},?/",$line,$matches) ||
-				 preg_match("/\s?(\w*)\s?=\s?\"(.*)\",?/",$line,$matches))){
+        // detect a new field
+        else if(preg_match("/\s?(\w*)\s?=\s?(.*)/",$line,$matches)){
+            // close the previous field if exists
+            if($key){
+                $xml_content .= format_bibtex_data($key,$data);
+            }
+            
             $key = $matches[1];
             // new version of biborb: translate group into groups
             if($key == 'group'){
                 $key = 'groups';
             }
-            $data = $matches[2];
-		
-			// if groups key, split into several <bibtex:group>
-			// groups must be separated by a comma
-			if($key == 'groups'){
-				$xml_content .= "<bibtex:groups>\n";
-				$group_array = split(',',$data);
-				foreach($group_array as $gr){
-					if(trim($gr) != ''){
-						$xml_content .= bibfield("group",trim($gr));
-					}
-				}
-				$xml_content .= "</bibtex:groups>\n";
-			}
-			else {
-				$xml_content .= bibfield($key,trim($data));
-			}
-		}
-		// field set in several lines (data)
-		else if(!$openfield && 
-				(preg_match("/\s?(\w*)\s?=\s?{(.*)/",$line,$matches) ||
-				 preg_match("/\s?(\w*)\s?=\s?\"(.*)/",$line,$matches))){
-			$openfield = true;
-			$key = $matches[1];
-			$data_content = trim($matches[2])."\n";
-		 }
-        // detec the end of an entry
-        else if(preg_match("/(.*)[}\"],?/",$line,$matches)){
-            //if $data_content is null, end of a an entry
-            // or additionnal brace or quote, who knows :)
-            if($openfield){	
-                $data_content .= $matches[1];
-                //keeps formatting for abstract
-                if($key != 'abstract'){
-                    $data_content = preg_replace("/\s+/"," ",$data_content);
-                }
-                // new version of biborb: need to create group field if multiple groups defined
-                if($key == 'groups'){
-                    $xml_content .= "<bibtex:groups>\n";
-                    $group_array = split(',',$data_content);
-                    foreach($group_array as $gr){
-                        if(trim($gr) != ''){
-                            $xml_content .= bibfield("group",trim($gr));
-                        }
-                    }
-                    $xml_content .= "</bibtex:groups>\n";
-                }
-                else{
-                    $xml_content .= bibfield($key,$data_content);
-                }
-                $openfield = false;
-            }
-			else {
-				$data_content .= trim($matches[1])."\n";
-			}
+            $data = trim($matches[2]);
         }
-        else {
-            $data_content .= trim($line)."\n";	
+        else{
+            //preserve line break (for abstract)
+            // for the other fields, line breaks are removed in format_bibtex_data
+            $data .= "\n".$line;
         }
+        $i++;
     }
-
+    
     if($first == 0){
+        if($key){
+            // get the last curly bracket in data end remove it
+            $k = strrpos($data,"}");
+            $xml_content .= format_bibtex_data($key,substr($data,0,$k));
+        }
         $xml_content .= end_bibentry($type);
     }
     $xml_content .= "</bibtex:file>";
-    
+
     return array($entries_count,$ids,$xml_content);
 }
 
