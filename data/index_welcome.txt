@@ -57,7 +57,7 @@ restrict write access to bibliographies.  </p>
 
 <hr/>
 <span style="font-family:serif"><strong>BibORB</strong> CVS-release,
-26 January 2003<br/> Released under the GPL licence.<br/> Update and
+19 February 2004<br/> Released under the GPL licence.<br/> Update and
 information available at <a href="http://www.nongnu.org/biborb">BibORB
 website</a> </span>
 

@@ -73,7 +73,7 @@ if(array_key_exists('action',$_GET)){
         /**
          *  Edit a given entry: redirection whith needed GET variables
          */
-        case 'edit': 
+		case 'edit':
             echo header("Location: bibindex.php?mode=update&id=".$_GET['id']."&bibname=".$_SESSION['bibname']."&".session_name()."=".session_id());
             break;
             

@@ -55,10 +55,28 @@ links */
     color:navy;
     border:solid 1px #333;
     border-bottom:none;
-    background-color:#ccc;
+    background-color:#ddd;
     font-weight:bold;
     font-size:x-small;
-    padding:1px;
+	display:inline;
+	float:left;
+	min-width:8em;
+	position:relative;
+	padding-left:2px;
+	padding-bottom:2px;
+	left:-1px;
+	top:2px;
+}
+
+/* look for the div containing url, pdf, bibtex... */
+#bibtex_table .bibtex_misc {
+	float:left;
+}
+
+/* look for the div containing basket/admin action */
+#bibtex_table .command {
+	float:right;
+	display:inline;
 }
 
 /* Look for bibtex action link (edit, modify) */

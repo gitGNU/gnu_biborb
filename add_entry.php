@@ -116,7 +116,6 @@ else
     }
     
   }
-  
   echo header("Location: bibindex.php?mode=welcome&".session_name()."=".session_id());
 }
 

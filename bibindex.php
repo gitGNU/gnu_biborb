@@ -510,6 +510,7 @@ function select_entry_type(){
     $html = "<div style='text-align:center'><form method='get' action='bibindex.php'>
         <fieldset style='border:none'>
     <input name='".session_name()."' value='".session_id()."' type='hidden'/>
+	<input name='bibname' value='".$_SESSION['bibname']."' type='hidden' />
 Select an entry type:
     <select name='type' size='1'>
         <option value='article'>article</option>
