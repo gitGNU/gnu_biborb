@@ -1,0 +1,6 @@
+Options -Indexes
+
+<Files .ht*>
+  order allow,deny
+  deny from all
+</Files>
