@@ -141,7 +141,6 @@ $bibtex_entries = array(
 $fields_to_export = array('author',
 			  'address',
 			  'annote',
-			  'author',
 			  'booktitle',
 			  'chapter',
 			  'crossref',

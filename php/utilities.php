@@ -226,7 +226,7 @@ function eval_php($string){
  */
 function remove_null_values($anArray){
     foreach($anArray as $key=>$val){
-        if($val == null || $val == ""){
+        if($val == null || trim($val) == ""){
             unset($anArray[$key]);
         }
     }

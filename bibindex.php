@@ -646,6 +646,7 @@ if(isset($_POST['action'])){
                 $tab = $bt->xml_to_bibtex_array($entries);
                 header("Content-Type: text/plain");
                 echo $bt->array_to_bibtex_string($tab,$GLOBALS['fields_to_export']);
+                //echo $bt->array_to_RIS($tab);
                 exit();
             }
             else{

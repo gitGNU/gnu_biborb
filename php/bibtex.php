@@ -36,6 +36,7 @@
  */
 
 require_once("php/third_party/PARSEENTRIES.php");
+require_once("php/third_party/PARSECREATORS.php");
 require_once("php/utilities.php");
 
 class BibTeX_Tools
@@ -197,5 +198,127 @@ class BibTeX_Tools
         return $export;
     }
     
+    /**
+    
+     */
+    function array_to_RIS($tab){
+        $ris_type_translate = array('article'       => 'JOUR',
+                                    'book'          => 'BOOK',
+                                    'booklet'       => 'BOOK',
+                                    'inbook'        => 'CHAP',
+                                    'incollection'  => 'JOUR',
+                                    'inproceedings' => 'JOUR',
+                                    'manual'        => 'BOOK',
+                                    'masterthesis'  => 'THES',
+                                    'misc'          => 'GEN',
+                                    'phdthesis'     => 'THES',
+                                    'proceedings'   => 'CONF',
+                                    'techreport'    => 'RPRT',
+                                    'unpublished'   => 'UNPB');
+        $pc = new PARSECREATORS();
+        $export = "";
+        foreach($tab as $entry){
+            $export .= sprintf("TY  - %s\n",$ris_type_translate[$entry['___type']]);
+            // authors
+            if(array_key_exists('author',$entry)){
+                list($authors,$etal) = $pc->parse($entry['author']);
+                foreach($authors as $author){
+                    $export .= sprintf("A1  - %s, %s\n",$author[2],$author[0]);
+                }
+            }
+               
+            // title
+            if(array_key_exists('title',$entry)){
+                $export .= sprintf("T1  - %s\n",$entry['title']);
+            }
+            
+            // journal
+            if(array_key_exists('journal',$entry)){
+                $export .= sprintf("JO  - %s\n",$entry['journal']);
+            }
+            
+            // volume
+            if(array_key_exists('volume',$entry)){
+                $export .= sprintf("VL  - %s\n",$entry['volume']);
+            }
+            
+            // number
+            if(array_key_exists('number',$entry)){
+                $export .= sprintf("IS  - %s\n",$entry['number']);
+            }
+            
+            // start/end page
+            if(array_key_exists('pages',$entry)){
+                $pages = split('-',$entry['pages']);
+                $pages = remove_null_values($pages);
+                if(isset($pages[0])){
+                    $export .= sprintf("SP  - %s\n",$pages[0]);
+                }
+                if(isset($pages[1])){
+                    $export .= sprintf("EP  - %s\n",$pages[1]);
+                }
+            }
+            
+            // series
+            if(array_key_exists('series',$entry)){
+                $export .= sprintf("T3  - %s\n",$entry['series']);
+            }
+            
+            // editor
+            if(array_key_exists('editor',$entry)){
+                list($editors,$etal) = $pc->parse($entry['editor']);
+                foreach($editors as $editor){
+                    $export .= sprintf("A3  - %s, %s\n",$editor[2],$editor[0]);
+                }
+            }
+            
+            // year
+            if(array_key_exists('year',$entry)){
+                $export .= sprintf("Y1  - %s\n",$entry['year']);
+            }
+            
+            // pusblisher
+            if(array_key_exists('publisher',$entry)){
+                $export .= sprintf("PB  - %s\n",$entry['publisher']);
+            }
+            
+            // address
+            if(array_key_exists('address',$entry)){
+                $export .= sprintf("AD  - %s\n",$entry['address']);
+            }
+            
+            // note
+            if(array_key_exists('note',$entry)){
+                $export .= sprintf("N1  - %s\n",$entry['note']);
+            }
+            
+            // abstract
+            if(array_key_exists('abstract',$entry)){
+                $export .= sprintf("N2 - %s\n",$entry['abstract']);
+            }
+            
+            // keywords
+            if(array_key_exists('keywords',$entry)){
+                $keywords = split(',',$entry['keywords']);
+                foreach($keywords as $keyword){
+                    $export .= sprintf("KW  - %s\n",$keyword);
+                }
+            }
+            
+            // url
+            if(array_key_exists('url',$entry)){
+                $export .= sprintf("UR  - %s\n",$entry['url']);
+            }
+            
+            // pdf
+            if(array_key_exists('pdf',$entry)){
+                $export .= sprintf("L1  - %s\n",$entry['pdf']);
+            }
+            
+            $export .= "ER  - \n";
+            $export .= "\n";
+        }
+        return $export;
+    }
 }
 ?>
