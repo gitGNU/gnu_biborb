@@ -130,7 +130,7 @@
 						<xsl:if test="$display_basket_actions = '' and $inbasket =''">
 							<xsl:if test="$display_images">
 								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}">
-									<img src="./data/images/cvs-add-16.png" alt="add to basket" title="Add to basket" />
+									<img src="./data/images/{$add-image}" alt="add to basket" title="Add to basket" />
 								</a>
 							</xsl:if>
 							<xsl:if test="$display_text">
@@ -144,7 +144,7 @@
 						<xsl:if test="$display_basket_actions != '' or contains($inbasket,'inbasket')">
 							<xsl:if test="$display_images">
 								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}">
-									<img src="./data/images/cvs-remove-16.png" alt="remove from basket" title="Remove from basket" />
+									<img src="./data/images/{$remove-image}" alt="remove from basket" title="Remove from basket" />
 								</a>
 							</xsl:if>
 							<xsl:if test="$display_text">

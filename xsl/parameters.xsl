@@ -102,5 +102,9 @@
     
     <!-- Sort -->
     <xsl:param name="sort"/>
+    
+    <!-- Basket action images -->
+    <xsl:variable name="add-image">cvs-add-16.png</xsl:variable>
+    <xsl:variable name="remove-image">cvs-remove-16.png</xsl:variable>
 	
 </xsl:stylesheet>
