@@ -35,6 +35,7 @@
     version="1.0">
 
     <xsl:param name="id"/>
+    <xsl:param name="biborb_xml_version"/>
 
     <xsl:output method="xml" indent="yes" encoding="iso-8859-1"/>
 

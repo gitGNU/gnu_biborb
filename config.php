@@ -43,7 +43,8 @@ define("BIBORB_RELEASE_DATE","5 February 2005");
 
 /**
  * Path where is install biborb
- * The end '/' is mandatory.
+ * The end '/' is mandatory if you provide it
+ *  "/path/to/biborb/"
  */
 define("BIBORB_PATH","/Users/ggardey/Sites/biborbdev/biborb/");
 
@@ -63,7 +64,7 @@ define("DISPLAY_LANG_SELECTION",TRUE);
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-define("DISABLE_AUTHENTICATION",FALSE);
+define("DISABLE_AUTHENTICATION",TRUE);
 
 /**
  * Authentication methods: mysql, files

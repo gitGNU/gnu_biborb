@@ -243,7 +243,8 @@ $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'sort_order' => $sort_order,
                     'can_modify' => $_SESSION['user_can_modify'] || $_SESSION['user_is_admin'],
                     'can_delete' => $_SESSION['user_can_delete'] || $_SESSION['user_is_admin'],
-                    'shelf-mode' => $display_shelf_actions);
+                    'shelf-mode' => $display_shelf_actions,
+                    'biborb_xml_version' => BIBORB_XML_VERSION);
 
 /**
  * Action are given by GET/POST method.
@@ -561,7 +562,7 @@ if(isset($_POST['action'])){
                 trigger_error("You are not authorized to add references!",ERROR);
             }
             // Error if no value given
-            if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
+            if((!array_key_exists('bibfile',$_FILES) || !file_exists($_FILES['bibfile']['tmp_name'])) && !array_key_exists('bibval',$_POST)){
                 trigger_error("Error, no bibtex data provided!",ERROR);
             }
             else{

@@ -458,11 +458,11 @@ XSLT_END;
             if(array_search($entry['id'],$dbids) === FALSE){
                 if(array_key_exists('author',$entry)){
                     $pc = new PARSECREATORS();
-                    $authors = $pc->creators($entry);
+                    list($authors,$etal) = $pc->parse($entry['author']);
                     $entry['lastName'] = $authors[0][2];
                 }
                 $entry['dateAdded'] = date("Y-m-d");
-                $entryl['lastDateModified'] = date("Y-m-d");
+                $entry['lastDateModified'] = date("Y-m-d");
                 $data = $bt->entries_array_to_xml(array($entry));
                 $result = $xsltp->transform($data[2],$xsl,$param);
                 $fp = fopen($this->xml_file(),"w"); 

@@ -38,6 +38,7 @@
     <xsl:output method="xml" encoding="iso-8859-1"/>
     
     <xsl:param name="bibname"/>
+    <xsl:param name="biborb_xml_version"/>
     
     <xsl:template match="/">
         <!-- the database content -->
