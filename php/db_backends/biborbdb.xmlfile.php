@@ -3,7 +3,7 @@
 *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2004  Guillaume Gardey (ggardey@club-internet.fr)
+ * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -145,7 +145,7 @@ class BibORB_DataBase {
         Only used in this class. 
     */
     function update_bibtex_file(){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();
         $xsl_content = load_file("./xsl/xml2bibtex.xsl");
         $bibtex = $xsltp->transform($xml_content,$xsl_content);
@@ -171,7 +171,7 @@ class BibORB_DataBase {
         Return a sorted array of all BibTeX ids.
      */
     function all_bibtex_ids(){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();    
         $xsl_content = load_file("./xsl/extract_ids.xsl");
         $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry",$xsl_content);
@@ -188,7 +188,7 @@ class BibORB_DataBase {
         associated with a group.
     */
     function ids_for_group($groupname){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();    
         $xsl_content = load_file("./xsl/extract_ids.xsl");
         if($groupname){
@@ -233,7 +233,7 @@ class BibORB_DataBase {
      DEPRECATED
     */
    /* function entries_for_group($groupname){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();    
         $xsl_content = load_file("./xsl/entries_for_group.xsl");
         $param = array('group'=>$groupname);
@@ -249,7 +249,7 @@ class BibORB_DataBase {
      DEPRECATED
      */
    /* function entries_group_orphan(){
-        $xsltp = new XSLT_PRocessor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_PRocessor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();
         $xsl_content = load_file("./xsl/entries_group_orphan.xsl");
         $res = $xsltp->transform($xml_content,$xsl_content,null);
@@ -261,7 +261,7 @@ class BibORB_DataBase {
         Get a set of entries.
     */
     function entries_with_ids($anArray){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xsl_content = load_file("./xsl/entries_with_ids.xsl");
         //transform the array into an xml string
         $xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
@@ -280,7 +280,7 @@ class BibORB_DataBase {
         Get an entry
     */
     function entry_with_id($anID){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xsl_content = load_file("./xsl/entries_with_ids.xsl");
 	
         //transform the array into an xml string
@@ -342,7 +342,7 @@ class BibORB_DataBase {
             }
 	    
             // add the new entry
-            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $bt = new BibTeX_Tools();
             $bibtex_val = extract_bibtex_data($dataArray);
             $bibtex_val['type'] = $dataArray['add_type'];
@@ -379,7 +379,7 @@ class BibORB_DataBase {
         $res = array('added' => array(),
                      'notadded' => array()); 
         //open the database file in append mode
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $bt = new BibTeX_Tools();
         $xsl = load_file("./xsl/add_entries.xsl");
         $param = array('bibname' => $this->xml_file());
@@ -416,7 +416,7 @@ class BibORB_DataBase {
         Delete an entry from the database
     */
     function delete_entry($bibtex_id){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();
         $xsl_content = load_file("./xsl/delete_entries.xsl");
         $param = array('id'=>$bibtex_id);  
@@ -491,7 +491,7 @@ class BibORB_DataBase {
                 $dataArray['pdf'] = $dataArray['ad_pdf'];
             }
             
-            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $bt = new BibTeX_Tools();
             $bibtex_val = extract_bibtex_data($dataArray);
             $bibtex_val['type'] = $dataArray['type_ref'];
@@ -520,7 +520,7 @@ class BibORB_DataBase {
         Test if a key is already present in the database
     */
     function is_bibtex_key_present($bibtex_key){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $content = load_file($this->xml_file());
         $xsl = load_file("./xsl/search_entry.xsl");
         $param = array('id' => $bibtex_key);
@@ -532,7 +532,7 @@ class BibORB_DataBase {
         Return an array containing groups present in the bibliography.
     */
     function groups(){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         // Get groups from the xml bibtex file
         $xml_content = load_file($this->xml_file());
         $xsl_content = load_file("./xsl/group_list.xsl");  
@@ -559,7 +559,7 @@ class BibORB_DataBase {
         Add a set of entries to a group
     */
     function add_to_group($idArray,$group){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         // create an xml string containing id present in the basket
         $xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
         $xml_content = "<listofids>";
@@ -588,7 +588,7 @@ class BibORB_DataBase {
         Reset groups of a set of entries
     */
     function reset_groups($idArray){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         // create an xml string containing id present in the basket
         $xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
         $xml_content = "<listofids>";
@@ -614,7 +614,7 @@ class BibORB_DataBase {
      Search in given fields, a given value
     */
     function search_entries($value,$fields){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content =$this->all_entries();
         $xsl_content = load_file("./xsl/search.xsl");
         $param = array( 'bibname' => $this->xml_file());
@@ -628,7 +628,7 @@ class BibORB_DataBase {
     }
     
     function ids_for_search($value,$fields){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->search_entries($value,$fields);    
         $xsl_content = load_file("./xsl/extract_ids.xsl");
         $xsl_content = str_replace("XPATH_QUERY",'//bibtex:entry',$xsl_content);
@@ -643,7 +643,7 @@ class BibORB_DataBase {
         Advanced search function
     */
     function advanced_search_entries($searchArray){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content =$this->all_entries();
         $xsl_content = load_file("./xsl/advanced_search.xsl");
         $param = array( 'bibname' => $this->xml_file());
@@ -657,7 +657,7 @@ class BibORB_DataBase {
     }
     
     function ids_for_advanced_search($searchArray){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->advanced_search_entries($searchArray);    
         $xsl_content = load_file("./xsl/extract_ids.xsl");
         $xsl_content = str_replace("XPATH_QUERY",'//bibtex:entry',$xsl_content);
@@ -672,7 +672,7 @@ class BibORB_DataBase {
         XPath search
      */
     function xpath_search($xpath_query){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();
         $xsl_content = load_file("./xsl/xpath_query.xsl");
         $xsl_content = str_replace("XPATH_QUERY",$xpath_query,$xsl_content);
@@ -683,7 +683,7 @@ class BibORB_DataBase {
     }
     
     function ids_for_xpath_search($xpath_query){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();    
         $xsl_content = load_file("./xsl/extract_ids.xsl");
         $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry[$xpath_query]",$xsl_content);
@@ -718,7 +718,7 @@ class BibORB_DataBase {
         Return a list of available types of papers
     */
     function entry_types(){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = load_file("./xsl/model.xml");
         $xsl_content = load_file("./xsl/get_all_bibtex_types.xsl");        
         $result = $xsltp->transform($xml_content,$xsl_content); 
@@ -731,7 +731,7 @@ class BibORB_DataBase {
      Change the type of a given entry
     */
     function change_type($id,$newtype){	
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         // get the entry
         $xml_content = $this->entry_with_id($id);
         // get its type
@@ -755,7 +755,7 @@ class BibORB_DataBase {
      Change the bibtex key
     */
     function change_id($id,$newid){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         // get the entry
         $xml_content = $this->entry_with_id($id);
         
@@ -809,7 +809,7 @@ class BibORB_DataBase {
         Shelf mode
      */
     function change_ownership($id,$newownership){	
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                                           // get the entry
         $xml_content = $this->entry_with_id($id);
         //$oldownership = trim($xsltp->transform($xml_content,load_file("./xsl/get_bibtex_ownership.xsl")));
@@ -837,7 +837,7 @@ class BibORB_DataBase {
         Shelf mode
      */
     function change_readstatus($id,$newreadstatus){	
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                                           // get the entry
         $xml_content = $this->entry_with_id($id);
         //$oldownership = trim($xsltp->transform($xml_content,load_file("./xsl/get_bibtex_ownership.xsl")));

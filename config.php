@@ -3,7 +3,7 @@
  * 
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2004  Guillaume Gardey (ggardey@club-internet.fr)
+ * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,10 +40,10 @@ define("BIBORB_VERSION","CVS");
 define("BIBORB_RELEASE_DATE","22 November 2004");
 
 /**
- * Name of the PHP SESSION
- * You shouldn't need to change this value.
+ * Path where is install biborb
+ * The end '/' is mandatory.
  */
-$session_id = "SID";
+define("BIBORB_PATH","/Users/ggardey/Sites/biborbdev/biborb/");
 
 /**
  * Localization
@@ -200,4 +200,11 @@ define("GEN_BIBTEX",TRUE);
  * value: TRUE/FALSE
  */
 define("SHELF_MODE",TRUE);
+
+
+/**
+ * Name of the PHP SESSION
+ * You shouldn't need to change this value.
+ */
+$session_id = "SID";
 ?>

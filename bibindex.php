@@ -3,7 +3,7 @@
  *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2004  Guillaume Gardey (ggardey@club-internet.fr)
+ * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -267,7 +267,7 @@ if(isset($_GET['action'])){
                     $confirm = (strcmp($_GET['confirm_delete'],msg("Yes")) == 0);
                 }
             
-                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");		
+                $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");		
                 // save the bibtex entry to show which entry was deleted
                 $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
                 $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
@@ -355,7 +355,7 @@ if(isset($_GET['action'])){
                 $confirm = (strcmp($_GET['confirm_delete'],msg("Yes"))==0);
             }
             $ids_to_remove = $_SESSION['basket']->items;
-            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $xml_content = $_SESSION['bibdb']->entries_with_ids($ids_to_remove);
         
             if(!WARN_BEFORE_DELETING || $confirm){
@@ -416,7 +416,7 @@ if(isset($_POST['action'])){
                 if($res['added']){
                     $message = msg("ENTRY_ADDED_SUCCESS")."<br/>";
                     $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
-                    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                     $param = $GLOBALS['xslparam'];
                     $param['bibindex_mode'] = "displaybasket";
                     $param['mode'] = "user";
@@ -439,7 +439,7 @@ if(isset($_POST['action'])){
                 if($res['updated']){
                     $message = msg("The following entry was updated:")."<br/>";
                     $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
-                    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                     $param = $GLOBALS['xslparam'];
                     $param['bibindex_mode'] = "displaybasket";
                     $param['mode'] = "user";
@@ -477,7 +477,7 @@ if(isset($_POST['action'])){
 
                 if(count($res['added']) > 0){
                     $entries = $_SESSION['bibdb']->entries_with_ids($res['added']);
-                    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                     $param = $GLOBALS['xslparam'];
                     $param['bibindex_mode'] = "displaybasket";
                     $param['mode'] = "admin";
@@ -546,7 +546,7 @@ if(isset($_POST['action'])){
 //                die();
                 
                 // xslt transformation
-                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                 $param = $GLOBALS['xslparam'];
                 // hide basket actions
                 $param['display_basket_actions'] = 'no';
@@ -578,7 +578,7 @@ if(isset($_POST['action'])){
         case 'bibtex_from_aux':
             $bibtex_keys = bibtex_keys_from_aux($_FILES['aux_file']['tmp_name']);
             $xmldata = $_SESSION['bibdb']->entries_with_ids($bibtex_keys);
-            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $param = $GLOBALS['xslparam'];
             $param['fields_to_export'] = implode(".",$fields_to_export);
             
@@ -688,7 +688,7 @@ switch($mode) {
     // bibtex of a given entry
     case 'bibtex':
         $entries = $_SESSION['bibdb']->entry_with_id($_GET['id']);
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $bibtex = $xsltp->transform($entries,load_file("./xsl/xml2bibtex.xsl"));
         $bibtex = preg_replace(array('/(\s*\\1)?/','/ +/'),array("\\1",' '),$bibtex);
         $xsltp->free();

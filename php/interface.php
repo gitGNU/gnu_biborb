@@ -3,7 +3,7 @@
  *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2004  Guillaume Gardey (ggardey@club-internet.fr)
+ * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -299,7 +299,7 @@ function bibindex_details()
         $param['display_basket_actions'] = $_GET['basket'] ? "true" : "no";
     }
     
-    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
     $xsl_content = load_file("./xsl/biborb_output_sorted_by_id.xsl");
     
     if(array_key_exists('bibids',$_GET)){
@@ -602,7 +602,7 @@ function bibindex_display_all(){
     	// get the data of the references to display
         $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);        
         // init an XSLT processor
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         // set up XSLT parameters
         $param = $GLOBALS['xslparam'];
         $param['bibindex_mode'] = $_GET['mode'];
@@ -707,7 +707,7 @@ function bibindex_display_by_group(){
 
     // if the group is defined, display the entries matching it
     if(($group || isset($_GET['orphan'])) && $nb>0){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $param = $GLOBALS['xslparam'];
         $param['group'] = $group;
         $param['basketids'] = $_SESSION['basket']->items_to_string();
@@ -933,7 +933,7 @@ function bibindex_display_search(){
         $flatids = flatten_array($_SESSION['ids']);
         if(count($flatids)>0){
             $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
-            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $nb = count($flatids);
             $param = $GLOBALS['xslparam'];
             $param['bibindex_mode'] = $_GET['mode'];
@@ -1103,7 +1103,7 @@ function bibindex_display_advanced_search(){
         $flatids = flatten_array($_SESSION['ids']);
         if(count($flatids)>0){
             $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
-            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $nb = count($flatids);
             $param = $GLOBALS['xslparam'];
             $param['bibindex_mode'] = 'displayadvancedsearch';
@@ -1171,7 +1171,7 @@ function bibindex_display_basket(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $content = null;
-    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
     $param = $GLOBALS['xslparam'];
     $param['bibindex_mode'] = $_GET['mode'];
     $param['basketids'] = $_SESSION['basket']->items_to_string();
@@ -1305,7 +1305,7 @@ function bibindex_entry_to_add(){
 function bibindex_add_entry($type){
 	
     // xslt transformation
-    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
     $param = $GLOBALS['xslparam'];
     $xml_content = load_file("./xsl/model.xml");
     $xsl_content = load_file("./xsl/model.xsl");
@@ -1358,7 +1358,7 @@ function bibindex_update_entry(){
 	$types = $_SESSION['bibdb']->entry_types();
     
 	// xslt transformation
-	$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+	$xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
 	$param = $GLOBALS['xslparam'];
 	$param['id'] = $_GET['id'];
 	$param['modelfile'] = "file://".realpath("./xsl/model.xml");
@@ -1543,7 +1543,7 @@ function bibindex_export_basket_to_html(){
 		$entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
 		
 		// xslt transformation
-		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+		$xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
 		$param = $GLOBALS['xslparam'];
 		// hide basket actions
 		$param['display_basket_actions'] = 'no';
@@ -1603,7 +1603,7 @@ function bibindex_display_xpath_search()
         $flatids = flatten_array($_SESSION['ids']);
         if(count($flatids)>0){
             $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
-            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $nb = count($flatids);
             $param = $GLOBALS['xslparam'];
             $param['bibindex_mode'] = "displayxpathsearch";
