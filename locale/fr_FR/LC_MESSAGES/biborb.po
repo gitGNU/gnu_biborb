@@ -1,20 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# LANGUAGE translation of BibORB.
+# Copyright (C) 2004 THE BibORB'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the BibORB package.
+# guigui <EMAIL@ADDRESS>, 2004.
+# , fuzzy
+# guigui <EMAIL@ADDRESS>, 2004.
+# 
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: BibORB 1.3.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-07-14 17:43+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2004-09-09 00:08+0200\n"
+"Last-Translator: Guillaume Gardey <ggardey@club-internet.fr>\n"
+"Language-Team: French\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: bibindex.php:204 bibindex.php:231 bibindex.php:283 bibindex.php:308
 msgid "Yes"
@@ -737,3 +739,4 @@ msgstr "Retour"
 
 msgid "Language:"
 msgstr "Langue :"
+

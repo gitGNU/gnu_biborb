@@ -1,38 +1,40 @@
 <p>
-    Ce menu donne acc
-    This menu gives access to management functions. According to the <acronym class='biborb'>BibORB</acronym> configuration you may add, edit or delete entries.
-</p>
-
-<p>
-Available actions (depending on the configuration):
+    Ce menu donne accès aux fonctions d'administration. Selon la configuration
+    de <acronym class='biborb'>BibORB</acronym> vous pouvez ajouter, importer des
+    références ou mettre à jour la bibliographie.
 </p>
 
 <table class='help'>
-       <tbody>
+	<tbody>
 		<tr class='colored'>
-			<th>Login</th>
-			<td>Login to add/edit/delete entries.</td>
+			<th>S'Identifier</th>
+			<td>S'Identifier pour avoir aux fonctions d'ajout et d'importation.</td>
 		</tr>
 		<tr>
-			<th>Logout</th>
-			<td>Logout</td>
+			<th>Déconnexion</th>
+			<td>Déconnexion</td>
 		</tr>
 		<tr class='colored'>
-			<th>Add an entry</th>
+			<th>Ajouter une référence</th>
 			<td/>
 		</tr>
 		<tr>
-			<th>Update from BibTeX</th>
-			<td>Updates the bibliography according to the BibTeX file in the bibs directory. Use it when editing your bibliography in an alternative editor.</td>
+			<th>Mettre à jour (BibTeX)</th>
+			<td>La bibliographie est mise à jour en fonction du fichier .bib 
+			présent dans le répertoire de la bibliographie. Utiliser le si vous éditez
+			votre bibliographie avec un éditeur pour mettre à jour les informations.</td>
 		</tr>
 		<tr class='colored'>
-			<th>Import BibTeX</th>
-			<td>The BibTeX entries may be added by copy/paste in a text field or by choosing a BibTeX source file. <code>@string</code> <acronym>BibTeX</acronym> macros will be resolved and expanded.</td>
+			<th>Importer BibTeX</th>
+			<td>Importer les références contenues dans une chaîne <acronym>BibTeX</acronym>
+			ou dans un fichier <code>.bib</code>. Les macros <code>@string</code> seront
+			résolues et remplacées.</td>
 		</tr>
 	</tbody>
 </table>
 
-<span style="color:red"><strong>Warning!</strong></span>
+<span style="color:red"><strong>Attention!</strong></span>
 <ul>
-    <li>BibORB will not detect errors nor duplicate BibTeX keys.</li>
+    <li>Lors de l'importation, <acronym>BibORB</acronym> ne détecte pas les erreurs
+    <acronym>BibTeX</acronym> ni la présence de clés déjà existante.</li>
 </ul>

@@ -3,7 +3,7 @@
  *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2004  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -96,27 +96,6 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL
 }
 
 /**
- * XSLT processor
- */
-function xslt_transform($xmlstring,$xslstring,$xslparam = array()) {
-    $xh = xslt_create();
-    xslt_set_encoding($xh,"iso-8859-1");
-    xslt_set_base($xh,"file://".getcwd()."/biborb");
-    $xslparam['session_name'] = session_name();
-    $xslparam['session_id'] = session_id();
-    $arguments = array('/_xml' => $xmlstring, '/_xsl' => $xslstring);  
-    $result = xslt_process($xh,'arg:/_xml','arg:/_xsl',NULL,$arguments,$xslparam);
-
-    if (!$result) {
-        die(sprintf("Impossible de traiter le document XSLT [%d]: %s", 
-                    xslt_errno($xh), xslt_error($xh)));
-    }
-    xslt_free($xh);
-    
-    return $result;  
-}
-
-/**
  * Load a text file
  */
 function load_file($filename) {
@@ -154,8 +133,12 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
     return $result;
 }
 
+/**
+	Set the localization configuration
+ */
 function load_i18n_config($language)
 {
+	setlocale(LC_ALL,$language);
     putenv("LANG=$language");
     setlocale(LC_MESSAGES, $language);
     $domain = 'biborb';
@@ -163,6 +146,9 @@ function load_i18n_config($language)
     textdomain($domain);
 }
 
+/**
+ 	Load a localized text file. 
+ */
 function load_localized_file($filename)
 {
     $default = "./locale/en_US/$filename";
@@ -175,7 +161,9 @@ function load_localized_file($filename)
     }
 }
 
-// Parse a string and replace with localized data
+/**
+	Parse a string and replace with localized data
+ */
 function replace_localized_strings($string)
 {
     // ensure localisation is set up
