@@ -369,7 +369,7 @@ function bibindex_edit()
     $html .= menu();
     $title = null;
     $content = "<form method='post' action='modify.php' enctype='multipart/form-data'>";
-    $content .= get_bibentry_for_edition($_SESSION['bibname'],$_SESSION['id']);
+    $content .= get_bibentry_for_edition($_SESSION['bibname'],$_SESSION['id'],0);
     $content .= "<center>";
     $content .= "<input type='submit' name='action' value='cancel'/>";
     $content .= "<input type='submit' name='action' value='ok' />";

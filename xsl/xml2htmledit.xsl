@@ -38,6 +38,7 @@ Description:
 
   <xsl:param name="bibname"/>
   <xsl:param name="id"/>
+  <xsl:param name="add"/>
 
   <xsl:template match="/entrylist">
     <xsl:variable name="bibfile" select="document($bibname)//bibtex:entry[@id=$id]"></xsl:variable>
@@ -111,7 +112,15 @@ Description:
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:variable>
-                  <input name="_{name()}" value='{$val}' />
+                  <xsl:choose>
+                    <xsl:when test="local-name() = 'id' and $add=0">
+                      <xsl:value-of select="$val"/>
+                      <input name="_{name()}" value='{$val}' type='hidden' />
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <input name="_{name()}" value='{$val}' />
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </td>
               </tr>
             </xsl:otherwise>
