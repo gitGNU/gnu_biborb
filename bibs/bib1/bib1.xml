@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+<file name='bib1'><bibentry type='techreport' id='paper-one'>
+<author>Someone</author>
+<title>A title</title>
+<year>2002</year>
+<month>July</month>
+<keywords>keywords1, keywords2</keywords>
+<group>GroupA</group>
+<urlzip>test.ps.gz</urlzip>
+</bibentry>
+<bibentry type='inproceedings' id='paper-two'>
+<author>Someone else</author>
+<title>An other title</title>
+<year>2000</year>
+<month>July</month>
+<keywords>TA, forward analysis</keywords>
+<group>GroupA</group>
+</bibentry>
+<bibentry type='article' id='paper-three'>
+<author>Anyone</author>
+<title>Who knows?</title>
+<year>1993</year>
+<group>GroupB</group>
+<abstract>one shortabstract</abstract>
+</bibentry>
+</file>

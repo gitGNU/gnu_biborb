@@ -1,0 +1,169 @@
+/**
+This file is part of BibORB
+
+Copyright (C) 2003  Guillaume Gardey
+
+BibORB is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+BibORB is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+**/
+
+/**
+
+File: style.css
+Author: Guillaume Gardey (ggardey@club-internet.fr)
+Year: 2003
+Licence: GPL
+
+Description:
+
+   The artist playground :-)
+
+**/
+
+body {
+  margin: 0;
+  font-family:sans-serif;
+  background-color:silver;
+  color:black;
+}
+
+.left {
+        position:relative;
+        top:2em;
+        left:1em;
+        padding-left:1em;
+        padding-right:1em;
+        padding-bottom:1em;
+        border:solid 1px;
+        width:auto;
+        float:left;
+}
+
+.main {
+        position:relative;
+        top:2em;
+        width:650px;
+        float:left;
+        padding-left:2em;
+        margin-left:180px;
+}
+
+html>body .left {
+  position: fixed;
+}
+
+.menu{
+       width: 140px;
+}
+
+.menutitle{
+            font-size: 120%;
+            font-weight: bold;
+            margin-top: 1em;
+            text-align: left;
+}
+
+.menubloc{
+           text-align: left;
+           margin-top:0.5em;
+           border-bottom:solid 2px;
+           border-top:solid 2px;
+
+}
+.menubloc a { color:navy; text-decoration:none; font-weight:bold;text-align:center;background-color:transparent;}
+.menubloc a:hover { color:red; text-decoration:none;background-color:transparent;}
+
+.menufooter{
+             background-image: none;
+             height: 24px;
+}
+
+
+.left2{ 
+        position:absolute;
+        top:260px;
+        left:1em;
+        width: 150px;
+        height: 250px;
+        padding-left:1em;
+        padding-right:1em;
+}
+
+html>body .left2 {
+  position: fixed;
+}
+
+.bibname{ color:white;font-weight:bold; text-align:center;background-color:navy;font-size:120%}
+
+.website{ background-color:silver; color:black; }
+.website h1 { color:navy;width:470px;border-bottom:solid 5px; background-color:transparent; }
+.website h3 { border-bottom:dashed 2px;width:470px; }
+.website table { border-collapse:collapse;margin-left:150px; }
+.website th {  border:solid 1px black;background-color:navy;color:white;}
+.website td { border:solid 1px; }
+
+
+/*
+ bibtex style
+*/
+
+.startbib{
+           background-color:transparent;
+           border-top:dashed 2px;
+           color:navy;
+           padding-top:1em;
+ }
+
+.key {
+       color:white;
+       background-color:navy;
+       font-family:monospace;
+       padding:1px;
+}
+
+a.button {
+          border:1px solid navy;
+          margin:1px;
+          font-family:monospace;
+          text-decoration:none;
+          padding-left:2px;
+          padding-right:2px;
+}
+
+a.button:visited{ text-decoration:none;color:blue;background-color:transparent;}
+
+.id { 
+      font-family:monospace;
+ }
+ 
+.keywords { 
+            font-family:monospace;
+ }
+ 
+.title { font-weight:bold; }
+
+.author {font-style:italic; }
+
+
+a.clean{
+        text-decoration:none;
+        border-style:none;
+        }
+
+a.bibtex:link { color:black; text-decoration:none; font-family:monospace;background-color:transparent; }
+a.bibtex:visited { color:black; text-decoration:none;font-family:monospace;background-color:transparent; }
+a.bibtex:hover { color:black; text-decoration:none; font-family:monospace;background-color:transparent;}
+a.bibtex:active { color:black; text-decoration:none; font-family:monospace;background-color:transparent;}
+a.bibtex:focus { color:black; text-decoration:none;font-family:monospace;background-color:transparent;}

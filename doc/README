@@ -1,0 +1,117 @@
+author: Guillaume Gardey (ggardey@club-internet.fr)
+Licence: GPL
+
+DESCRIPTION
+-----------
+
+This tool aims to provide a web-based interface to BibTeX
+bibliographies and electronic version of papers.
+A 'group' facility has been introduced to create a simple classement
+method.
+It supports search over titles, authors and keywords.
+
+It is based on:
+	* BibTeX
+		To provide an input format for references.
+	* XML
+		To provide an easier input format for manipulating the
+references.
+	* XSLT
+		To transform in any needed format the references.
+	* CSS
+		Some nice web design :-) .
+	* PHP
+		To link every thing together.
+
+This tool does not provide editor facility (and will never) and will
+not checked if the BibTeX file is correctly written.
+
+
+HOW DOES IT WORKS?
+------------------
+
+Well, I try to apply KISS method. Hope it works and it is not too dirty. :)
+
+The directory structure of the tool is:
+	
+	admin => stores tools (one for the moment) to create or
+manipulate bibliographies
+	xsl => stores XSLT stylesheets to translate into HTML or BibTeX
+some references
+	doc => some documentation
+	bibs => directory where to put all bibliographies you want
+	bibs/example => a directory example. It contains the
+bibliography name 'example'.
+	bibs/example/papers => to store electronic version of papers
+
+All directories in bibs must have the same structure. For instance for
+the bibliography 'example', the 'bibs/example' directory contains:
+	* example.bib => the BibTeX file containing references
+	* example.xml => XML traduction of the BibTeX file. This file
+MUST(!!!) be writable for anyone so that it could be updated through
+the web interface.
+	* description.txt => a brief description of this
+bibliography('My own very personal biblio' for instance)
+	* papers/ => the directory where to put local electronic version of
+references.
+
+If you want to put more than one BibTeX file, it is possible. The tool
+will then use their name to create corresponding groups. See BibTeX
+section for more details.
+
+
+INSTALLATION
+------------
+
+As the tool is based on PHP, XML, XSL and CSS ensure that :
+	* XSL functions are activate in your PHP(>=4.0.3)
+configuration (xslt.so)
+	* You have a CSS2 compliant web browser so that the interface
+behaves "normally"
+
+Now decompress the archive in any web accessible place (for instance
+~/public_html, /var/www or anywhere you want).
+
+...and it should work.
+
+Ensure that all XML files are writable (chmod a+w) for anyone if you want to be
+able to update references through the web interface.
+
+
+BIBTEX - XML
+------------
+
+Well, the only thing to do is to write your BibTeX file.
+
+The tool has a PHP script to translate a BibTeX file into an XML
+file. Briefly, it translates:
+	* @atype{id, into an <bibentry type='atype' id='anid'> tag.
+	* key = { data } into  an <key>data</key> tag. ( " are also
+recognized, and multiple lines data too)
+
+Warning!! the script does not transform LaTeX code and do not
+interpret BibTeX constants. It also does not transform authors name
+and lastname.
+
+Some additional BibTeX fields have been added:
+
+	* TXTAUTHOR: if present will be used as author data (for
+instance if AUTHOR contains LaTeX code or mutliple lastname)
+	* TXTTITLE: if present will be used as title
+	* ABSTRACT: abstract of the paper
+	* GROUP: for classification purpose for a single bibfile
+bibliography. If more than two bibfile, the GROUP tag takes its value from the
+name of the bibfile.
+	* KEYWORDS: paper's keywords
+	* URL: link to the ps version of the paper
+	* URLZIP: link to the ps.gz version of the paper
+	* PDF: link to the pdf version of the paper
+
+In URL, URLZIP, PDF, only the filename is needed. It will look for papers in the
+paper directory.
+
+TODO
+----
+
+Well, certainly some bugs to resolve, and some CSS work to have
+something "browser independent" unless they all comply to W3C standards.
