@@ -47,7 +47,7 @@ $session_id = "SID";
 
 /**
  * Localization
- * Available: en_US, fr_FR
+ * Available: en_US, fr_FR, de_DE
  */
 $language = "en_US";
 
