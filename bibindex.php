@@ -74,6 +74,7 @@ require_once("php/biborbdb.php"); // database
 require_once("php/xslt_processor.php"); // xslt processing
 require_once("php/interface.php"); // generate interface
 require_once("php/auth.php");
+require_once("php/third_party/Tar.php");
 
 /**
  * Session
@@ -550,6 +551,17 @@ if(isset($_POST['action'])){
             header("Content-Type: application/force-download");
             echo $xsltp->transform($xmldata,load_file("./xsl/xml2bibtex_advanced.xsl"),$param);
             $xsltp->free();
+            die();
+ 
+        case 'get_archive':
+            chdir("./bibs");
+            $tar_name = $_SESSION['bibdb']->name().".tar.gz";
+            if(file_exists($tar_name)){ unlink($tar_name);}
+            $tar = new Archive_Tar($tar_name,"gz");
+            $tar->create($_SESSION['bibdb']->name()) or die("Error while creating archive!");
+            header("Content-disposition: attachment; filename=".$tar_name);
+            header("Content_Type: application/octed-stream");
+            readfile($tar_name);
             die();
             
         default:

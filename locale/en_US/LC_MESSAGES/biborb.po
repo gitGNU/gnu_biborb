@@ -710,7 +710,6 @@ msgstr "Remarks"
 msgid "BIBORB_OUTPUT_LONGNOTES_TITLE"
 msgstr "Display remarks for this reference"
 
-
 msgid "Import"
 msgstr ""
 
@@ -786,3 +785,11 @@ msgstr "When compiling a LaTeX file (<code>article.tex</code>), cited references
 
 msgid "BIBINDEX_TOOLS_TITLE"
 msgstr "Tools"
+
+msgid "TOOL_GET_ARCHIVE_TITLE"
+msgstr "Download the bibliography"
+
+msgid "TOOL_GET_ARCHIVE_HELP"
+msgstr "Download a compressed archive (<code>tar.gz</code>) of the current "
+" bibliography. The archive will contains the BibTeX data as well as "
+" uploaded data."

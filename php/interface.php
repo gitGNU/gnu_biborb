@@ -1144,7 +1144,6 @@ function bibindex_display_basket(){
             $content .= "</div>";
         }
         $content .= "</div>".$start;
-
         $content .= $main_content;
     }
     else{
@@ -1466,30 +1465,7 @@ function bibindex_export_basket_to_html(){
 		echo bibindex_display_basket();
 	}
 }
-/**
-    
- */
-function bibindex_display_tools(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->name());
-    $title = _("BIBINDEX_TOOLS_TITLE");
-    
-    $content = "<h4 class='tool_name'>"._("TOOL_AUX2BIBTEX_TITLE")."</h4>";
-    $content .= "<div class='tool_help'>";
-    $content .= _("TOOL_AUX2BIBTEX_HELP");
-    $content .= "</div>";
-    $content .= "<form class='tool_form' method='post' enctype='multipart/form-data' action='bibindex.php'  onsubmit='return validate_bibtex2aux_form(\"".$_SESSION['language']."\")' id='bibtex2aux_form'>";
-    $content .= "<fieldset>";
-    $content .= "<input type='file' name='aux_file'/>";
-    $content .= "<input type='hidden' name='action' value='bibtex_from_aux'/>";
-    $content .= "&nbsp;<input type='submit' class='submit' value='"._("Download")."'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
-    
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
-}
+
 
 /**
 
@@ -1558,6 +1534,43 @@ function bibindex_display_xpath_search()
             $content .= _("No match.");
         }
     }
+    $html .= main($title,$content);
+    $html .= html_close();
+    echo $html;
+}
+
+
+/**
+
+*/
+function bibindex_display_tools(){
+    $html = bibheader();
+    $html .= bibindex_menu($_SESSION['bibdb']->name());
+    $title = _("BIBINDEX_TOOLS_TITLE");
+    
+    $content = "<h4 class='tool_name'>"._("TOOL_AUX2BIBTEX_TITLE")."</h4>";
+    $content .= "<div class='tool_help'>";
+    $content .= _("TOOL_AUX2BIBTEX_HELP");
+    $content .= "</div>";
+    $content .= "<form class='tool_form' method='post' enctype='multipart/form-data' action='bibindex.php'  onsubmit='return validate_bibtex2aux_form(\"".$_SESSION['language']."\")' id='bibtex2aux_form'>";
+    $content .= "<fieldset>";
+    $content .= "<input type='file' name='aux_file'/>";
+    $content .= "<input type='hidden' name='action' value='bibtex_from_aux'/>";
+    $content .= "&nbsp;<input type='submit' class='submit' value='"._("Download")."'/>";
+    $content .= "</fieldset>";
+    $content .= "</form>";
+    
+    $content .= "<h4 class='tool_name'>"._("TOOL_GET_ARCHIVE_TITLE")."</h4>";
+    $content .= "<div class='tool_help'>";
+    $content .= _("TOOL_GET_ARCHIVE_HELP");
+    $content .= "</div>";
+    $content .= "<form class='tool_form' method='post' action='bibindex.php'>";
+    $content .= "<fieldset>";
+    $content .= "<input type='hidden' name='action' value='get_archive'/>";
+    $content .= "<input type='submit' class='submit' value='"._("Download")."'/>";
+    $content .= "</fieldset>";
+    $content .= "</form>";
+    
     $html .= main($title,$content);
     $html .= html_close();
     echo $html;

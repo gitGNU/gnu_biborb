@@ -35,7 +35,7 @@
  
  */
 
-require_once("PARSEENTRIES.php");
+require_once("third_party/PARSEENTRIES.php");
 require_once("utilities.php");
 
 class BibTeX_Tools

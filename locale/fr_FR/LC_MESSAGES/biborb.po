@@ -785,3 +785,10 @@ msgstr "Lors de la compilation d'un fichier LaTeX (<code>article.tex</code>), "
 
 msgid "BIBINDEX_TOOLS_TITLE"
 msgstr "Outils"
+
+msgid "TOOL_GET_ARCHIVE_TITLE"
+msgstr "Télécharger la bibliographie"
+
+msgid "TOOL_GET_ARCHIVE_HELP"
+msgstr "Télécharger une archive (<code>tar.gz</code>) de la bibliographie courante "
+" L'archive contiendra les données BibTeX ainsi que les données uploadées. "
