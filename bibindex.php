@@ -243,7 +243,22 @@ function bibindex_search()
 function bibindex_details()
 {
   $html = bibheader();
-  $html .= get_bibentry($_SESSION['bibname'],$_SESSION['id'],$_SESSION['abstract']);  
+  $content = get_bibentry($_SESSION['bibname'],$_SESSION['id'],$_SESSION['abstract']);
+  if(array_key_exists('menu',$_GET))
+  {
+
+    if($_GET['menu']){
+      $html .= menu();
+      $html .= main(null,$content);
+    }
+    else{
+      $html .= $content;
+    }
+  }
+  else{
+    $html .= $content;
+  }
+  
   $html .= html_close();
   return $html;  
 }
