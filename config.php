@@ -48,6 +48,11 @@ $disable_authentication = FALSE;
 
 
 /**
+ *  Sould a confirmation may be displayed when deleting an entry
+ */
+$warn_before_deleting = TRUE;
+
+/**
  * Should the abstract be present for each entry.
  */
 $display_abstract = FALSE;
@@ -120,6 +125,36 @@ $bibtex_entries = array(
 );
 
 /**
+ * Choose which fields to save when exporting an entry to bibtex
+ * By default all fields are exported
+ */
+$fields_to_export = array('author',
+			  'address',
+			  'annote',
+			  'author',
+			  'booktitle',
+			  'chapter',
+			  'crossref',
+			  'edition',
+			  'editor',
+			  'howpublished',
+			  'institution',
+			  'journal',
+			  'key',
+			  'month',
+			  'note',
+			  'number',
+			  'organisation',
+			  'pages',
+			  'publisher',
+			  'school',
+			  'series',
+			  'title',
+			  'type',
+			  'volume',
+			  'year');
+
+/**
  * The CSS style file to use.
  */
 $CSS_FILE="style.css";
@@ -127,6 +162,7 @@ $CSS_FILE="style.css";
 /**
  * Display sort in all/group/search view
  * If no, displayed only on search
+ * true/no
  */
 $DISPLAY_SORT="no";
 

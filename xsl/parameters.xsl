@@ -117,4 +117,6 @@
     <xsl:variable name="edit-image">stock_edit-16.png</xsl:variable>
     <xsl:variable name="delete-image">stock_delete-16.png</xsl:variable>
 	
+    <!-- A list of fields -->
+    <xsl:param name="fields_to_export"/>
 </xsl:stylesheet>

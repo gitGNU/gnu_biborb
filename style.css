@@ -312,3 +312,8 @@ a.bibname, a:visited.bibname {
     font-weight:bold;
     font-style:italic;
 }
+
+a.cleanref, a:hover.cleanref, a:visited.cleanref {
+    color:navy;
+    text-decoration:none;
+}
