@@ -137,9 +137,10 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
     On click call javascript to change the language
  */
 function lang_html_select($lang,$index = false){
-    $names = array('fr_FR'=>'Français',
-                  'de_DE'=>'Deutsch',
-                  'en_US'=>'English');
+    $names = array('fr_FR' => 'Français',
+                   'de_DE' => 'Deutsch',
+                   'en_US' => 'English',
+                   'it_IT' => 'Italiano');
     if($index){
         $res = "<select name='lang' id='lang' onchange='javascript:change_lang_index(this.value)'>";
     }
