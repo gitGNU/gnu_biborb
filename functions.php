@@ -109,10 +109,30 @@ function xml2bibtex($bibname)
 
   $xmlfile = "./bibs/".$bibname."/".$bibname.".xml";
   $bibfile = "./bibs/".$bibname."/".$bibname.".bib";
-  
+  // get the number of entries
+  $xml_content = load_xml_bibfile($bibname);
+  $xsl_content = load_file("./xsl/count.xsl");  
+  //Nombre d'enregistrement
+  $nb_record = xslt_transform($xml_content,$xsl_content);  
+  $record = explode(".",$nb_record);
+  $nb = $record[0];
   $xml_content = load_file($xmlfile);
   $xsl_content = load_file("./xsl/xml2bibtex.xsl");
-  $bibtex = xslt_transform($xml_content,$xsl_content);
+
+  $xh = xslt_create();
+  xslt_set_encoding($xh,"iso-8859-1");
+  $arguments = array('/_xml' => $xml_content, '/_xsl' => $xsl_content);  
+  $bibtex = xslt_process($xh,'arg:/_xml','arg:/_xsl',NULL,$arguments);
+
+  if (!$bibtex) {
+    if($nb!=0){
+      die(sprintf("Impossible de traiter le document XSLT [%d]: %s", 
+		  xslt_errno($xh), xslt_error($xh)));
+    }
+    
+  }
+
+  xslt_free($xh);
   
   $fp = fopen($bibfile,"w");
   fwrite($fp,$bibtex);
@@ -222,10 +242,12 @@ function xslt_transform($xmlstring,$xslstring,$xslparam = array())
 {
   $xh = xslt_create();
   xslt_set_encoding($xh,"iso-8859-1");
+
   $xslparam['session_name'] = session_name();
   $xslparam['session_id'] = session_id();
   $arguments = array('/_xml' => $xmlstring, '/_xsl' => $xslstring);  
   $result = xslt_process($xh,'arg:/_xml','arg:/_xsl',NULL,$arguments,$xslparam);
+
   if (!$result) {
     die(sprintf("Impossible de traiter le document XSLT [%d]: %s", 
                 xslt_errno($xh), xslt_error($xh)));
@@ -425,14 +447,32 @@ delete only a bibtex entry, do not erase files
 */
 function delete_only_bibtex_entry($bibname,$id)
 {
-  $xml_content = load_xml_bibfile($bibname,$id);
-  $xsl_content = load_file("./xsl/delete.xsl");
-  $param = array('id'=>$id);  
-  $newxml = xslt_transform($xml_content,$xsl_content,$param);
+  // get the number of entries
+  $xml_content = load_xml_bibfile($bibname);
+  $xsl_content = load_file("./xsl/count.xsl");  
+  //Nombre d'enregistrement
+  $nb_record = xslt_transform($xml_content,$xsl_content);  
+  $record = explode(".",$nb_record);
+  $nb = $record[0];
   
+  $xsl_content = load_file("./xsl/delete.xsl");
+  $param = array('id'=>$id);
+  $xh = xslt_create();
+  xslt_set_encoding($xh,"iso-8859-1");
+  $arguments = array('/_xml' => $xml_content, '/_xsl' => $xsl_content);  
+  $result = xslt_process($xh,'arg:/_xml','arg:/_xsl',NULL,$arguments,$param);
+
+  if(!$result) {
+    if($nb!=1){
+      die(sprintf("Impossible de traiter le document XSLT [%d]: %s", 
+		  xslt_errno($xh), xslt_error($xh)));
+    }
+  }
+  xslt_free($xh);
+
   // update the xml file.
   $fp = fopen("./bibs/".$bibname."/".$bibname.".xml","w");
-  fwrite($fp,$newxml);
+  fwrite($fp,$result);
   fclose($fp);
   
   //update the bibtex file.
