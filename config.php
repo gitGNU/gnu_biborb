@@ -34,8 +34,11 @@
  *    
  */
 
+/**
+ * Versio of Biborb
+ */
+$biborb_version = "CVS";
 
-  
 /**
  * If TRUE, this will disable authentification.
  * All users will have the administrator status

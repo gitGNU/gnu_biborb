@@ -81,6 +81,7 @@ function update_xml($bibname){
 
 /**
  * Convert a bibtex file to an xml file.
+ * 
  */
 function write_xml_file($xmlfile,$bibfile,$append = false){  
   $inf = pathinfo($bibfile);  
@@ -145,67 +146,86 @@ function xml2bibtex($bibname){
 
 /**
  * bibtex2xml
- * Transform a BibTeX file into an XML file
+ * Transform a BibTeX string into an XML string
  */
 function bibtex2xml($bibfile,$group=NULL){
+	
+	
     $content = file($bibfile);          // content to analyse
-    $first=1;                           // 
+    
+	$first = 1;							// is it the first entry analyzed?
     $xml_content = null;                // xml content
     $key = null;                        // bibtex field
     $data_content = null;               // bibtex field value
     $openfield = false;                 // true if a value is on several lines
     $type = null;                       // type of the bibtex entry being analyzed                
 
+	
+	// remove uneeded spaces
+	for($i=0;$i<sizeof($content);$i++){
+		$content = preg_replace("/\s+/"," ",$content);
+	}
+	
     for($i=0;$i<sizeof($content);$i++){
         // recode &, <, >
         $patterns = array('&','<','>');
         $replace = array('&amp;','&lt;','&gt;');    
         $line = str_replace($patterns,$replace,$content[$i]);
 
-        //new entry (spaces)@(spaces)(alphanum)(spaces){(spaces)(anychar)(spaces),
-        if(preg_match("/\s*@\s*(\w*)\s*{\s*(.*)\s*,/",$line,$matches)){
+        //new entry @(alphanum){(anychar),
+        if(preg_match("/@\s?(\w*)\s?{(.*),/",$line,$matches)){
+			// If it isn't the first entry, close the previous one
             if($first==0){
                 $xml_content .= end_bibentry($type);
             }
+			// save the type to add the good closing tag
             $type = $matches[1];
-            $xml_content .= new_bibentry($matches[1],$matches[2]);
-            if($group!=NULL){	
+			
+            $xml_content .= new_bibentry($type,trim($matches[2]));
+			
+            if($group!=NULL){
                 $xml_content .= bibfield("group",$group);	
             }
+
             $first = 0;
-        } 
-        else if(!$openfield && preg_match("/\s*(\w*)\s*=(.*)/",$line,$matches)){
+        }
+		// detect a line defining a field
+        else if(!$openfield && 
+				(preg_match("/\s?(\w*)\s?=\s?{(.*)},?/",$line,$matches) ||
+				 preg_match("/\s?(\w*)\s?=\s?\"(.*)\",?/",$line,$matches))){
             $key = $matches[1];
             // new version of biborb: translate group into groups
             if($key == 'group'){
                 $key = 'groups';
             }
             $data = $matches[2];
-            
-            // bibfield in an single line
-            if(preg_match("/\s*{\s*(.*)\s*},?/",$data,$matches) || preg_match("/\s*\"\s*(.*)\s*\",?/",$data,$matches)){
-                if($key == 'groups'){
-                    $xml_content .= "<bibtex:groups>\n";
-                    $group_array = split(',',$matches[1]);
-                    foreach($group_array as $gr){
-                        if(trim($gr) != ''){
-                            $xml_content .= bibfield("group",trim($gr));
-                        }
-                    }
-                    $xml_content .= "</bibtex:groups>\n";
-                }
-                else {
-                    $xml_content .= bibfield($key,$matches[1]);
-                }
-            }
-            // bibfield in several lines (data)
-            else if(preg_match("/\s*{\s*(.*)/",$data,$matches) || preg_match("/\s*\"\s*(.*)/",$data,$matches)){	
-	           $data_content = $matches[1]."\n";	
-	           $openfield=true;
-            }
-        }
-        // end of an entry
-        else if(preg_match("/\s*(.*)\s*},?/",$line,$matches) || preg_match("/\s*(.*)\s*\",?/",$line,$matches)){
+		
+			// if groups key, split into several <bibtex:group>
+			// groups must be separated by a comma
+			if($key == 'groups'){
+				$xml_content .= "<bibtex:groups>\n";
+				$group_array = split(',',$data);
+				foreach($group_array as $gr){
+					if(trim($gr) != ''){
+						$xml_content .= bibfield("group",trim($gr));
+					}
+				}
+				$xml_content .= "</bibtex:groups>\n";
+			}
+			else {
+				$xml_content .= bibfield($key,trim($data));
+			}
+		}
+		// field set in several lines (data)
+		else if(!$openfield && 
+				(preg_match("/\s?(\w*)\s?=\s?{(.*)/",$line,$matches) ||
+				 preg_match("/\s?(\w*)\s?=\s?\"(.*)/",$line,$matches))){
+			$openfield = true;
+			$key = $matches[1];
+			$data_content = trim($matches[2])."\n";
+		 }
+        // detec the end of an entry
+        else if(preg_match("/(.*)[}\"],?/",$line,$matches)){
             //if $data_content is null, end of a an entry
             // or additionnal brace or quote, who knows :)
             if($openfield){	
@@ -213,9 +233,6 @@ function bibtex2xml($bibfile,$group=NULL){
                 //keeps formatting for abstract
                 if($key != 'abstract'){
                     $data_content = preg_replace("/\s+/"," ",$data_content);
-                }
-                else{
-//                    $data_content = preg_replace("/\n\n/","<br/><br/>",$data_content);
                 }
                 // new version of biborb: need to create group field if multiple groups defined
                 if($key == 'groups'){
@@ -232,10 +249,13 @@ function bibtex2xml($bibfile,$group=NULL){
                     $xml_content .= bibfield($key,$data_content);
                 }
                 $openfield = false;
-            }      
+            }
+			else {
+				$data_content .= trim($matches[1])."\n";
+			}
         }
         else {
-            $data_content .= $line;	
+            $data_content .= trim($line)."\n";	
         }
     }
   
