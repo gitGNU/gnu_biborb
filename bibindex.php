@@ -213,13 +213,14 @@ else{
 // sort
 $sort = DEFAULT_SORT;
 $sort_order = DEFAULT_SORT_ORDER;
-if(array_key_exists('user_pref',$_SESSION)){$sort = $_SESSION['user_pref']['default_sort'];}
-else if(array_key_exists('sort',$_GET)){$sort = $_GET['sort'];}
+
+if(array_key_exists('sort',$_GET)){$sort = $_GET['sort'];}
 else if(array_key_exists('sort',$_POST)){$sort = $_POST['sort'];}
+else if(array_key_exists('user_pref',$_SESSION)){$sort = $_SESSION['user_pref']['default_sort'];}
 // sort order
-if(array_key_exists('user_pref',$_SESSION)){$sort_order = $_SESSION['user_pref']['default_sort_order'];}
-else if(array_key_exists('sort_order',$_GET)){$sort_order = $_GET['sort_order'];}
+if(array_key_exists('sort_order',$_GET)){$sort_order = $_GET['sort_order'];}
 else if(array_key_exists('sort_order',$_POST)){$sort_order = $_POST['sort_order'];}
+else if(array_key_exists('user_pref',$_SESSION)){$sort_order = $_SESSION['user_pref']['default_sort_order'];}
 
 $_SESSION['bibdb']->set_sort($sort);
 $_SESSION['bibdb']->set_sort_order($sort_order);
