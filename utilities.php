@@ -160,7 +160,7 @@ function load_i18n_config($language)
 
 function load_localized_file($filename)
 {
-    $default = "./locale/en/$filename";
+    $default = "./locale/en_US/$filename";
     $i18nfile = "./locale/".$GLOBALS['language']."/".$filename;
     if(file_exists($i18nfile)){
         return load_file($i18nfile);
@@ -173,6 +173,8 @@ function load_localized_file($filename)
 // Parse a string and replace with localized data
 function replace_localized_strings($string)
 {
+    // ensure localisation is set up
+    load_i18n_config($_SESSION['language']);
     // get all key to translate
     preg_match_all("(BIBORB_OUTPUT\w+)",$string,$matches);
     $keys = array_unique($matches[0]);

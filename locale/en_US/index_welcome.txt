@@ -1,0 +1,62 @@
+<span class='biborb'>BibORB</span> is a tool to manage and consult BibTeX bibliographies using a web
+browser.
+
+<p> The main aims in its design were to allow sharing of
+bibliographies on a local network and accessing easily electronic releases of 
+papers. It grew from this to permit; creation and deletion of bibliographies, 
+then the facilities to edit BibTeX entries were added thus creating a simple 
+web front-end to BibTeX.  </p>
+
+<span class='biborb'>BibORB</span> presently supports: 
+<ul>
+    <li> Extensive functions via the web based interface including:
+   	<ul>
+		<li> Import your existing .bib files </li>
+		<li> Create new bibliographies </li>
+		<li> Delete bibliographies </li>
+		<li> Export bibliography as plain text .bib file </li>
+		<li> View different bibliographies </li>
+		<li> Browse bibliography entries </li>
+		<li> Create new bibliography entries </li>
+		<li> Delete bibliography entries </li>
+		<li> Upload further information on bibliography entries to
+		the server (including electronic releases of papers in .ps, 
+                .ps.gz or .pdf)
+                </li>
+		<li> Create a link to another website with information
+		about the bibliography entry </li>
+		<li> Create a link to more information about the
+		bibliography entry on the server </li>
+		<li> Search your bibliography (by authors, keywords or titles)</li>
+		<li> Select a subset of a bibliography by groups </li>
+                <li> Select a subset of a bibliography matching a search query</li>
+		<li> Select subset of bibliography by shopping basket
+		function </li>
+                <li> Export the basket to plain text .bib file </li>
+                <li> Export the basket to a simple HTML output </li>
+	</ul>
+    </li>
+
+    <li> You can also use your favorite text editor to edit the bib file and
+    then click on Update from BiBTeX to update the database. This bibliography can
+    then be browsed etc. as above.
+    </li>
+</ul>
+
+<span class='biborb'>BibORB</span> does not support:
+<ul>
+    <li>Concurrent access to the database. It has not
+    been designed so that different users may 'safely' modify the same
+    bibliography.</li>
+    <li>The use of @string or @preamble </li>
+</ul>
+
+<p><span class='biborb'>BibORB</span> also provides a basic authentication method based on databases to
+restrict write access to bibliographies.  </p>
+
+<hr/>
+<span style="font-family:serif"><span class='biborb'>BibORB</span> $biborb_version release,
+$date_release<br/> Released under the GPL licence.<br/> Update and
+information available at <a href="http://www.nongnu.org/biborb"><span class='biborb'>BibORB</span>
+website</a> </span>
+

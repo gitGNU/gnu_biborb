@@ -350,6 +350,9 @@ function check_login($thelogin,$thepasswd){
 */
 
 function add_all_to_basket_div($ids,$mode,$extraparam=null){
+    // ensure localization is set up
+    load_i18n_config($_SESSION['language']);
+
     $html = "<div class='addtobasket'>";
     $html .= _("Add all entries to the basket.");
     $addalllink = "bibindex.php?mode=$mode&action=add_to_basket&id=";
@@ -370,6 +373,9 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
     Generate the sort div section
 */
 function sort_div($selected_sort,$mode,$group){
+    // ensure the localization is set up
+    load_i18n_config($_SESSION['language']);
+
     $html = "<div class='sort'>";
     $html .= _("Sort by:");
     $html .= "<form method='get' action='bibindex.php'>";
