@@ -31,8 +31,10 @@
  * Description:
  * 
  *      Performs actions on the bibliography
+ *  This is page is a proxy page. According to GET/POST values, it performs action
+ *  on the bibliography/articles.
  * 
- * 
+ *  The action is set up using the GET or POST variable 'action'
  */
  
 require_once("config.php");
@@ -43,72 +45,114 @@ session_name($session_id);
 session_start();
 
 
+/*************************************************************************************/
+/**                    Look in GET variables if action is set.                       */
+/*************************************************************************************/
+            
 if(array_key_exists('action',$_GET)){
-    // action defined
     // select what do to
     switch($_GET['action']){
-        /**
-         * Action on a given entry
+            /*************************************************************************/
+            /**                      Action on a given entry                         */
+            /*************************************************************************/
+        
+        /** 
+         *  Delete an entry from the database
          */
-        case 'delete': // delete an entry from database
+        case 'delete': 
+            // save the bibtex entry to show which entry has been deleted
             $bibtex = get_bibtex($_SESSION['bibname'],$_GET['id']);
+            // delete it
             delete_bibtex_entry($_SESSION['bibname'],$_GET['id']);
+            // update message
             $_SESSION['message'] = "The follwoing entry was deleted: <pre>".$bibtex."</pre>";
+            // redirect to result page
             echo header("Location: bibindex.php?mode=operationresult&bibname=".$_SESSION['bibname']."&".session_name()."=".session_id());
             break;
             
-        case 'edit': // edit a given entry
+        /**
+         *  Edit a given entry: redirection whith needed GET variables
+         */
+        case 'edit': 
             echo header("Location: bibindex.php?mode=update&id=".$_GET['id']."&bibname=".$_SESSION['bibname']."&".session_name()."=".session_id());
             break;
             
-        case 'add_to_basket': // add the entry to basket
+        /**
+         *  Add an entry to the basket
+         */
+        case 'add_to_basket':
             add_to_basket($_GET['id']);
             // use javascript to redirect to the previous page
             echo "<head><script language='javascript'>history.back()</script></head>";
             break;
         
-        case 'delete_from_basket': //remove the entry from the basket
+        /**
+         *  Delete an entry from the basket.
+         */
+        case 'delete_from_basket': 
             delete_from_basket($_GET['id']);
             echo header("Location: bibindex.php?mode=displaybasket&".session_name()."=".session_id());
             break;
         
+        /**
+         *  Display the entry using the BibTeX format.
+         */
         case 'bibtex':
             header("Content-Type: text/plain");
             echo get_bibtex($_GET['bibname'],$_GET['id']);
             break;
-            
+           
+            /*************************************************************************/
+            /**                     Action on all entries of the basket              */
+            /*************************************************************************/
+
         /**
-         * Action on all entries of the basket
+         * Delete all entries
          */
-        case 'resetbasket': // delete all entries of the basket
+        case 'resetbasket':
             reset_basket();
             echo header("Location: bibindex.php?mode=displaybasket&".session_name()."=".session_id());
             break;
-        
-        case 'resetgroup': // reset the group of all entries of the basket
+        /**
+         *  Reset the group of all entries of the basket
+         */
+        case 'resetgroup': 
             basket_reset_group();
             echo header("Location: bibindex.php?mode=displaybasket&".session_name()."=".session_id());
             break;
         
-        case 'addgroup': // append a group to all entries of the basket
+        /**
+         *  Append a group to all entries of the basket
+         */
+        case 'addgroup':
             basket_add_group($_GET['groupvalue']);
             echo header("Location: bibindex.php?mode=displaybasket&".session_name()."=".session_id());
             break;
             
-        case 'exportbaskettobibtex': // export the basket to bibtex
+        /**
+         *  Export the basket to bibtex
+         */
+        case 'exportbaskettobibtex':
             header("Content-Type: text/plain");
             echo basket_to_bibtex();
             break;
         
-        case 'exportbaskettohtml': // export the basket to HTML
+        /**
+         *  Export the basket to HTML
+         */
+        case 'exportbaskettohtml': // 
             $html = html_header(null,$GLOBALS['CSS_FILE'],null);
             $html .= basket_to_simple_html();
             $html .= html_close();
             echo $html;
             break;
         
+
+            /*************************************************************************/
+            /**                     Bibliography manipulation                        */
+            /*************************************************************************/
         /**
-         * Database manipulation
+         * Create a new bibliography
          */
         case 'create':
             // check if the database already exists
@@ -149,12 +193,16 @@ if(array_key_exists('action',$_GET)){
             }
             echo header("Location: index.php?mode=result&".session_name()."=".session_id());
             break;
-            
+        
+        /**
+         *  Remove a bibliography
+         */
         case 'remove':
             deldir("./bibs/".$_GET['database_name']);
             $_SESSION['message'] = "Database ".$_SESSION['message']." deleted.";
             echo header("Location: index.php?mode=result&".session_name()."=".session_id());
             break;
+            
         /**
          * Default => error
          */
@@ -163,12 +211,22 @@ if(array_key_exists('action',$_GET)){
     }
 }
 
+/*************************************************************************************/
+/**                    Look in POST variables if action is set.                      */
+/*************************************************************************************/
 if(array_key_exists('action',$_POST)){
     
     switch($_POST['action']){
+        /**
+         *  Cancel an action => redirect to welcome page
+         */
         case 'cancel':
             echo header("Location: bibindex.php?mode=welcome&".session_name()."=".session_id());
             break;
+            
+            /*************************************************************************/
+            /**                      Action on a given entry                         */
+            /*************************************************************************/
         /**
          * Add a new entry
          */
@@ -176,11 +234,22 @@ if(array_key_exists('action',$_POST)){
             add_entry();
             echo header("Location: bibindex.php?mode=operationresult&".session_name()."=".session_id()); 
             break;
+        
+        /**
+         *  Update an entry according to POST variables
+         */
         case 'update':
             update_this_entry();
             echo header("Location: bibindex.php?mode=operationresult&".session_name()."=".session_id());
             break;
             
+            /*************************************************************************/
+            /**                     Authentication                                   */
+            /*************************************************************************/
+            
+        /**
+         *  Check the login
+         */
         case 'login':
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
@@ -208,6 +277,11 @@ if(array_key_exists('action',$_POST)){
     }
 }
 
+
+/**
+ *  add_entry()
+ *  Add a new entry to the bibliography
+ */
 function add_entry(){  
     // check if the entry is already present
     $inbib = exists_entry_with_id($_SESSION['bibname'],$_POST['_id']);
@@ -265,6 +339,10 @@ function add_entry(){
     }
 }
 
+/**
+ *  update_this_entry()
+ *  Update the current entry according to POST values
+ */
 function update_this_entry(){
   // check if the id value is null
     $_SESSION['error'] = null;
@@ -323,19 +401,22 @@ function update_this_entry(){
     }
 }
 
+/**
+ *  check_login($thelogin,$thepasswd)
+ *  Authentication test
+ */
 function check_login($thelogin,$thepasswd){
   global $host,$dbuser,$pass,$db,$table;
   
-  $connect = @mysql_connect($host,$dbuser,$pass) or die("Impossible de se connecter à mysql");
+  $connect = @mysql_connect($host,$dbuser,$pass) or die("Unable to connect to mysql");
   $base = @mysql_select_db($db,$connect);
   if(!$base){
-    echo "Impossible de se connecter à la base utilisateur.";
-
+    echo "Unable to connect to the users database";
     exit();
   }
   else {
     $query = "SELECT login,password FROM $table WHERE login='$thelogin' AND password=md5('$thepasswd')";
-    $result = mysql_query($query,$connect) or die("Requete invalide".mysql_error());
+    $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
     return (mysql_num_rows($result)>0);
   }
 }

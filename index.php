@@ -32,7 +32,7 @@
  *      It offers the following functions:
  *          * authentication ($disable_authentication set to false)
  *          * add a new bibliography (if $disable_authentication set to true or registered user)
- *          * delete a bibliography (it will delete the entire directory)
+ *          * delete a bibliography (it will delete the entire directory!)
  *          * accessing the list of available bibliographies 
  *
  */
@@ -41,7 +41,7 @@ require_once("config.php");     // load configuration variables
 require_once("functions.php");  // load needed functions
 
 /**
- * Session
+ * Load the session
  */
 session_name($session_id);
 session_start();
@@ -49,6 +49,7 @@ session_start();
 /**
  * Get a value for 'mode' in the $_GET array.
  * If not in $_GET, receive null
+ * The 'mode' variable sets which page to display
  */
 $_SESSION['mode'] = get_value('mode',$_GET);
 
@@ -57,21 +58,19 @@ $_SESSION['mode'] = get_value('mode',$_GET);
  *  admin => may modify, create or delete
  *  user => only for consultation purpose
  */
-if(!$disable_authentication)
-{
+if(!$disable_authentication){
   if(!array_key_exists('usermode',$_SESSION)){
       $_SESSION['usermode'] = "user";
   }
 }
-else
-{
+else{
   $_SESSION['usermode'] = "admin";
 }
 
 /****************************************************** BEGINING OF THE HTML OUTPUT **/
 
 /**
- * Select what to do.
+ * Select what to do according the value of 'mode'
  */
 switch($_SESSION['mode']){
     /**
@@ -103,7 +102,7 @@ switch($_SESSION['mode']){
         break;
     
     /**
-     * Little help on what is available for administrator mode
+     * Litlle help on what is available for the administrator mode
      */
     case 'manager_help':
         echo index_manager_help();
@@ -124,14 +123,14 @@ switch($_SESSION['mode']){
         break;
     
     /**
-     * Generice page to display result of operations (add, delete, ...)
+     * Generic page to display result of operations (add, delete, ...)
      */
     case 'result':
         echo index_result();
         break;
     
     /**
-     * By default, load the welcom page
+     * By default, load the welcome page
      */
     default:
         echo index_welcome();
@@ -140,7 +139,7 @@ switch($_SESSION['mode']){
 
 /**
  * End of the display.
- * I reset 'error' and 'message'.
+ * Reset 'error' and 'message'.
  */
 $_SESSION['error'] = null;
 $_SESSION['message'] = null;
@@ -173,7 +172,7 @@ function index_login(){
  */
 function index_logout()
 {
-    // change admin to user
+    // change admin mode to user mode
     $_SESSION['usermode'] = "user";
     // redirect to welcome page
     echo header("Location: index.php?mode=welcome&".session_name()."=".session_id());
@@ -181,7 +180,8 @@ function index_logout()
 
 /**
  * index_welcome()
- * Welcome page
+ * Display the welcome page
+ * The text is loaded from ./data/index_welcome.txt
  */
 function index_welcome(){
     // html header
@@ -314,7 +314,7 @@ function index_select(){
     $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
     $title = "Available bibliographies";
     $html .= index_menu();
-    
+
     // get all bibliographies and create an array
     $databases = get_databases_names();
     $content = "<div style='text-align:center;'>";

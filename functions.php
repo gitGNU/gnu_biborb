@@ -853,6 +853,6 @@ function deldir($dir) {
         }
     }
     closedir($current_dir);
-    rmdir(${dir});
+    rmdir($dir);
 } 
 ?>

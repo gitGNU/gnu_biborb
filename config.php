@@ -40,7 +40,7 @@
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = FALSE;
+$disable_authentication = TRUE;
 
 
 /**

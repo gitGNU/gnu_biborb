@@ -89,10 +89,10 @@ if(!array_key_exists('bibname',$_SESSION) && !array_key_exists('bibname',$_GET))
  * Compute the list of groups present in the bibliography and record it into session
  */
 if(array_key_exists('bibname',$_GET)){
+    $_SESSION['bibname'] = $_GET['bibname'];
     if(array_key_exists('bibname',$_SESSION)){
         $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
     } 
-    $_SESSION['bibname'] = $_GET['bibname'];
 }
 
 /**
