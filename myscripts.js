@@ -23,3 +23,15 @@ function toggle_element(id)
         }
     }
 }
+
+function addGroup()
+{
+	var groups = document.fields._groups;
+	var groupslist = document.fields.groupslist;
+	if(groups.value != ''){
+		groups.value += ',';
+	}
+	groups.value += groupslist.options[groupslist.selectedIndex].value;
+	
+
+}

@@ -380,5 +380,9 @@ a.cleanref, a:hover.cleanref, a:visited.cleanref {
     text-decoration:none;
 }
 
+a.admin, a.admin:visited, a.admin:hover {
+    color:red;
+    text-decoration:none;
+}
 
 

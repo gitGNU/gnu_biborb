@@ -250,7 +250,8 @@
                                             <xsl:if test="position() != last()">,</xsl:if>
                                         </xsl:for-each>
                                     </xsl:variable>
-                                    <input name="_groups" value="{$val}" />
+                                    <input name="_groups" value="{$val}" /><br/>
+                                    <span style='color:black;font-weight:normal;'>Add a group:</span>#XHTMLGROUPSLIST
                                 </td>
                             </xsl:when>
                             <!-- any other fields -->

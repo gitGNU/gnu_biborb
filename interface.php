@@ -610,16 +610,7 @@ function bibindex_display_by_group(){
     $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibdb']->name()."'/>";
     $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
     $main_content .= "<h3 style='display:inline;'>Available groups:</h3> ";
-    $main_content .= "<select name='group' size='1'>";
-    // set Select values to groups available
-    foreach($_SESSION['bibdb']->groups() as $gr){
-        $main_content .= "<option value='".$gr."' ";
-        if($gr == $group){
-            $main_content .= "selected='selected'";
-        }
-        $main_content .= ">".$gr."</option>";
-    }
-    $main_content .= "</select>";
+    $main_content .= xhtml_select('group',1,$_SESSION['bibdb']->groups(),$group);
     $main_content .= "<input class='misc_button' type='submit' value='Display'/>";
 //    $main_content .= "<input type='submit' value=''/>";
     $main_content .= "</fieldset>";
@@ -627,25 +618,25 @@ function bibindex_display_by_group(){
     
     // if the group is defined, display the entries matching it
     if($group){
-		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-		$param = $GLOBALS['xslparam'];
-		$param['group'] = $group;
-		$param['basketids'] = $_SESSION['basket']->items_to_string();
-		$param['bibindex_mode'] = "displaybygroup";
-		$param['extra_get_param'] = "group=$group";
-		$entries = $_SESSION['bibdb']->entries_for_group($group);
-		$nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
-		if($nb == 0){
-			$main_content .= "No entry for the group $group.";
-		}
-		else if($nb == 1){
-			$main_content .= "An entry for the group $group.";
-		}
-		else{
-			$main_content .= "$nb entries for the group $group.";
-		}
-		
-		$main_content .= $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);;
+	$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+	$param = $GLOBALS['xslparam'];
+	$param['group'] = $group;
+	$param['basketids'] = $_SESSION['basket']->items_to_string();
+	$param['bibindex_mode'] = "displaybygroup";
+	$param['extra_get_param'] = "group=$group";
+	$entries = $_SESSION['bibdb']->entries_for_group($group);
+	$nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
+	if($nb == 0){
+	    $main_content .= "No entry for the group $group.";
+	}
+	else if($nb == 1){
+	    $main_content .= "An entry for the group $group.";
+	}
+	else{
+	    $main_content .= "$nb entries for the group $group.";
+	}
+	
+	$main_content .= $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);;
     }
     $html .= main($title,$main_content);
     $html .= html_close();
@@ -659,56 +650,56 @@ function bibindex_display_by_group(){
  */
 function bibindex_display_search(){
 
-	$searchvalue = array_key_exists('search',$_GET) ? remove_accents(trim($_GET['search'])) :"";
-	
+    $searchvalue = array_key_exists('search',$_GET) ? remove_accents(trim($_GET['search'])) :"";
+    
     $title = "Search";
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
-	
-	
-	$main_content = "<form action='bibindex.php' method='get' style='text-align:center'>";
-	$main_content .= "<fieldset style='border:none'>";
-	$main_content .= "<input type='hidden' name='mode' value='displaysearch' />";
-	$main_content .= "<input class='misc_input' name='search' size='40' value='".$searchvalue."' />";
-	$main_content .= "<input class='misc_button' type='submit' value='Search' /><br/>";
-	//	$main_content .= "<span style='font-weight:bold'>Search in fields:</span>";
-	$main_content .= "<table style='margin:auto;text-align:left;'>";
-	$main_content .= "<tbody>";
-	$main_content .= "<tr>";
-	$main_content .= "<td style='width:80px;'><input type='checkbox' name='author' value='1'";
-	if(array_key_exists('author',$_GET)){
-		$main_content .= "checked='checked'";
-	}
-	$main_content .= " />Author</td>";
-	$main_content .= "<td style='width:80px;'><input type='checkbox' name='title' value='1' ";
-	if(array_key_exists('title',$_GET)){
-		$main_content .= "checked='checked'";
-	}
-	$main_content .= "/>Title</td>";
-	$main_content .= "<td style='width:80px;'><input type='checkbox' name='keywords' value='1' ";
-	if(array_key_exists('keywords',$_GET)){
-		$main_content .= "checked='checked'";
-	}
-	$main_content .= "/>Keywords</td>";
-	$main_content .= "</tr>";
-	$main_content .= "<tr>";
-	$main_content .= "<td><input type='checkbox' name='journal' value='1'";
-	if(array_key_exists('journal',$_GET)){
-		$main_content .= "checked='checked'";
-	}
-	$main_content .= " />Journal</td>";
-	$main_content .= "<td><input type='checkbox' name='editor' value='1'";
-	if(array_key_exists('editor',$_GET)){
-		$main_content .= "checked='checked'";
-	}
-	$main_content .= " />Editor</td>";
-	$main_content .= "<td><input type='checkbox' name='year' value='1'";
-	if(array_key_exists('year',$_GET)){
-		$main_content .= "checked='checked'";
-	}
-	$main_content .= " />Year</td>";
-	
-	$main_content .= "</tr>";
+    
+    
+    $main_content = "<form action='bibindex.php' method='get' style='text-align:center'>";
+    $main_content .= "<fieldset style='border:none'>";
+    $main_content .= "<input type='hidden' name='mode' value='displaysearch' />";
+    $main_content .= "<input class='misc_input' name='search' size='40' value='".$searchvalue."' />";
+    $main_content .= "<input class='misc_button' type='submit' value='Search' /><br/>";
+    //	$main_content .= "<span style='font-weight:bold'>Search in fields:</span>";
+    $main_content .= "<table style='margin:auto;text-align:left;'>";
+    $main_content .= "<tbody>";
+    $main_content .= "<tr>";
+    $main_content .= "<td style='width:80px;'><input type='checkbox' name='author' value='1'";
+    if(array_key_exists('author',$_GET)){
+	$main_content .= "checked='checked'";
+    }
+    $main_content .= " />Author</td>";
+    $main_content .= "<td style='width:80px;'><input type='checkbox' name='title' value='1' ";
+    if(array_key_exists('title',$_GET)){
+	$main_content .= "checked='checked'";
+    }
+    $main_content .= "/>Title</td>";
+    $main_content .= "<td style='width:80px;'><input type='checkbox' name='keywords' value='1' ";
+    if(array_key_exists('keywords',$_GET)){
+	$main_content .= "checked='checked'";
+    }
+    $main_content .= "/>Keywords</td>";
+    $main_content .= "</tr>";
+    $main_content .= "<tr>";
+    $main_content .= "<td><input type='checkbox' name='journal' value='1'";
+    if(array_key_exists('journal',$_GET)){
+	$main_content .= "checked='checked'";
+    }
+    $main_content .= " />Journal</td>";
+    $main_content .= "<td><input type='checkbox' name='editor' value='1'";
+    if(array_key_exists('editor',$_GET)){
+	$main_content .= "checked='checked'";
+    }
+    $main_content .= " />Editor</td>";
+    $main_content .= "<td><input type='checkbox' name='year' value='1'";
+    if(array_key_exists('year',$_GET)){
+	$main_content .= "checked='checked'";
+    }
+    $main_content .= " />Year</td>";
+    
+    $main_content .= "</tr>";
     $main_content .=  "<tr style='text-align:center'><td colspan='3'>Sort by:";
     $main_content .= "<select name='sort' size='1'>";
     
@@ -744,52 +735,52 @@ function bibindex_display_search(){
     $main_content .= "</select></td>";
     
     $main_content .= "</tr>";
-	$main_content .= "</tbody>";
-	$main_content .= "</table>";
-	$main_content .= "</fieldset>";
-	$main_content .= "</form>";
-
+    $main_content .= "</tbody>";
+    $main_content .= "</table>";
+    $main_content .= "</fieldset>";
+    $main_content .= "</form>";
+    
     if($searchvalue){
-		$fields =array();
+	$fields =array();
         $extra_param ="search=$searchvalue";
-
-		if(array_key_exists('author',$_GET)){
-			array_push($fields,'author');
+	
+	if(array_key_exists('author',$_GET)){
+	    array_push($fields,'author');
             $extra_param .= "&author=1";
-		}
-		if(array_key_exists('title',$_GET)){
-			array_push($fields,'title');
+	}
+	if(array_key_exists('title',$_GET)){
+	    array_push($fields,'title');
             $extra_param .= "&title=1";
-		}
-		if(array_key_exists('keywords',$_GET)){
-			array_push($fields,'keywords');
+	}
+	if(array_key_exists('keywords',$_GET)){
+	    array_push($fields,'keywords');
             $extra_param .= "&keywords=1";
-		}
-		if(array_key_exists('editor',$_GET)){
-			array_push($fields,'editor');
+	}
+	if(array_key_exists('editor',$_GET)){
+	    array_push($fields,'editor');
             $extra_param .= "&editor=1";
-		}
-		if(array_key_exists('journal',$_GET)){
-			array_push($fields,'journal');
+	}
+	if(array_key_exists('journal',$_GET)){
+	    array_push($fields,'journal');
             $extra_param .= "&journal=1";
-		}
-		if(array_key_exists('year',$_GET)){
-			array_push($fields,'year');
+	}
+	if(array_key_exists('year',$_GET)){
+	    array_push($fields,'year');
             $extra_param .= "&year=1";
-		}
+	}
         if(array_key_exists('sort',$_GET)){
             array_push($fields,'sort');
             $extra_param .= "&sort=".$_GET['sort'];
         }
-
-		$entries = $_SESSION['bibdb']->search_entries($searchvalue,$fields);
-		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+	
+	$entries = $_SESSION['bibdb']->search_entries($searchvalue,$fields);
+	$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
-		$param = $GLOBALS['xslparam'];
-		$param['bibindex_mode'] = $_GET['mode'];
-		$param['basketids'] = $_SESSION['basket']->items_to_string();
+	$param = $GLOBALS['xslparam'];
+	$param['bibindex_mode'] = $_GET['mode'];
+	$param['basketids'] = $_SESSION['basket']->items_to_string();
         $param['display_sort'] = 'no';
-
+	
         $param['extra_get_param'] = $extra_param;
         if($nb==1){
             $main_content .= "One match for $searchvalue.";
@@ -805,19 +796,19 @@ function bibindex_display_search(){
     }
     $html .= main($title,$main_content);
     $html .= html_close();
-
+    
     return $html;
 }
 
 /**
-    Display advanced search
- */
+ Display advanced search
+*/
 function bibindex_display_advanced_search(){
-
+    
     $bibtex_fields = array('author','booktitle','edition','editor','journal','publisher','series','title','year');
     
     $biborb_fields = array('abstract','keywords','groups','longnotes');
-
+    
     $extraparam = "";
     
     // if the result of a search is being displayed, hide the search form
@@ -1005,23 +996,41 @@ function bibindex_display_basket(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $content = null;
-	$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-	$param = $GLOBALS['xslparam'];
-	$param['bibindex_mode'] = $_GET['mode'];
-	$param['basketids'] = $_SESSION['basket']->items_to_string();
-	$entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
-	$nb = $_SESSION['basket']->count_items();
-	$content = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-	if($nb == 0){
-		$content = "No entry in the basket.";
-	}
-	else if($nb == 1){
-		$content = "An entry in the basket.".$content;
+    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+    $param = $GLOBALS['xslparam'];
+    $param['bibindex_mode'] = $_GET['mode'];
+    $param['basketids'] = $_SESSION['basket']->items_to_string();
+    $param['display_add_all'] = 'no';
+    $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
+    $nb = $_SESSION['basket']->count_items();
+    $main_content = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+    if($nb == 0){
+	$content = "No entry in the basket.";
+    }
+    else{
+	$content = "<div>";
+	if($nb == 1){
+	    $content = "An entry in the basket.";
 	}
 	else{
-		$content = "$nb entries in the basket.".$content;
+	    $content = "$nb entries in the basket.";
 	}
+	if($_SESSION['usermode'] == "admin"){
+	    $content .= "<div style='float:right;display:inline;'>";
+	    $content .= "<a class='admin' href='bibindex.php?mode=operation_result&action=delete_basket'>";
+	    $content .= "Delete all from database";
+	    $content .= "</a>";
+	    $content .= "</div>";
+	}
+	$content .= "</div>";
 	
+	$content .= $main_content;
+    }
+    
+    
+    
+
+    
     $html .= main($title,$content);
     $html .= html_close();
     return $html;
@@ -1037,8 +1046,9 @@ function bibindex_basket_modify_group(){
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     
     //$main_content = load_file("./data/basket_group_modify.txt");
-
-	$main_content = <<<HTML_TEXT
+    $groupslist = xhtml_select('group',1,$_SESSION['bibdb']->groups(),"");
+    
+    $main_content = <<<HTML_TEXT
 		<form style='margin:0;padding:0;' action='bibindex.php' method='get'>
 			<fieldset style='border:none;margin:O;padding:0;'>
 				<input type="hidden" name="mode" value="groupmodif"/>
@@ -1057,15 +1067,8 @@ function bibindex_basket_modify_group(){
 		<form style='margin-left:70px;' action='bibindex.php' method='get'>
 			<fieldset style='border:none;margin:0;padding:0;'>
 				<input type="hidden" name="mode" value="groupmodif"/>
-				<span style='font-style:italic'>Existing group: </span> <select name='groupvalue' size='1'>
-HTML_TEXT;
-			
-	foreach($_SESSION['bibdb']->groups() as $gr){
-		$main_content .= "<option value='".$gr."'>".$gr."</option>";
-	}
-
-	$main_content .= <<<HTML_TEXT
-				</select>
+				<span style='font-style:italic'>Existing group: </span>
+														  $groupslist
 				<input class="misc_button" type='submit' name='action' value='Add'/>
 			</fieldset>
 		</form>
@@ -1098,27 +1101,13 @@ function bibindex_entry_to_add(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = "New entry";
+    $types = xhtml_select('type',1,$_SESSION['bibdb']->entry_types(),"");
+    
     $content =<<<HTML
 <div style='text-align:center'>
 	<form method='get' action='bibindex.php#required_ref'>
 		<fieldset style='border:none'>
-			Select an entry type:
-			<select name='type' size='1'>
-			<option value='article'>article</option>
-			<option value='book'>book</option>
-			<option value='booklet'>booklet</option>
-			<option value='conference'>conference</option>
-			<option value='inbook'>inbook</option>
-			<option value='incollection'>incollection</option>
-			<option value='inproceedings'>inproceedings</option>
-			<option value='manual'>manual</option>
-			<option value='mastersthesis'>mastersthesis</option>
-			<option value='misc'>misc</option>
-			<option value='phdthesis'>phdthesis</option>
-			<option value='proceedings'>proceedings</option>
-			<option value='techreport'>techreport</option>
-			<option value='unpublished'>unpublished</option>
-			</select>
+			Select an entry type: $types
 			<br/>
 			<br/>
 			<input class='misc_button' type='submit' name='mode' value='cancel'/>
@@ -1140,15 +1129,15 @@ HTML;
 function bibindex_add_entry($type){
 	
 	
-	// xslt transformation
-	$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-	$param = $GLOBALS['xslparam'];
-	$xml_content = load_file("./xsl/model.xml");
-	$xsl_content = load_file("./xsl/model.xsl");
-	$param = array("typeentry"=>$type);
-	$fields = $xsltp->transform($xml_content,$xsl_content,$param);
-	$xsltp->free();
-	
+    // xslt transformation
+    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+    $param = $GLOBALS['xslparam'];
+    $xml_content = load_file("./xsl/model.xml");
+    $xsl_content = load_file("./xsl/model.xsl");
+    $param = array("typeentry"=>$type);
+    $fields = $xsltp->transform($xml_content,$xsl_content,$param);
+    $xsltp->free();
+    
     $html = bibheader("");
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = "New entry";
@@ -1181,19 +1170,47 @@ function bibindex_update_entry(){
     
 	// get the entry
 	$entry = $_SESSION['bibdb']->entry_with_id($_GET['id']);
-	
+	$types = $_SESSION['bibdb']->entry_types();
+    
 	// xslt transformation
 	$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
 	$param = $GLOBALS['xslparam'];
 	$param['id'] = $_GET['id'];
 	$param['modelfile'] = "file://".realpath("./xsl/model.xml");
 	$param['update'] = "true";
+
+	
 	$fields = $xsltp->transform($entry,load_file("./xsl/xml2htmledit.xsl"),$param);
+	$thetype = trim($xsltp->transform($entry,load_file("./xsl/get_bibtex_type.xsl")));
 	$xsltp->free();
+	$glist = $_SESSION['bibdb']->groups();
+	array_push($glist,"");
+	$groups=xhtml_select("groupslist",1,$glist,"","addGroup()");
+	$fields = str_replace("#XHTMLGROUPSLIST",$groups,$fields);
 	
+	$listtypes = xhtml_select('bibtex_type',1,$types,$thetype);
 	
-    $content = <<<HTML
-		<form method='post' action='bibindex.php' enctype='multipart/form-data'>
+	$theid = $_GET['id'];
+	$content = <<<HTML
+	    <form method='get' action='bibindex.php' style='border:none;margin:0;padding:0;'>
+            <fieldset style='border:none;margin:0;padding:0;'>
+	    <table>
+                    <tbody>
+                        <tr>
+                            <th style='text-align:left'>BibTeX type:</th>
+                            <td>$listtypes</td>
+                            <td><input class='misc_button' type='submit' name='action' value='update_type'/></td>
+                        </tr>
+                        <tr>
+                            <th style='text-align:left'>BibTeX Key:</th>
+                            <td><input name="bibtex_key" value="$theid"/></td>
+                            <td><input class='misc_button' type='submit' name='action' value='update_key'/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </form>
+        <form method='post' action='bibindex.php' enctype='multipart/form-data' name="fields">
 			<fieldset style='border:none'>
 				$fields
 				<div style='text-align:center'>
@@ -1207,11 +1224,11 @@ HTML;
 	
 	// create the HTML page
 	$html = bibheader("onload='javascript:toggle_element(\"additional\")'");
-    $html .= bibindex_menu($_SESSION['bibdb']->name());
-    $title = "Update an entry";
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
+	$html .= bibindex_menu($_SESSION['bibdb']->name());
+	$title = "Update an entry";
+	$html .= main($title,$content);
+	$html .= html_close();
+	echo $html;
 }
 
 /**

@@ -176,7 +176,7 @@ if(isset($_GET['action'])){
     case 'delete_from_basket':  // delete an entry from the basket
 	if(!isset($_GET['id'])){
 	    die("Error in delete_from_basket: id not set");
-	}
+            }
 	else{
 	    $_SESSION['basket']->remove_item($_GET['id']);
 	}
@@ -188,52 +188,52 @@ if(isset($_GET['action'])){
         
         /**
             Delete an entry from the database
-	*/
+        */
     case 'delete':
-	if(!isset($_GET['id'])){
-	    die("Error while deleting: no Bibtex ID selected!");
-	}
-	else{
-	    $confirm = FALSE;
-	    if(array_key_exists('confirm_delete',$_GET)){
-		$confirm = (strcmp($_GET['confirm_delete'],'Yes') == 0);
-	    }
-	    
-	    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");		
-	    // save the bibtex entry to show which entry was deleted
-	    $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
-	    $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
-	    if(!$GLOBALS['warn_before_deleting'] || $confirm){		    
-		// delete it
-		$_SESSION['bibdb']->delete_entry($_GET['id']);
-		// update message
-		$message = "The following entry was deleted: <pre>".$bibtex."</pre>";
-		// if present, remvove entries from the basket
-		$_SESSION['basket']->remove_item($_GET['id']);
-		$_GET['mode'] = "operationresult";
-	    }
-	    else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],'No') == 0){
-		$_GET['mode'] = "welcome";
-	    }
-	    else{
-		$theid = $_GET['id'];
-		$message = "Delete this entry?";
-		$message .= "<pre>$bibtex</pre>";
-		$message .= <<<HTML
-		    <form action='bibindex.php' method='get' style='margin:auto;'>
-		    <fieldset style='border:none;'>
-		    <input type='hidden' name='action' value='delete'/>
-		    <input type='hidden' name='id' value='$theid'/>
-		    <input type='submit' name='confirm_delete' value='No'/>
-		    <input type='submit' name='confirm_delete' value='Yes'/>
-		    </fieldset>
-		    </form>
+        if(!isset($_GET['id'])){
+            die("Error while deleting: no Bibtex ID selected!");
+        }  
+        else{
+            $confirm = FALSE;
+            if(array_key_exists('confirm_delete',$_GET)){
+                $confirm = (strcmp($_GET['confirm_delete'],'Yes') == 0);
+            }
+            
+            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");		
+            // save the bibtex entry to show which entry was deleted
+            $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+            $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
+            if(!$GLOBALS['warn_before_deleting'] || $confirm){		    
+                // delete it
+                $_SESSION['bibdb']->delete_entry($_GET['id']);
+                // update message
+                $message = "The following entry was deleted: <pre>".$bibtex."</pre>";
+                // if present, remvove entries from the basket
+                $_SESSION['basket']->remove_item($_GET['id']);
+                $_GET['mode'] = "operationresult";
+            }
+            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],'No') == 0){
+            $_GET['mode'] = "welcome";
+            }
+            else{
+                $theid = $_GET['id'];
+                $message = "Delete this entry?";
+                $message .= "<pre>$bibtex</pre>";
+                $message .= <<<HTML
+                    <form action='bibindex.php' method='get' style='margin:auto;'>
+                    <fieldset style='border:none;'>
+                    <input type='hidden' name='action' value='delete'/>
+                    <input type='hidden' name='id' value='$theid'/>
+                    <input type='submit' name='confirm_delete' value='No'/>
+                    <input type='submit' name='confirm_delete' value='Yes'/>
+                    </fieldset>
+                    </form>
 HTML;
-		$_GET['mode'] = "operationresult";
-	    }
-	    $xsltp->free();		
-	}
-	break;
+        		$_GET['mode'] = "operationresult";
+            }
+            $xsltp->free();		
+        }
+        break;
 	
     case 'Add':					// Add entries in the basket to a given group
 	if(!isset($_GET['groupvalue'])){
@@ -251,13 +251,63 @@ HTML;
     case 'logout':
 	$_SESSION['usermode'] = "user";
 	break;
-	
+	    
     case 'cancel':
 	$_GET['mode'] = "welcome";
 	break;
 	
-    default:
+    case 'update_type':
+	// get the entry
+	$_SESSION['bibdb']->change_type($_GET['bibtex_key'],$_GET['bibtex_type']);
 	break;
+	
+    case 'update_key':
+	// TO IMPLEMENT
+	break;
+	
+    case 'delete_basket':
+        $confirm = FALSE;
+        if(array_key_exists('confirm_delete',$_GET)){
+            $confirm = (strcmp($_GET['confirm_delete'],'Yes')==0);
+        }
+        $ids_to_remove = $_SESSION['basket']->items;
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $_SESSION['bibdb']->entries_with_ids($ids_to_remove);
+        
+        if(!$GLOBALS['warn_before_deleting'] || $confirm){
+            $_SESSION['bibdb']->delete_entries($ids_to_remove);
+            // update message
+            $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
+            $message = "The following entries were deleted: <pre>".$bibtex."</pre>";
+            $_SESSION['basket']->reset();
+            $_GET['mode'] = "operationresult";
+        }
+       else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],'No') == 0){
+            $_GET['mode'] = "welcome";
+        }
+        else{
+            $param['display_add_all'] = 'no';
+            $html_entries = $xsltp->transform($xml_content,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+            $message = "Delete the following entries?";
+            $message .= $html_entries;
+            $message .= <<<HTML
+                    <form action='bibindex.php' method='get' style='margin:auto;'>
+                    <fieldset style='border:none;'>
+                    <input type='hidden' name='action' value='delete_basket'/>
+                    <input type='submit' name='confirm_delete' value='No'/>
+                    <input type='submit' name='confirm_delete' value='Yes'/>
+                    </fieldset>
+                    </form>
+HTML;
+        		$_GET['mode'] = "operationresult";
+            }
+            $xsltp->free();
+
+    	break;
+	
+	
+    default:
+        break;
     }
 }
 

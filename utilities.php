@@ -129,4 +129,25 @@ function myhtmlentities($str){
     return str_replace($patterns,$replace,$str);
 }
 
+function xhtml_select($name,$size,$tab,$selected,$onchange=null)
+{
+    $result = "<select name='$name' size='1'";
+    if($onchange){
+	$result .= " onChange='$onchange'";
+    }
+    $result .= ">";
+    foreach($tab as $val)
+    {
+	if(!strcmp($val,$selected)){
+	    $result .= "<option name='$val' selected='selected'>$val</option>";
+	}
+	else{
+	    $result .= "<option name='$val'>$val</option>";
+	}
+    }
+    $result .= "</select>";
+    return $result;
+}
+
+
 ?>
