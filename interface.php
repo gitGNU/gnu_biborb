@@ -100,6 +100,7 @@ function index_add_database(){
     // create the form to create a new bibliography
     $content = <<<HTML
 <form method='get' action='index.php'>
+    <fieldset style="border:none">
     <input type='hidden' name='mode' value='result'/>
     <table style='margin:auto;'>
         <tbody>
@@ -116,6 +117,7 @@ function index_add_database(){
             </tr>
         </tbody>
     </table>
+    </fieldset>
 </form>
 HTML;
     
@@ -139,8 +141,9 @@ function index_delete_database(){
     $content = <<<HTML
 <div style='text-align:center;'>
     <form method='get' action='index.php'>
-        <input type='hidden' name='mode' value='result'/>
         <fieldset style='border:none;'>
+        <input type='hidden' name='mode' value='result'/>
+        
             <select class='misc_button' name='database_name' size='1'>
 HTML;
     foreach($databases as $name){
@@ -442,22 +445,22 @@ function bibindex_menu($bibname)
     }
     $html .= "<li><a title='Export the selection to BibTeX format' href='bibindex.php?mode=exportbaskettobibtex'>Export to BibTeX</a></li>";
     $html .= "<li><a title='Export the selection to a simple HTML page' href='bibindex.php?mode=exportbaskettohtml'>Export to HTML</a></li>";
-    $html .= "<li><a title='Remove entries recorded in the basket' href='bibindex.php?mode=".$GLOBALS['mode']."&action=resetbasket";
+    $html .= "<li><a title='Remove entries recorded in the basket' href='bibindex.php?mode=".$GLOBALS['mode']."&amp;action=resetbasket";
 	if($GLOBALS['mode'] == "displaybygroup" && array_key_exists('group',$_GET)){
-		$html  .= "&group=".$_GET['group'];
+		$html  .= "&amp;group=".$_GET['group'];
 	}
 	if($GLOBALS['mode'] == "displaysearch"){
 		if(array_key_exists('search',$_GET)){
-			$html .= "&search=".$_GET['search'];
+			$html .= "&amp;search=".$_GET['search'];
 		}
 		if(array_key_exists('author',$_GET)){
-			$html .= "&author=".$_GET['author'];
+			$html .= "&amp;author=".$_GET['author'];
 		}
 		if(array_key_exists('title',$_GET)){
-			$html .= "&title=".$_GET['title'];
+			$html .= "&amp;title=".$_GET['title'];
 		}
 		if(array_key_exists('keywords',$_GET)){
-			$html .= "&search=".$_GET['keywords'];
+			$html .= "&amp;search=".$_GET['keywords'];
 		}	
 	}
 	$html .= "'>Reset basket</a></li>";
@@ -687,6 +690,7 @@ function bibindex_display_search(){
 		$main_content .= "checked='checked'";
 	}
 	$main_content .= "/>Keywords</td>";
+	$main_content .= "</tr>";
 	$main_content .= "<tr>";
 	$main_content .= "<td><input type='checkbox' name='journal' value='1'";
 	if(array_key_exists('journal',$_GET)){
@@ -825,8 +829,7 @@ function bibindex_display_advanced_search(){
 	    <script type="text/javascript"><!--
 document.write("<a class='cleanref' href=\"javascript:toggle_element(\'search_form\')\">Display/ Hide search form</a>");
 --></script>
-<noscript>
-</noscript>
+<noscript><pre> </pre></noscript>
 HTML;
     }
     $content .= "<div id='search_form'>";
@@ -885,12 +888,11 @@ HTML;
         $content .="selected='selected'";
     }
     $content .= ">Title</option>";
-    $content .= "</select></td></tbody></table>";    
+    $content .= "</select></td></tr></tbody></table>";    
     $content .= <<<HTML
-	</select>
         <table width='100%'>
 	<tbody>
-	<tr colspan='2'><td><span class='emphit'>BibTeX Fields</span></td></tr>
+	<tr><td><span class='emphit'>BibTeX Fields</span></td></tr>
 HTML;
     
     foreach($bibtex_fields as $field){
@@ -904,7 +906,7 @@ HTML;
 	    $content .= "<input style='width:85%;' name='$field'/></td></tr>";
 	}
     }
-    $content .= "<tr colspan='2'><td><span class='emphit'>BibORB Fields</span></td></tr>";
+    $content .= "<tr><td><span class='emphit'>BibORB Fields</span></td></tr>";
     foreach($biborb_fields as $field){
 	$content .= "<tr><td>$field</td><td>";
 	if(array_key_exists($field,$_GET)){

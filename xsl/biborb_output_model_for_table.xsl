@@ -46,7 +46,10 @@
 		-->
 		<xsl:variable name="theidp" select="concat('.',@id,'.')"/>
 		<xsl:variable name="inbasket">
-			<xsl:if test="contains($basketids,$theidp)">inbasket</xsl:if>
+			<xsl:choose>
+			 <xsl:when test="contains($basketids,$theidp)">inbasket</xsl:when>
+			 <xsl:otherwise>notinbasket </xsl:otherwise>
+            </xsl:choose>
 		</xsl:variable>
 	
 		<!-- 
@@ -54,7 +57,7 @@
 			the entry.
 			A different style is applied if the entry is in the basket
 		-->
-		<tr class="{$inbasket}">			
+        <tr class="{$inbasket}">
             <td class="bibtex_start">
 				<!-- The bibtex entry -->
                 <div class="bibtex_key">
@@ -127,7 +130,7 @@
 					<xsl:if test="$display_basket_actions != 'no'">
 				
 						<!-- if not present in basket, display the add action -->
-						<xsl:if test="$display_basket_actions = '' and $inbasket =''">
+						<xsl:if test="$display_basket_actions = '' and contains($inbasket,'notinbasket')">
 							<xsl:if test="$display_images">
 								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}">
 									<img src="./data/images/{$add-basket-image}" alt="add to basket" title="Add to basket" />
@@ -141,7 +144,7 @@
 						</xsl:if>
 
 						<!-- if present in basket display the remove action -->
-						<xsl:if test="$display_basket_actions != '' or contains($inbasket,'inbasket')">
+						<xsl:if test="$display_basket_actions != '' or not( contains($inbasket,'notinbasket'))">
 							<xsl:if test="$display_images">
 								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}">
 									<img src="./data/images/{$remove-basket-image}" alt="remove from basket" title="Remove from basket" />

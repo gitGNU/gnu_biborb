@@ -1,6 +1,6 @@
 <p>
     This menu give access to management functions. If you logged in or use <span class='biborb'>BibORB</span> wihtout authentication, you may add, edit or delete entries.
-<p>
+</p>
 
 <p>
 Available actions are:
@@ -35,4 +35,4 @@ Available actions are:
 <ul>
     <li>BibORB will not detect errors nor duplicate BibTeX keys.</li>
     <li>BibORB does not support <code>@String</code> nor <code>@preamble</code>.</li>
-<ul>
+</ul>
