@@ -182,9 +182,9 @@ function bibindex_search()
     $content = search_bibentries($_SESSION['bibname'],$_SESSION['search'],
 				    $_SESSION['author'],$_SESSION['title'],
 				 $_SESSION['keywords'],$_SESSION['mod']);
-    if(sizeof($content)==1){
+/*    if(sizeof($content)==1){
       $content = "No results";
-    }
+    }*/
     
     $html .= main($title,$content);
   }
