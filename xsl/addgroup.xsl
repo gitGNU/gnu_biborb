@@ -40,10 +40,6 @@
     <xsl:param name="bibname"/>
     <xsl:param name="group"/>
     
-    <!--<xsl:variable name="groupvalue" select="$group"/>-->
-    
-    
-    
     <xsl:template match="/">
         <!-- load the xml file --> 
         <xsl:variable name="bibfile" select="document($bibname)"/>

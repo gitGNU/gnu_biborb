@@ -36,7 +36,7 @@
     exclude-result-prefixes="bibtex"
     version="1.0">
   
-    <xsl:output method="xml" encoding="iso-8859-1" omit-xml-declaration="yes"/>
+    <xsl:output method="html" encoding="iso-8859-1" omit-xml-declaration="yes"/>
     
     <!-- the name of the bibliography -->
     <xsl:param name="bibname"/>
@@ -63,6 +63,6 @@
     </xsl:template>
     
     <!-- include XSLT stylesheet -->
-    <xsl:include href="./xsl/bibtex_entry2tr.xsl"/>
+    <xsl:include href="file://./xsl/bibtex_entry2tr.xsl"/>
     
 </xsl:stylesheet>

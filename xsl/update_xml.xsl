@@ -60,7 +60,7 @@
     </xsl:template>
     
     <xsl:template match="*">
-        <xsl:element name="bibtex:{name()}">
+        <xsl:element name="bibtex:{local-name()}">
             <xsl:apply-templates select=" @* | node()"/>
         </xsl:element>
     </xsl:template>

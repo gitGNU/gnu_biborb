@@ -91,13 +91,15 @@
         </tr>
         <!-- fourth row for this entry -->
         <!-- Abstract -->
-        <xsl:if test="$abstract != ''">
+        <!--<xsl:if test="$abstract != ''"> -->
             <tr>
                 <td class="bibtex_abstract">
-                    <xsl:apply-templates select=".//bibtex:abstract"/>
+                    <xsl:call-template name="bibtex:abstract">
+                        <xsl:with-param name="id" select="$theid"/>
+                    </xsl:call-template>
                 </td>
             </tr>
-        </xsl:if>
+        <!--</xsl:if>-->
         <!-- fifth row for this entry -->
         <!-- keywords -->
         <tr>
@@ -122,12 +124,33 @@
     <xsl:template name="abstract">
         <xsl:param name="id"/>
         <span>
-            <a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}">abstract</a>
+        <script type="text/javascript">&lt;!--
+        document.write(&quot;&lt;a href=\&quot;javascript:toggle_abstract(\'<xsl:value-of select="$id"/>\')\&quot;&gt;abstract&lt;/a&gt;&quot;);
+        //--&gt;</script>
+            <noscript><a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}">abstract</a></noscript>
+        
         </span>
     </xsl:template>
     
     <xsl:template name="link2bibtex">
         <xsl:param name="id"/>
         <a href ="./action_proxy.php?action=bibtex&amp;bibname={$bibname}&amp;id={$id}">bibtex</a>
+    </xsl:template>
+    
+    <xsl:template name="bibtex:abstract">
+        <xsl:param name="id"/>
+        <xsl:choose>
+            <xsl:when test="$abstract != ''">
+                <span id="{$id}">
+                    <xsl:value-of select=".//bibtex:abstract"/>
+                </span>
+            </xsl:when>
+            <xsl:otherwise>
+                <span id="{$id}" style="display:none;">
+                    <xsl:value-of select=".//bibtex:abstract"/>
+                </span>
+            </xsl:otherwise>
+        </xsl:choose>
+        
     </xsl:template>
 </xsl:stylesheet>
