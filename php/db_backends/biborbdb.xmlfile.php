@@ -743,10 +743,14 @@ function create_database($name,$description){
     $resArray = array('message' => null,
                       'error' => null);
     
+    // get name of existing databases
     $databases_names = get_databases_names();
     
     if($name != null){
+        // Create the new bibliography if it doesn't exist.
         if(!in_array($name,$databases_names)){
+            $name = remove_accents($name);
+            $name = str_replace(' ','_',$name);
             $res = mkdir("./bibs/$name",0775);
             if($res){
                 $resArray['message'] = msg("BIB_CREATION_SUCCESS");
@@ -754,7 +758,6 @@ function create_database($name,$description){
             else{
                 $resArray['message'] = msg("BIB_CREATION_ERROR");
             }
-            
             mkdir("./bibs/$name/papers",0775);
             copy("./data/template/template.bib","./bibs/$name/$name.bib");
             copy("./data/template/template.xml","./bibs/$name/$name.xml");
@@ -809,7 +812,7 @@ function get_databases_names(){
 
 /**
     Extract ids from the xml
-*/
+ */
 function extract_ids_from_xml($xmlstring)
 {
     preg_match_all("/id=['|\"](.*)['|\"]/U",$xmlstring,$matches);
