@@ -35,7 +35,7 @@ Description:
 
 **/
 
-$session_id = "id";
+$session_id = "SID";
 
 $host = "localhost";
 $dbuser = "biborb-admin";

@@ -57,12 +57,18 @@ else
   $pdffile = null;
   
   // if present: error
-  if($inbib){
-    $_SESSION['error'] = "ID already present, select a different one. <br/>";
+  if($inbib || $_POST['_id'] == null){
+    if($inbib){      
+      $_SESSION['error'] = "ID already present, select a different one. <br/>";
+    }
+    else{
+      $_SESSION['error'] = "Null ID not allowed. <br/>";
+    }
+    
     $_SESSION['error'] .= "<A HREF='javascript:history.back()'>Modify</A> or <a href='bibindex.php?mode=welcome&amp;".session_name()."=".session_id()."'>Cancel</a>";
   }
   else {
-    
+
     // cope with file upload
     if(file_exists($_FILES['url']['tmp_name'])){
       $infofile = pathinfo($_FILES['url']['name']);

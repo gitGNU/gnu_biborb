@@ -488,7 +488,7 @@ function add_bibtex_entry($type,$tab,$urlfile,$urlzipfile,$pdffile){
 
 // convert to BibTeX according to POST data
 function to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile){
-  $bibtex_entries = array("_id", "_address", "_annote", "_author", "_booktitle", "_chapter", "_crossref", "_edition", "_editor", "_howpublished", "_institution", "_journal", "_key", "_month", "_note", "_number", "_organisation", "_pages", "_publisher", "_school", "_series", "_title", "_type", "_volume", "_year","_abstract", "_keywords","_url","_urlzip","_pdf","_group","_website");
+  $bibtex_entries = array("_id", "_address", "_annote", "_author", "_booktitle", "_chapter", "_crossref", "_edition", "_editor", "_howpublished", "_institution", "_journal", "_key", "_month", "_note", "_number", "_organisation", "_pages", "_publisher", "_school", "_series", "_title", "_type", "_volume", "_year","_abstract", "_keywords","_url","_urlzip","_pdf","_group","_website","_longnotes");
     
   if ($urlfile != null){
     $tab['_url'] = $urlfile;
@@ -521,7 +521,7 @@ function to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile){
 
 //same thing but html formatted
 function to_bibtex_tab($type,$tab,$urlfile,$urlzipfile,$pdffile){
-  $bibtex_entries = array("_id", "_address", "_annote", "_author", "_booktitle", "_chapter", "_crossref", "_edition", "_editor", "_howpublished", "_institution", "_journal", "_key", "_month", "_note", "_number", "_organisation", "_pages", "_publisher", "_school", "_series", "_title", "_type", "_volume", "_year","_abstract", "_keywords","_url","_urlzip","_pdf","_group","_website");
+  $bibtex_entries = array("_id", "_address", "_annote", "_author", "_booktitle", "_chapter", "_crossref", "_edition", "_editor", "_howpublished", "_institution", "_journal", "_key", "_month", "_note", "_number", "_organisation", "_pages", "_publisher", "_school", "_series", "_title", "_type", "_volume", "_year","_abstract", "_keywords","_url","_urlzip","_pdf","_group","_website","_longnotes");
     
   if ($urlfile != null){
     $tab['_url'] = $urlfile;

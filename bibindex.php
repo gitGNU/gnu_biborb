@@ -45,6 +45,7 @@ if($_SESSION['bibname'] == null)
 {
   $_SESSION['bibname'] = $_GET['bibname'];
 }
+
 if($_GET['bibname']!=null && strcmp($_GET['bibname'],$_SESSION['bibname']) != 0)
 {
   $_SESSION['bibname'] = $_GET['bibname'];
