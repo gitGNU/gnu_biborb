@@ -54,7 +54,12 @@ class BibORB_DataBase {
     var $sort;
     // Sort order method (ascending/descending)
     var $sort_order;
-    
+    // Read status
+    var $read_status;
+    var $read_status_values = array('any','notread','readnext','read');
+    // Ownership
+    var $ownership;
+    var $ownership_values = array('any','notown','borrowed','buy','own');
     
     /**
         Constructor.
@@ -65,6 +70,8 @@ class BibORB_DataBase {
         $this->biblio_name = $bibname;
         $this->biblio_dir = "./bibs/$bibname/";
         $this->generate_bibtex = $genBibtex;
+        $this->read_status = 'any';
+        $this->ownership = 'any';
     }
     
     /**
@@ -79,6 +86,30 @@ class BibORB_DataBase {
      */
     function set_sort_order($sort_order){
         $this->sort_order = $sort_order;
+    }
+    
+    /**
+        Set the read status.
+        When querying the database, only references of the given $read_status
+        will be output.
+     */
+    function set_read_status($status){
+        if(array_search($status,$this->read_status_values) === FALSE){
+            $status = 'notread';
+        }
+        $this->read_status = $status;
+    }
+    
+    /**
+        Set the ownership
+        When querying the database, only references of the given $ownership
+        will be output.
+     */
+    function set_ownership($val){
+        if(array_search($val,$this->ownership_values) === FALSE){
+            $status = 'notown';
+        }
+        $this->ownership = $val;
     }
     
     /**
@@ -161,10 +192,24 @@ class BibORB_DataBase {
         $xml_content = $this->all_entries();    
         $xsl_content = load_file("./xsl/extract_ids.xsl");
         if($groupname){
-            $xpath = '//bibtex:entry[(.//bibtex:group)=$group]';
+            $xpath = '//bibtex:entry[(.//bibtex:group)=$group';
+            if($this->read_status != 'any'){
+                $xpath .= ' and (.//bibtex:read)=\''.$this->read_status.'\'';
+            }
+            if($this->ownership != 'any'){
+                $xpath .= ' and (.//bibtex:own)=\''.$this->ownership.'\'';
+            }
+            $xpath .= ']';
         }
         else{
-            $xpath = '//bibtex:entry[not(.//bibtex:group)]';
+            $xpath = '//bibtex:entry[not(.//bibtex:group)';
+            if($this->read_status != 'any'){
+                $xpath .= ' and (.//bibtex:read)=\''.$this->read_status.'\'';
+            }
+            if($this->ownership != 'any'){
+                $xpath .= ' and (.//bibtex:own)=\''.$this->ownership.'\'';
+            }
+            $xpath .= ']';
         }
         $xsl_content = str_replace("XPATH_QUERY",$xpath,$xsl_content);
         $param = array('group'=>$groupname,

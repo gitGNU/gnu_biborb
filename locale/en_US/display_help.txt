@@ -13,7 +13,7 @@ This menu gives access to the bibliography's entries.
        <td>Display entries by groups.</td>
     </tr>
     <tr class='colored'>
-      <th>earch</th>
+      <th>Search</th>
       <td>Search the bibliography for entries (simple, detailed, XPath).</td>
     </tr>
   </tbody>
@@ -77,8 +77,16 @@ Several actions may be available for each displayed entry:
         <td> Add all entries to the basket.</td>
     </tr>
     <tr class='colored'>
-        <th class='img'><img src="data/images/dialog_info.png" alt="Remarks"></th>
+        <th class='img'><img src="data/images/dialog_info.png" alt="Remarks"/></th>
         <td>Display data of the BibTeX field <code>longnotes</code>.</td>
+    </tr>
+    <tr>
+        <th class='img'><img src="data/images/stock_readnext.png" alt="readnext"/><img src="data/images/stock_read.png" alt="read"/><img src="data/images/stock_notread.png" alt="not read"/></th>
+        <td>Read status of the reference.</td>
+    </tr>
+    <tr class='colored'>
+        <th class='img'><img src="data/images/stock_notown.png" alt="Not Own"/><img src="data/images/stock_borrow.png" alt="Borrowed"/><img src="data/images/stock_buy.png" alt="To Buy"/><img src="data/images/stock_own.png" alt="Own"/></th>
+        <td>Ownership status of the reference.</td>
     </tr>
     </tbody>
 </table>

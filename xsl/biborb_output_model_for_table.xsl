@@ -181,7 +181,7 @@
                         </xsl:if>
                         
                         <!-- Not own -->
-                        <xsl:if test="not(normalize-space(.//bibtex:own)) or .//bibtex:own=''">
+                        <xsl:if test="not(normalize-space(.//bibtex:own)) or .//bibtex:own='notown'">
                             <xsl:if test="$display_images">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
@@ -258,7 +258,7 @@
                         </xsl:if>
                         
                         <!-- Read = no -->
-                        <xsl:if test="not(normalize-space(.//bibtex:read)) or .//bibtex:read='no'">
+                        <xsl:if test="not(normalize-space(.//bibtex:read)) or .//bibtex:read='notread'">
                             <xsl:if test="$display_images">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">

@@ -129,10 +129,9 @@ html > body #menu {position:fixed;}
 /**
  * Style for simple search
  */
-#simple_search_form {padding:0;margin:auto;width:300px;}
+#simple_search_form {padding:0;margin:auto;}
 #simple_search_form fieldset {border:none;padding:0;text-align:center;margin:auto;}
-#simple_search_form .items {text-align:left;}
-#simple_search_form .item {border:none;margin:0;padding:0;float:left;width:90px;}
+#simple_search_form table {width:300px;padding:0;margin:auto;text-align:left;}
 #simple_search_form input {border:solid black 1px;}
 
 /**

@@ -926,43 +926,43 @@ msgid "link"
 msgstr "Lien"
 
 msgid "BIBORB_OUTPUT_OWN_ALT"
-msgstr "Own"
+msgstr "Disponible"
 
 msgid "BIBORB_OUTPUT_OWN_TITLE"
-msgstr "Current Status: Own. Click to set to Not Own."
+msgstr "Status actuel : Disponible. Status après clic : Non Disponible."
 
 msgid "BIBORB_OUTPUT_BORROW_ALT"
-msgstr "Borrow"
+msgstr "Emprunté"
 
 msgid "BIBORB_OUTPUT_BORROW_TITLE"
-msgstr "Current Status: Borrow. Click to set to Buy."
+msgstr "Status actuel : Emprunté. Status après clic : A acheter."
 
 msgid "BIBORB_OUTPUT_BUY_ALT"
-msgstr "Buy"
+msgstr "A Acheter"
 
 msgid "BIBORB_OUTPUT_BUY_TITLE"
-msgstr "Current Status: Buy. Click to set to Own."
+msgstr "Status actuel : A Acheter. Status après clic : Disponible."
 
 msgid "BIBORB_OUTPUT_NOTOWN_ALT"
-msgstr "Not Own"
+msgstr "Non Disponible"
 
 msgid "BIBORB_OUTPUT_NOTOWN_TITLE"
-msgstr "Current Status: Not Own. Click to set to Borrow."
+msgstr "Status actuel : Non Disponible. Status après clic : Emprunté."
 
 msgid "BIBORB_OUTPUT_READ_ALT"
-msgstr "Read"
+msgstr "Lu"
 
 msgid "BIBORB_OUTPUT_READ_TITLE"
-msgstr "Current Status: Read. Click to set to Not Read."
+msgstr "Status actuel : Lu. Status après clic : Non Lu."
 
 msgid "BIBORB_OUTPUT_READNEXT_ALT"
-msgstr "Read Next"
+msgstr "A Lire"
 
 msgid "BIBORB_OUTPUT_READNEXT_TITLE"
-msgstr "Current Status: Read Next. Click to set to Read."
+msgstr "Status actuel : A Lire. Status après clic : Lu."
 
 msgid "BIBORB_OUTPUT_NOTREAD_ALT"
-msgstr "Not Read"
+msgstr "Non Lu"
 
 msgid "BIBORB_OUTPUT_NOTREAD_TITLE"
-msgstr "Current Status: Not Read. Click to set to Read Next."
+msgstr "Status actuel : Non Lu. Status après clic : A Lire."

@@ -1,6 +1,6 @@
 <acronym class='biborb'>BibORB</acronym> is a tool to manage and consult BibTeX bibliographies using a web browser.
 
-<p> The main aims in its design were to allow sharing of bibliographies on a local network and accessing easily electronic releases of  papers. It grew from this to permit; creation and deletion of bibliographies, then the facilities to edit BibTeX entries were added thus creating a simple web front-end to BibTeX.
+<p> The main aims in its design were to allow sharing of bibliographies on a local network and accessing easily electronic releases of  papers. It grew from this to permit: creation and deletion of bibliographies, then the facilities to edit BibTeX entries were added thus creating a simple web front-end to BibTeX.
 </p>
 
 <span class='biborb'>BibORB</span> presently supports: 
@@ -26,8 +26,7 @@
     </li>
 </ul>
 
-<p><acronym class='biborb'>BibORB</acronym> also provides basic authentication methods to
-restrict write access to bibliographies.</p>
+<p><acronym class='biborb'>BibORB</acronym> also provides basic authentication methods to restrict write access to bibliographies.</p>
 
 <hr/>
 <span style="font-family:serif"><acronym class='biborb'>BibORB</acronym> $biborb_version release,

@@ -361,4 +361,74 @@ function remove_null_values($anArray){
     }
     return $anArray;
 }
+
+/**
+ */
+function read_status_html_select($name,$selected){
+    $html = "<select size='1' name='$name'>";
+    if($selected == 'any'){
+        $html .= "<option value='any' selected='selected'></option>";
+    }
+    else{
+        $html .= "<option value='any'></option>";
+    }
+    if($selected == 'read'){
+        $html .= "<option value='read' selected='selected'>".msg("Read")."</option>";
+    }
+    else{
+        $html .= "<option value='read'>".msg("Read")."</option>";
+    }
+    if($selected == 'readnext'){
+        $html .= "<option value='readnext' selected='selected'>".msg("Read Next")."</option>";
+    }
+    else{
+        $html .= "<option value='readnext'>".msg("Read Next")."</option>";
+    }
+    if($selected == 'notread'){
+        $html .= "<option value='notread' selected='selected'>".msg("Not Read")."</option>";
+    }
+    else{
+        $html .= "<option value='notread'>".msg("Not Read")."</option>";
+    }
+    $html .= "</select>";
+    return $html;
+}
+/**
+ */
+function ownership_html_select($name,$selected){
+    $html = "<select size='1' name='$name'>";
+    if($selected == 'any'){
+        $html .= "<option value='any' selected='selected'></option>";
+    }
+    else{
+        $html .= "<option value='any'></option>";
+    }
+    if($selected == 'notown'){
+        $html .= "<option value='notown' selected='selected'>".msg("Not Own")."</option>";
+    }
+    else{
+        $html .= "<option value='notown'>".msg("Not Own")."</option>";
+    }
+    if($selected == 'borrowed'){
+        $html .= "<option value='borrowed' selected='selected'>".msg("Borrowed")."</option>";
+    }
+    else{
+        $html .= "<option value='borrowed'>".msg("Borrowed")."</option>";
+    }
+    if($selected == 'buy'){
+        $html .= "<option value='buy' selected='selected'>".msg("Buy")."</option>";
+    }
+    else{
+        $html .= "<option value='buy'>".msg("Buy")."</option>";
+    }
+    if($selected == 'own'){
+        $html .= "<option value='own' selected='selected'>".msg("Own")."</option>";
+    }
+    else{
+        $html .= "<option value='own'>".msg("Own")."</option>";
+    }
+    $html .= "</select>";
+    return $html;
+}
+
 ?>

@@ -587,6 +587,8 @@ function bibindex_display_all(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     
+    $_SESSION['bibdb']->set_read_status('any');
+    $_SESSION['bibdb']->set_ownership('any');
     // store the ids in session if we come from an other page.
     if(!isset($_GET['page'])){
         $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->all_bibtex_ids(),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
@@ -640,33 +642,62 @@ function bibindex_display_by_group(){
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     
     // create a form with all groups present in the bibliography
+    
     $main_content = "<form id='display_by_group_form' method='get' action='bibindex.php'>";
     $main_content .="<fieldset>";
     $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibdb']->name()."'/>";
     $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
     $main_content .= "<label for='group'>".msg("Available groups").":</label> ";
     $main_content .= xhtml_select('group',1,$_SESSION['bibdb']->groups(),$group);
+    // if shelf_mode on, create a popup to display which references to display
+    if(SHELF_MODE){
+        $main_content .= read_status_html_select("read_status_grp",(isset($_GET['read_status_grp']) ? $_GET['read_status_grp'] : 'any'));
+        $main_content .= ownership_html_select("ownership_grp",(isset($_GET['ownership_grp']) ? $_GET['ownership_grp'] : 'any'));
+    }
     $main_content .= "&nbsp;<input class='submit' type='submit' value='".msg("Display")."'/>";
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
+    
+    // create a form to display orphans references
+    // if shelf_mode on, create a popup to display which references to display
     $main_content .= "<form id='group_orphan_form' method='get' action='bibindex.php'>";
     $main_content .= "<fieldset>";
     $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibdb']->name()."'/>";
     $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
     $main_content .= "<input type='hidden' name='orphan' value='1'/>";
     $main_content .= "<label>".msg("Entries associated with no group:")."</label>";
+    // if shelf_mode on, create a popup to display which references to display
+    if(SHELF_MODE){
+        $main_content .= read_status_html_select("read_status_orphans",(isset($_GET['read_status_orphans']) ? $_GET['read_status_orphans'] : 'any'));
+        $main_content .= ownership_html_select("ownership_orphans",(isset($_GET['ownership_orphans']) ? $_GET['ownership_orphans'] : 'any'));
+    }
     $main_content .= "&nbsp;<input type='submit' class='submit' value='".msg("Orphans")."'/>";
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
     
-    
+    if(SHELF_MODE){
+        if(isset($_GET['read_status_orphans'])){
+            $_SESSION['bibdb']->set_read_status($_GET['read_status_orphans']);
+        }
+        if(isset($_GET['ownership_orphans'])){
+            $_SESSION['bibdb']->set_ownership($_GET['ownership_orphans']);
+        }
+        if(isset($_GET['read_status_grp'])){
+            $_SESSION['bibdb']->set_read_status($_GET['read_status_grp']);
+        }
+        if(isset($_GET['ownership_grp'])){
+            $_SESSION['bibdb']->set_ownership($_GET['ownership_grp']);
+        }
+    }
     // store the ids in session if we come from an other page.
     if(!isset($_GET['page'])){
         $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_group($group),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
         $_GET['page'] = 0;
     }
+
     $flatids = flatten_array($_SESSION['ids']);
     $nb=count($flatids);
+
     // if the group is defined, display the entries matching it
     if(($group || isset($_GET['orphan'])) && $nb>0){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -674,11 +705,25 @@ function bibindex_display_by_group(){
         $param['group'] = $group;
         $param['basketids'] = $_SESSION['basket']->items_to_string();
         $param['bibindex_mode'] = "displaybygroup";
+
+        // display orphans
         if(isset($_GET['orphan'])){
+            if(isset($_GET['read_status_orphans'])){
+                $param['extra_get_param'] = "read_status_orphans=".$_GET['read_status_orphans']."&amp;";
+            }
+            if(isset($_GET['ownership_orphans'])){
+                $param['extra_get_param'] = "ownership=".$_GET['ownership_orphans']."&amp;";
+            }
             $param['extra_get_param'] = "orphan=1&page=".$_GET['page'];
             $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
         }
         else{
+            if(isset($_GET['read_status_grp'])){
+                $param['extra_get_param'] = "read_status_orphans=".$_GET['read_status_grp']."&amp;";
+            }
+            if(isset($_GET['ownership_grp'])){
+                $param['extra_get_param'] = "ownership=".$_GET['ownership_grp']."&amp;";
+            }
             $param['extra_get_param'] = "group=$group&page=".$_GET['page'];
             $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
         }
@@ -759,43 +804,7 @@ function bibindex_display_search(){
     $main_content = "<form id='simple_search_form' action='bibindex.php' method='get' style='text-align:center'>";
     $main_content .= "<fieldset>";
     $main_content .= "<input type='hidden' name='mode' value='displaysearch' />";
-    $main_content .= "<input name='search' value='".$searchvalue."' />";
-    $main_content .= "&nbsp;<input class='submit' type='submit' value='".msg("Search")."' /><br/>";
-    $main_content .= "<div class='items'>";
-    $main_content .= "<div class='item'><input type='checkbox' name='author' value='1'";
-    if(array_key_exists('author',$_GET)){
-        $main_content .= "checked='checked'";
-    }
-    $main_content .= " />".msg("Author")."</div>";
-    $main_content .= "<div class='item'><input type='checkbox' name='title' value='1' ";
-    if(array_key_exists('title',$_GET)){
-        $main_content .= "checked='checked'";
-    }
-    $main_content .= "/>".msg("Title")."</div>";
-    $main_content .= "<div class='item'><input type='checkbox' name='keywords' value='1' ";
-    if(array_key_exists('keywords',$_GET)){
-        $main_content .= "checked='checked'";
-    }
-    $main_content .= "/>".msg("Keywords")."</div>";
-    $main_content .= "<br/>";
-    $main_content .= "<div class='item'><input type='checkbox' name='journal' value='1'";
-    if(array_key_exists('journal',$_GET)){
-        $main_content .= "checked='checked'";
-    }
-    $main_content .= " />".msg("Journal")."</div>";
-    $main_content .= "<div class='item'><input type='checkbox' name='editor' value='1'";
-    if(array_key_exists('editor',$_GET)){
-        $main_content .= "checked='checked'";
-    }
-    $main_content .= " />".msg("Editor")."</div>";
-    $main_content .= "<div class='item'><input type='checkbox' name='year' value='1'";
-    if(array_key_exists('year',$_GET)){
-        $main_content .= "checked='checked'";
-    }
-    $main_content .= " />".msg("Year")."</div>";
-    $main_content .= "</div>";
-    
-    $main_content .= "<br/><br/>";
+    $main_content .= "<input name='search' value='".$searchvalue."' />&nbsp;";
     $main_content .= msg("Sort by:")."&nbsp;<select name='sort'>";
     
     $main_content .= "<option value='ID' ";
@@ -827,8 +836,47 @@ function bibindex_display_search(){
         $main_content .="selected='selected'";
     }
     $main_content .= ">".msg("Year")."</option>";
-    $main_content .= "</select><br/>";
+    $main_content .= "</select>&nbsp;";
+    $main_content .= "&nbsp;<input class='submit' type='submit' value='".msg("Search")."' /><br/>";
+    $main_content .= "<table>";
+    $main_content .= "<tbody>";
+    $main_content .= "<tr>";
+    $main_content .= "<td><input type='checkbox' name='author' value='1'";
+    if(array_key_exists('author',$_GET)){
+        $main_content .= "checked='checked'";
+    }
+    $main_content .= " />".msg("Author")."</td>";
+    $main_content .= "<td><input type='checkbox' name='title' value='1' ";
+    if(array_key_exists('title',$_GET)){
+        $main_content .= "checked='checked'";
+    }
+    $main_content .= "/>".msg("Title")."</td>";
+    $main_content .= "<td><input type='checkbox' name='keywords' value='1' ";
+    if(array_key_exists('keywords',$_GET)){
+        $main_content .= "checked='checked'";
+    }
+    $main_content .= "/>".msg("Keywords")."</td>";
+    $main_content .= "</tr><tr>";
+    $main_content .= "<td><input type='checkbox' name='journal' value='1'";
+    if(array_key_exists('journal',$_GET)){
+        $main_content .= "checked='checked'";
+    }
+    $main_content .= " />".msg("Journal")."</td>";
+    $main_content .= "<td><input type='checkbox' name='editor' value='1'";
+    if(array_key_exists('editor',$_GET)){
+        $main_content .= "checked='checked'";
+    }
+    $main_content .= " />".msg("Editor")."</td>";
+    $main_content .= "<td><input type='checkbox' name='year' value='1'";
+    if(array_key_exists('year',$_GET)){
+        $main_content .= "checked='checked'";
+    }
+    $main_content .= " />".msg("Year")."</td>";
+    $main_content .= "</tr></tbody></table>";
     
+    $main_content .= "<br/>";
+    
+        
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
     

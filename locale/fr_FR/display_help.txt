@@ -81,6 +81,14 @@ Pour chaque référence affichée et selon votre configuration de <acronym class='b
         <th class='img'><img src="data/images/dialog_info.png" alt="Remarques"></th>
         <td>Afficher les données du champ BibTeX <code>longnotes</code>.</td>
     </tr>
+    <tr>
+        <th class='img'><img src="data/images/stock_readnext.png" alt="A lire"/><img src="data/images/stock_read.png" alt="Lu"/><img src="data/images/stock_notread.png" alt="Non lu"/></th>
+        <td>Etat de lecture de la référence.</td>
+    </tr>
+    <tr class='colored'>
+        <th class='img'><img src="data/images/stock_notown.png" alt="Non disponible"/><img src="data/images/stock_borrow.png" alt="Emprunté"/><img src="data/images/stock_buy.png" alt="A acheter"/><img src="data/images/stock_own.png" alt="Disponible"/></th>
+        <td>Disponibilité de la référence.</td>
+    </tr>
     </tbody>
 </table>
     

@@ -983,7 +983,7 @@ msgid "BIBORB_OUTPUT_BORROW_ALT"
 msgstr "Borrow"
 
 msgid "BIBORB_OUTPUT_BORROW_TITLE"
-msgstr "Current Status: Borrow. Click to set to Buy."
+msgstr "Current Status: Borrowed. Click to set to Buy."
 
 msgid "BIBORB_OUTPUT_BUY_ALT"
 msgstr "Buy"
@@ -995,7 +995,7 @@ msgid "BIBORB_OUTPUT_NOTOWN_ALT"
 msgstr "Not Own"
 
 msgid "BIBORB_OUTPUT_NOTOWN_TITLE"
-msgstr "Current Status: Not Own. Click to set to Borrow."
+msgstr "Current Status: Not Own. Click to set to Borrowed."
 
 msgid "BIBORB_OUTPUT_READ_ALT"
 msgstr "Read"
