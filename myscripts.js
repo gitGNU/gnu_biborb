@@ -44,3 +44,8 @@ function addGroup()
         groups.value += addGroup;
     }
 }
+
+function test(){
+    var elt = document.getElementsByTagName('select');
+    var selected_bib = elt[0].value;
+}

@@ -348,13 +348,13 @@
         <xsl:param name="id"/>
 		<!-- image version -->
         <xsl:if test="$display_images">
-            <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}">
-                <img src="data/images/{$bibtex-image}" alt='BIBORB_OUTPUT_BIBTEX_ALT' title='BIBORB_OUTPUT_BIBTEX_TITLE'/>
+            <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}" onclick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=400,resizable=yes'); return false;">
+                <img src="data/images/{$bibtex-image}" alt='BIBORB_OUTPUT_BIBTEX_ALT' title='BIBORB_OUTPUT_BIBTEX_TITLE' />
             </a>
         </xsl:if>
 		<!-- text version -->
         <xsl:if test="$display_text">
-            <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}" title='BIBORB_OUTPUT_BIBTEX_TITLE'>
+            <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}" title='BIBORB_OUTPUT_BIBTEX_TITLE' onclick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=400,resizable=yes'); return false;">
                 BIBORB_OUTPUT_BIBTEX_ALT
             </a>
         </xsl:if>

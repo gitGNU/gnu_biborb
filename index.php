@@ -40,10 +40,10 @@
  */
 
 require_once("config.php");     // load configuration variables
-require_once("functions.php");  // load needed functions
-require_once("biborbdb.php");   // load biborb database
-require_once("interface.php");  // load function to generate the interface
-require_once("auth.php");       // load authentication class
+require_once("php/functions.php");  // load needed functions
+require_once("php/biborbdb.php");   // load biborb database
+require_once("php/interface.php");  // load function to generate the interface
+require_once("php/auth.php");       // load authentication class
 
 /**
  * Load the session

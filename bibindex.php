@@ -68,12 +68,12 @@
  */
 
 require_once("config.php"); // globals definitions
-require_once("functions.php"); // functions
-require_once("basket.php"); // basket functions
-require_once("biborbdb.php"); // database
-require_once("xslt_processor.php"); // xslt processing
-require_once("interface.php"); // generate interface
-require_once("auth.php");
+require_once("php/functions.php"); // functions
+require_once("php/basket.php"); // basket functions
+require_once("php/biborbdb.php"); // database
+require_once("php/xslt_processor.php"); // xslt processing
+require_once("php/interface.php"); // generate interface
+require_once("php/auth.php");
 
 /**
  * Session
