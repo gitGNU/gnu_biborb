@@ -418,7 +418,7 @@ function bibindex_menu()
     }
     if($_SESSION['usermode']=='admin'){
         $html .= "<li><a class='admin' href='".bibindex_href('addentry')."'>Add an entry</a></li>";
-        //$html .= "<li><a class='admin' href='".bibindex_href('update_xml_from_bibtex')."'>Update from BibTeX</a></li>";
+        $html .= "<li><a class='admin' href='".bibindex_href('update_xml_from_bibtex')."'>Update from BibTeX</a></li>";
         //$html .= "<li><a class='admin' href='".bibindex_href('update_bibtex_from_xml')."'>Update from XML</a></li>";
         $html .= "<li><a class='admin' href='".bibindex_href('import')."'>Import BibTeX</a></li>";
     }
