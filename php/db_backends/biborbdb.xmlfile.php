@@ -360,25 +360,48 @@ class BibORB_DataBase {
 	
     /**
         Add entries. $bibtex is a bibtex string.
+        Only entries which bibtex key is not present in the database are added.
+        It returns an array:
+            array( 'added' => array of successfuly added references
+                   'notadded' => array of references notadded due to bibtex key conflicts
+                )
     */
     function add_bibtex_entries($bibtex){
-        // add the new entry
+        // the array to return
+        $res = array('added' => array(),
+                     'notadded' => array()); 
+        //open the database file in append mode
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $bt = new BibTeX_Tools();
-        $data = $bt->bibtex_string_to_xml($bibtex);
         $xsl = load_file("./xsl/add_entries.xsl");
         $param = array('bibname' => $this->xml_file());
-        $result = $xsltp->transform($data[2],$xsl,$param);
-        $xsltp->free();
+        
+        // entries to add
+        $entries_to_add = $bt->get_array_from_string($bibtex); 
+        // bibtex key present in database
+        $dbids = $this->all_bibtex_ids();
 
-        // save the database
-        $fp = fopen($this->xml_file(),"w");
-        fwrite($fp,$result);
-        fclose($fp);
+        // iterate and add ref which id is not present in the database
+        foreach($entries_to_add as $entry){
+            if(array_search($entry['id'],$dbids) === FALSE){
+                $data = $bt->entries_array_to_xml(array($entry));
+                $result = $xsltp->transform($data[2],$xsl,$param);
+                $fp = fopen($this->xml_file(),"w"); 
+                fwrite($fp,$result);
+                fclose($fp);
+                $res['added'][] = $entry['id'];
+            }
+            else{
+                $res['notadded'][] = $entry['id'];
+            }
+        }
+        $xsltp->free();
+        
         
         // update bibtex file
         if($this->generate_bibtex){$this->update_bibtex_file();}
-        return $data[1];
+        
+        return $res;
     }
     
     /**

@@ -464,11 +464,12 @@ if(isset($_POST['action'])){
             Import bibtex entries.
         */
         case 'import':
+            // Error if no value given
             if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
                 die("Error, no bibtex data provided!");
             }
             else{
-	    
+                // get bibtex data from $_POST or $_FILES
                 if(array_key_exists('bibval',$_POST)){
                     $bibtex_data = explode("\n",$_POST['bibval']);
                     
@@ -479,20 +480,33 @@ if(isset($_POST['action'])){
                 // add the new entry	
                 $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
 
-                $entries = $_SESSION['bibdb']->entries_with_ids($res);
-                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-                $param = $GLOBALS['xslparam'];
-                $param['bibindex_mode'] = "displaybasket";
-                $param['mode'] = "admin";
-                $formated = replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
-                $xsltp->free();
-                if($res == 1){
-                    $message = msg("The following entry was added to the database:");
+                if(count($res['added']) > 0){
+                    $entries = $_SESSION['bibdb']->entries_with_ids($res['added']);
+                    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                    $param = $GLOBALS['xslparam'];
+                    $param['bibindex_mode'] = "displaybasket";
+                    $param['mode'] = "admin";
+                    $formated = replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+                    $xsltp->free();
+                    if(count($res['added']) == 1){
+                        $message = msg("The following entry was added to the database:");
+                    }
+                    else if(count($res['added']) > 1){
+                        $message = msg("The following entries were added to the database:");
+                    }
+                    $message .= $formated;
                 }
-                else {
-                    $message = msg("The following entries were added to the database:");
+                
+                if(count($res['notadded']) != 0){
+                    $error = msg("Some entries were not imported. Their BibTeX keys were already present in the bibliography. ");
+                    $error .= "<br/>";
+                    $error .= msg("BibTeX keys in conflict: ");
+                    $lg = count($res['notadded']);
+                    for($i=0;$i<$lg;$i++){
+                        $error .= $res['notadded'][$i];
+                        $error .= ($i!=$lg-1 ? ", " : ".");
+                    }
                 }
-                $message .= $formated;
             }
             break;
 	

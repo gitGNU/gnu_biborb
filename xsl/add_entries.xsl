@@ -40,7 +40,9 @@
     <xsl:param name="bibname"/>
     
     <xsl:template match="/">
+        <!-- the database content -->
         <xsl:variable name="bibfile" select="document($bibname)"/>
+        <!-- new ids to add -->
         <xsl:variable name="list_id" select="//id"/>
         <!-- look for all id in the xml file and output the corresponding bibtex entry -->
         <xsl:element name="bibtex:file">
@@ -48,8 +50,8 @@
             <xsl:copy>
                 <!-- copy the xml database -->
                 <xsl:apply-templates select="$bibfile//bibtex:entry" />
-                <!-- copy the new entry -->
-                <xsl:apply-templates select="//bibtex:entry"/>
+                <!-- copy the new entry if not already present in the database -->
+                <xsl:apply-templates select="//bibtex:entry[not(@id=$bibfile//@id)]"/>
             </xsl:copy>
         </xsl:element>
     </xsl:template>
