@@ -313,10 +313,36 @@ unset($_SESSION['message']);
 function bibindex_details()
 {
     $html = bibheader();
-    
-    // get the selected entry
-    $content = get_bibentry($_SESSION['bibname'],$_SESSION['id'],$_SESSION['abstract']);
-    // display the menu or not
+    if(get_value('bibids',$_GET)){
+		$bibids = explode(',',$_GET['bibids']);
+		// create an xml string containing id present 
+		$xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
+		$xml_content .= '<entrylist>';
+		for($i=0;$i<count($bibids);$i++){
+			$xml_content .= '<id>'.$bibids[$i].'</id>';
+		}
+		$xml_content .= '</entrylist>';
+
+		$xsl_content = load_file("./xsl/basket2html_table.xsl");
+		// set paramters
+
+		$param = array( 'bibnameurl' => xmlfilename($_SESSION['bibname']),
+						'bibname' => $_SESSION['bibname'],
+						'basket' => 'false',
+						'mode' => $usermode,
+						'abstract' => $_SESSION['abstract'],
+						'display_images' => $GLOBALS['display_images'],
+						'display_text' => $GLOBALS['display_text']);
+		
+		//return the HTML table
+		$content = xslt_transform($xml_content,$xsl_content,$param);
+		$content = ereg_replace("<div class=\"result\">(.)*</div><br/>","",$content);
+	}
+	else{
+		// get the selected entry
+		$content = get_bibentry($_SESSION['bibname'],$_SESSION['id'],$_SESSION['abstract']);
+	}
+	// display the menu or not
     if($_SESSION['menu'] != null){
         if($_SESSION['menu']){
             $html .= bibindex_menu();

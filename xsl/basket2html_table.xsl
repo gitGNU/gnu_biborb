@@ -72,6 +72,13 @@
                     <xsl:value-of select="$cpt"/> entries in the basket.
                 </xsl:otherwise>
             </xsl:choose>
+			<xsl:variable name="bibids">
+				<xsl:for-each select="//id">
+					<xsl:value-of select="current()" />
+					<xsl:if test="position() != last()">,</xsl:if>
+				</xsl:for-each>
+			</xsl:variable><br/>
+			<a href="./bibindex.php?mode=details&amp;bibname={$bibname}&amp;bibids={$bibids}">Url to retrieve this subset</a>
         </div><br/>
         <!-- display all entries in a table -->
         <table id="bibtex_table">
