@@ -423,7 +423,8 @@ function bibindex_menu($bibname)
     $html .= "<ul>";
     $html .= "<li><a href='bibindex.php?mode=displayall'>All</a></li>";
     $html .= "<li><a href='bibindex.php?mode=displaybygroup'>Groups</a></li>";
-    $html .= "<li><a href='bibindex.php?mode=displaysearch'>Search</a></li>";
+    $html .= "<li><a href='bibindex.php?mode=displaysearch'>Simple Search</a></li>";
+    $html .= "<li><a href='bibindex.php?mode=displayadvancedsearch'>Advanced Search</a></li>";
     $html .= "</ul>";
     $html .= "</li>";
     // third menu item
@@ -801,6 +802,49 @@ function bibindex_display_search(){
     $html .= main($title,$main_content);
     $html .= html_close();
 
+    return $html;
+}
+
+/**
+    Display advanced search
+ */
+function bibindex_display_advanced_search(){
+
+    $bibtex_fields = array('author','booktitle','edition','editor','journal','publisher','series','title','year');
+    
+    $biborb_fields = array('abstract','keywords','groups','longnotes');
+                            
+
+    $content = <<< HTML
+<form action='bibindex.php' method='post'>
+    <fieldset style='border:none;'>
+        <span class='emphit'>Connector:</span>
+        <select name='connector' size='1'>
+            <option value='and' checked='checked'>and</option>
+            <option value='or'>or</option>
+        </select>
+        <table width='100%'>
+            <tbody>
+            <tr colspan='2'><td><span class='emphit'>BibTeX Fields</span></td></tr>
+HTML;
+    foreach($bibtex_fields as $field){
+        $content .= "<tr><td>$field</td><td><input style='width:85%;' name='$field'/></td></tr>";
+    }
+    $content .= "<tr colspan='2'><td><span class='emphit'>BibORB Fields</span></td></tr>";
+    foreach($biborb_fields as $field){
+        $content .= "<tr><td>$field</td><td width='75%'><input style='width:85%;' name='$field'/></td></tr>";
+    }
+    
+    $content .= "</tbody></table>";
+    $content .= "<div style='text-align:center;'><input type='submit' value='search'/></div>";
+    $content .= "</fieldset>";
+    $content .= "</form>";
+
+    $title = "Advanced Search";
+    $html = bibheader();
+    $html .= bibindex_menu($_SESSION['bibdb']->name());
+    $html .= main($title,$content);
+    $html .= html_close();
     return $html;
 }
 

@@ -358,9 +358,8 @@ else {
 }
 
     
-switch($mode)
-{
-	// Welcome page
+switch($mode) {
+    // Welcome page
     case 'welcome': echo bibindex_welcome(); break;
     
 	// Generice page to display operations results
@@ -377,6 +376,8 @@ switch($mode)
     
 	// Display search page
     case 'displaysearch': echo bibindex_display_search(); break;
+    
+    case 'displayadvancedsearch': echo bibindex_display_advanced_search(); break;
         
     // Help on the basket menu item
     case 'basket': echo bibindex_basket_help(); break;
