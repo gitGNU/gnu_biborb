@@ -1,10 +1,8 @@
-# LANGUAGE translation of BibORB.
-# Copyright (C) 2004 THE BibORB'S COPYRIGHT HOLDER
+# Language translation of BibORB.
+# Copyright (C) 2004 Guillaume Gardey
 # This file is distributed under the same license as the BibORB package.
-# guigui <EMAIL@ADDRESS>, 2004.
-# , fuzzy
-# guigui <EMAIL@ADDRESS>, 2004.
-# 
+# Guillaume Gardey <ggardey@club-internet.fr>, 2003.
+#
 # 
 msgid ""
 msgstr ""
@@ -739,4 +737,10 @@ msgstr "Retour"
 
 msgid "Language:"
 msgstr "Langue :"
+
+msgid "Entries associated with no group:"
+msgstr "Références n'appartenant à aucun groupe :"
+
+msgid "Orphans"
+msgstr "Orphelins"
 

@@ -154,6 +154,10 @@ html > body #menu {position:fixed;}
 #display_by_group_form label {font-weight:bold;}
 #display_by_group_form input {border:1px solid black;}
 #display_by_group_form input.submit {border:1px solid black;}
+#group_orphan_form {padding:0;margin:0;}
+#group_orphan_form fieldset {border:none;margin:0;padding:0;text-align:center;}
+#group_orphan_form label {font-weight:bold;}
+#group_orphan_form input.submit {border:1px solid black;}
 
 /**
  * Style for group management

@@ -81,7 +81,6 @@ require_once("php/auth.php");
 session_name($session_id);
 session_start();
 
-
 if(get_magic_quotes_gpc()) {
     $_POST = array_map('stripslashes_deep', $_POST);
     $_GET = array_map('stripslashes_deep', $_GET);

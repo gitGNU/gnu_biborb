@@ -1,3 +1,21 @@
+Version CVS:
+    * Internationalization support.
+    * English and French localization.
+    * Better BibTeX import (@string supported by expanding macro).
+    * Better user management to define authorizations on each bibliographies.
+    * Quickly switch to other bibliographies.
+    * Fix bug with backslashes when importing or updating entries.
+    * Display entries that are associated with no groups.
+    * Some XHTML/CSS/Javascript modifications to ease the navigation into 
+      bibliographies.
+
+Version 1.3.1:
+    * Add the possibility to change the BibTeX type (article, book...) of an 
+      entry.
+    * Add the possibility to change the BibTeX key.
+    * Delete all entries recorded in the basket from the current bibliography.
+    * Existing groups are displayed when creating or editing an entry.
+
 Version 1.3:
     * Advanced search added.
     * Selection of fields to use when exporting entries to bibtex.

@@ -2,7 +2,7 @@
 /**
  * This file is part of BibORB
  *
- * Copyright (C) 2003-2004  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

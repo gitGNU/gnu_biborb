@@ -3,7 +3,7 @@
  * 
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2004  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,12 +34,10 @@
  */
 
 /**
- * Sets magic_quotes behavior of PHP
+ * Version of Biborb
  */
-ini_set("magic_quotes_gpc",1);
-ini_set("magic_quotes_sysbase",0);
-ini_set("magic_quotes_runtime",0);
-
+$biborb_version = "CVS";
+$date_release = "12 September 2004";
 
 /**
  * Localisation
@@ -52,12 +50,6 @@ $language = "en_US";
  * TRUE/FALSE
  */
 $display_language_selection = TRUE;
-
-/**
- * Version of Biborb
- */
-$biborb_version = "CVS";
-$date_release = "11 September 2004";
 
 
 /**
@@ -166,7 +158,6 @@ $fields_to_export = array('author',
 /**
  * The CSS style file to use.
  */
-//$CSS_FILE="css/style-rounded.css";
 $CSS_FILE="css/style.css";
 
 /**

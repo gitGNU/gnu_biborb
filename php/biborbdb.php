@@ -131,6 +131,19 @@ class BibORB_DataBase {
     }
     
     /**
+        Get all entries that are not associated with a group.
+     */
+    function entries_group_orphan(){
+        $xsltp = new XSLT_PRocessor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $this->all_entries();
+        $xsl_content = load_file("./xsl/entries_group_orphan.xsl");
+        $res = $xsltp->transform($xml_content,$xsl_content,null);
+        $xsltp->free();
+        return $res;
+    }
+    
+    
+    /**
      Get a set of entries
     */
     function entries_with_ids($anArray){

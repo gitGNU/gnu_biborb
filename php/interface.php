@@ -34,7 +34,6 @@
 
 /********************************** Interface for the index.php */
 
-
 /**
  * index_login()
  * Create the page to display for authentication
@@ -628,28 +627,46 @@ function bibindex_display_by_group(){
     $main_content .= xhtml_select('group',1,$_SESSION['bibdb']->groups(),$group);
     $main_content .= "&nbsp;<input class='submit' type='submit' value='"._("Display")."'/>";
     $main_content .= "</fieldset>";
-    $main_content .="</form><br/>";
-
+    $main_content .= "</form>";
+    $main_content .= "<form id='group_orphan_form' method='get' action='bibindex.php'>";
+    $main_content .= "<fieldset>";
+    $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibdb']->name()."'/>";
+    $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
+    $main_content .= "<input type='hidden' name='orphan' value='1'/>";
+    $main_content .= "<label>"._("Entries associated with no group:")."</label>";
+    $main_content .= "&nbsp;<input type='submit' class='submit' value='"._("Orphans")."'/>";
+    $main_content .= "</fieldset>";
+    $main_content .= "</form>";
+    
     // if the group is defined, display the entries matching it
-    if($group){
+    if($group || isset($_GET['orphan'])){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $param = $GLOBALS['xslparam'];
         $param['group'] = $group;
         $param['basketids'] = $_SESSION['basket']->items_to_string();
         $param['bibindex_mode'] = "displaybygroup";
-        $param['extra_get_param'] = "group=$group";
-        $entries = $_SESSION['bibdb']->entries_for_group($group);
-
-        $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
-        if($nb == 0){
-            $main_content .= sprintf(_("No entry for the group %s."),$group);
-        }
-        else if($nb == 1){
-            $main_content .= sprintf(_("An entry for the group %s."),$group);
+        if(isset($_GET['orphan'])){
+            $param['extra_get_param'] = "orphan=1";
+            $entries = $_SESSION['bibdb']->entries_group_orphan();
         }
         else{
-            $main_content .= sprintf(_("%d entries for the group %s."),$nb,$group);
+            $param['extra_get_param'] = "group=$group";
+            $entries = $_SESSION['bibdb']->entries_for_group($group);
         }
+
+        $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
+        if(!isset($_GET['orphan'])){
+            if($nb == 0){
+                $main_content .= sprintf(_("No entry for the group %s."),$group);
+            }
+            else if($nb == 1){
+                $main_content .= sprintf(_("An entry for the group %s."),$group);
+            }
+            else{
+                $main_content .= sprintf(_("%d entries for the group %s."),$nb,$group);
+            }
+        }
+                
         
         // create the header
         $start = "<div style='result_header'>";
