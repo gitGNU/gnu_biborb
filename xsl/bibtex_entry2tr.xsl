@@ -162,7 +162,7 @@
                 </span>
             </xsl:when>
             <xsl:otherwise>
-                <span id="{$id}" style="display:none;">
+                <span id="{$id}" style="display:none;white-space:pre">
                     <xsl:value-of select=".//bibtex:abstract"/>
                 </span>
             </xsl:otherwise>

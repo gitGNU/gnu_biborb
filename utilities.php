@@ -127,4 +127,8 @@ function myhtmlentities($str){
     return str_replace($patterns,$replace,$str);
 }
 
+function newline2br($string){
+    return str_replace('\n','<br>',$string);
+}
+
 ?>
