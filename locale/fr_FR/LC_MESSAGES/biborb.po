@@ -966,3 +966,30 @@ msgstr "Non Lu"
 
 msgid "BIBORB_OUTPUT_NOTREAD_TITLE"
 msgstr "Status actuel : Non Lu. Status après clic : A Lire."
+
+msgid "Read Status"
+msgstr "Etat de lecture"
+
+msgid "Ownership"
+msgstr "Disponibilité"
+
+msgid "Read"
+msgstr "Lu"
+
+msgid "Not Read"
+msgstr "Non Lu"
+
+msgid "Read Next"
+msgstr "A Lire"
+
+msgid "Not Own"
+msgstr "Non Disponible"
+
+msgid "Own"
+msgstr "Disponible"
+
+msgid "Borrowed"
+msgstr "Emprunté"
+
+msgid "Buy"
+msgstr "A Acheter"

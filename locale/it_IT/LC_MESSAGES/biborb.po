@@ -1013,3 +1013,30 @@ msgstr "Stato: Leggi prox. Clicca per settare a Letto."
 msgid "BIBORB_OUTPUT_NOTREAD_TITLE"
 msgstr "Stato: Non letto. Clicca per settare a Leggi prox."
 
+msgid "Read Status"
+msgstr ""
+
+msgid "Ownership"
+msgstr ""
+
+msgid "Read"
+msgstr ""
+
+msgid "Not Read"
+msgstr ""
+
+msgid "Read Next"
+msgstr ""
+
+msgid "Not Own"
+msgstr ""
+
+msgid "Own"
+msgstr ""
+
+msgid "Borrowed"
+msgstr ""
+
+msgid "Buy"
+msgstr ""
+
