@@ -67,27 +67,27 @@ $disable_authentication = TRUE;
  * Authentication methods: mysql, files
  * Used if $disable_authentication = FALSE
  */
-$authentication_method = 'files';
+define("AUTH_METHOD",'files');
 
 /**
  *  Should a confirmation be displayed when deleting entries
  */
-$warn_before_deleting = TRUE;
+define("WARN_BEFORE_DELETING",TRUE);
 
 /**
  * Should the abstract be present for each entry.
  */
-$display_abstract = FALSE;
+define("DISPLAY_ASTRACT",FALSE);
 
 /**
  * Should action be represented by icons or not.
  */
-$display_images = TRUE;
+define("DISPLAY_IMAGES",TRUE);
 
 /**
  *  Sould action be represented by text or not.
  */
-$display_text = FALSE;
+define("DISPLAY_TEXT",FALSE);
 
 /**
  * List of all possible fields in a BibTeX record.
@@ -185,7 +185,6 @@ $DEFAULT_SORT_ORDER="ascending";
  * Max number of references by page.
  */
 $MAX_REFERENCES_BY_PAGE=10;
-
 
 /**
  * Keep an up-to-date BibTeX file.

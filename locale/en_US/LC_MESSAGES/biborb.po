@@ -599,12 +599,20 @@ msgstr "Import BibTeX References"
 
 #: php/interface.php:1363
 msgid "BIBINDEX_IMPORT_HELP"
-msgstr "Select a BibTeX file or edit entries in the text area. Entries will be added "
-"to the current bibliography."
+msgstr "Import references from a BibTeX file or a BibTeX string."
 
 #: php/interface.php:1365 php/interface.php:1367
-msgid "File"
-msgstr ""
+msgid "BIBINDEX_IMPORT_FILE_TITLE"
+msgstr "File"
+
+msgid "BIBINDEX_IMPORT_TXT_DESC"
+msgstr "Copy a BibTeX string."
+
+msgid "BIBINDEX_IMPORT_TXT_TITLE"
+msgstr "BibTeX"
+
+msgid "BIBINDEX_IMPORT_FILE_DESC"
+msgstr "Select a file to import:"
 
 #: php/interface.php:1401
 msgid "BIBINDEX_EXPORT_TO_BIBTEX_TITLE"

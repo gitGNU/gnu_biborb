@@ -197,7 +197,7 @@ $_SESSION['update_authorizations'] = FALSE;
 /**
 * Default paramaters for XSLT transformation
  */
-$abst = array_key_exists('abstract',$_GET) ? $_GET['abstract'] : $GLOBALS['display_abstract'];
+$abst = array_key_exists('abstract',$_GET) ? $_GET['abstract'] : DISPLAY_ABSTRACT;
 
 $sort = $DEFAULT_SORT;
 $sort_order = $DEFAULT_SORT_ORDER;
@@ -211,8 +211,8 @@ $_SESSION['bibdb']->set_sort_order($sort_order);
 
 $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'bibnameurl' => $_SESSION['bibdb']->xml_file(),
-                    'display_images' => $GLOBALS['display_images'],
-                    'display_text' => $GLOBALS['display_text'],
+                    'display_images' => DISPLAY_IMAGES,
+                    'display_text' => DISPLAY_TEXT,
                     'abstract' => $abst,
                     'display_add_all'=> 'true',
                     'sort' => $sort,
@@ -271,7 +271,7 @@ if(isset($_GET['action'])){
                 // save the bibtex entry to show which entry was deleted
                 $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
                 $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
-                if(!$GLOBALS['warn_before_deleting'] || $confirm){		    
+                if(!WARN_BEFORE_DELETING || $confirm){		    
                     // delete it
                     $_SESSION['bibdb']->delete_entry($_GET['id']);
                     // update message
@@ -358,7 +358,7 @@ if(isset($_GET['action'])){
             $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
             $xml_content = $_SESSION['bibdb']->entries_with_ids($ids_to_remove);
         
-            if(!$GLOBALS['warn_before_deleting'] || $confirm){
+            if(!WARN_BEFORE_DELETING || $confirm){
                 $_SESSION['bibdb']->delete_entries($ids_to_remove);
                 // update message
                 $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));

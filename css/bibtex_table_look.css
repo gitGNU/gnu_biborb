@@ -171,9 +171,6 @@ links */
 }
 .addtobasket a,.addtobasket a:hover,.addtobasket a:active,.addtobasket a:visited,.addtobasket a:focus {
     text-decoration:none;
-    color:navy;
-    font-family:serif;
-    display:inline;
 }
 
 /* look when entry present in basket */
@@ -183,12 +180,14 @@ links */
 
 
 /* look of sort form */
+.sort {font-size:x-small}
 .sort fieldset {
     margin:0;
     padding:0;
     border:none;
     vertical-align:middle;
     display:inline;
+    font-size:x-small;
 }
 
 .sort form {

@@ -138,9 +138,7 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
     foreach($ids as $id){
         $addalllink .= "$id*";
     }
-    if($extraparam){
-        $addalllink .= "&amp;$extraparam";
-    }
+    if($extraparam){$addalllink .= "&amp;$extraparam";}
     $html .= "<a href='".$addalllink."'>";
     $html .= "<img src='./data/images/add.png' alt='add' />";
     $html .= "</a>";
@@ -149,7 +147,7 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
 }
 
 /**
-    Generate the sort div section
+    Generate a XHTLM div containing sort functions
 */
 function sort_div($selected_sort,$selected_order,$mode,$misc){
     // ensure the localization is set up
@@ -157,7 +155,7 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
 
     $html = "<div class='sort'>";
     $html .= msg("Sort by:");
-    $html .= "<form method='get' action='bibindex.php'>";
+    $html .= "&nbsp;<form method='get' action='bibindex.php'>";
     $html .= "<fieldset>";
     $html .= "<select name='sort' size='1'>";
     
@@ -181,7 +179,7 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
     else{
         $html .= "<option value='year'>".msg("Year")."</option>";
     }
-    $html .= "</select>";
+    $html .= "</select>&nbsp;";
     $html .= "<input type='hidden' name='mode' value='$mode'/>";
     if($misc){
         foreach($misc as $key=>$val){
@@ -201,7 +199,7 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
     else{
         $html .= "<option value='descending'>".msg("descending")."</option>";
     }
-    $html .= "</select>";
+    $html .= "</select>&nbsp;";
     $html .= "<input type='submit' value='".msg("Sort")."'/>";
     $html .= "</fieldset>";
     $html .= "</form>";

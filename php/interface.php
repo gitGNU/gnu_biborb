@@ -586,28 +586,35 @@ function bibindex_display_all(){
     $title = msg("BIBINDEX_DISPLAY_ALL_TITLE");
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
-    
-    $_SESSION['bibdb']->set_read_status('any');
-    $_SESSION['bibdb']->set_ownership('any');
+ 
     // store the ids in session if we come from an other page.
+    // the bibtex keys are retreived from the database the first time that display_all is called
     if(!isset($_GET['page'])){
+    	// split the array so that we display only MAX_REFERENCES_BY_PAGE
         $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->all_bibtex_ids(),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+        // go to the first page
         $_GET['page'] = 0;
     }
     
-    // get HTML representation of entries
     $flatids = flatten_array($_SESSION['ids']);
+    
     if(count($flatids)>0){
-        $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+    	// get the data of the references to display
+        $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);        
+        // init an XSLT processor
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        // set up XSLT parameters
         $param = $GLOBALS['xslparam'];
         $param['bibindex_mode'] = $_GET['mode'];
         $param['basketids'] = $_SESSION['basket']->items_to_string();
         $param['extra_get_param'] = "page=".$_GET['page'];
+        // do the transformation
         $content = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+        // localize string
+        $content = replace_localized_strings($content);
         $xsltp->free();
     
-        // create the header
+        // create the header: sort function + add all to basket
         $start = "<div class='result_header'>";
         if($GLOBALS['DISPLAY_SORT']){
             $start = sort_div($GLOBALS['sort'],$GLOBALS['sort_order'],$_GET['mode'],null).$start;
@@ -617,8 +624,7 @@ function bibindex_display_all(){
     
         // create a nav bar to display entries
         $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),"displayall","sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."page=".$_GET['page']);
-
-        $content = $start.replace_localized_strings($content);
+        $content = $start.$content;
     }
     else{
         $content = msg("No entries.");
@@ -626,7 +632,8 @@ function bibindex_display_all(){
     $html .= main($title,$content);
     $html .= html_close();
     return $html;  
-}
+} // end bibindex_display_all
+
 
 /**
  * bibindex_display_by_group()
@@ -1431,23 +1438,31 @@ function bibindex_import(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = msg("BIBINDEX_IMPORT_TITLE");
+    
+    // general help message
     $content = msg("BIBINDEX_IMPORT_HELP");
     $content .= "<br/><br/>";
-    $content .= "<h3 style='padding:0;margin:0'>".msg("File")."</h3>";
+    
+    // import from a BibTeX file
+    $content .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_FILE_TITLE")."</h3>";
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data'>";
     $content .= "<fieldset class='fieldset-bordered' title='".msg("File")."'>";
+    $content .= "<div style='text-align:left;'>";
+    $content .= msg("BIBINDEX_IMPORT_FILE_DESC")."&nbsp;";
     $content .= "<input type='file' name='bibfile'/>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
-    $content .= "<br/>";
-    $content .= "<br/>";
-    $content .= "<input type='hidden' name='action' value='import'/>";
+    $content .= "<input type='hidden' name='action' value='import'/>&nbsp;";
     $content .= "<input class='submit' type='submit' value='".msg("Import")."'/>";
+    $content .= "</div>";
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "<br/>";
-    $content .= "<h3 style='padding:0;margin:0'>BibTeX</h3>";
+    
+    // import from a BibTeX string
+    $content .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_TXT_TITLE")."</h3>";
     $content .= "<form method='post' action='bibindex.php'>";
     $content .= "<fieldset class='fieldset-bordered' title='BibTeX'>";
+    $content .= "<div style='text-align:left'>".msg("BIBINDEX_IMPORT_TXT_DESC")."</div>";
     $content .= "<textarea name='bibval' cols='55' rows='15'></textarea>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
     $content .= "<div style='text-align:center'>";
