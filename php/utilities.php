@@ -129,21 +129,26 @@ function myhtmlentities($str){
     return str_replace($patterns,$replace,$str);
 }
 
-function xhtml_select($name,$size,$tab,$selected,$onchange=null)
+function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$class=null)
 {
     $result = "<select name='$name'";
     if($onchange){
-	$result .= " onchange='$onchange'";
+        $result .= " onchange='$onchange'";
+    }
+    if($style){
+        $result .= " style='$style'";
+    }
+    if($class){
+        $result .= " class='$class'";
     }
     $result .= ">";
-    foreach($tab as $val)
-    {
-	if(!strcmp($val,$selected)){
-	    $result .= "<option  selected='selected'>$val</option>";
-	}
-	else{
-	    $result .= "<option>$val</option>";
-	}
+    foreach($tab as $val){
+        if(!strcmp($val,$selected)){
+            $result .= "<option  selected='selected'>$val</option>";
+        }
+        else{
+            $result .= "<option>$val</option>";
+        }
     }
     $result .= "</select>";
     return $result;
@@ -161,7 +166,7 @@ function load_i18n_config($language)
 function load_localized_file($filename)
 {
     $default = "./locale/en_US/$filename";
-    $i18nfile = "./locale/".$GLOBALS['language']."/".$filename;
+    $i18nfile = "./locale/".$_SESSION['language']."/".$filename;
     if(file_exists($i18nfile)){
         return load_file($i18nfile);
     }

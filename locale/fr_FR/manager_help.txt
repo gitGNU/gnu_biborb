@@ -1,4 +1,5 @@
 <p>
+    Ce menu donne acc
     This menu gives access to management functions. According to the <acronym class='biborb'>BibORB</acronym> configuration you may add, edit or delete entries.
 </p>
 

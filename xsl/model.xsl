@@ -51,7 +51,7 @@
                             <label for="{name()}"><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                or/and<br/>
+                                <span style='color:black;font-weight:normal'>or/and</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -62,7 +62,7 @@
                             <label for="{name()}"><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                or<br/>
+                                <span style='color:black;font-weight:normal'>or</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -86,7 +86,7 @@
                             <label for="{name()}"><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                or/and<br/>
+                                <span style='color:black;font-weight:normal'>or/and</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -97,7 +97,7 @@
                             <label for="{name()}"><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                or/and<br/>
+                                <span style='color:black;font-weight:normal'>or</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -118,7 +118,7 @@
                 </label>
                 <xsl:choose>
                     <xsl:when test="name() = 'abstract' or name()='longnotes'">
-                        <textarea name="{name(.)}"><xsl:text> </xsl:text></textarea><br/>
+                        <textarea name="{name(.)}" rows="5" cols="80"><xsl:text> </xsl:text></textarea><br/>
                     </xsl:when>
                     <xsl:when test="name() = 'url' or name() = 'urlzip' or name() = 'pdf'">
                         <input type="file" name="{name(.)}" /><br/>

@@ -1,4 +1,4 @@
-<span class='biborb'>BibORB</span> is a tool to manage and consult BibTeX bibliographies using a web
+<acronym class='biborb'>BibORB</acronym> is a tool to manage and consult BibTeX bibliographies using a web
 browser.
 
 <p> The main aims in its design were to allow sharing of
@@ -43,20 +43,12 @@ web front-end to BibTeX.  </p>
     </li>
 </ul>
 
-<span class='biborb'>BibORB</span> does not support:
-<ul>
-    <li>Concurrent access to the database. It has not
-    been designed so that different users may 'safely' modify the same
-    bibliography.</li>
-    <li>The use of @string or @preamble </li>
-</ul>
-
-<p><span class='biborb'>BibORB</span> also provides a basic authentication method based on databases to
-restrict write access to bibliographies.  </p>
+<p><acronym class='biborb'>BibORB</acronym> also provides a basic authentication method based on databases to
+restrict write access to bibliographies.</p>
 
 <hr/>
-<span style="font-family:serif"><span class='biborb'>BibORB</span> $biborb_version release,
+<span style="font-family:serif"><acronym class='biborb'>BibORB</acronym> $biborb_version release,
 $date_release<br/> Released under the GPL licence.<br/> Update and
-information available at <a href="http://www.nongnu.org/biborb"><span class='biborb'>BibORB</span>
+information available at <a href="http://www.nongnu.org/biborb"><acronym class='biborb'>BibORB</acronym>
 website</a> </span>
 

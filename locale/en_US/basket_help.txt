@@ -1,32 +1,28 @@
 <p>
-This menu give access to the basket. The basket records entries you have selected in the bibliograpy to perform some actions on.
+This menu gives access to the basket functions. You can select some entries and perform actions on them:
 </p>
 
-
-<p>
-Actions that can be done on the basket are:
-</p>
-<table style='margin:auto;border-collapse:collapse;'>
+<table class="help">
 	<tbody>
-		<tr style='background-color:#ddd'>
-			<td style='font-weight:bold;font-family:serif;'>Display All</td>
-			<td>Display all entries in the basket.</td>
+		<tr class='colored'>
+			<th>Display All</th>
+			<td>Display all entries recorded in the basket.</td>
 		</tr>
 		<tr>
-			<td style='font-weight:bold;font-family:serif;'>Group Modification</td>
-			<td>Change the group of all entries in basket (classification).</td>
+			<th>Group Modification</th>
+			<td>Classify entries in groups.</td>
 		</tr>
-		<tr style='background-color:#ddd'>
-			<td style='font-weight:bold;font-family:serif;'>Reset basket</td>
-			<td>Reset groups of all entries in the basket.</td>
-		</tr>
-		<tr>
-			<td style='font-weight:bold;font-family:serif;'>Export to BibTeX</td>
+		<tr class='colored'>
+			<th>Export to BibTeX</th>
 			<td>Export the selection to BibTeX.</td>
 		</tr>
-		<tr style='background-color:#ddd'>
-			<td style='font-weight:bold;font-family:serif;'>Export to HTML</td>
+		<tr>
+			<th>Export to HTML</th>
 			<td>Export the selection to HTML.</td>
+		</tr>
+        <tr class='colored'>
+			<th>Reset Basket</th>
+			<td>Delete the basket.</td>
 		</tr>
 	</tbody>
 </table>

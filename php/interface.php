@@ -87,25 +87,15 @@ function index_add_database(){
     $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
     $title = _("INDEX_CREATE_BIB_TITLE");
     // create the form to create a new bibliography
-    $content = "<form method='get' action='index.php'>";
-    $content .= "<fieldset style='border:none'>";
+    $content = "<form method='get' action='index.php' id='f_bib_creation' onsubmit='return validate_bib_creation(\"".$_SESSION['language']."\")' style='margin:auto;width:350px'>";
+    $content .= "<fieldset class='fieldset'>";
     $content .= "<input type='hidden' name='mode' value='result'/>";
-    $content .= "<table style='margin:auto;'>";
-    $content .= "<tbody>";
-    $content .= "<tr>";
-    $content .= "<td class='emphit'>"._("INDEX_CREATE_BIBNAME").": </td>";
-    $content .= "<td><input class='misc_input' type='text' name='database_name'/></td>";
-    $content .= "</tr>";
-    $content .= "<tr>";
-    $content .= "<td class='emphit'>"._("INDEX_CREATE_DESCRIPTION").": </td>";
-    $content .= "<td><input class='misc_input' type='text' name='description'/></td>";
-    $content .= "</tr>";
-    $content .= "<tr>";
-    $content .= "<td style='text-align:center' colspan='2'><input class='misc_button' type='submit' name='action' value='".
-        _("Create")."'/></td>";
-    $content .= "</tr>";
-    $content .= "</tbody>";
-    $content .= "</table>";
+    $content .= "<label for='database_name'>"._("INDEX_CREATE_BIBNAME").":</label>";
+    $content .= "<input class='longtextfield' type='text' name='database_name'/><br/>";
+    $content .= "<label for='description'>"._("INDEX_CREATE_DESCRIPTION").":</label>";
+    $content .= "<input class='longtextfield' type='text' name='description'/><br/>";
+    $content .= "<input class='submit' type='submit' name='action' value='".
+        _("Create")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     
@@ -128,7 +118,7 @@ function index_delete_database(){
     $databases = get_databases_names();
     $content = "<div style='text-align:center;'>";
     $content .= "<form method='get' action='index.php'>";
-    $content .= "<fieldset style='border:none;'>";
+    $content .= "<fieldset class='fieldset'>";
     $content .= "<input type='hidden' name='mode' value='result'/>";
     $content .= "<select class='misc_button' name='database_name'>";
 
@@ -139,7 +129,7 @@ function index_delete_database(){
     }
 
     $content .= "</select>";
-    $content .= "<input class='misc_button' type='submit' name='action' value='"._("Delete")."'/>";
+    $content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Delete")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "</div>";
@@ -397,7 +387,7 @@ function bibindex_menu($bibname)
     // jump to a given bibliography
     $avbibs = get_databases_names();
     $html .= "<li>";
-    $html .= "<form style='margin:0;padding:0;action='bibindex.php'>";
+    $html .= "<form style='margin:0;padding:0;' action='bibindex.php'>";
     $html .= "<fieldset class='fieldset'>";
     $html .= "<select class='misc_button' onchange='javascript:change_db(this.value)'>";
     foreach($avbibs as $bib){
@@ -530,12 +520,14 @@ function bibindex_welcome()
     $content = _("This is the bibliography").": <b>".$_SESSION['bibdb']->name()."</b>.<br/>";
     if(array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){      
         $content .= _("You are logged as").": <em>".$_SESSION['user']."</em>.";
+/*
         $content .= "<br/>";
         $content .= "Allowed to add entry: ".($_SESSION['user_can_add'] ? "YES" : "NO");
         $content .= "<br/>";
         $content .= "Allowed to modify entry: ".($_SESSION['user_can_modify'] ? "YES" : "NO");
         $content .= "<br/>";
         $content .= "Allowed to delete entry: ".($_SESSION['user_can_delete'] ? "YES" : "NO");
+*/
     }
 	$nb = $_SESSION['bibdb']->count_entries();
 	$nbpapers = $_SESSION['bibdb']->count_epapers();
@@ -1081,10 +1073,7 @@ function bibindex_basket_modify_group(){
     $title = _("BIBINDEX_BASKET_GROUPS_MANAGE_TITLE");
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
-    
-    //$main_content = load_file("./data/basket_group_modify.txt");
-    $groupslist = xhtml_select('groupvalue',1,$_SESSION['bibdb']->groups(),"");
-    
+
     $main_content = "<form style='margin:0;padding:0;' action='bibindex.php' method='get'>";
     $main_content .= "<fieldset style='border:none;margin:O;padding:0;'>";
 	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
@@ -1093,21 +1082,28 @@ function bibindex_basket_modify_group(){
 	$main_content .= "</form>";
 	$main_content .= "<br/>";
 	$main_content .= _("Add all entries in the basket to a group:");
-	$main_content .= "<form style='margin-left:70px;margin-bottom:O;' action='bibindex.php' method='get'>";
-	$main_content .= "<fieldset style='border:none;margin:0;margin-top:1em;padding:0'>";
+    $main_content .= "<br/>";
+    $main_content .= "<br/>";
+	$main_content .= "<form style='margin:auto;width:400px' action='bibindex.php' method='get' id='f_add_group' onsubmit='return validate_add_group(\"".$_SESSION['language']."\")'>";
+	$main_content .= "<fieldset class='fieldset'>";
 	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-	$main_content .= "<span style='font-style:italic'>"._("New group:")." </span> <input class='misc_input' name='groupvalue' />";
-	$main_content .= "<input  class='misc_button' type='submit' name='action' value='"._("Add")."'/>";
+	$main_content .= "<label style='font-weight:normal;width:120px;' for='groupvalue'>"._("New group:")."</label> <input class='longtextfield' name='groupvalue' id='groupvalue'/>";
+	$main_content .= "<input  class='submit' type='submit' name='action' value='"._("Add")."'/>";
 	$main_content .= "</fieldset>";
-	$main_content .= "</form>";
-	$main_content .= "<form style='margin-left:70px;' action='bibindex.php' method='get'>";
-	$main_content .= "<fieldset style='border:none;margin:0;padding:0;'>";
-	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-	$main_content .= "<span style='font-style:italic'>"._("Existing group:")." </span>";
-	$main_content .= $groupslist;
-	$main_content .= "<input class='misc_button' type='submit' name='action' value='"._("Add")."'/>";
-	$main_content .= "</fieldset>";
-	$main_content .= "</form>";
+	$main_content .= "</form><br/>";
+    $groups = $_SESSION['bibdb']->groups();
+    
+    // display available groups if at least one exists
+    if(count($groups)>0){
+        $main_content .= "<form style='margin:auto;width:400px' action='bibindex.php' method='get'>";
+        $main_content .= "<fieldset class='fieldset'>";
+        $main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
+        $main_content .= "<label style='font-weight:normal;width:120px;' for='groupvalue'>"._("Existing group:")."</label>";
+        $main_content .= xhtml_select('groupvalue',1,$groups,"",null,null,"longtextfield");
+        $main_content .= "<input class='submit' type='submit' name='action' value='"._("Add")."'/>";
+        $main_content .= "</fieldset>";
+        $main_content .= "</form>";
+    }
 
     $html .= main($title,$main_content);
     $html .= html_close();
@@ -1137,10 +1133,10 @@ function bibindex_entry_to_add(){
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("BIBINDEX_SELECT_NEW_ENTRY_TITLE");
     $types = xhtml_select('type',1,$_SESSION['bibdb']->entry_types(),"");
-	$content = "<form style='text-align:center' method='get' action='bibindex.php'>";
-	$content .= "<fieldset style='border:none'>";
-	$content .= "<label for='mode'>"._("Select an entry type: ")."</label>".$types."<br/><br/>";
-    $content .= "<input class='submit' type='submit' name='mode' value='"._("Cancel")."'/>";
+	$content = "<form style='margin:auto;width:350px;' method='get' action='bibindex.php'>";
+	$content .= "<fieldset class='fieldset'>";
+	$content .= "<label style='width:auto;font-weight:normal;' for='mode'>"._("Select an entry type: ")."</label>".$types."<br/>";
+//    $content .= "<input class='submit' type='submit' name='mode' id='mode' value='"._("Cancel")."'/>";
     $content .= "&nbsp;<input class='submit' type='submit' name='mode' value='"._("Select")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
@@ -1172,14 +1168,14 @@ function bibindex_add_entry($type){
     $html = bibheader("");
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("BIBINDEX_ADD_ENTRY_TITLE");
-    $content = "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields'>";
+    $content = "<form method='post' action='bibindex.php' enctype='multipart/form-data' onsubmit='return validate_new_entry_form(\"".$_SESSION['language']."\")' id='f_new_entry'>";
 	$content .= "<fieldset style='border:none'>";
 	$content .= "<input name='type' value='$type' type='hidden'/>";
 	$content .= $fields;
 	$content .= "<p/>";
 	$content .= "<div style='text-align:center;'>";
 	$content .= "<input type='hidden' name='mode' value='operationresult'/>";
-	$content .= "<input class='misc_button' type='submit' name='action' value='"._("Cancel")."'/>";
+	$content .= "<input class='misc_button' type='submit' name='action' value='"._("Cancel")."'/>&nbsp;";
 	$content .= "<input class='misc_button' type='submit' name='action' value='"._("Add")."'/>";
 	$content .= "</div>";
 	$content .= "</fieldset>";

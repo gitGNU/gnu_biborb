@@ -45,6 +45,7 @@ body {
     color:black;
 }
 
+
 /**
  * Style for the Menu 
  */
@@ -201,6 +202,10 @@ html > body #menu {position:fixed;}
     margin:auto;
 }
 
+#content p {
+    text-align:justify;
+}
+
 /**
  * Style for the table recording available databases
  */
@@ -280,7 +285,7 @@ a.admin, a.admin:visited, a.admin:hover {
 
 .fieldset label {
 	text-align:right;
-	width:90px;
+	width:100px;
     float:left;
     padding-top:0.3em;
     margin:0;
@@ -290,10 +295,45 @@ a.admin, a.admin:visited, a.admin:hover {
 
 .fieldset .textfield {
 	width:100px;
+	margin:3px;
+	padding:0;
+}
+
+.fieldset .longtextfield {
+	width:200px;
+	margin:3px;
+	padding:0;
+}
+
+.fieldset .submit {
     margin:3px;
-    padding:0;
 }
 
 input {
     border:1px solid black;
 }
+
+#content table.help {
+    margin:auto;
+    border-collapse:collapse;
+    width:450px;
+}
+#content table.help th {
+    text-align:left;
+    padding:3px;
+    font-style:italic;
+    width:150px;
+}
+
+#content table.help th.img {
+    text-align:center;
+    width:50px;
+}
+
+#content tr.colored {
+    background-color:#ddd;
+}
+
+
+
+

@@ -1,0 +1,32 @@
+<acronym class='biborb'>BibORB</acronym> est un outil pour gérer et consulter des bibliographies via un navigateur web.
+
+<p><acronym class='biborb'>BibORB</acronym> permet de partager des bibliographies sur un réseau local ou internet et d'avoir accès facilement aux versions électroniques des articles enregistrés. Il est également une interface à <acronym>BibTeX</acronym>, et permet ainsi l'édition et la gestion de bibliographie <acronym>BibTeX</acronym>.
+</p>
+
+Les fonctions actuellement disponibles sont:
+<ul>
+    <li> Importer des bibliographies <acronym>BibTeX</acronym>.</li>
+    <li> Créer / supprimer des bibliographies.</li>
+    <li> Exporter les bibliographies au format <acronym>BibTeX</acronym>.</li>
+    <li> Naviguer dans différentes bibliographies.</li>
+    <li> Ajouter / modifier / supprimer des références.</li>
+    <li> Uploader des versions électroniques des articles (.ps, .ps. gz, .pdf).</li>
+    <li> Ajouter des liens vers des pages web (internet ou sur le serveur).</li>
+    <li> Rechercher des articles suivant différents critères.</li>
+    <li> Classer les articles par groupes.</li>
+    <li> Sélectionner des articles (panier).</li>
+    <li> Exporter les articles du panier au format <acronym>BibTeX</acronym> </li>
+    <li> Exporter les articles du panier au format <acronym>HTML</acronym></li>
+</ul>
+
+<p>
+    Vous pouvez aussi utiliser votre éditeur de texte préféré pour éditer les fichiers <acronym>BibTeX</acronym> et utiliser la fonction "Mettre à jour (BibTeX)" pour mettre la jour la bibliographie.
+</p>
+
+<p>Une gestion d'utilisateurs est également disponible afin de définir les droits d'accès aux bibliographies (ajout d'articles, suppression, édition)  </p>
+
+<hr/>
+<span style="font-family:serif"><acronym class='biborb'>BibORB</acronym> $biborb_version release,
+$date_release<br/> Distribué sous license GPL.<br/> 
+Mises à jour et détails  disponibles sur la page <a href="http://www.nongnu.org/biborb"><acronym class='biborb'>BibORB</acronym></a> </span>
+

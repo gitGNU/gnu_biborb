@@ -173,6 +173,7 @@ class PARSEENTRIES
 		}
 		foreach($values as $value)
 		{
+            
 			$pos = strpos($oldString, $value);
 			$oldString = substr_replace($oldString, '', $pos, strlen($value));
 		}
@@ -198,7 +199,6 @@ class PARSEENTRIES
 // needs to know if the value is a string macro
 //			$this->entries[$this->count][strtolower(trim($key))] = trim($this->removeDelimiters(trim($value)));
 			$this->entries[$this->count][strtolower(trim($key))] = trim($value);
-
 		}
 	}
 // Start splitting a bibtex entry into component fields.

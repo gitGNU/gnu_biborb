@@ -147,12 +147,12 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
 
     $html = "<div class='addtobasket'>";
     $html .= _("Add all entries to the basket.");
-    $addalllink = "bibindex.php?mode=$mode&action=add_to_basket&id=";
+    $addalllink = "bibindex.php?mode=$mode&amp;action=add_to_basket&amp;id=";
     foreach($ids as $id){
         $addalllink .= "$id*";
     }
     if($extraparam){
-        $addalllink .= "&$extraparam";
+        $addalllink .= "&amp;$extraparam";
     }
     $html .= "<a href='".$addalllink."'>";
     $html .= "<img src='./data/images/add.png' alt='add' />";
