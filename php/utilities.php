@@ -348,4 +348,16 @@ function eval_php($string){
     }
     return $eval_string;
 }
+
+/**
+    Remove null values or empty string from an array
+ */
+function remove_null_values($anArray){
+    foreach($anArray as $key=>$val){
+        if($val == null || $val == ""){
+            unset($anArray[$key]);
+        }
+    }
+    return $anArray;
+}
 ?>
