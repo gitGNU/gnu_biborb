@@ -102,6 +102,7 @@
     
     <!-- Sort -->
     <xsl:param name="sort"/>
+    <xsl:param name="display_sort"/>
     
     <!-- Basket action images -->
     <xsl:variable name="add-image">cvs-add-16.png</xsl:variable>

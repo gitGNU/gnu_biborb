@@ -122,4 +122,15 @@ $bibtex_entries = array(
  */
 $CSS_FILE="style.css";
 
+/**
+ * Display sort in all/group/search
+ * If no, displayed only on search
+ */
+$DISPLAY_SORT="no";
+
+/**
+ * Default sort method: ID,title,year
+ */
+$DEFAULT_SORT="year";
+
 ?>

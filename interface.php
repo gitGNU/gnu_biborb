@@ -666,6 +666,41 @@ function bibindex_display_search(){
 	$main_content .= " />Year</td>";
 	
 	$main_content .= "</tr>";
+    $main_content .=  "<tr><td>Sort by</td>";
+    $main_content .= "<td><select name='sort' size='1'>";
+    
+    $main_content .= "<option value='ID' ";
+    $sort = null;
+    if(array_key_exists('sort',$_GET)){
+        $sort = $_GET['sort'];
+    }
+    if($sort == 'ID'){
+        $main_content .="selected='selected'";
+    }
+    $main_content .= ">ID</option>";
+    
+    $main_content .= "<option value='title' ";
+    $sort = null;
+    if(array_key_exists('sort',$_GET)){
+        $sort = $_GET['sort'];
+    }
+    if($sort == 'title'){
+        $main_content .="selected='selected'";
+    }
+    $main_content .= ">Title</option>";
+    
+    $main_content .= "<option value='year' ";
+    $sort = null;
+    if(array_key_exists('sort',$_GET)){
+        $sort = $_GET['sort'];
+    }
+    if($sort == 'year'){
+        $main_content .="selected='selected'";
+    }
+    $main_content .= ">Year</option>";
+    $main_content .= "</select></td><td/>";
+    
+    $main_content .= "</tr>";
 	$main_content .= "</tbody>";
 	$main_content .= "</table>";
 	$main_content .= "</fieldset>";
@@ -674,53 +709,52 @@ function bibindex_display_search(){
     if($searchvalue){
 		$fields =array();
         $extra_param ="search=$searchvalue";
-        $val = "<input type='hidden' name='search' value='$searchvalue'/>";
+
 		if(array_key_exists('author',$_GET)){
 			array_push($fields,'author');
             $extra_param .= "&author=1";
-            $val .= "<input type='hidden' name='author' value='1'/>";
 		}
 		if(array_key_exists('title',$_GET)){
 			array_push($fields,'title');
             $extra_param .= "&title=1";
-            $val .= "<input type='hidden' name='title' value='1'/>";
 		}
 		if(array_key_exists('keywords',$_GET)){
 			array_push($fields,'keywords');
             $extra_param .= "&keywords=1";
-            $val .= "<input type='hidden' name='keywords' value='1'/>";
 		}
 		if(array_key_exists('editor',$_GET)){
 			array_push($fields,'editor');
             $extra_param .= "&editor=1";
-            $val .= "<input type='hidden' name='editor' value='1'/>";
 		}
 		if(array_key_exists('journal',$_GET)){
 			array_push($fields,'journal');
             $extra_param .= "&journal=1";
-            $val .= "<input type='hidden' name='journal' value='1'/>";
 		}
 		if(array_key_exists('year',$_GET)){
 			array_push($fields,'year');
             $extra_param .= "&year=1";
-            $val .= "<input type='hidden' name='year' value='1'/>";
 		}
+        if(array_key_exists('sort',$_GET)){
+            array_push($fields,'sort');
+            $extra_param .= "&sort=".$_GET['sort'];
+        }
+
 		$entries = $_SESSION['bibdb']->search_entries($searchvalue,$fields);
 		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
 		$param = $GLOBALS['xslparam'];
 		$param['bibindex_mode'] = $_GET['mode'];
 		$param['basketids'] = $_SESSION['basket']->items_to_string();
-        $valtoreplace = '<input type="submit" value="sort"/>';
-        $val .= '<input type="submit" value="sort"/>';
+        $param['display_sort'] = 'no';
+
         $param['extra_get_param'] = $extra_param;
         if($nb==1){
             $main_content .= "One match for $searchvalue.";
-            $main_content .= str_replace($valtoreplace,$val,$xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+            $main_content .= $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
         }
         else if($nb>1) {
             $main_content .= "$nb match for $searchvalue.";
-            $main_content .= str_replace($valtoreplace,$val,$xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+            $main_content .= $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
         }
         else{
             $main_content .= "No match for $searchvalue.";

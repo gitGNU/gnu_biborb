@@ -131,17 +131,19 @@ if($abst==null){
     $abst = $GLOBALS['display_abstract'];
 } 
 
-$sort = 'ID';
+$sort = $DEFAULT_SORT;
 if(array_key_exists('sort',$_GET)){
     $sort = $_GET['sort'];
 }
+
 $xslparam = array('bibname' => $_SESSION['bibdb']->name(),
 				  'bibnameurl' => $_SESSION['bibdb']->xml_file(),
 				  'display_images' => $GLOBALS['display_images'],
 				  'display_text' => $GLOBALS['display_text'],
 				  'abstract' => $abst,
 				  'display_add_all'=> 'true',
-                  'sort' => $sort);
+                  'sort' => $sort,
+                  'display_sort'=> $DISPLAY_SORT);
 
 /**
  *  If the basket doesn't exists, create it.

@@ -52,7 +52,7 @@
         
 
         <div class="sort">
-            <xsl:if test="$sort">
+            <xsl:if test="$display_sort = 'true'">
             Sort by:
                 <form method="get" action="bibindex.php">
                     <fieldset>

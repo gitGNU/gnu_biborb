@@ -173,6 +173,8 @@ links */
 	background-color: f7f3b6;
 }
 
+
+/* look of sort form */
 .sort fieldset {
     margin:0;
     padding:0;
@@ -184,4 +186,8 @@ links */
 .sort form {
     display:inline;
     border:none;
+}
+
+div.sort {
+    height:1em;
 }
