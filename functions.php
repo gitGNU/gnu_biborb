@@ -435,7 +435,7 @@ function get_bibentry_for_edition($bibname,$bibid,$add=1)
 {
     $xml_content = load_file("./xsl/model.xml");
     $xsl_content = load_file("./xsl/xml2htmledit.xsl");
-    $param = array('id' => $bibid,'bibname' => "file:".realpath("bibs/".$bibname."/".$bibname.".xml"));
+    $param = array('id' => $bibid,'bibname' => "file://".realpath("bibs/".$bibname."/".$bibname.".xml"));
     $param['add'] = $add;
   
     return xslt_transform($xml_content,$xsl_content,$param);
