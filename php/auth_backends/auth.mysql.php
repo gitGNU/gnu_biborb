@@ -100,7 +100,7 @@ class Auth
         }
         else{
             // Get ($user,$pass) record
-            $query = "SELECT login,password FROM ".$this->users_table." WHERE login='$user' AND password=md5('$pass')";
+            $query = "SELECT login,password FROM ".$this->users_table." WHERE login='".addslashes($user)."' AND password=md5('".addslashes($pass)."')";
             $result = mysql_query($query,$connect) or trigger_error("Invalid SQL Request");
             return (mysql_num_rows($result)>0);
         }
@@ -119,7 +119,7 @@ class Auth
         }
         else{
             // get $admin value for $user
-            $query = "SELECT admin FROM ".$this->users_table." WHERE login='$user'";
+            $query = "SELECT admin FROM ".$this->users_table." WHERE login='".addslashes($user)."'";
             $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
@@ -146,7 +146,7 @@ class Auth
         else{
             $user = ($user == "" ? "_anonymous_" : $user);
             // get records where $id = $user
-            $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
+            $query = "SELECT id FROM ".$this->users_table." WHERE login='".addslashes($user)."'";
             $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
@@ -162,7 +162,7 @@ class Auth
                     return $access[2] == '1';
                 }
                 else{
-                    $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
+                    $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='".addslashes($database_name)."'";
                     $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
                     $row = mysql_fetch_assoc($result);
                     $access = $row['access'];
@@ -188,7 +188,7 @@ class Auth
         else{
             $user = ($user == "" ? "_anonymous_" : $user);
             
-            $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
+            $query = "SELECT id FROM ".$this->users_table." WHERE login='".addslashed($user)."'";
             $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
@@ -204,7 +204,7 @@ class Auth
                     return $access[0] == '1';
                 }
                 else{
-                    $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
+                    $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='".addslashes($database_name)."'";
                     $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
                     $row = mysql_fetch_assoc($result);
                     $access = $row['access'];
@@ -230,7 +230,7 @@ class Auth
         else{
             $user = ($user == "" ? "_anonymous_" : $user);
             
-            $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
+            $query = "SELECT id FROM ".$this->users_table." WHERE login='".addslashes($user)."'";
             $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
@@ -246,7 +246,7 @@ class Auth
                     return $access[1] == '1';
                 }
                 else{
-                    $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
+                    $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='".addslashes($database_name)."'";
                     $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
                     $row = mysql_fetch_assoc($result);
                     $access = $row['access'];
@@ -271,7 +271,7 @@ class Auth
         else{
             $pref = array();
             // get the user_id
-            $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
+            $query = "SELECT id FROM ".$this->users_table." WHERE login='".addslashes($user)."'";
             $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             $row = mysql_fetch_assoc($result);
             $id = $row['id'];
@@ -326,7 +326,7 @@ class Auth
         }
         else{
             // get the user_id
-            $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
+            $query = "SELECT id FROM ".$this->users_table." WHERE login='".addslashes($user)."'";
             $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             $row = mysql_fetch_assoc($result);
             $id = $row['id'];
@@ -339,16 +339,16 @@ class Auth
                 mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             }
             $query = "UPDATE ".$this->user_preferences_table." SET ";
-            $query .= "css_file='".(array_key_exists("css_file",$pref) ? $pref['css_file'] : "style.css")."',";
-            $query .= "default_language='".(array_key_exists("default_language",$pref) ? $pref['default_language'] : "en_US")."',";
-            $query .= "default_database='".(array_key_exists("default_database",$pref) ? $pref['default_database'] : "")."',";
+            $query .= "css_file='".(array_key_exists("css_file",$pref) ? addslashes($pref['css_file']) : "style.css")."',";
+            $query .= "default_language='".(array_key_exists("default_language",$pref) ? addslashes($pref['default_language']) : "en_US")."',";
+            $query .= "default_database='".(array_key_exists("default_database",$pref) ? addslashes($pref['default_database']) : "")."',";
             $query .= "display_images='".(array_key_exists("display_images",$pref) ? ($pref['display_images'] == "yes" ? "Y" : "N") : "Y")."',";
             $query .= "display_txt='".(array_key_exists("display_txt",$pref) ? ($pref['display_txt'] == "yes" ? "Y" : "N") : "N")."',";
             $query .= "display_abstract='".(array_key_exists("display_abstract",$pref) ? ($pref['display_abstract'] == "yes" ? "Y" : "N") : "N")."',";
             $query .= "warn_before_deleting='".(array_key_exists("warn_before_deleting",$pref) ? ($pref['warn_before_deleting'] == "yes" ? "Y" : "N") : "Y")."',";
-            $query .= "default_sort='".(array_key_exists("default_sort",$pref) ? $pref['default_sort'] : "ID")."',";
-            $query .= "default_sort_order='".(array_key_exists("default_sort_order",$pref) ? $pref['default_sort_order'] : "ascending")."',";
-            $query .= "max_ref_by_page='".(array_key_exists("max_ref_by_page",$pref) ? $pref['max_ref_by_page'] : "10")."',";
+            $query .= "default_sort='".(array_key_exists("default_sort",$pref) ? addslashes($pref['default_sort']) : "ID")."',";
+            $query .= "default_sort_order='".(array_key_exists("default_sort_order",$pref) ? addslashes($pref['default_sort_order']) : "ascending")."',";
+            $query .= "max_ref_by_page='".(array_key_exists("max_ref_by_page",$pref) ? addslashes($pref['max_ref_by_page']) : "10")."',";
             $query .= "display_shelf_actions='".(array_key_exists("display_shelf_actions",$pref) ? ($pref['display_shelf_actions'] == "yes" ? "Y" : "N") : "N")."' ";
         
             $query .= "WHERE user_id='$id' LIMIT 1";
