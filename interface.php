@@ -820,19 +820,48 @@ function bibindex_display_advanced_search(){
     <fieldset style='border:none;'>
         <span class='emphit'>Connector:</span>
         <select name='connector' size='1'>
-            <option value='and' checked='checked'>and</option>
-            <option value='or'>or</option>
-        </select>
+HTML;
+    if(array_key_exists('connector',$_POST)){
+	if(!strcmp($_POST['connector'],'and')){
+	    $content .= "<option value='and' selected='selected'>and</option>";
+	    $content .= "<option value='or'>or</option>";
+	}
+	else{
+	    $content .= "<option value='and'>and</option>";
+	    $content .= "<option value='or' selected='selected'>or</option>";
+	}
+    }
+    else{
+	$content .= "<option value='and' selected='selected'>and</option>";
+	$content .= "<option value='or'>or</option>";
+    }
+    $content .= "</select>";
+    
+    $content .= <<<HTML
+     </select>
         <table width='100%'>
             <tbody>
             <tr colspan='2'><td><span class='emphit'>BibTeX Fields</span></td></tr>
 HTML;
+
     foreach($bibtex_fields as $field){
-        $content .= "<tr><td>$field</td><td><input style='width:85%;' name='$field'/></td></tr>";
+        $content .= "<tr><td style='width:100px;'>$field</td><td>";
+	if(array_key_exists($field,$_POST)){
+		$content .= "<input style='width:85%;' name='$field' value='".$_POST[$field]."'/></td></tr>";
+	}
+	else{
+		$content .= "<input style='width:85%;' name='$field'/></td></tr>";
+	}
     }
     $content .= "<tr colspan='2'><td><span class='emphit'>BibORB Fields</span></td></tr>";
     foreach($biborb_fields as $field){
-        $content .= "<tr><td>$field</td><td width='75%'><input style='width:85%;' name='$field'/></td></tr>";
+	$content .= "<tr><td>$field</td><td>";
+	if(array_key_exists($field,$_POST)){
+		$content .= "<input style='width:85%;' name='$field' value='".$_POST[$field]."'/></td></tr>";
+	}
+	else{
+		$content .= "<input style='width:85%;' name='$field'/></td></tr>";
+	}
     }
     
     $content .= "</tbody></table>";
