@@ -52,7 +52,7 @@
     </required>
     <optional>
       <exalternative>
-	<volume/><number/>
+        <volume/><number/>
       </exalternative>
       <series/><address/><edition/><month/><note/>
     </optional>
