@@ -391,13 +391,14 @@ function get_bibtex($bibname,$bibid)
 /**
  * Return an html output of a given entry
  */
-function get_bibentry($bibname,$bibid,$abstract)
+function get_bibentry($bibname,$bibid,$abstract,$basket = 'no', $mode = 'user')
 {
     $xml_content = load_xml_bibfile($bibname);
     $xsl_content = load_file("./xsl/one_entry2html.xsl");
     $param = array( 'bibname' => $bibname,
                     'id' => $bibid,
-                    'basket' => 'no',
+					'mode' => $mode,
+                    'basket' => $basket,
                     'display_images' => $GLOBALS['display_images'],
                     'display_text' => $GLOBALS['display_text']);
     if($abstract){
@@ -701,7 +702,7 @@ function to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile){
     $first = 1;
     foreach($newtab as $key => $value){
     // get keys present in the tab
-        if($key != "id" && $key != 'type'){
+        if($key != "id" && $key != 'type' && trim($value) != ''){
             if($first == 0){
                 $txt .= ",\n";
             }

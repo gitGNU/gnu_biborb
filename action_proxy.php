@@ -375,8 +375,9 @@ function add_entry(){
             }
         }
         else {
-            $_SESSION['message'] .= "No electronic paper was added to the database<br/>";
+            $_SESSION['message'] .= "No electronic paper was added to the database<br/><br/>";
         }
+		$_SESSION['message'] .= get_bibentry($_SESSION['bibname'],$_POST['_id'],$_GLOBALS['abstract'],'',$_SESSION['usermode']);
     }
 }
 
@@ -439,6 +440,7 @@ function update_this_entry(){
         else {
             $_SESSION['message'] .= "No electronic paper was added to the database<br/>";
         }
+		$_SESSION['message'] .= get_bibentry($_SESSION['bibname'],$_POST['_id'],$_GLOBALS['abstract'],'',$_SESSION['usermode']);
     }
 }
 
