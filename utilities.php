@@ -121,4 +121,10 @@ function load_file($filename) {
   return implode('',file($filename));  
 }
 
+function myhtmlentities($str){
+    $patterns = array('&','<','>');
+    $replace = array('&amp;','&lt;','&gt;');    
+    return str_replace($patterns,$replace,$str);
+}
+
 ?>

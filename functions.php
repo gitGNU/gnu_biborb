@@ -598,6 +598,7 @@ function add_new_entry($bibname,$type,$tab,$urlfile,$urlzipfile,$pdffile){
  */
 function update_entry($bibname,$type,$tab,$urlfile,$urlzipfile,$pdffile){
     $xml = to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile);
+    echo $xml;
     $xsl = load_file("./xsl/update_xml.xsl");
     $param = array('bibname' => "file://".realpath(xmlfilename($bibname)));
     $result = xslt_transform($xml,$xsl,$param);
@@ -634,7 +635,7 @@ function to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile){
     foreach($newtab as $key => $value){
         if($key != 'groups' && $key!= 'type' && $key != 'id'){
             $xml .= "<bibtex:".$key.">";
-            $xml .= $value;
+            $xml .= myhtmlentities($value,null,"utf-8");
             $xml .= "</bibtex:".$key.">";
         }
         else if($key == 'groups') {
@@ -642,7 +643,7 @@ function to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile){
             $groupvalues = split(',',$value);
             foreach($groupvalues as $gr){
                 $xml .= "<bibtex:group>";
-                $xml .= trim($gr);
+                $xml .= trim(myhtmlentities($gr));
                 $xml .= "</bibtex:group>";
             }
             $xml .= "</bibtex:groups>";
@@ -687,7 +688,7 @@ function to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile){
                 $txt .= ",\n";
             }
             $first = 0;
-            $txt .= "\t".$key." = {".$value."}";
+            $txt .= "\t".$key." = {".myhtmlentities($value)."}";
         }
     }
     $txt .= "\n}\n";
@@ -731,7 +732,7 @@ function to_bibtex_tab($type,$tab,$urlfile,$urlzipfile,$pdffile){
         if($key != "_id" && in_array($key,$GLOBALS['bibtex_entries'])){
             if($tab[$key] != ""){
                 $txt .= "<tr>";
-                $txt .= "<td>".substr($key,1)."</td><td> = {".stripslashes($tab[$key])."},</td>";
+                $txt .= "<td>".substr($key,1)."</td><td> = {".myhtmlentities(stripslashes($tab[$key]))."},</td>";
                 $txt .= "</tr>";
             }
         }
