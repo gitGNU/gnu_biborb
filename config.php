@@ -37,7 +37,13 @@
  * Localisation
  * Default: en
  */
-$language = "fr";
+$language = "en";
+
+/**
+ * Display a selection of language on BibORB pages
+ * TRUE/FALSE
+ */
+$display_language_selection = FALSE;
 
 /**
  * Version of Biborb

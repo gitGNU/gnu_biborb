@@ -733,3 +733,6 @@ msgstr ""
 
 msgid "Back"
 msgstr ""
+
+msgid "Language:"
+msgstr ""

@@ -83,7 +83,10 @@ session_start();
 /**
  *  i18n
  */
-load_i18n_config($GLOBALS['language']);
+if(!array_key_exists('language',$_SESSION) || !$GLOBALS['display_language_selection']){
+    $_SESSION['language'] = $GLOBALS['language'];
+}
+load_i18n_config($_SESSION['language']);
 
 /**
  * Global variables to store an error message or a standad message.
@@ -169,6 +172,11 @@ else{
  */
 if(isset($_GET['action'])){
     switch($_GET['action']){
+        case 'select_lang':
+            $_SESSION['language'] = $_GET['lang'];
+            load_i18n_config($_SESSION['language']);
+            break;
+            
         case 'add_to_basket':		// Add an item to the basket
             if(!isset($_GET['id'])){
                 die("Error in add_to_basket: id not set");
@@ -518,7 +526,8 @@ switch($mode) {
     case 'addentry':echo bibindex_entry_to_add(); break;
     
     // Select the type of the new entry to add
-    case _("Select"): echo bibindex_add_entry($_GET['type']); break;
+    case _("Select"):
+        echo bibindex_add_entry($_GET['type']); break;
     
     // Update an entry
     case 'update': echo bibindex_update_entry(); break;

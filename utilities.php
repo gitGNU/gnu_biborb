@@ -183,4 +183,19 @@ function replace_localized_strings($string)
     return $string;
 }
 
+// return the locales supported by biborb
+function get_locales(){
+    $locales = array();
+    $path = './locale/';
+    if($dir = opendir($path)) {
+        while (false !== ($file = readdir($dir))) {
+            if ($file != "." && $file != ".." && is_dir($path.$file) && $file != 'CVS') {
+                array_push($locales,$file);
+            }
+        }
+        closedir($dir);
+    }
+    return $locales;
+}
+
 ?>

@@ -53,7 +53,10 @@ session_start();
 /**
  *  i18n
  */
-load_i18n_config($language);
+if(!array_key_exists('language',$_SESSION) || !$GLOBALS['display_language_selection']){
+    $_SESSION['language'] = $GLOBALS['language'];
+}
+load_i18n_config($_SESSION['language']);
 
 /**
  * To store an error or a message. (mode=result)
@@ -92,7 +95,11 @@ else{
  */
 if(isset($_GET['action'])){
     switch($_GET['action']){
-        
+        case 'select_lang':
+            $_SESSION['language'] = $_GET['lang'];
+            load_i18n_config($_SESSION['language']);
+            break;
+            
         /*
             Create a database
          */

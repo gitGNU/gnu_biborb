@@ -272,6 +272,16 @@ function index_menu(){
     $html .= "</ul>";
     $html .= "</li>";
     $html .= "</ul>";
+    if($GLOBALS['display_language_selection']){
+        $html .= "<form name='language_selection' action='index.php' method='get'>";
+        $html .= "<div style='text-align:center;'>"._("Language:");
+        $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language']);
+        $html .= "<br/>";
+        $html .= "<input type='hidden' name='action' value='select_lang'/>";
+        $html .= "<input class='misc_button' type='submit' value='"._("Select")."'/>";
+        $html .= "</div>";
+        $html .= "</form>";
+    }
     $html .= "</div>";
     
     return $html;  
@@ -474,6 +484,17 @@ function bibindex_menu($bibname)
     $html .= "</ul>";
     $html .= "</li>";
     $html .= "</ul>";
+    
+    if($GLOBALS['display_language_selection']){
+        $html .= "<form name='language_selection' action='bibindex.php' method='get'>";
+        $html .= "<div style='text-align:center;'>"._("Language:");
+        $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language']);
+        $html .= "<br/>";
+        $html .= "<input type='hidden' name='action' value='select_lang'/>";
+        $html .= "<input class='misc_button' type='submit' value='"._("Select")."'/>";
+        $html .= "</div>";
+        $html .= "</form>";
+    }
     $html .= "</div>";
    
   return $html;  

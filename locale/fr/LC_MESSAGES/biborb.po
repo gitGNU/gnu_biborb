@@ -734,3 +734,6 @@ msgstr "Une Clé BibTeX vide n'est pas autorisée!"
 
 msgid "Back"
 msgstr "Retour"
+
+msgid "Language:"
+msgstr "Langue :"
