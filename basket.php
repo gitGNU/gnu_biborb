@@ -93,7 +93,7 @@ function basket_to_html($usermode,$abstract){
     //load the xsl file
     $xsl_content = load_file("./xsl/basket2html_table.xsl");
     // set paramters
-    $param = array( 'bibnameurl' => "file:".realpath(xmlfilename($_SESSION['bibname'])),
+    $param = array( 'bibnameurl' => xmlfilename($_SESSION['bibname']),
                     'bibname' => $_SESSION['bibname'],
                     'session_name' => session_name(),
                     'session_id' => session_id(),
@@ -114,7 +114,7 @@ function basket_to_simple_html(){
     //load the xsl file
     $xsl_content = load_file("./xsl/basket2simple_html.xsl");
     // set paramters
-    $param = array( 'bibnameurl' => "file:".realpath(xmlfilename($_SESSION['bibname'])),
+    $param = array( 'bibnameurl' => xmlfilename($_SESSION['bibname']),
                     'bibname' => $_SESSION['bibname']);
     
     //return the HTML table
@@ -165,7 +165,7 @@ function basket_add_group($group){
     //load the xsl file
     $xsl_content = load_file("./xsl/addgroup.xsl");
     // set paramters
-    $param = array( 'bibname' => "file:".realpath(xmlfilename($_SESSION['bibname'])),
+    $param = array( 'bibname' => xmlfilename($_SESSION['bibname']),
                     'group' => $group);
     // new xml file
     $result = xslt_transform($in_basket,$xsl_content,$param); 

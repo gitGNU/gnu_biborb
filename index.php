@@ -319,11 +319,15 @@ function index_select(){
     $databases = get_databases_names();
     $content = "<div style='text-align:center;'>";
     $content .= "<table id='available_bibliographies'>";
-    $content .= "<thead><tr><th>Name</th><th>Description</th></tr></thead>";
+    $content .= "<thead><tr><th>Name</th><th>Description</th><th>Sources(BibTeX)</th></tr></thead>";
     $content .= "<tbody>";
     foreach($databases as $name){
         $description = load_file("./bibs/$name/description.txt");
-        $content .= "<tr><td><a href='./bibindex.php?mode=welcome&amp;bibname=$name&amp;".session_name()."=".session_id()."'>$name</a></td><td>$description</td></tr>";
+        $content .= "<tr>";
+        $content .= "<td><a href='./bibindex.php?mode=welcome&amp;bibname=$name&amp;".session_name()."=".session_id()."'>$name</a></td>";
+        $content .= "<td>$description</td>";
+        $content .= "<td><a href='./bibs/$name/$name.bib'>Download</td>";
+        $content .= "</tr>";
     }
     $content .= "</tbody></table>";
     $content .= "</div>";

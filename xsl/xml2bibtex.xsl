@@ -34,24 +34,22 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:bibtex="http://bibtexml.sf.net/"> 
 
-    <xsl:output method="text" indent="no"/>
+    <xsl:output method="text" encoding="iso-8859-1"/>
   
     <xsl:param name="id"/>
 
-    <xsl:template match="/">
+    <xsl:template match="/bibtex:file">
+        <xsl:text> </xsl:text>
         <xsl:choose>
             <xsl:when test="$id != ''">
-                <pre>
-                    <xsl:apply-templates select="bibtex:file/bibtex:entry[@id=$id]/bibtex:*"/>
-                </pre>
+                <xsl:apply-templates select="//bibtex:entry[@id=$id]/bibtex:*"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:apply-templates select="//bibtex:entry/bibtex:*"/>
+                <xsl:apply-templates select=".//bibtex:entry/bibtex:*"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
-    
     <xsl:template match="bibtex:*">
         @<xsl:value-of select="local-name()"/>{<xsl:value-of select="../@id"/>,
         <xsl:for-each select="*">

@@ -99,7 +99,7 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL) {
 function xslt_transform($xmlstring,$xslstring,$xslparam = array()) {
     $xh = xslt_create();
     xslt_set_encoding($xh,"iso-8859-1");
-
+    xslt_set_base($xh,"file://".getcwd()."/biborb");
     $xslparam['session_name'] = session_name();
     $xslparam['session_id'] = session_id();
     $arguments = array('/_xml' => $xmlstring, '/_xsl' => $xslstring);  

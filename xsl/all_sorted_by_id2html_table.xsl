@@ -63,6 +63,6 @@
     </xsl:template>
     
     <!-- include XSLT stylesheet -->
-    <xsl:include href="file://./xsl/bibtex_entry2tr.xsl"/>
+    <xsl:include href="xsl/bibtex_entry2tr.xsl"/>
     
 </xsl:stylesheet>
