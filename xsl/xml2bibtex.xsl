@@ -36,7 +36,8 @@
 
     <xsl:output method="text" encoding="iso-8859-1"/>
   
-    <xsl:param name="id"/>
+    <!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
 
     <xsl:template match="/bibtex:file">
         <xsl:text> </xsl:text>

@@ -5,7 +5,7 @@
 Available actions are:
 
 <ul>
-    <li><strong>Login</strong>, authenticate to get write access to the bibligraphy (if authentication activated)</li>
+    <li><strong>Login</strong>, authenticate to get write access to the bibliography (if authentication activated)</li>
     <li><strong>Logout</strong> (if authentication activated)</li>
     <li><strong>Add an entry</strong></li>
     <li><strong>Update from BibTeX</strong> updates the bibliography according to the BibTeX file in the bibs directory. Use it when editing your bibliography in an alternative editor.</li>

@@ -38,17 +38,8 @@
   
     <xsl:output method="xml" encoding="iso-8859-1"/>
     
-    <!-- the name of the bibliography -->
-    <xsl:param name="bibname"/>
-    <xsl:param name="bibnameurl"/>
-    <!-- session name and id -->
-    <xsl:param name="session_name"/>
-    <xsl:param name="session_id"/>
-    <xsl:param name="mode"/>
-    <xsl:param name="basket"/>
-    <xsl:param name="abstract"/>
-    <xsl:param name="display_images"/>
-    <xsl:param name="display_text"/>
+	<!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
 
     <xsl:template match="/entrylist">
         <!-- load the xml file into a variable -->
@@ -78,7 +69,9 @@
 					<xsl:if test="position() != last()">,</xsl:if>
 				</xsl:for-each>
 			</xsl:variable><br/>
-			<a href="./bibindex.php?mode=details&amp;bibname={$bibname}&amp;bibids={$bibids}">Url to retrieve this subset</a>
+			<xsl:if test="$cpt != 0">
+				<a href="./bibindex.php?mode=details&amp;bibname={$bibname}&amp;bibids={$bibids}">Url</a> to access directly this subset.
+			</xsl:if>
         </div><br/>
         <!-- display all entries in a table -->
         <table id="bibtex_table">

@@ -40,19 +40,8 @@
   
     <xsl:output method="xml" encoding="iso-8859-1"/>
     
-    <!-- session name and id -->
-    <xsl:param name="session_name"/>
-    <xsl:param name="session_id"/>
-    <!-- admin mode -->
-    <!-- if mode='admin', display edit and delete button -->
-    <xsl:param name="mode"/>
-    <!-- the group to display -->
-    <xsl:param name="group"/>
-    <xsl:param name="basket"/>
-    <xsl:param name="abstract"/>
-    <xsl:param name="bibname"/>
-    <xsl:param name="display_images"/>
-    <xsl:param name="display_text"/>
+	<!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
     
     <xsl:template match="/">
         <!-- get entries of the given group -->
@@ -63,10 +52,10 @@
             <xsl:variable name="cpt" select="count($result)"/>
             <xsl:choose>
                 <xsl:when test="$cpt != 1">
-                    <xsl:value-of select="$cpt"/> entries for the group: <b><xsl:value-of select="$group"/></b>.
+                    <xsl:value-of select="$cpt"/> entries for the group <b><xsl:value-of select="$group"/></b>.
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:value-of select="$cpt"/> entry for the group: <b><xsl:value-of select="$group"/></b>.
+                    <xsl:value-of select="$cpt"/> entry for the group <b><xsl:value-of select="$group"/></b>.
                 </xsl:otherwise>
             </xsl:choose>
         </div>
@@ -80,7 +69,7 @@
             </xsl:for-each>
         </xsl:variable>
         <div class="addtobasket">
-            Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" /></a>
+            Add all entries to basket <a href="bibindex.php?mode=group&amp;group={$group}&amp;action=add_to_basket&amp;id={$ids}&amp;{$bibindex_mode}&amp;{$extra_get_param}"><img src="./data/images/add.png" alt="add" /></a>
         </div>
         
         <!-- start the table -->

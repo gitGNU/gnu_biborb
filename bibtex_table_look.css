@@ -143,6 +143,7 @@ links */
     font-size:5px;
 }
 
+
 /* look for links */
 #bibtex_table a, #bibtex_table a:hover,#bibtex_table a:active,#bibtex_table a:visited,#bibtex_table a:focus {
     text-decoration:none;
@@ -163,4 +164,9 @@ links */
     text-decoration:none;
     color:navy;
     font-family:serif;
+}
+
+/* look when entry present in basket */
+.inbasket {
+	background-color: #f98;
 }

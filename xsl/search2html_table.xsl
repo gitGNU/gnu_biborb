@@ -38,19 +38,9 @@
    
     <xsl:output method="xml" encoding="iso-8859-1"/>
     
-    <!-- Possible input parameters -->
-    <xsl:param name="bibname"/>
-    <xsl:param name="group"/>
-    <xsl:param name="author"/>
-    <xsl:param name="title"/>
-    <xsl:param name="keywords"/>
-    <xsl:param name="mode"/>
-    <xsl:param name="basket"/>
-    <xsl:param name="abstract"/>
-    <xsl:param name="session_id"/>
-    <xsl:param name="session_name"/>
-    <xsl:param name="display_images"/>
-    <xsl:param name="display_text"/>
+	<!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
+    
 
     <!-- every parameter values to lower case -->
     <xsl:variable name="lcletters">abcdefghijklmnopqrstuvwxyz</xsl:variable>
@@ -110,7 +100,7 @@
         
         <xsl:if test="$cpt != 0">
             <div class="addtobasket">
-                Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" /></a>
+                Add all entries to basket <a href="bibindex.php?action=add_to_basket&amp;id={$ids}&amp;{$bibindex_mode}&amp;{$extra_get_param}"><img src="./data/images/add.png" alt="add" /></a>
             </div>
         
             <!-- begining of the table -->

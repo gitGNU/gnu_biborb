@@ -37,7 +37,8 @@
   
     <xsl:output method="xml"/>
     
-    <xsl:param name="id"/>
+    <!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
 
     <xsl:template match="bibtex:file">
         <xsl:if test="//bibtex:entry[@id=$id]">true</xsl:if>

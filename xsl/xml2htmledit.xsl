@@ -38,8 +38,10 @@
   
     <xsl:output method="xml" encoding="iso-8859-1"/>
 
-    <xsl:param name="bibname"/>
-    <xsl:param name="id"/>
+    <!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
+	
+	
     <xsl:param name="add"/>
 
     <xsl:template match="/entrylist">

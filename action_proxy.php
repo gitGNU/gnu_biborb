@@ -110,7 +110,7 @@ if(array_key_exists('action',$_GET)){
          * Delete all entries
          */
         case 'resetbasket':
-            reset_basket();
+            $_SESSION['basket']->reset();
             echo header("Location: bibindex.php?mode=displaybasket&".session_name()."=".session_id());
             break;
         /**

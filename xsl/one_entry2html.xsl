@@ -37,19 +37,8 @@
   
     <xsl:output method="xml" encoding="iso-8859-1"/>
     
-    <!-- the name of the bibliography -->
-    <xsl:param name="bibname"/>
-    <!-- session name and id -->
-    <xsl:param name="session_name"/>
-    <xsl:param name="session_id"/>
-    <!-- admin mode -->
-    <!-- if mode='admin', display edit and delete button -->
-    <xsl:param name="mode"/>
-    <xsl:param name="basket"/>
-    <xsl:param name="abstract"/>
-    <xsl:param name="id"/>
-    <xsl:param name="display_images"/>
-    <xsl:param name="display_text"/>
+    <!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
 
     <xsl:template match="/bibtex:file">
         <!-- start the table -->

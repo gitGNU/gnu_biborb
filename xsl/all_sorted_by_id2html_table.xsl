@@ -38,18 +38,8 @@
   
     <xsl:output method="xml" encoding="iso-8859-1" />
     
-    <!-- the name of the bibliography -->
-    <xsl:param name="bibname"/>
-    <!-- session name and id -->
-    <xsl:param name="session_name"/>
-    <xsl:param name="session_id"/>
-    <!-- admin mode -->
-    <!-- if mode='admin', display edit and delete button -->
-    <xsl:param name="mode"/>
-    <xsl:param name="basket"/>
-    <xsl:param name="abstract"/>
-    <xsl:param name="display_images"/>
-    <xsl:param name="display_text"/>
+	<!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
 
     <xsl:template match="/">
 		<!-- count how many entries are present -->
@@ -62,9 +52,10 @@
                 <xsl:if test="position() != last()">*</xsl:if>
             </xsl:for-each>
         </xsl:variable>
+		
 		<xsl:if test="$cpt != 0">
             <div class="addtobasket">
-                Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" /></a>
+                Add all entries to basket <a href="bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" /></a>
             </div>
 		</xsl:if>
 		

@@ -190,6 +190,7 @@ function index_welcome(){
     $title = "BibORB: BibTeX On-line References Browser";
     // the main content
     $content = load_file("./data/index_welcome.txt");
+
     // create the menu;
     $html .= index_menu();
     // create the main data

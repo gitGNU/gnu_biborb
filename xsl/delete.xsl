@@ -40,7 +40,7 @@
     <xsl:output method="xml" indent="yes" encoding="iso-8859-1"/>
 
     <!-- something i do not understand, copy-of do not copy namespace-->
-    <!-- so i do it manually-->
+    <!-- so i do it manually :( -->
     <xsl:template match="/">
         <xsl:element name="bibtex:file">
             <xsl:attribute name="name"><xsl:value-of select="bibtex:file/@name"/></xsl:attribute>

@@ -41,14 +41,49 @@
 /*                                                                              */
 /********************************************************************************/
 
-/**
- * Reset the basket.
- */
-function reset_basket(){
-    for($i=0;$i<count($_SESSION['basket']);$i++){
-        unset($_SESSION['basket'][$i]);
-    }
-    $_SESSION['basket'] = array();
+class Basket {
+	var $items;
+	
+	function Basket() {
+		$this->items = array();
+	}
+	
+	function add_item($item) {
+		if(!in_array($item,$this->items)){
+			array_push($this->items,$item);
+		}
+	}
+	
+	function add_items($array){
+		foreach($array as $item){
+			$this->add_item($item);
+		}
+	}
+	
+	function remove_item($item) {
+		$key = array_search($item,$this->items);
+		if(!($key === FALSE)){
+			for($i=$key;$i<count($this->items)-1;$i++){
+				$this->items[$i] = $this->items[$i+1];
+			}
+		}
+		array_pop($this->items);
+	}
+	
+	function reset(){
+		$length = count($this->items);
+		for($i=0;$i<$length;$i++){
+			array_pop($this->items);
+		}
+	}
+	
+	function items_to_string(){
+		$res = ".";
+		foreach($this->items as $item){
+			$res .= $item.".";
+		}
+		return $res;
+	}
 }
 
 /**
@@ -79,8 +114,8 @@ function basket_to_xml(){
     // create an xml string containing id present in the basket
     $xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
     $xml_content .= '<entrylist>';
-    for($i=0;$i<count($_SESSION['basket']);$i++){
-        $xml_content .= '<id>'.$_SESSION['basket'][$i].'</id>';
+    for($i=0;$i<count($_SESSION['basket']->items);$i++){
+        $xml_content .= '<id>'.$_SESSION['basket']->items[$i].'</id>';
     }
     $xml_content .= '</entrylist>';
     return $xml_content;
@@ -89,19 +124,22 @@ function basket_to_xml(){
 /**
  * Extract information form the XML file and produces an HTML table of the basket
  */
-function basket_to_html($usermode,$abstract){
+function basket_to_html($usermode,$bibindexmode,$abstract){
     // create an xml string containing id present in the basket
     $xml_content = basket_to_xml();
     //load the xsl file
     $xsl_content = load_file("./xsl/basket2html_table.xsl");
     // set paramters
+	
     $param = array( 'bibnameurl' => xmlfilename($_SESSION['bibname']),
                     'bibname' => $_SESSION['bibname'],
                     'session_name' => session_name(),
                     'session_id' => session_id(),
                     'basket' => 'true',
                     'mode' => $usermode,
+					'bibindex_mode' => $bibindexmode,
                     'abstract' => $abstract,
+					'basketids' => $_SESSION['basket']->items_to_string(),
                     'display_images' => $GLOBALS['display_images'],
                     'display_text' => $GLOBALS['display_text']);
     
@@ -130,8 +168,8 @@ function basket_to_simple_html(){
  */
 function basket_to_bibtex(){
     $text = "";
-    for($i=0;$i<count($_SESSION['basket']);$i++){
-        $text .= get_bibtex($_SESSION['bibname'],$_SESSION['basket'][$i]);
+    foreach($_SESSION['basket']->items as $item){
+        $text .= get_bibtex($_SESSION['bibname'],$item);
     }
     return $text;
 }
@@ -184,4 +222,5 @@ function basket_add_group($group){
     //update group in SESSION
     $_SESSION['group_list'] = get_group_list($_SESSION['bibname']);
 }
+//}
 ?>

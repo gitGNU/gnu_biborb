@@ -37,7 +37,8 @@
   
     <xsl:output method="xml" encoding="iso-8859-1"/>
     
-    <xsl:param name="bibname"/>
+    <!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
     
     <xsl:template match="/">
         <xsl:variable name="bibfile" select="document($bibname)"/>

@@ -331,14 +331,18 @@ function load_xml_bibfile($bibname)
 /**
  * Return an HTML table of all entries of a bibfile
  */
-function get_all_bibentries($bibname,$mode,$abstract)
-{
+function get_all_bibentries($bibname,$mode,$abstract,$bibindexmode)
+{   
+	$basketids = $_SESSION['basket']->items_to_string();
+
     $xml_content = load_xml_bibfile($bibname);
     $xsl_content = load_file("./xsl/all_sorted_by_id2html_table.xsl");
     $param = array('mode' => $mode,
                    'bibname' => $bibname,
                    'display_images' => $GLOBALS['display_images'],
-                   'display_text' => $GLOBALS['display_text']);
+                   'display_text' => $GLOBALS['display_text'],
+				   'basketids' => $basketids,
+				   'bibindex_mode' => $bibindexmode);
     
     if($abstract){
         $param['abstract'] = "true";
@@ -350,13 +354,17 @@ function get_all_bibentries($bibname,$mode,$abstract)
 /**
  * Return an HTML output of entries of a given group
  */
-function get_bibentries_of_group($bibname,$groupname,$mode,$abstract)
+function get_bibentries_of_group($bibname,$groupname,$usermode,$bibindexmode,$abstract,$extraparam)
 {
     $xml_content = load_xml_bibfile($bibname);    
-    $xsl_content = load_file("./xsl/by_group2html_table.xsl");  
+    $xsl_content = load_file("./xsl/by_group2html_table.xsl");
+	$basketids = $_SESSION['basket']->items_to_string();
     $param = array('group'=>$groupname,
-                   'mode' => $mode, 
+                   'mode' => $usermode, 
                    'bibname' => $bibname,
+				   'bibindex_mode' => $bibindexmode,
+				   'basketids' => $basketids,
+				   'extra_get_param' => $extraparam,
                    'display_images' => $GLOBALS['display_images'],
                    'display_text' => $GLOBALS['display_text']);
     if($abstract){
@@ -369,18 +377,22 @@ function get_bibentries_of_group($bibname,$groupname,$mode,$abstract)
 /**
  * Return an HTML output of entries matching search paramters
  */
-function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mode,$abstract){
+function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mode,$bibindexmode,$abstract){
     $xml_content = load_xml_bibfile($bibname);
     $xsl_content = load_file("./xsl/search2html_table.xsl");  
     $param = array();
+	
     if($forauthor!=null){
         $param["author"]=$value;
+		$extraparam = "author=author&search=$value";
     }
     if($fortitle!=null){
         $param["title"]=$value;
+		$extraparam = "title=title&search=$value";
      }
     if($forkeywords!=null){
         $param["keywords"]=$value;
+		$extraparam = "keywords=keywords&search=$value";
     }
     $param["mode"] = $mode;
     $param['bibname'] = $bibname;
@@ -389,6 +401,9 @@ function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mo
     }
     $param['display_images'] = $GLOBALS['display_images'];
     $param['display_text'] = $GLOBALS['display_text'];
+	$param['basketids'] = $_SESSION['basket']->items_to_string();
+	$param['bibindex_mode'] = $bibindexmode;
+	$param['extra_get_param'] = $extraparam;
 
     return xslt_transform($xml_content,$xsl_content,$param);
 }

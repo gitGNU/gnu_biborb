@@ -35,8 +35,8 @@
     
     <xsl:output method="xml" encoding="iso-8859-1"/>
     
-    <xsl:param name="bibname"/>
-    <xsl:param name="bibnameurl"/>
+    <!-- include generic parameters -->
+	<xsl:include href="xsl/parameters.xsl"/>
     
     <xsl:template match="/entrylist">
         <!-- load the xml file into a variable -->
