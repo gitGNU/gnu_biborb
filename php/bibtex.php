@@ -46,7 +46,7 @@ class BibTeX_Tools
     function get_array_from_string($string){
         $bibtex_parser = new PARSEENTRIES();
         for($i=0;$i<count($string);$i++){
-            $string[$i] = stripslashes($string[$i]);
+            $string[$i] = $string[$i];
         }
         $bibtex_parser->loadBibtexString($string);
         $bibtex_parser->expandMacro = TRUE;
@@ -55,7 +55,7 @@ class BibTeX_Tools
         $entries = $res[2];
         for($i=0;$i<count($entries);$i++){
             foreach($entries[$i] as $key => $value){
-                $entries[$i][$key] = addslashes($entries[$i][$key]);
+                $entries[$i][$key] = $entries[$i][$key];
             }
         }
         return $entries;
@@ -83,7 +83,6 @@ class BibTeX_Tools
         foreach($tab as $key => $value){
             if($key != 'groups' && $key!= 'type' && $key != 'id'){
                 $xml .= "<bibtex:".$key.">";
-                //$xml .= stripslashes(trim(myhtmlentities($value)));
                 $xml .= trim(myhtmlentities($value));
                 $xml .= "</bibtex:".$key.">";
             }
@@ -92,7 +91,6 @@ class BibTeX_Tools
                 $groupvalues = split(',',$value);
                 foreach($groupvalues as $gr){
                     $xml .= "<bibtex:group>";
-                    //$xml .= stripslashes(trim(myhtmlentities($gr)));
                     $xml .= trim(myhtmlentities($gr));
                     $xml .= "</bibtex:group>";
                 }

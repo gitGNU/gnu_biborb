@@ -85,7 +85,7 @@ function validate_bib_creation(lang){
 // check if group is not empty
 function validate_add_group(lang){
     var msg;
-    var group = document.forms['f_add_group'].elements['groupvalue'].value;
+    var group = document.forms['add_new_group'].elements['newgroupvalue'].value;
     
     if(lang == 'fr_FR'){
 		msg = "Nom de groupe vide!";
@@ -103,10 +103,12 @@ function validate_add_group(lang){
     }
 }
 
+
+
 // check if id is not empty
 function validate_new_entry_form(lang){
     var msg;
-    var id = document.forms['f_new_entry'].elements['id'].value;
+    var id = document.forms['f_bibtex_entry'].elements['id'].value;
     
     if(lang == 'fr_FR'){
 		msg = "Clé BibTeX vide! Vous devez définir une clé BibTeX!";
@@ -116,6 +118,26 @@ function validate_new_entry_form(lang){
 	}
     
 	if(trim(id) == ""){
+		alert(msg);
+		return false;
+	}
+    else{
+        return true;
+    }
+}
+
+function validate_new_bibtex_key(lang){
+    var msg;
+    var group = document.forms['new_bibtex_key'].elements['bibtex_key'].value;
+    
+    if(lang == 'fr_FR'){
+		msg = "Clé BibTeX vide! Vous devez définir une clé BibTeX!";
+	}
+	else if(lang == 'en_US'){
+		msg = "Empty ID! You must define a BibTeX ID.";
+	}
+    
+	if(trim(group) == ""){
 		alert(msg);
 		return false;
 	}

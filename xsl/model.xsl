@@ -37,7 +37,9 @@
     <xsl:param name="typeentry"/>
   
     <xsl:template match="/entrylist">
-        <input name="add_type" type="hidden" value="{$typeentry}"/>
+        <fieldset class='clean'>
+            <input name="add_type" type="hidden" value="{$typeentry}"/>
+        </fieldset>
         
         <!-- Required BibTeX fields -->        
         <fieldset class="required">
@@ -48,7 +50,7 @@
                     <xsl:when test="name() = 'alternative'">
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select="*">
-                            <label for="{name()}"><xsl:value-of select="name()"/>:</label>
+                            <label><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:x-small;'>or/and</span><br/>
@@ -59,7 +61,7 @@
                     <xsl:when test="name() = 'exalternative'">
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select="*">
-                            <label for="{name()}"><xsl:value-of select="name()"/>:</label>
+                            <label><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:x-small;'>or</span><br/>
@@ -68,7 +70,7 @@
                     </xsl:when>
                     <!-- all other fields -->
                     <xsl:otherwise>
-                        <label for="{name()}"><xsl:value-of select="name()"/>:</label>
+                        <label><xsl:value-of select="name()"/>:</label>
                         <input name="{name(.)}" /><br/>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -83,7 +85,7 @@
                     <xsl:when test="name() = 'alternative'">
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select="*">
-                            <label for="{name()}"><xsl:value-of select="name()"/>:</label>
+                            <label><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:x-small;'>or/and</span><br/>
@@ -94,7 +96,7 @@
                     <xsl:when test="name() = 'exalternative'">
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select="*">
-                            <label for="{name()}"><xsl:value-of select="name()"/>:</label>
+                            <label><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:x-small;'>or</span><br/>
@@ -103,7 +105,7 @@
                     </xsl:when>
                     <!-- all other fields -->
                     <xsl:otherwise>
-                        <label for="{name()}"><xsl:value-of select="name()"/>:</label>
+                        <label><xsl:value-of select="name()"/>:</label>
                         <input name="{name(.)}"/><br/>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -113,7 +115,7 @@
         <fieldset class="additional">
             <legend>BIBORB_OUTPUT_ADDITIONAL_FIELDS</legend>
             <xsl:for-each select="entry[@type=$typeentry]/additional/*">
-                <label for="{name()}"><xsl:value-of select="name()"/>:
+                <label><xsl:value-of select="name()"/>:
                     <xsl:if test="name() = 'website'">http://</xsl:if>
                 </label>
                 <xsl:choose>
@@ -135,7 +137,6 @@
                 </xsl:choose>
             </xsl:for-each>
         </fieldset>
-        <br/>
   </xsl:template>
   
  

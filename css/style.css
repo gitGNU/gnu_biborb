@@ -146,119 +146,31 @@ html > body #menu {position:fixed;}
 /**
  * Style for the main panel
  */
-#main {
-    position:relative;
-    float:middle;
-    width:65%;
-    margin-left:200px;
-    margin-top:1em;
-    padding:1em;
-    border: solid 1px #aaa;
-    background-color:#eef;
-}
-
-.main_title {
-  color:navy;
-  text-align:center;
-  border-bottom:dashed 2px gray;
-  margin-bottom:2em;
-  text-shadow:#666 2px 2px 2px;
-}
-
-#error_title {
-    color:red;
-    font-weight:bold;
-    font-size:x-large;
-    text-align:center;
-    display:block;
-    padding-bottom:1em;
-}
-
-#error {
-    color:red;
-    border:1px solid red;
-    margin:1em;
-    padding:1em;
-    text-align:center;
-}
-
-#message_title {
-    color:navy;
-    font-weight:bold;
-    font-size:x-large;
-    text-align:center;
-    display:block;
-    padding-bottom:1em;
-}
-
-#message { 
-    color:navy;
-    border:1px solid navy;
-    margin:1em;
-    padding:1em;
-}
-
-#content {
-    margin:auto;
-}
-
-#content p {
-    text-align:justify;
-}
+#main { position:relative;float:middle;width:65%;margin-left:200px;padding:0 1em 1em 1em;border: solid 1px #aaa;background-color:#eef;}
+#main_title {color:navy;text-align:center;border-bottom:dashed 2px gray; padding-bottom:0.5em;margin-bottom:1em;text-shadow:#666 2px 2px 2px;}
+#error_title {color:red;font-weight:bold;font-size:x-large;text-align:center;display:block;padding-bottom:1em;}
+#error {color:red;border:1px solid red;margin:1em;padding:1em;text-align:center;}
+#message_title {color:navy;font-weight:bold;font-size:x-large;text-align:center;display:block;padding-bottom:1em;}
+#message { color:navy;border:1px solid navy;margin:1em;padding:1em;}
+#content {margin:auto;}
+#content p {text-align:justify;}
 
 /**
  * Style for the table recording available databases
  */
+#available_bibliographies {border-collapse:collapse;margin:auto;}
+#available_bibliographies th {border-bottom:3px solid black;margin:2px;}
+#available_bibliographies tr:hover {background-color:#ccc;}
+#available_bibliographies td {padding:0.5em;border-bottom:dashed 1px black;}
+#available_bibliographies a.download, a:visited.download {color:blue;text-decoration:none;text-align:center;display:block;}
+#available_bibliographies a.bibname, a:visited.bibname {text-decoration:none;color:navy;font-weight:bold;display:block;}
+#available_bibliographies .bib_description {font-style:italic;}
 
-#available_bibliographies table {
-    border-collapse:collapse;
-    margin:auto;
-}
+.biborb {font-weight:bold;color:navy;}
 
-#available_bibliographies th {
-    border-bottom:3px solid black;
-#    background-color:#ccc;
-    margin:2px;
-}
+.misc_input {border:1px solid black;}
 
-#available_bibliographies tr:hover {
-    background-color:#ccc;
-}
-
-#available_bibliographies td {
-    padding:0.5em;
-    border-bottom:dashed 1px black;
-}
-
-a.download, a:visited.download {
-    color:blue;
-    text-decoration:none;
-}
-
-a.bibname, a:visited.bibname { 
-    text-decoration:none;
-    color:navy;
-    font-weight:bold;
-    display:block;
-}
-
-.bib_description {
-    font-style:italic;
-}
-
-
-.biborb {
-    font-weight:bold;
-    color:navy;
-}
-
-.misc_input {
-    border:1px solid black;
-}
-
-.misc_button {
-    border:1px solid black;
-}
+.misc_button {border:1px solid black;}
 
 .emphit {
     font-weight:bold;
@@ -309,9 +221,13 @@ a.admin, a.admin:visited, a.admin:hover {
     margin:3px;
 }
 
-input {
-    border:1px solid black;
+.fieldset-bordered {
+    border: dotted 1px navy;
+    text-align:center;
+    margin:0;
+    padding:1em;
 }
+
 
 #content table.help {
     margin:auto;
@@ -335,5 +251,133 @@ input {
 }
 
 
+/**
+ * Style for the form to choose a database
+ */
+/**
+ * Style for the form to choose language
+ */
+#choose_bib {margin:0;padding:0;}
+#choose_bib fieldset {border:none;text-align:center;margin:0;padding:0;}
+#choose_bib label {margin:0;font-style:italic;display:block;}
+#choose_bib input {width:100px;margin:3px;padding:0;border:solid 1px black;}
+#choose_bib input.submit {margin:3px;padding:0;width:auto;}
+
+/**
+ * Style for the form to choose language
+ */
+#language_form {margin:0;padding:0;}
+#language_form fieldset {border:none;text-align:center;margin:0;padding:0;}
+#language_form label {margin:0;font-style:italic;display:block;}
+#language_form input {width:100px;margin:3px;padding:0;border:solid 1px black;}
+#language_form input.submit {margin:3px;padding:0;width:auto;}
+
+/**
+ * Style for login_form
+ */
+#login_form {width:250px;margin:auto;}
+#login_form fieldset {border:none;text-align:center;margin:0;padding:0;}
+#login_form label {text-align:right;width:100px;float:left;padding-top:0.3em;margin:0;font-weight:bold;font-style:italic;}
+#login_form input {width:100px;margin:3px;padding:0;border:solid 1px black;}
+#login_form input.submit {margin:3px;padding:0;width:auto;}
+
+/**
+ * Style for add database form
+ */
+#f_bib_creation {margin:auto;width:350px;}
+#f_bib_creation fieldset {border:none;text-align:center;margin:0;padding:0;}
+#f_bib_creation label {text-align:right;width:100px;float:left;padding-top:0.3em;margin:0;font-weight:bold;font-style:italic;}
+#f_bib_creation input {width:200px;margin:3px;padding:0;border:solid 1px black;}
+#f_bib_creation input.submit {margin:3px;padding:0;width:auto;}
+
+/**
+ * Style for delete database form
+ */
+#f_delete_database {margin:auto;width:350px;}
+#f_delete_database fieldset {border:none;text-align:center;margin:0;padding:0;}
+#f_bib_creation input.submit {margin:3px;padding:0;width:auto;}
+
+/**
+ * Style for simple search
+ */
+#simple_search_form {padding:0;margin:auto;width:300px;}
+#simple_search_form fieldset {border:none;padding:0;text-align:center;margin:auto;}
+#simple_search_form .items {text-align:left;}
+#simple_search_form .item {border:none;margin:0;padding:0;float:left;width:90px;}
+#simple_search_form input {border:solid black 1px;}
+
+/**
+ * Style for the advanced search form
+ */
+#search_form {padding:0;margin:0;}
+#search_form fieldset {border:none;margin:0;padding:0;text-align:center;}
+#search_form strong {text-align:left;float:left;}
+#search_form label {text-align:right;width:80px;float:left;margin:3px;}
+#search_form input {width:80%;margin-left:1em;border:1px solid black;margin:3px;}
+#search_form input.submit {margin-left:1em;border:1px solid black;width:auto;}
+
+/**
+ * Style for the form containing group to display
+ */ 
+#
+#display_by_group_form {padding:0;margin:0;}
+#display_by_group_form fieldset {border:none;margin:0;padding:0;text-align:center;}
+#display_by_group_form label {font-weight:bold;}
+#display_by_group_form input {border:1px solid black;}
+#display_by_group_form input.submit {border:1px solid black;}
+
+/**
+ * Style for group management
+ */
+#reset_groups {padding:0;margin:0;border:none;}
+#reset_groups fieldset {border:none;padding:0;margin:0;}
+#add_new_group {padding:0;margin:auto;width:400px;}
+#add_new_group fieldset {border:none;padding:0;margin:0;}
+#add_new_group label {float:left;min-width:100px;}
+#add_new_group .longtextfield {width:170px;}
+#add_group {padding:0;margin:auto;width:400px;}
+#add_group fieldset {border:none;padding:0;margin:0;}
+#add_group label {float:left;min-width:100px;}
+#add_group .longtextfield {width:170px;}
+
+/**
+ * Style for the form to select an entry type
+ */
+#select_entry_type {margin:auto;padding:0;text-align:center;}
+#select_entry_type fieldset {margin:0;padding:0;border:none;}
+#select_entry_type label {font-style:italic; font-weight:bold;}
+
+/**
+ * Style for the form to edit entry
+ */
+#f_bibtex_entry {margin:0;padding:0;border:none;}
+#f_bibtex_entry fieldset.clean {margin:0;padding:0;border:none;text-align:center;}
+#f_bibtex_entry .required {color:red;font-weight:bold;}
+#f_bibtex_entry fieldset.required {border:dotted 1px red;}
+#f_bibtex_entry .required label {color:red;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
+#f_bibtex_entry .required input {width:80%;border:1px solid black;margin:0.1em;}
+#f_bibtex_entry .optional {color:navy;font-weight:bold;}
+#f_bibtex_entry fieldset.optional {border:dotted 1px navy;}
+#f_bibtex_entry .optional label {color:navy;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
+#f_bibtex_entry .optional input {width:80%;border:1px solid black;margin:0.1em;}
+#f_bibtex_entry .additional {color:green;font-weight:bold;}
+#f_bibtex_entry fieldset.additional {border:dotted 1px green;}
+#f_bibtex_entry .additional label {color:green;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
+#f_bibtex_entry .additional input {width:80%;border:1px solid black;margin:0.1em;}
+#f_bibtex_entry .additional textarea {height:165px;width:80%;border:1px solid black;margin:0.1em;}
+
+/**
+ * Generic style
+ */
+.result_header {margin:0;border:none;padding:0;vertical-align:center;}
+.add_all {margin:0;border:none;padding:0;vertical-align:center;}
+.f_default_form {}
+.f_default_form fieldset {margin:0;padding:0;border:none;}
+.f_default_form label {font-weight:bold;font-style:italic;min-width:100px;float:left;margin:3px;}
+.f_default_form input {width:150px;border:solid 1px black;}
+.f_default_form select {width:150px;border:solid 1px black;}
+.f_default_form input.submit {border:solid 1px black;width:auto;}
+.submit {border:1px solid black;}
+input {border:solid 1px black;}
 
 

@@ -57,7 +57,7 @@ $display_language_selection = TRUE;
  * Version of Biborb
  */
 $biborb_version = "CVS";
-$date_release = "22 August 2004";
+$date_release = "11 September 2004";
 
 
 /**

@@ -302,11 +302,17 @@ if(isset($_GET['action'])){
         break;
 	
         case _("Add"):					// Add entries in the basket to a given group
-            if(!isset($_GET['groupvalue'])){
+            if(isset($_GET['groupvalue'])){
+                $gval = trim($_GET['groupvalue']);
+            }
+            if(isset($_GET['newgroupvalue'])){
+                $gval = trim($_GET['newgroupvalue']);
+            }
+            if(!isset($gval)){
                 die(_("No group specified!"));
             }
-            else if(trim($_GET['groupvalue']) != ""){
-                $_SESSION['bibdb']->add_to_group($_SESSION['basket']->items,trim($_GET['groupvalue']));
+            else if($gval != ""){
+                $_SESSION['bibdb']->add_to_group($_SESSION['basket']->items,$gval);
             }
             break;
 	
@@ -438,9 +444,10 @@ if(isset($_POST['action'])){
 	    
                 if(array_key_exists('bibval',$_POST)){
                     $bibtex_data = explode("\n",$_POST['bibval']);
+                    
                 }
                 else{
-                    $bibtex_data= file($_FILES['bibfile']['tmp_name']);
+                    $bibtex_data= addslashes_deep(file($_FILES['bibfile']['tmp_name']));
                 }
                 // add the new entry	
                 $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);

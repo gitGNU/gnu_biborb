@@ -90,22 +90,10 @@ function upload_file($bibname,$type,$id)
 function main($title,$content,$error = null,$message = null)
 {
   $html = "<div id='main'>";
-  if($title != null){
-    $html .= "<div class='main_title'>";
-    $html .= "<h2>$title</h2>";
-    $html .= "</div>";
-  }
-  if($error){
-	$html .= "<div id='error'>$error</div>";
-  }
-  if($message){
-      $html .= "<div id='message'>$message</div>";
-  }
-  
-  if($content != null) {
-    $html .= "<div id='content'>$content</div>";
-  }
-  
+  if($title != null){$html .= "<h2 id='main_title'>$title</h2>";}
+  if($error){$html .= "<div id='error'>$error</div>";}
+  if($message){$html .= "<div id='message'>$message</div>";}
+  if($content != null) {$html .= "<div id='content'>$content</div>";}
   $html .= "</div>";
   return $html;  
 }

@@ -44,12 +44,12 @@ function index_login(){
     $html .= index_menu();
     $title = _("INDEX_MENU_LOGIN_TITLE");
 
-    $content = "<form style='margin:auto;width:250px;' action='index.php' method='post'>";
-    $content .= "<fieldset class='fieldset'>";
+    $content = "<form id='login_form' action='index.php' method='post'>";
+    $content .= "<fieldset>";
     $content .= "<label for='login'>"._("LOGIN_USERNAME").":</label>";
-    $content .= "<input type='text' name='login' value='login' class='textfield'/><br/>";
+    $content .= "<input type='text' name='login' id='login' value='login'/><br/>";
     $content .= "<label for='password'>"._("LOGIN_PASSWORD").":</label>";
-    $content .= "<input type='password' name='mdp' value='mdp' class='textfield'/><br/>";
+    $content .= "<input type='password' id='password' name='mdp' value='mdp'/><br/>";
     $content .= "<input type='submit' name='action' value=\""._("Login")."\" class='submit'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
@@ -87,13 +87,13 @@ function index_add_database(){
     $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
     $title = _("INDEX_CREATE_BIB_TITLE");
     // create the form to create a new bibliography
-    $content = "<form method='get' action='index.php' id='f_bib_creation' onsubmit='return validate_bib_creation(\"".$_SESSION['language']."\")' style='margin:auto;width:350px'>";
-    $content .= "<fieldset class='fieldset'>";
+    $content = "<form method='get' action='index.php' id='f_bib_creation' onsubmit='return validate_bib_creation(\"".$_SESSION['language']."\")'>";
+    $content .= "<fieldset>";
     $content .= "<input type='hidden' name='mode' value='result'/>";
     $content .= "<label for='database_name'>"._("INDEX_CREATE_BIBNAME").":</label>";
-    $content .= "<input class='longtextfield' type='text' name='database_name'/><br/>";
+    $content .= "<input type='text' name='database_name' id='database_name'/><br/>";
     $content .= "<label for='description'>"._("INDEX_CREATE_DESCRIPTION").":</label>";
-    $content .= "<input class='longtextfield' type='text' name='description'/><br/>";
+    $content .= "<input type='text' name='description' id='description'/><br/>";
     $content .= "<input class='submit' type='submit' name='action' value='".
         _("Create")."'/>";
     $content .= "</fieldset>";
@@ -116,11 +116,10 @@ function index_delete_database(){
     
     // get all bibliographies and create a form to select which one to delete
     $databases = get_databases_names();
-    $content = "<div style='text-align:center;'>";
-    $content .= "<form method='get' action='index.php'>";
-    $content .= "<fieldset class='fieldset'>";
+    $content = "<form method='get' action='index.php' id='f_delete_database'>";
+    $content .= "<fieldset>";
     $content .= "<input type='hidden' name='mode' value='result'/>";
-    $content .= "<select class='misc_button' name='database_name'>";
+    $content .= "<select name='database_name'>";
 
     foreach($databases as $name){
         if($name != ".trash"){
@@ -132,7 +131,6 @@ function index_delete_database(){
     $content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Delete")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "</div>";
     
     $html .= index_menu();
     $html .= main($title,$content);
@@ -184,8 +182,7 @@ function index_select(){
 
     // get all bibliographies and create an array
     $databases = get_databases_names();
-    $content = "<div id='available_bibliographies'>";
-    $content .= "<table>";
+    $content = "<table id='available_bibliographies'>";
     $content .= "<thead>";
     $content .= "<tr>";
     $content .= "<th>"._("INDEX_AVAILABLE_BIBS_COL_BIBNAME")."</th>";
@@ -207,7 +204,6 @@ function index_select(){
         }
     }
     $content .= "</tbody></table>";
-    $content .= "</div>";
     
     $html .= main($title,$content);
     $html .= html_close();
@@ -258,11 +254,12 @@ function index_menu(){
     $html .= "</li>";
     $html .= "</ul>";
     if($GLOBALS['display_language_selection']){
-        $html .= "<form action='index.php' method='get'>";
-        $html .= "<fieldset class='fieldset'>"._("Language:")."<br/>";
+        $html .= "<form id='language_form' action='index.php' method='get'>";
+        $html .= "<fieldset>";
+        $html .= "<label for='lang'>"._("Language:")."</label>";
         $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language'],"javascript:change_lang_index(this.value)");
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
-        $html .= "<noscript><div><input class='misc_button' type='submit' value='"._("Select")."'/></div></noscript>";
+        $html .= "<noscript><div><input class='submit' type='submit' value='"._("Select")."'/></div></noscript>";
         $html .= "</fieldset>";
         $html .= "</form>";
     }
@@ -286,9 +283,7 @@ function bibindex_details()
     $html = bibheader();
 
     // get the bibname
-    if(!array_key_exists('bibname',$_GET)){
-        die("No bibliography name provided");
-    }
+    if(!array_key_exists('bibname',$_GET)){die("No bibliography name provided");}
     $bibdb = new BibORB_DataBase($_GET['bibname']);
     
     // get the parameters
@@ -312,7 +307,6 @@ function bibindex_details()
         $bibids = explode(',',$_GET['bibids']);
 		$xml_content = $bibdb->entries_with_ids($bibids);
 		$content = $xsltp->transform($xml_content,$xsl_content,$param);
-//      $content = ereg_replace("<div class=\"result\">(.)*</div><br/>","",$content);
 	}
 	else if(array_key_exists('id',$_GET)){
 		// get the selected entry
@@ -345,12 +339,12 @@ function bibindex_login(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("INDEX_LOGIN_TITLE");
-    $content = "<form style='margin:auto;width:250px;' action='bibindex.php' method='post'>";
-    $content .= "<fieldset class='fieldset'>";
+    $content = "<form id='login_form' action='bibindex.php' method='post'>";
+    $content .= "<fieldset>";
     $content .= "<label for='login'>"._("LOGIN_USERNAME").":</label>";
-    $content .= "<input type='text' name='login' value='login' class='textfield'/><br/>";
+    $content .= "<input type='text' name='login' id='login' value='login'/><br/>";
     $content .= "<label for='password'>"._("LOGIN_PASSWORD").":</label>";
-    $content .= "<input type='password' name='mdp' value='mdp' class='textfield'/><br/>";
+    $content .= "<input type='password' id='password' name='mdp' value='mdp'/><br/>";
     $content .= "<input type='submit' name='action' value=\""._("Login")."\" class='submit'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
@@ -387,9 +381,9 @@ function bibindex_menu($bibname)
     // jump to a given bibliography
     $avbibs = get_databases_names();
     $html .= "<li>";
-    $html .= "<form style='margin:0;padding:0;' action='bibindex.php'>";
-    $html .= "<fieldset class='fieldset'>";
-    $html .= "<select class='misc_button' onchange='javascript:change_db(this.value)'>";
+    $html .= "<form id='choose_bib' action='bibindex.php'>";
+    $html .= "<fieldset>";
+    $html .= "<select onchange='javascript:change_db(this.value)'>";
     foreach($avbibs as $bib){
         if($bib == $bibname){
             $html .= "<option selected='selected'>$bib</option>";
@@ -399,7 +393,7 @@ function bibindex_menu($bibname)
         }
     }
     $html .= "</select><br/>";
-    $html .= "<noscript><div><input class='misc_button' type='submit' value='Go'/></div></noscript>";
+    $html .= "<noscript><div><input class='submit' type='submit' value='Go'/></div></noscript>";
     $html .= "</fieldset>";
     $html .= "</form>";
     $html .= "</li>";
@@ -485,12 +479,13 @@ function bibindex_menu($bibname)
     $html .= "</ul>";
     
     if($GLOBALS['display_language_selection']){
-        $html .= "<form action='bibindex.php' method='get'>";
-        $html .= "<div style='text-align:center;'>"._("Language:")."<br/>";
+        $html .= "<form id='language_form' action='bibindex.php' method='get'>";
+        $html .= "<fieldset>";
+        $html .= "<label for='lang'>"._("Language:")."</label>";
         $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language'],"javascript:change_lang(this.value)");
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
-        $html .= "<noscript><div><input class='misc_button' type='submit' value='"._("Select")."'/></div></noscript>";
-        $html .= "</div>";
+        $html .= "<noscript><div><input class='submit' type='submit' value='"._("Select")."'/></div></noscript>";
+        $html .= "</fieldset>";
         $html .= "</form>";
     }
     $html .= "</div>";
@@ -517,7 +512,7 @@ function bibindex_welcome()
     $html = bibheader();  
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = "BibORB: BibTeX On-line References Browser";
-    $content = _("This is the bibliography").": <b>".$_SESSION['bibdb']->name()."</b>.<br/>";
+    $content = _("This is the bibliography").": <strong>".$_SESSION['bibdb']->name()."</strong>.<br/>";
     if(array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){      
         $content .= _("You are logged as").": <em>".$_SESSION['user']."</em>.";
 /*
@@ -598,7 +593,7 @@ function bibindex_display_all(){
     $xsltp->free();
     
     // create the header
-    $start = "<div style='margin:0;border:none;padding:0;vertical-align:center;'>";
+    $start = "<div class='result_header'>";
     if($GLOBALS['DISPLAY_SORT']){
         $start = sort_div($GLOBALS['sort'],$_GET['mode'],null).$start;
     }
@@ -625,16 +620,15 @@ function bibindex_display_by_group(){
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     
     // create a form with all groups present in the bibliography
-    $main_content = "<div style='text-align:center;'>";
-    $main_content .= "<form method='get' action='bibindex.php'>";
-    $main_content .="<fieldset style='border:none'>";
+    $main_content = "<form id='display_by_group_form' method='get' action='bibindex.php'>";
+    $main_content .="<fieldset>";
     $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibdb']->name()."'/>";
     $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
-    $main_content .= "<h3 style='display:inline;'>"._("Available groups").":</h3> ";
+    $main_content .= "<label for='group'>"._("Available groups").":</label> ";
     $main_content .= xhtml_select('group',1,$_SESSION['bibdb']->groups(),$group);
-    $main_content .= "<input class='misc_button' type='submit' value='"._("Display")."'/>";
+    $main_content .= "&nbsp;<input class='submit' type='submit' value='"._("Display")."'/>";
     $main_content .= "</fieldset>";
-    $main_content .="</form></div><br/>";
+    $main_content .="</form><br/>";
 
     // if the group is defined, display the entries matching it
     if($group){
@@ -658,11 +652,11 @@ function bibindex_display_by_group(){
         }
         
         // create the header
-        $start = "<div style='margin:0;border:none;padding:0;vertical-align:center;'>";
+        $start = "<div style='result_header'>";
         if($GLOBALS['DISPLAY_SORT']){
             $start = sort_div($GLOBALS['sort'],$_GET['mode'],$group).$start;
         }
-        $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode'],"group=$group&sort=".$GLOBALS['sort']);
+        $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode'],"group=$group&amp;sort=".$GLOBALS['sort']);
         $start .= "</div>";
         $main_content .= "<br/><br/>".$start;
         $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
@@ -685,51 +679,47 @@ function bibindex_display_search(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     
-    $main_content = "<form action='bibindex.php' method='get' style='text-align:center'>";
-    $main_content .= "<fieldset style='border:none'>";
+    $main_content = "<form id='simple_search_form' action='bibindex.php' method='get' style='text-align:center'>";
+    $main_content .= "<fieldset>";
     $main_content .= "<input type='hidden' name='mode' value='displaysearch' />";
-    $main_content .= "<input class='misc_input' name='search' value='".$searchvalue."' />";
-    $main_content .= "<input class='misc_button' type='submit' value='"._("Search")."' /><br/>";
-    //	$main_content .= "<span style='font-weight:bold'>Search in fields:</span>";
-    $main_content .= "<table style='margin:auto;text-align:left;'>";
-    $main_content .= "<tbody>";
-    $main_content .= "<tr>";
-    $main_content .= "<td style='width:80px;'><input type='checkbox' name='author' value='1'";
+    $main_content .= "<input name='search' value='".$searchvalue."' />";
+    $main_content .= "&nbsp;<input class='submit' type='submit' value='"._("Search")."' /><br/>";
+    $main_content .= "<div class='items'>";
+    $main_content .= "<div class='item'><input type='checkbox' name='author' value='1'";
     if(array_key_exists('author',$_GET)){
-	$main_content .= "checked='checked'";
+        $main_content .= "checked='checked'";
     }
-    $main_content .= " />"._("Author")."</td>";
-    $main_content .= "<td style='width:80px;'><input type='checkbox' name='title' value='1' ";
+    $main_content .= " />"._("Author")."</div>";
+    $main_content .= "<div class='item'><input type='checkbox' name='title' value='1' ";
     if(array_key_exists('title',$_GET)){
-	$main_content .= "checked='checked'";
+        $main_content .= "checked='checked'";
     }
-    $main_content .= "/>"._("Title")."</td>";
-    $main_content .= "<td style='width:80px;'><input type='checkbox' name='keywords' value='1' ";
+    $main_content .= "/>"._("Title")."</div>";
+    $main_content .= "<div class='item'><input type='checkbox' name='keywords' value='1' ";
     if(array_key_exists('keywords',$_GET)){
-	$main_content .= "checked='checked'";
+        $main_content .= "checked='checked'";
     }
-    $main_content .= "/>"._("Keywords")."</td>";
-    $main_content .= "</tr>";
-    $main_content .= "<tr>";
-    $main_content .= "<td><input type='checkbox' name='journal' value='1'";
+    $main_content .= "/>"._("Keywords")."</div>";
+    $main_content .= "<br/>";
+    $main_content .= "<div class='item'><input type='checkbox' name='journal' value='1'";
     if(array_key_exists('journal',$_GET)){
-	$main_content .= "checked='checked'";
+        $main_content .= "checked='checked'";
     }
-    $main_content .= " />"._("Journal")."</td>";
-    $main_content .= "<td><input type='checkbox' name='editor' value='1'";
+    $main_content .= " />"._("Journal")."</div>";
+    $main_content .= "<div class='item'><input type='checkbox' name='editor' value='1'";
     if(array_key_exists('editor',$_GET)){
-	$main_content .= "checked='checked'";
+        $main_content .= "checked='checked'";
     }
-    $main_content .= " />"._("Editor")."</td>";
-    $main_content .= "<td><input type='checkbox' name='year' value='1'";
+    $main_content .= " />"._("Editor")."</div>";
+    $main_content .= "<div class='item'><input type='checkbox' name='year' value='1'";
     if(array_key_exists('year',$_GET)){
-	$main_content .= "checked='checked'";
+        $main_content .= "checked='checked'";
     }
-    $main_content .= " />"._("Year")."</td>";
+    $main_content .= " />"._("Year")."</div>";
+    $main_content .= "</div>";
     
-    $main_content .= "</tr>";
-    $main_content .=  "<tr style='text-align:center'><td colspan='3'>"._("Sort by:");
-    $main_content .= "<select name='sort'>";
+    $main_content .= "<br/><br/>";
+    $main_content .= _("Sort by:")."&nbsp;<select name='sort'>";
     
     $main_content .= "<option value='ID' ";
     $sort = null;
@@ -760,11 +750,8 @@ function bibindex_display_search(){
         $main_content .="selected='selected'";
     }
     $main_content .= ">"._("Year")."</option>";
-    $main_content .= "</select></td>";
+    $main_content .= "</select><br/>";
     
-    $main_content .= "</tr>";
-    $main_content .= "</tbody>";
-    $main_content .= "</table>";
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
     
@@ -810,7 +797,7 @@ function bibindex_display_search(){
         $param['extra_get_param'] = $extra_param;
         
         // add all
-        $start = "<div style='margin:0;border:none;padding:0;vertical-align:center;'>";
+        $start = "<div class='result_header'>"; 
         $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode'],$extra_param);
         $start .= "</div>";
         
@@ -856,32 +843,28 @@ function bibindex_display_advanced_search(){
     }
     $content .= "<div id='search_form'>";
     $content .= "<form action='bibindex.php' method='get'>";
-    $content .= "<fieldset style='border:none;'>";
-	$content .= "<table style='width:100%'>";
-	$content .= "<tbody>";
-	$content .= "<tr>";
-    $content .= "<td style='width:50%;'><span class='emphit'>"._("Connector:")." </span>";
+    $content .= "<fieldset>";
+    $content .= "<em>"._("Connector:")." </em>";
     $content .= "<select name='connector'>";
 
     if(array_key_exists('connector',$_GET)){
-	$extraparam .= "connector=".$_GET['connector']."&";
-	if(!strcmp($_GET['connector'],'and')){
-	    $content .= "<option value='and' selected='selected'>"._("and")."</option>";
-	    $content .= "<option value='or'>"._("or")."</option>";
-	}
-	else{
-	    $content .= "<option value='and'>"._("and")."</option>";
-	    $content .= "<option value='or' selected='selected'>"._("or")."</option>";
-	}
+        $extraparam .= "connector=".$_GET['connector']."&";
+        if(!strcmp($_GET['connector'],'and')){
+            $content .= "<option value='and' selected='selected'>"._("and")."</option>";
+            $content .= "<option value='or'>"._("or")."</option>";
+        }
+        else{
+            $content .= "<option value='and'>"._("and")."</option>";
+            $content .= "<option value='or' selected='selected'>"._("or")."</option>";
+        }
     }
     else{
-	$extraparam = "connector=and&";
-	$content .= "<option value='and' selected='selected'>"._("and")."</option>";
-	$content .= "<option value='or'>"._("or")."</option>";
+        $extraparam = "connector=and&";
+        $content .= "<option value='and' selected='selected'>"._("and")."</option>";
+        $content .= "<option value='or'>"._("or")."</option>";
     }
-    $content .= "</select></td>";
-    $content .= "<td style='50%'>";
-    $content .= "<span class='emphit'>"._("Sort by:")." </span>";
+    $content .= "</select><br/>";
+    $content .= "<em>"._("Sort by:")." </em>";
     $content .= "<select name='sort' >";
     $content .= "<option value='year' ";
     $sort = null;
@@ -909,42 +892,41 @@ function bibindex_display_advanced_search(){
         $content .="selected='selected'";
     }
     $content .= ">"._("Title")."</option>";
-    $content .= "</select></td></tr></tbody></table>";    
-    $content .= "<table width='100%'>";
-    $content .= "<tbody>";
-	$content .= "<tr><td><span class='emphit'>"._("BibTeX Fields")."</span></td></tr>";
+    $content .= "</select><br/>";    
+	$content .= "<strong>"._("BibTeX Fields")."</strong><br/>";
     
     foreach($bibtex_fields as $field){
-        $content .= "<tr><td style='width:110px;'>$field</td><td>";
-	if(array_key_exists($field,$_GET)){
-	    $thefield = remove_accents(trim($_GET[$field]));
-	    $content .= "<input style='width:85%;' name='$field' value='".$thefield."'/></td></tr>";
-	    $extraparam .= "$field=".$thefield."&";
-	}
-	else{
-	    $content .= "<input style='width:85%;' name='$field'/></td></tr>";
-	}
+        $content .= "<label for='$field'>$field</label>";
+        if(array_key_exists($field,$_GET)){
+            $thefield = remove_accents(trim($_GET[$field]));
+            $content .= "<input name='$field' value='".$thefield."'/>";
+            $extraparam .= "$field=".$thefield."&";
+        }
+        else{
+            $content .= "<input name='$field'/>";
+        }
+        $content .= "<br/>";
     }
-    $content .= "<tr><td><span class='emphit'>"._("BibORB Fields")."</span></td></tr>";
+    $content .= "<strong>"._("BibORB Fields")."</strong><br/>";
     foreach($biborb_fields as $field){
-	$content .= "<tr><td>$field</td><td>";
-	if(array_key_exists($field,$_GET)){
-	    $thefield = remove_accents(trim($_GET[$field]));
-	    $content .= "<input style='width:85%;' name='$field' value='".$thefield."'/></td></tr>";
-	    $extraparam .= "$field=".$thefield."&";
-	}
-	else{
-	    $content .= "<input style='width:85%;' name='$field'/></td></tr>";
-	}
+        $content .= "<label for='$field'>$field</label>";
+        if(array_key_exists($field,$_GET)){
+            $thefield = remove_accents(trim($_GET[$field]));
+            $content .= "<input name='$field' value='".$thefield."'/>";
+            $extraparam .= "$field=".$thefield."&";
+        }
+        else{
+            $content .= "<input name='$field'/>";
+        }
+        $content .= "<br/>";
     }
     
-    $content .= "</tbody></table>";
     $content .= "<input type='hidden' name='mode' value='displayadvancedsearch'/>";
     $content .= "<input type='hidden' name='searched' value='1'/>";
-    $content .= "<div style='text-align:center;'><input type='submit' value='"._("Search")."'/></div>";
+    $content .= "<input class='submit' type='submit' value='"._("Search")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "</div><br/>";
+    $content .= "</div>";
     
     $searchArray = array();
     foreach($bibtex_fields as $val){
@@ -973,7 +955,7 @@ function bibindex_display_advanced_search(){
         $param['extra_get_param'] = $extraparam;
         
         // add all
-        $start = "<div style='margin:0;border:none;padding:0;vertical-align:center;'>";
+        $start = "<div class='result_header'>";
         $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode'],$extraparam);
         $start .= "</div>";
         
@@ -994,10 +976,10 @@ function bibindex_display_advanced_search(){
 
     // hide the search form if some results are being displayed
     if(array_key_exists('searched',$_GET)){
-	$html = bibheader("onload='javascript:toggle_element(\"search_form\")'");
+        $html = bibheader("onload='javascript:toggle_element(\"search_form\")'");
     }
     else{
-	$html = bibheader();
+        $html = bibheader();
     }
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $html .= main($title,$content.$main_content);
@@ -1074,33 +1056,33 @@ function bibindex_basket_modify_group(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
 
-    $main_content = "<form style='margin:0;padding:0;' action='bibindex.php' method='get'>";
-    $main_content .= "<fieldset style='border:none;margin:O;padding:0;'>";
+    $main_content = "<form id='reset_groups' action='bibindex.php' method='get'>";
+    $main_content .= "<fieldset>";
 	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-	$main_content .= "<input  class='misc_button' type='submit' name='action' value='"._("Reset")."'/> &nbsp;"._("Reset the groups field of each entry in the basket. ");
+	$main_content .= "<input class='submit' type='submit' name='action' value='"._("Reset")."'/> &nbsp;"._("Reset the groups field of each entry in the basket. ");
 	$main_content .= "</fieldset>";
 	$main_content .= "</form>";
 	$main_content .= "<br/>";
 	$main_content .= _("Add all entries in the basket to a group:");
     $main_content .= "<br/>";
     $main_content .= "<br/>";
-	$main_content .= "<form style='margin:auto;width:400px' action='bibindex.php' method='get' id='f_add_group' onsubmit='return validate_add_group(\"".$_SESSION['language']."\")'>";
-	$main_content .= "<fieldset class='fieldset'>";
+	$main_content .= "<form id='add_new_group' action='bibindex.php' method='get' onsubmit='return validate_add_group(\"".$_SESSION['language']."\")'>";
+	$main_content .= "<fieldset>";
 	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-	$main_content .= "<label style='font-weight:normal;width:120px;' for='groupvalue'>"._("New group:")."</label> <input class='longtextfield' name='groupvalue' id='groupvalue'/>";
-	$main_content .= "<input  class='submit' type='submit' name='action' value='"._("Add")."'/>";
+	$main_content .= "<label for='newgroupvalue'>"._("New group:")."</label> <input name='newgroupvalue' id='newgroupvalue' class='longtextfield'/>";
+	$main_content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Add")."'/>";
 	$main_content .= "</fieldset>";
 	$main_content .= "</form><br/>";
     $groups = $_SESSION['bibdb']->groups();
     
     // display available groups if at least one exists
     if(count($groups)>0){
-        $main_content .= "<form style='margin:auto;width:400px' action='bibindex.php' method='get'>";
-        $main_content .= "<fieldset class='fieldset'>";
+        $main_content .= "<form id='add_group' action='bibindex.php' method='get'>";
+        $main_content .= "<fieldset>";
         $main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-        $main_content .= "<label style='font-weight:normal;width:120px;' for='groupvalue'>"._("Existing group:")."</label>";
+        $main_content .= "<label for='groupvalue'>"._("Existing group:")."</label>";
         $main_content .= xhtml_select('groupvalue',1,$groups,"",null,null,"longtextfield");
-        $main_content .= "<input class='submit' type='submit' name='action' value='"._("Add")."'/>";
+        $main_content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Add")."'/>";
         $main_content .= "</fieldset>";
         $main_content .= "</form>";
     }
@@ -1133,11 +1115,10 @@ function bibindex_entry_to_add(){
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("BIBINDEX_SELECT_NEW_ENTRY_TITLE");
     $types = xhtml_select('type',1,$_SESSION['bibdb']->entry_types(),"");
-	$content = "<form style='margin:auto;width:350px;' method='get' action='bibindex.php'>";
-	$content .= "<fieldset class='fieldset'>";
-	$content .= "<label style='width:auto;font-weight:normal;' for='mode'>"._("Select an entry type: ")."</label>".$types."<br/>";
-//    $content .= "<input class='submit' type='submit' name='mode' id='mode' value='"._("Cancel")."'/>";
-    $content .= "&nbsp;<input class='submit' type='submit' name='mode' value='"._("Select")."'/>";
+	$content = "<form id='select_entry_type' method='get' action='bibindex.php'>";
+	$content .= "<fieldset>";
+	$content .= "<label for='mode'>"._("Select an entry type: ")."</label>".$types;
+    $content .= "&nbsp;<input class='submit' type='submit' name='mode' id='mode' value='"._("Select")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
 	
@@ -1168,16 +1149,15 @@ function bibindex_add_entry($type){
     $html = bibheader("");
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("BIBINDEX_ADD_ENTRY_TITLE");
-    $content = "<form method='post' action='bibindex.php' enctype='multipart/form-data' onsubmit='return validate_new_entry_form(\"".$_SESSION['language']."\")' id='f_new_entry'>";
-	$content .= "<fieldset style='border:none'>";
+    $content = "<form method='post' action='bibindex.php' enctype='multipart/form-data' onsubmit='return validate_new_entry_form(\"".$_SESSION['language']."\")' id='f_bibtex_entry'>";
+	$content .= "<fieldset class='clean'>";
 	$content .= "<input name='type' value='$type' type='hidden'/>";
+    $content .= "</fieldset>";
 	$content .= $fields;
-	$content .= "<p/>";
-	$content .= "<div style='text-align:center;'>";
+	$content .= "<fieldset class='clean'>";
 	$content .= "<input type='hidden' name='mode' value='operationresult'/>";
 	$content .= "<input class='misc_button' type='submit' name='action' value='"._("Cancel")."'/>&nbsp;";
 	$content .= "<input class='misc_button' type='submit' name='action' value='"._("Add")."'/>";
-	$content .= "</div>";
 	$content .= "</fieldset>";
 	$content .= "</form>";
 
@@ -1220,45 +1200,31 @@ function bibindex_update_entry(){
 	
 	$theid = $_GET['id'];
     // form to update the type
-	$content = "<form method='get' action='bibindex.php' style='border:none;margin:0;padding:0;'>";
-    $content .= "<fieldset style='border:none;margin:0;padding:0;'>";
-	$content .= "<table>";
-    $content .= "<tbody>";
-    $content .= "<tr>";
-    $content .= "<th style='text-align:left;width:100px;'>"._("BibTeX type:")."</th>";
-    $content .= "<td style='width:200px;'>$listtypes</td>";
-    $content .= "<td><input class='misc_button' type='submit' name='action' value='"._("Update")."'/></td>";
-    $content .= "</tr>";
-    $content .= "</tbody>";
-    $content .= "</table>";
+	$content = "<form method='get' action='bibindex.php' class='f_default_form'>";
+    $content .= "<fieldset>";
+    $content .= "<label>"._("BibTeX type:")."</label>&nbsp;";
+    $content .= $listtypes;
+    $content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Update")."'/>";
     $content .= "<input type='hidden' name='id' value='$theid'/>";
     $content .= "<input type='hidden' name='object' value='type'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     
-    $content .= "<form method='get' action='bibindex.php' style='border:none;margin:0;padding:0;'>";
-    $content .= "<fieldset style='border:none;margin:0;padding:0;'>";
-	$content .= "<table>";
-    $content .= "<tbody>";
-    $content .= "<tr>";
-    $content .= "<th style='text-align:left;width:100px;'>"._("BibTeX Key:")."</th>";
-    $content .= "<td style='width:200px;'><input name='bibtex_key' value='$theid'/></td>";
-    $content .= "<td><input class='misc_button' type='submit' name='action' value='"._("Update")."'/></td>";
-    $content .= "</tr>";
-    $content .= "</tbody>";
-    $content .= "</table>";
+    $content .= "<form method='get' id='new_bibtex_key' action='bibindex.php' class='f_default_form' onsubmit='return validate_new_bibtex_key(\"".$_SESSION['language']."\")'>";
+    $content .= "<fieldset>";
+    $content .= "<label>"._("BibTeX Key:")."</label>";
+    $content .= "&nbsp;<input name='bibtex_key' value='$theid'/>";
+    $content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Update")."'/>";
     $content .= "<input type='hidden' name='id' value='$theid'/>";
     $content .= "<input type='hidden' name='object' value='key'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields'>";
-    $content .= "<fieldset style='border:none'>";
+    $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields' id='f_bibtex_entry'>";
     $content .= $fields;
-    $content .= "<div style='text-align:center'>";
+    $content .= "<fieldset class='clean'>";
     $content .= "<input class='misc_button' type='submit' name='action' value='"._("Cancel")."'/>";
     $content .= "&nbsp;<input class='misc_button' type='submit' name='action' value='"._("Update")."'/>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
-    $content .= "</div>";
     $content .= "</fieldset>";
     $content .= "</form>";
 	
@@ -1280,25 +1246,25 @@ function bibindex_import(){
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("BIBINDEX_IMPORT_TITLE");
     $content = _("Select a BibTeX file or edit entries in the text area. Entries will be added to the current bibliography.");
-    $content .= "<h3>"._("File")."</h3>";
+    $content .= "<br/><br/>";
+    $content .= "<h3 style='padding:0;margin:0'>"._("File")."</h3>";
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data'>";
-    $content .= "<fieldset title='"._("File")."'>";
+    $content .= "<fieldset class='fieldset-bordered' title='"._("File")."'>";
     $content .= "<input type='file' name='bibfile'/>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
     $content .= "<br/>";
     $content .= "<br/>";
-    $content .= "<div style='text-align:center'>";
-    $content .= "<input class='misc_button' type='submit' name='action' value='"._("Import")."'/>";
-    $content .= "</div>";
+    $content .= "<input class='submit' type='submit' name='action' value='"._("Import")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "<h3>BibTeX</h3>";
+    $content .= "<br/>";
+    $content .= "<h3 style='padding:0;margin:0'>BibTeX</h3>";
     $content .= "<form method='post' action='bibindex.php'>";
-    $content .= "<fieldset title='BibTeX'>";
+    $content .= "<fieldset class='fieldset-bordered' title='BibTeX'>";
     $content .= "<textarea class='misc_input' name='bibval' cols='55' rows='15'></textarea>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
     $content .= "<div style='text-align:center'>";
-    $content .= "<input class='misc_button' type='submit' name='action' value='"._("Import")."'/>";
+    $content .= "<input class='submit' type='submit' name='action' value='"._("Import")."'/>";
     $content .= "</div>";
     $content .= "</fieldset>";
     $content .= "</form>";
