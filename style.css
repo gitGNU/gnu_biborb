@@ -121,9 +121,15 @@ html > body #menu {position:fixed;}
     font-weight: normal;
 }
 
+
 #menu li li a:hover{
     background-color:#ade;
 }
+
+#menu li li a.admin:hover {
+    background-color:red;
+}
+
 
 /**
  * Style for the main panel
@@ -226,6 +232,26 @@ html > body #menu {position:fixed;}
     display:inline;
 }
 
+#bibtex_table .bibtex_action {
+    display:inline;
+    font-family:serif;
+    color:red;
+}
+
+#bibtex_table a.bibtex_action:hover, #bibtex_table a.bibtex_action:visited {
+    color:red;
+}
+
+#bibtex_table a.basket_action {
+    display:inline;
+    font-family:serif;
+    color:navy;
+}
+
+#bibtex_table a.basket_action:hover,  #bibtex_table a.basket_action:visited {
+    color:navy;
+}
+
 #bibtex_table .bibtex_button input {
     font-size:xx-small;
     display:relative;
@@ -264,6 +290,7 @@ html > body #menu {position:fixed;}
     font-size:xx-small;
     font-weight:bold;
 }
+
 
 
 /**
