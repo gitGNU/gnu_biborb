@@ -25,7 +25,9 @@ config.php file.
 * AUTHENTICATION
 If you want to share your bibliography within a local network, you may not want
 other people to edit or even delete your data. A simple authentication is
-available with biborb to manage authorized "admin" users.
+available with biborb to manage authorized "admin" users. Unauthorized visitor 
+may consult bibliographies but won't be able to modify it.
+
 You will need a database and adapt the different variables in the config.php
 file:
 
@@ -36,9 +38,10 @@ $pass = xxxx;
 $db = xxxx;
 $table = xxxx;
 
-you then have to add manually users to the database.
+biborb.sql in admin directory contains SQL instructions to create the needded
+table. You then have to add manually users to the database.
 
-Unauthorized visitor may consult bibliographies but won't be able to modify it.
+
 
 * CSS LOOKING
 The CSS file style.css contains formatting data for BibORB. The user interface 
