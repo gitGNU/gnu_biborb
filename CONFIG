@@ -43,3 +43,8 @@ table. You then have to add manually users to the database.
 The CSS file style.css contains formatting data for BibORB. The user interface 
 is managed using CSS so, it would not be difficult to CSS hackers to change 
 entirely the looking of BibORB.
+    + style.css => general look of the interface (left menu, main panel ...)
+    + bibtex_table_look.css => look of entries in biborb (action links, 
+        author/title/abstract....formatting)
+    + bibtex_simple_html_look.css => look of HTML export
+

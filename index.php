@@ -212,8 +212,9 @@ function index_add_database(){
     $title = "Create a new bibliography";
     // create the form to create a new bibliography
     // creation is performed by action_proxy.php
+
     $content = "<form method='get' action='action_proxy.php'>";
-    $content .= "<table><tbody>";
+    $content .= "<table style='margin:auto;'><tbody>";
     $content .= "<tr>";
     $content .= "<td>Database name: </td>";
     $content .= "<td>";
@@ -224,9 +225,10 @@ function index_add_database(){
     $content .= "<td>Description: </td>";
     $content .= "<td><input type='text' size='40' name='description'/></td>";
     $content .= "</tr>";
-    $content .= "<tr><td><input type='submit' name='action' value='create'/></td></tr>";
+    $content .= "<tr><td style='text-align:center' colspan='2'><input type='submit' name='action' value='create'/></td></tr>";
     $content .= "</tbody></table>";
     $content .= "</form>";
+
     // create the menu
     $html .= index_menu();
     // create the main panel
@@ -263,6 +265,7 @@ function index_delete_database(){
     $content .= "<input type='submit' name='action' value='remove'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
+    $content .= "</div>";
     
     // create the menu
     $html .= index_menu();
@@ -302,7 +305,7 @@ function index_manager_help(){
 function index_result(){
     $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
     $html .= index_menu();
-    $html .= main(null,null);
+    $html .= main("Results",null);
     $html .= html_close();
     
     return $html;
@@ -331,7 +334,7 @@ function index_select(){
             $content .= "<tr>";
             $content .= "<td><a href='./bibindex.php?mode=welcome&amp;bibname=$name&amp;".session_name()."=".session_id()."'>$name</a></td>";
             $content .= "<td>$description</td>";
-            $content .= "<td><a href='./bibs/$name/$name.bib'>Download</td>";
+            $content .= "<td><a href='./bibs/$name/$name.bib'>Download</a></td>";
             $content .= "</tr>";
         }
     }

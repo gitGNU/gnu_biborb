@@ -33,8 +33,13 @@
  * 
  */
 
+
+@import url(bibtex_table_look.css);
+@import url(bibtex_simple_html_look.css);
+
+
 body {
-  font-family:sans-serif;
+  font-family:sans-serif,serif;
   font-size:small;
   background-color:white;
   color:black;
@@ -62,6 +67,7 @@ body {
 }
 
 html > body #menu {position:fixed;}
+
 #menu {
     margin-top:1em;
     position:relative;
@@ -212,157 +218,6 @@ html > body #menu {position:fixed;}
     color:navy;
 }
 
-/**
- * Style for the bibtex2html table output
- */
-
-#bibtex_table {
-    color:black;
-    border-spacing:0;
-    border:collapse;
-    width:100%;
-}
-
-#bibtex_table .bibtex_start {
-    border-top:solid 2px navy;
-    color:navy;
-}
-
-#bibtex_table .bibtex_key {
-    color:navy;
-    border:solid 1px #333;
-    border-bottom:none;
-    background-color:#ccc;
-    font-weight:bold;
-    font-size:x-small;
-    padding:1px;
-}
-
-#bibtex_table .bibtex_button {
-    display:inline;
-}
-
-#bibtex_table .bibtex_action {
-    display:inline;
-    font-family:serif;
-    color:red;
-}
-
-#bibtex_table a.bibtex_action:hover, #bibtex_table a.bibtex_action:visited {
-    color:red;
-}
-
-#bibtex_table a.basket_action {
-    display:inline;
-    font-family:serif;
-    color:navy;
-}
-
-#bibtex_table a.basket_action:hover,  #bibtex_table a.basket_action:visited {
-    color:navy;
-}
-
-#bibtex_table .bibtex_button input {
-    font-size:x-small;
-    display:relative;
-}
-
-#bibtex_table .bibtex_title {
-    font-weight:bold;
-    border-bottom:dotted 1px;
-    font-size:normal;
-    border-top:solid 1px #333;
-    border-left:solid 1px #333;
-    border-right:solid 1px #333;
-    background-color:#eee;
-}
-
-#bibtex_table .bibtex_author {
-    font-style:italic;
-    font-size:normal;
-    text-align:right;
-    border-left:solid 1px #333;
-    border-right:solid 1px #333;
-    background-color:#eee;
-}
-
-#bibtex_table .bibtex_abstract {
-    font-size:x-small;
-    background-color:#eee;
-    border-left:solid 1px #333;
-    border-right:solid 1px #333;
-    font-family:verdana;
-}
-
-#bibtex_table .bibtex_keywords {
-    font-family:monospace;
-    font-size:x-small;
-    text-align:right;
-    background-color:#eee;
-    border-left:solid 1px #333;
-    border-right:solid 1px #333;
-    border-bottom:solid 1px #333;
-}
-
-#bibtex_table img, img {
-    border:none;
-    vertical-align:middle;
-}
-
-.last {
-    font-size:5px;
-}
-
-#bibtex_table a, #bibtex_table a:hover,#bibtex_table a:active,#bibtex_table a:visited,#bibtex_table a:focus {
-    text-decoration:none;
-    display:inline;
-    padding-left:2px;
-    padding-right:2px;
-    color:#088;
-    font-size:x-small;
-    font-weight:bold;
-}
-
-.addtobasket {
-    color:navy;
-    text-align:right;    
-}
-
-.addtobasket a,.addtobasket a:hover,.addtobasket a:active,.addtobasket a:visited,.addtobasket a:focus {
-    text-decoration:none;
-    color:navy;
-    font-family:serif;
-}
-/**
- * Style for the simple output
- */
-
-.bibtex_simple dt {
-    font-family:monospace;
-}
-
-.bibtex_simple a, .bibtex_simple a:hover, .bibtex_simple a:visited, .bibtex_simple a:selected, .bibtex_simple a:focus {
-    text-decoration:none;
-}
-
-.field_id {
-    display:inline;
-    padding-bottom:1em;
-}
-
-.field_author, .field_editor, .field_publisher {
-    padding-right:0.5em;
-    font-style:italic;
-}
-
-.field_title {
-    padding-right:0.5em;
-    font-weight:bold;
-}
-
-.field_journal, .field_year, .field_school, .field_institution, .field_note, .field_booktitle, .field_pages, .field_chapter, .field_ {
-    padding-right:0.5em;
-}
 
 /**
  * Style for edition
