@@ -159,26 +159,15 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
     $html .= "<fieldset>";
     $html .= "<select name='sort' size='1'>";
     
-    if($selected_sort == 'ID'){
-        $html .= "<option value='ID' selected='selected'>ID</option>";
+    foreach($_SESSION['bibdb']->sort_values as $sort_val){
+        if($selected_sort == $sort_val){
+            $html .= "<option value='$sort_val' selected='selected'>".msg("$sort_val")."</option>";
+        }
+        else {
+            $html .= "<option value='$sort_val'>".msg("$sort_val")."</option>";
+        }
     }
-    else{
-        $html .= "<option value='ID'>ID</option>";
-    }
-    
-    if($selected_sort == 'title'){
-        $html .= "<option value='title' selected='selected'>".msg("Title")."</option>";
-    }
-    else{
-        $html .= "<option value='title'>".msg("Title")."</option>";
-    }
-    
-    if($selected_sort == 'year'){
-        $html .= "<option value='year' selected='selected'>".msg("Year")."</option>";
-    }
-    else{
-        $html .= "<option value='year'>".msg("Year")."</option>";
-    }
+
     $html .= "</select>&nbsp;";
     $html .= "<input type='hidden' name='mode' value='$mode'/>";
     if($misc){

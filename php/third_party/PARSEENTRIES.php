@@ -111,7 +111,7 @@ class PARSEENTRIES
         if($this->parseFile){
             if(!feof($this->fid)){
                 do{
-                    $line = trim(fgets($this->fid));
+                    $line = trim(fgets($this->fid),1024);
                     $isComment = (strlen($line)>0) ? $line[0] == '%' : FALSE;
                 }
                 while(!feof($this->fid) && $isComment);

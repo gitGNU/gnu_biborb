@@ -1091,3 +1091,13 @@ msgstr ""
 
 msgid "Display shelf actions."
 msgstr ""
+
+msgid "ID"
+msgstr ""
+
+msgid "dateAdded"
+msgstr "Date Added"
+
+msgid "lastDateModified"
+msgstr "Last Date Modified"
+

@@ -1042,3 +1042,12 @@ msgstr "Nombre de références par page."
 
 msgid "Display shelf actions."
 msgstr "Affichers les actions du mode 'Etagère'"
+
+msgid "ID"
+msgstr ""
+
+msgid "dateAdded"
+msgstr "Date Added"
+
+msgid "lastDateModified"
+msgstr "Last Date Modified"

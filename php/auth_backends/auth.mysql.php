@@ -93,15 +93,15 @@ class Auth
      */
     function is_valid_user($user,$pass){
         // connection to the users database
-        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
+        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
-            die("Unable to connect to the users database!");
+            trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         }
         else{
             // Get ($user,$pass) record
             $query = "SELECT login,password FROM ".$this->users_table." WHERE login='$user' AND password=md5('$pass')";
-            $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+            $result = mysql_query($query,$connect) or trigger_error("Invalid SQL Request");
             return (mysql_num_rows($result)>0);
         }
     }
@@ -112,15 +112,15 @@ class Auth
      */
     function is_admin_user($user){
         //connection to the users database
-        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
+        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
-            die("Unable to connect to the users database!");
+             trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         }
         else{
             // get $admin value for $user
             $query = "SELECT admin FROM ".$this->users_table." WHERE login='$user'";
-            $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+            $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
                 $row = mysql_fetch_assoc($result);
@@ -138,16 +138,16 @@ class Auth
      */
     function can_delete_entry($user, $database_name){
         //connection to the users database
-        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
+        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
-            die("Unable to connect to the users database!");
+            trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         }
         else{
             $user = ($user == "" ? "_anonymous_" : $user);
             // get records where $id = $user
             $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
-            $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+            $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
                 $row = mysql_fetch_assoc($result);
@@ -155,7 +155,7 @@ class Auth
 
                 // look for *
                 $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='*'";
-                $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+                $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
                 if(mysql_num_rows($result) != 0){
                     $row = mysql_fetch_assoc($result);
                     $access = $row['access'];
@@ -163,7 +163,7 @@ class Auth
                 }
                 else{
                     $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
-                    $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+                    $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
                     $row = mysql_fetch_assoc($result);
                     $access = $row['access'];
                     return $access[2] == '1';
@@ -180,23 +180,23 @@ class Auth
         Return TRUE/FALSE
      */
     function can_add_entry($user, $database_name){
-        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
+        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
-            die("Unable to connect to the users database!");
+            trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         }
         else{
             $user = ($user == "" ? "_anonymous_" : $user);
             
             $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
-            $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+            $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
                 $row = mysql_fetch_assoc($result);
                 $id = $row['id'];
                 
                 $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='*'";
-                $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+                $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
 
                 if(mysql_num_rows($result) != 0){
                     $row = mysql_fetch_assoc($result);
@@ -205,7 +205,7 @@ class Auth
                 }
                 else{
                     $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
-                    $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+                    $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
                     $row = mysql_fetch_assoc($result);
                     $access = $row['access'];
                     return $access[0] == '1';
@@ -222,23 +222,23 @@ class Auth
         Return TRUE/FALSE
      */
     function can_modify_entry($user, $database_name){
-        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
+        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
-            die("Unable to connect to the users database!");
+            trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         }
         else{
             $user = ($user == "" ? "_anonymous_" : $user);
             
             $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
-            $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+            $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
                 $row = mysql_fetch_assoc($result);
                 $id = $row['id'];
                 
                 $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='*'";
-                $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+                $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
 
                 if(mysql_num_rows($result) != 0){
                     $row = mysql_fetch_assoc($result);
@@ -247,7 +247,7 @@ class Auth
                 }
                 else{
                     $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
-                    $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+                    $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
                     $row = mysql_fetch_assoc($result);
                     $access = $row['access'];
                     return $access[1] == '1';
@@ -263,21 +263,21 @@ class Auth
      */
     function get_preferences($user){
         //connection to the users database
-        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
+        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
-            die("Unable to connect to the users database!");
+            trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         }
         else{
             $pref = array();
             // get the user_id
             $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
-            $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+            $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             $row = mysql_fetch_assoc($result);
             $id = $row['id'];
             // get pref for this user
             $query = "SELECT * FROM ".$this->user_preferences_table." WHERE user_id=$id";
-            $result = mysql_query($query,$connect) or die("Invalid request: ".mysql_error());
+            $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
                 // pref exist for this user
@@ -319,24 +319,24 @@ class Auth
      */
     function set_preferences($pref,$user){
         //connection to the users database
-        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
+        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
-            die("Unable to connect to the users database!");
+            trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.");
         }
         else{
             // get the user_id
             $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
-            $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+            $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             $row = mysql_fetch_assoc($result);
             $id = $row['id'];
             // get pref for this user
             $query = "SELECT * FROM ".$this->user_preferences_table." WHERE user_id='$id'";
-            $result = mysql_query($query,$connect) or die("Invalid request0: ".mysql_error());
+            $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             // create the record if doesn't already exist
             if(mysql_num_rows($result) == 0){
                 $query = "INSERT INTO `".$this->user_preferences_table."` (user_id) VALUES ('$id');";
-                mysql_query($query,$connect) or die("Invalid request1: ".mysql_error());
+                mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             }
             $query = "UPDATE ".$this->user_preferences_table." SET ";
             $query .= "css_file='".(array_key_exists("css_file",$pref) ? $pref['css_file'] : "style.css")."',";
@@ -352,7 +352,7 @@ class Auth
             $query .= "display_shelf_actions='".(array_key_exists("display_shelf_actions",$pref) ? ($pref['display_shelf_actions'] == "yes" ? "Y" : "N") : "N")."' ";
         
             $query .= "WHERE user_id='$id' LIMIT 1";
-            mysql_query($query,$connect) or die("Invalid request2: ".mysql_error());
+            mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
         }
     }
 }

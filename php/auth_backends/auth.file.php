@@ -75,7 +75,7 @@ class Auth
         foreach($content as $line){
             $line = trim($line);
             if($line != '' && $line[0] != '#'){
-                if(preg_match("/(\w*)\s*:\s*(.*),([01])$/",$line,$match)){
+                if(preg_match("/(\S*)\s*:\s*(\S*),([01])$/",$line,$match)){
                     if($match[1] == $user){
                         return (crypt($pass,$match[2]) == $match[2]);
                     }

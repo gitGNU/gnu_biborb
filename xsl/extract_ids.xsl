@@ -43,22 +43,39 @@
 
 	<xsl:template match="/">
         <xsl:choose>
+            <!-- Sort by year -->
             <xsl:when test="$sort = 'year'">
                 <xsl:for-each select="XPATH_QUERY">
                     <xsl:sort select=".//bibtex:year" order="{$sort_order}" data-type="number"/>
                     <xsl:value-of select='@id'/><xsl:if test='position()!=last()'>|</xsl:if>
                 </xsl:for-each>
             </xsl:when>
+            <!-- Sort by title -->
             <xsl:when test="$sort = 'title'">
                 <xsl:for-each select="XPATH_QUERY">
                     <xsl:sort select=".//bibtex:title" order="{$sort_order}" data-type="text"/>
-                <xsl:value-of select='@id'/><xsl:if test='position()!=last()'>|</xsl:if>
+                    <xsl:value-of select='@id'/><xsl:if test='position()!=last()'>|</xsl:if>
                 </xsl:for-each>
             </xsl:when>
+            <!-- Sort by ID -->
             <xsl:when test="$sort = 'ID'">
                 <xsl:for-each select="XPATH_QUERY">
                     <xsl:sort select="@id" order="{$sort_order}" data-type="text"/>
-                <xsl:value-of select='@id'/><xsl:if test='position()!=last()'>|</xsl:if>
+                    <xsl:value-of select='@id'/><xsl:if test='position()!=last()'>|</xsl:if>
+                </xsl:for-each>
+            </xsl:when>
+            <!-- Sort by date added -->
+            <xsl:when test="$sort = 'dateAdded'">
+                <xsl:for-each select="XPATH_QUERY">
+                    <xsl:sort select="number(translate(.//bibtex:dateAdded,'-',''))" order="{$sort_order}" data-type="number"/>
+                    <xsl:value-of select='@id'/><xsl:if test='position()!=last()'>|</xsl:if>
+                </xsl:for-each>
+            </xsl:when>
+            <!-- Sort by last date modified -->
+            <xsl:when test="$sort = 'lastDateModified'">
+                <xsl:for-each select="XPATH_QUERY">
+                    <xsl:sort select="number(translate(.//bibtex:dateModified,'-',''))" order="{$sort_order}" data-type="number"/>
+                    <xsl:value-of select='@id'/><xsl:if test='position()!=last()'>|</xsl:if>
                 </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>

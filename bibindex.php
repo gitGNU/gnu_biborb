@@ -622,12 +622,20 @@ if(isset($_POST['action'])){
             $xsltp->free();
             die();
  
+            /*
+                Create an archive of a given bibliography.
+             */
         case 'get_archive':
+            // move to bibs
             chdir("./bibs");
+            // tar name
             $tar_name = $_SESSION['bibdb']->name().".tar.gz";
+            // delete it if it already exists
             if(file_exists($tar_name)){ unlink($tar_name);}
+            // create the archive
             $tar = new Archive_Tar($tar_name,"gz");
-            $tar->create($_SESSION['bibdb']->name()) or die("Error while creating archive!");
+            $tar->create($_SESSION['bibdb']->name()) or trigger_error("Failed to create an archive of the Bibliography", FATAL);
+            // Save as...
             header("Content-disposition: attachment; filename=".$tar_name);
             header("Content_Type: application/octed-stream");
             readfile($tar_name);

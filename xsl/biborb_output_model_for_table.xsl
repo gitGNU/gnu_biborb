@@ -66,6 +66,7 @@
 				
 				<!-- Various links (abstract,url,urlzip,pdf,website,linl,bibtex -->
 				<div class="bibtex_misc">
+<!--                    <xsl:value-of select=".//bibtex:year"/>-->
 					<!-- 
 						If an abstract is present and we do not want to see 
 						the abstract by default we display a small button

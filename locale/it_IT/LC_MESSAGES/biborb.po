@@ -1046,3 +1046,47 @@ msgstr ""
 msgid "Enter an url:"
 msgstr ""
 
+msgid "PREFERENCES_TITLE"
+msgstr "User Preferences"
+
+msgid "Preferences updated."
+msgstr ""
+
+msgid "Select your language."
+msgstr ""
+
+msgid "Select the default database to open once logged in."
+msgstr ""
+
+msgid "Display icons commands."
+msgstr ""
+
+msgid "Display text commands."
+msgstr ""
+
+msgid "Display abstract."
+msgstr ""
+
+msgid "Warn before deleting."
+msgstr ""
+
+msgid "Default sort attribute."
+msgstr ""
+
+msgid "Default sort order."
+msgstr ""
+
+msgid "Number of references by page."
+msgstr ""
+
+msgid "Display shelf actions."
+msgstr ""
+
+msgid "ID"
+msgstr ""
+
+msgid "dateAdded"
+msgstr "Date Added"
+
+msgid "lastDateModified"
+msgstr "Last Date Modified"

@@ -47,16 +47,22 @@ class BibORB_DataBase {
     
     // name of the bibliography
     var $biblio_name;
+    
     // the biblio directory
     var $biblio_dir;
     
     // Sort method used to sort entries
     var $sort;
+    var $sort_values = array('title','ID','year','dateAdded','lastDateModified');
+    
     // Sort order method (ascending/descending)
     var $sort_order;
+    var $sort_order_values = array('ascending','descending');
+    
     // Read status
     var $read_status;
     var $read_status_values = array('any','notread','readnext','read');
+    
     // Ownership
     var $ownership;
     var $ownership_values = array('any','notown','borrowed','buy','own');
@@ -64,7 +70,8 @@ class BibORB_DataBase {
     /**
         Constructor.
         $bibname -> name of the bibliography
-        $genBibtex -> keep an up-to-date BibTeX file.
+        $genBibtex -> keep an up-to-date BibTeX file. Save in the $bibname 
+                      directory with name $bibname.tex.
      */
     function BibORB_DataBase($bibname,$genBibtex = true){
         $this->biblio_name = $bibname;
@@ -78,13 +85,20 @@ class BibORB_DataBase {
         Set the sort method.
      */
     function set_sort($sort){
+        if(array_search($sort,$this->sort_values) === FALSE){
+            $sort = 'ID';
+        }
         $this->sort = $sort;
+        
     }
     
     /**
         Set the sort order. (ascending/descending)
      */
     function set_sort_order($sort_order){
+        if(array_search($sort_order,$this->sort_order_values) === FALSE){
+            $sort_order = 'ascending';
+        }
         $this->sort_order = $sort_order;
     }
     
@@ -145,11 +159,13 @@ class BibORB_DataBase {
         Only used in this class. 
     */
     function update_bibtex_file(){
+        // Load all the database and transform it into a bibtex string
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();
         $xsl_content = load_file("./xsl/xml2bibtex.xsl");
         $bibtex = $xsltp->transform($xml_content,$xsl_content);
         $xsltp->free();
+        
         // write the bibtex file
         $fp = fopen($this->bibtex_file(),"w");
         fwrite($fp,$bibtex);
@@ -160,6 +176,7 @@ class BibORB_DataBase {
         Reload the database according the bibtex file.
      */
     function reload_from_bibtex(){
+        // load the bibtex file and transform it to XML
         $bt = new BibTeX_Tools();
         $data = $bt->bibtex_file_to_xml($this->bibtex_file());
         $fp = fopen($this->xml_file(),"w");
@@ -168,7 +185,8 @@ class BibORB_DataBase {
     }
     
     /**
-        Return a sorted array of all BibTeX ids.
+        Return an array of all BibTeX ids.
+        The entries are sorted using $this->sort and $this->sort_order
      */
     function all_bibtex_ids(){
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
@@ -191,7 +209,9 @@ class BibORB_DataBase {
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();    
         $xsl_content = load_file("./xsl/extract_ids.xsl");
+        // generate the apropriate XSLT request
         if($groupname){
+            // return entries associated to a given group
             $xpath = '//bibtex:entry[(.//bibtex:group)=$group';
             if($this->read_status != 'any'){
                 $xpath .= ' and (.//bibtex:read)=\''.$this->read_status.'\'';
@@ -202,6 +222,7 @@ class BibORB_DataBase {
             $xpath .= ']';
         }
         else{
+            // return 'orphan' entries
             $xpath = '//bibtex:entry[not(.//bibtex:group)';
             if($this->read_status != 'any'){
                 $xpath .= ' and (.//bibtex:read)=\''.$this->read_status.'\'';
@@ -212,6 +233,7 @@ class BibORB_DataBase {
             $xpath .= ']';
         }
         $xsl_content = str_replace("XPATH_QUERY",$xpath,$xsl_content);
+        // do the transformation
         $param = array('group'=>$groupname,
                        'sort' => $this->sort,
                        'sort_order' => $this->sort_order);
@@ -227,36 +249,7 @@ class BibORB_DataBase {
     function all_entries(){
         return load_file($this->xml_file());
     }
-    
-    /**
-        Get all enties for a group
-     DEPRECATED
-    */
-   /* function entries_for_group($groupname){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
-        $xml_content = $this->all_entries();    
-        $xsl_content = load_file("./xsl/entries_for_group.xsl");
-        $param = array('group'=>$groupname);
-        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-	
-        return $res;
-    }*/
-    
-    
-    /**
-        Get all entries that are not associated with a group.
-     DEPRECATED
-     */
-   /* function entries_group_orphan(){
-        $xsltp = new XSLT_PRocessor("file://".BIBORB_PATH,"ISO-8859-1");
-        $xml_content = $this->all_entries();
-        $xsl_content = load_file("./xsl/entries_group_orphan.xsl");
-        $res = $xsltp->transform($xml_content,$xsl_content,null);
-        $xsltp->free();
-        return $res;
-    }*/
-    
+        
     /**
         Get a set of entries.
     */
@@ -280,19 +273,7 @@ class BibORB_DataBase {
         Get an entry
     */
     function entry_with_id($anID){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
-        $xsl_content = load_file("./xsl/entries_with_ids.xsl");
-	
-        //transform the array into an xml string
-        $xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
-        $xml_content .= "<listofids>";
-        $xml_content .= "<id>$anID</id>";
-        $xml_content .= "</listofids>";
-	
-        $param = array('bibnameurl' => $this->xml_file());
-        $res = $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return $res;
+        return $this->entries_with_ids(array($anID));
     }
     
     /**
@@ -346,6 +327,8 @@ class BibORB_DataBase {
             $bt = new BibTeX_Tools();
             $bibtex_val = extract_bibtex_data($dataArray);
             $bibtex_val['type'] = $dataArray['add_type'];
+            $bibtex_val['dateAdded'] = date("Y-m-d");
+            $bibtex_val['dateModified'] = date("Y-m-d");
             $data = $bt->entries_array_to_xml(array($bibtex_val));
             $xml = $data[2];
             $xsl = load_file("./xsl/add_entries.xsl");
@@ -392,6 +375,8 @@ class BibORB_DataBase {
         // iterate and add ref which id is not present in the database
         foreach($entries_to_add as $entry){
             if(array_search($entry['id'],$dbids) === FALSE){
+                $entry['dateAdded'] = date("Y-m-d");
+                $entryl['dateModified'] = date("Y-m-d");
                 $data = $bt->entries_array_to_xml(array($entry));
                 $result = $xsltp->transform($data[2],$xsl,$param);
                 $fp = fopen($this->xml_file(),"w"); 
@@ -495,6 +480,7 @@ class BibORB_DataBase {
             $bt = new BibTeX_Tools();
             $bibtex_val = extract_bibtex_data($dataArray);
             $bibtex_val['type'] = $dataArray['type_ref'];
+            $bibtex_val['dateModified'] = date("Y-m-d");
             $data = $bt->entries_array_to_xml(array($bibtex_val));
             $xml = $data[2];
 
@@ -941,8 +927,7 @@ function get_databases_names(){
 /**
     Extract ids from the xml
  */
-function extract_ids_from_xml($xmlstring)
-{
+function extract_ids_from_xml($xmlstring) {
     preg_match_all("/id=['|\"](.*)['|\"]/U",$xmlstring,$matches);
     return array_unique($matches[1]);
 }
