@@ -13,12 +13,8 @@ This menu gives access to the bibliography's entries.
        <td>Display entries by groups.</td>
     </tr>
     <tr class='colored'>
-      <th>Simple Search</th>
-      <td>Search the bibliography for entries.</td>
-    </tr>
-    <tr>
-      <th>Advanced Search</th>
-      <td>Search the bibliography for entries. And/Or connectors, search available for more fields than simple search.</td>
+      <th>earch</th>
+      <td>Search the bibliography for entries (simple, detailed, XPath).</td>
     </tr>
   </tbody>
 </table>
@@ -79,6 +75,10 @@ Several actions may be available for each displayed entry:
     <tr>
         <th class='img'><img src="data/images/add.png" alt="add"/></th>
         <td> Add all entries to the basket.</td>
+    </tr>
+    <tr class='colored'>
+        <th class='img'><img src="data/images/dialog_info.png" alt="Remarks"></th>
+        <td>Display data of the BibTeX field <code>longnotes</code>.</td>
     </tr>
     </tbody>
 </table>

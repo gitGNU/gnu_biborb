@@ -96,7 +96,6 @@ class Auth
      */
     function can_delete_entry($user, $database_name){
         $users = $this->registered_users_for_bibliography($database_name);
-        print_r($users);
         if(array_key_exists($user,$users)){
             return strstr($users[$user],'d');
         }

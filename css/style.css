@@ -227,7 +227,7 @@ html > body #menu {position:fixed;}
 .f_default_form select {width:150px;border:solid 1px black;}
 .f_default_form input.submit {border:solid 1px black;width:auto;}
 .submit {border:1px solid black;}
-.biborb {font-weight:bold;color:navy;}
+.biborb {color:navy;}
 .emphit {font-weight:bold;font-style:italic;}
 a.cleanref, a:hover.cleanref, a:visited.cleanref {color:navy;text-decoration:none;}
 a.admin, a.admin:visited, a.admin:hover {color:red;text-decoration:none;}

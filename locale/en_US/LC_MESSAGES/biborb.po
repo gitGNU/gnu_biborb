@@ -801,7 +801,7 @@ msgstr ""
 "When compiling a LaTeX file (<code>article.tex</code>), cited references are "
 "recorded in the <code>article.aux</code> file. Submit your <code>.aux </"
 "code> file in the following formulary to download the BibTeX file containing "
-"references  used by your article."
+"references used by your article."
 
 #: php/interface.php:1559
 msgid "BIBINDEX_TOOLS_TITLE"
@@ -816,7 +816,7 @@ msgid "TOOL_GET_ARCHIVE_HELP"
 msgstr ""
 "Download a compressed archive (<code>tar.gz</code>) of the current  "
 "bibliography. The archive will contains the BibTeX data as well as  uploaded "
-"data."
+"data (PS, PDF ...)."
 
 #: php/interface.php:1021 php/interface.php:1507
 msgid "Simple Search"
@@ -859,7 +859,7 @@ msgstr ""
 #: php/interface.php:735
 #, php-format
 msgid "No orphan."
-msgstr ""
+msgstr "No results. All references belong to a group."
 
 #: php/interface.php:899
 #, php-format

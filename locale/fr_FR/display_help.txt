@@ -13,12 +13,8 @@ Ce menu donne accès aux différentes fonctions d'affichage.
        <td>Afficher les références appartenant à un groupe donné.</td>
     </tr>
     <tr class='colored'>
-      <th>Recherche Simple</th>
-      <td>Effectuer une recherche simple (un seul critère).</td>
-    </tr>
-    <tr>
-      <th>Recherche Avancée</th>
-      <td>Effectuer une recherche suivant plusieurs critères.</td>
+      <th>Recherche</th>
+      <td>Effectuer une recherche dans la bibliographie (simple, détaillée, XPath).</td>
     </tr>
   </tbody>
 </table>
@@ -28,7 +24,7 @@ Les références peuvent être triées suivant plusieurs critères (id, année, titre)
 </p>
 
 <p>
-Pour chaque référence affichée, plusieurs actions sont disponibles (suivant la configuration de <acronym class='biborb'>BibORB</acronym>) :
+Pour chaque référence affichée et selon votre configuration de <acronym class='biborb'>BibORB</acronym> (<code>config.php</code>), plusieurs actions sont disponibles:
 </p>
 
 <table class='help'>
@@ -39,7 +35,7 @@ Pour chaque référence affichée, plusieurs actions sont disponibles (suivant la c
    </tr>
    <tr>
        <th  class='img'><img src="data/images/tar.png" alt="ps.gz"/></th>
-       <td>Télécharger la version PS compressé du papier.</td>
+       <td>Télécharger la version PS compressée du papier.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/pdf-document.png" alt="pdf"/></th>
@@ -59,7 +55,7 @@ Pour chaque référence affichée, plusieurs actions sont disponibles (suivant la c
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/stock_jump-to-16.png" alt="Local link"/></th>
-        <td>Aller vers une page web liée à l'article (page local).</td>
+        <td>Aller vers une page web liée à l'article (page "local", ie. situé sur le même serveur que <acronym class='biborb'>BibORB</acronym>).</td>
     </tr>
     <tr>
         <th class='img'><img src="data/images/stock_edit-16.png" alt="edit"/></th>
@@ -80,6 +76,10 @@ Pour chaque référence affichée, plusieurs actions sont disponibles (suivant la c
     <tr>
         <th class='img'><img src="data/images/add.png" alt="add"/></th>
         <td>Ajouter toutes les références au panier.</td>
+    </tr>
+    <tr class='colored'>
+        <th class='img'><img src="data/images/dialog_info.png" alt="Remarques"></th>
+        <td>Afficher les données du champs BibTeX <code>longnotes</code>.</td>
     </tr>
     </tbody>
 </table>

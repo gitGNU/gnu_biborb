@@ -46,9 +46,9 @@ function index_login(){
     $content = "<form id='login_form' action='index.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")'>";
     $content .= "<fieldset>";
     $content .= "<label for='login'>".msg("LOGIN_USERNAME").":</label>";
-    $content .= "<input type='text' name='login' id='login' value='login'/><br/>";
+    $content .= "<input type='text' name='login' id='login' /><br/>";
     $content .= "<label for='password'>".msg("LOGIN_PASSWORD").":</label>";
-    $content .= "<input type='password' id='password' name='mdp' value='mdp'/><br/>";
+    $content .= "<input type='password' id='password' name='mdp' /><br/>";
     $content .= "<input type='hidden' name='action' value='login'/>";
     $content .= "<input type='submit' value=\"".msg("Login")."\" class='submit'/>";
     $content .= "</fieldset>";
@@ -342,9 +342,9 @@ function bibindex_login(){
     $content = "<form id='login_form' action='bibindex.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")' >";
     $content .= "<fieldset>";
     $content .= "<label for='login'>".msg("LOGIN_USERNAME").":</label>";
-    $content .= "<input type='text' name='login' id='login' value='login'/><br/>";
+    $content .= "<input type='text' name='login' id='login' /><br/>";
     $content .= "<label for='password'>".msg("LOGIN_PASSWORD").":</label>";
-    $content .= "<input type='password' id='password' name='mdp' value='mdp'/><br/>";
+    $content .= "<input type='password' id='password' name='mdp'/><br/>";
     $content .= "<input type='hidden' name='action' value='login'/>";
     $content .= "<input type='submit' value=\"".msg("Login")."\" class='submit'/>";
     $content .= "</fieldset>";
@@ -729,7 +729,9 @@ function bibindex_display_by_group(){
     }
     else{
         if(!isset($_GET['orphan'])){
-            $main_content .= sprintf(msg("No entry for the group %s."),$group);
+            if(isset($group)){
+                $main_content .= sprintf(msg("No entry for the group %s."),$group);
+            }
         }
         else{
             $main_content .= sprintf(msg("No orphan."));
@@ -829,7 +831,7 @@ function bibindex_display_search(){
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
     
-    $main_content .= "<a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a>, <a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a>.<br/><br/>";
+    $main_content .= "<a class='cleanref' href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a>, <a class='cleanref' href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a>.<br/><br/>";
     
     if($searchvalue){
         $fields =array();
@@ -1018,7 +1020,7 @@ function bibindex_display_advanced_search(){
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "</div><br/>";
-    $content .= "<a href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a>, <a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a>.<br/><br/>";
+    $content .= "<a class='cleanref' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a>, <a class='cleanref' href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a>.<br/><br/>";
     
     $searchArray = array();
     foreach($bibtex_fields as $val){
@@ -1504,7 +1506,7 @@ function bibindex_display_xpath_search()
     $content .= "<input type='submit' class='submit' value='".msg("Search")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "<a href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a>, <a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a>.<br/><br/>";
+    $content .= "<a class='cleanref' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a>, <a class='cleanref' href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a>.<br/><br/>";
     
     // execute an Xpath query
     if(array_key_exists("xpath_query",$_GET)){

@@ -10,7 +10,7 @@ Ce menu donne accès aux fonctions de création et suppression de bibliographies.
 		</tr>
 		<tr>
 			<th>Supprimer une bibliographie.</th>
-			<td>La bibliographie sera déplacée dans <code>bibs/.trash</code>. Pour la supprimer définitivement, supprimez la manuellement de ce répertoire.</td>
+			<td>La bibliographie sera déplacée dans <code>bibs/.trash</code>. Pour l'effacer définitivement, supprimez la manuellement de ce répertoire.</td>
 		</tr>
 	</tbody>
 </table>

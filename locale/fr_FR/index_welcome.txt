@@ -1,6 +1,6 @@
 <acronym class='biborb'>BibORB</acronym> est un outil pour gérer et consulter des bibliographies via un navigateur web.
 
-<p><acronym class='biborb'>BibORB</acronym> permet de partager des bibliographies sur un réseau local ou internet et d'avoir accès facilement aux versions électroniques des articles enregistrés. Il est également une interface à <acronym>BibTeX</acronym>, et permet ainsi l'édition et la gestion de bibliographie <acronym>BibTeX</acronym>.
+<p><acronym class='biborb'>BibORB</acronym> permet de partager des bibliographies sur un réseau local ou internet et d'accéder facilement aux versions électroniques des articles enregistrés. Il permet également d'enrichir les bibliographies en fournissant une interface d'édition.
 </p>
 
 Les fonctions actuellement disponibles sont:
@@ -12,11 +12,11 @@ Les fonctions actuellement disponibles sont:
     <li> Ajouter / modifier / supprimer des références.</li>
     <li> Uploader des versions électroniques des articles (.ps, .ps. gz, .pdf).</li>
     <li> Ajouter des liens vers des pages web (internet ou sur le serveur).</li>
-    <li> Rechercher des articles suivant différents critères.</li>
+    <li> Rechercher des articles suivant différents critères (recherche simple, détaillée, XPath).</li>
     <li> Classer les articles par groupes.</li>
     <li> Sélectionner des articles (panier).</li>
-    <li> Exporter les articles du panier au format <acronym>BibTeX</acronym> </li>
-    <li> Exporter les articles du panier au format <acronym>HTML</acronym></li>
+    <li> Exporter les articles du panier au format <acronym>BibTeX</acronym>,<acronym>HTML</acronym> </li>
+    <li> Générer le fichier <acronym>BibTeX</acronym> associer au fichier <acronym>LaTeX</acronym> <code>.aux</code>. </li>
 </ul>
 
 <p>

@@ -1,1 +1,2 @@
 testuser:testpass,0
+admin:admin,1
