@@ -956,7 +956,7 @@ function bibindex_display_advanced_search(){
         $content .= "<option value='and' selected='selected'>".msg("and")."</option>";
         $content .= "<option value='or'>".msg("or")."</option>";
     }
-    $content .= "</select><br/>";
+    $content .= "</select> ";
     $content .= "<em>".msg("Sort by:")." </em>";
     $content .= "<select name='sort' >";
     $content .= "<option value='year' ";
