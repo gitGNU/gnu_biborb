@@ -783,7 +783,7 @@ msgstr "XPath Query"
 msgid "TOOL_XPATH_HELP"
 msgstr ""
 "XPath (XML Path Language) ist eine Sprache zum ansprechen von teilen eines "
-"XML Dokuments. Da Referenzen im XML Format gespeichert sind, können
+"XML Dokuments. Da Referenzen im XML Format gespeichert sind, können"
 "XPath Anfragen zur suche in Bibliographien genutzt werden." 
 "Beispiele:<ul> <li><code>bibtex:"
 "inproceedings</code> sucht nach allen Einträgen vom Typ <code> inproceedings</"
@@ -870,103 +870,104 @@ msgstr ""
 
 # Translation of BibTeX field names
 msgid "id"
-msgstr ""
+msgstr "id"
 
 msgid "address"
-msgstr ""
+msgstr "Adresse"
 
 msgid "annote" 
 msgstr ""
 
 msgid "author" 
-msgstr ""
+msgstr "Autor"
 
 msgid "booktitle" 
-msgstr ""
+msgstr "Buchtitel"
 
 msgid "chapter" 
-msgstr ""
+msgstr "Kapitel"
 
 msgid "crossref"
-msgstr ""
+msgstr "Querverweis"
 
 msgid "edition"
-msgstr ""
+msgstr "Edition"
 
 msgid "editor"
-msgstr ""
+msgstr "Editor"
 
 msgid "howpublished"
-msgstr ""
+msgstr "wie erschienen"
 
 msgid "institution"
-msgstr ""
+msgstr "Institution"
 
 msgid "journal"
-msgstr ""
+msgstr "Journal"
 
 msgid "key"
-msgstr ""
+msgstr "Schlüssel"
 
 msgid "month"
-msgstr ""
+msgstr "Monat"
 
 msgid "note" 
-msgstr ""
+msgstr "Anmerkung"
 
 msgid "number"
-msgstr ""
+msgstr "Nummer"
 
 msgid "organization"
-msgstr ""
+msgstr "Organisation"
 
 msgid "pages"
-msgstr ""
+msgstr "Seiten"
 
 msgid "publisher"
-msgstr ""
+msgstr "Verlag"
 
 msgid "school"
-msgstr ""
+msgstr "Schule"
 
 msgid "series" 
-msgstr ""
+msgstr "Serie"
 
 msgid "title" 
-msgstr ""
+msgstr "Titel"
 
 msgid "type" 
-msgstr ""
+msgstr "Typ"
 
 msgid "volume" 
-msgstr ""
+msgstr "Band"
 
 msgid "year"
-msgstr ""
+msgstr "Jahr"
 
 msgid "abstract" 
-msgstr ""
+msgstr "Abstrakt"
 
 msgid "keywords"
-msgstr ""
+msgstr "Schlüsselwörter"
 
 msgid "url"
-msgstr ""
+msgstr "url"
 
 msgid "urlzip"
-msgstr ""
+msgstr "urlzip"
 
 msgid "pdf"
-msgstr ""
+msgstr "pdf"
 
 msgid "groups"
-msgstr ""
+msgstr "Gruppe"
 
 msgid "website"
-msgstr ""
+msgstr "Webseite"
 
 msgid "longnotes"
-msgstr ""
+msgstr "lange Anmerkung"
 
 msgid "link"
-msgstr ""
+msgstr "Link"
+
