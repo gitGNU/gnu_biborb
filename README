@@ -77,6 +77,9 @@ Now decompress the archive in any web accessible place (for instance
 Ensure that all XML files are writable (chmod a+w) for anyone if you want to be
 able to update references through the web interface.
 
+For convenience, a script is given in "admin" repertory to create all
+needed files and repertories  for a new bibliography. Run it in the
+repertory admin.
 
 BIBTEX - XML
 ------------

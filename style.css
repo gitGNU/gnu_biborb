@@ -107,13 +107,17 @@ html>body .left2 {
 
 .bibname{ color:white;font-weight:bold; text-align:center;background-color:navy;font-size:120%}
 
-.website{ background-color:silver; color:black; }
-.website h1 { color:navy;width:470px;border-bottom:solid 5px; background-color:transparent; }
-.website h3 { border-bottom:dashed 2px;width:470px; }
+
+.website { background-color:silver; color:black; }
+body.website { width:600px; }
+.website h1 { color:navy;width:600px;border-bottom:solid 5px; background-color:transparent; }
+.website h3 { border-bottom:dashed 2px;width:600px; }
 .website table { border-collapse:collapse;margin-left:150px; }
 .website th {  border:solid 1px black;background-color:navy;color:white;}
 .website td { border:solid 1px; }
 
+.boldred { background-color:transparent;color:red;font-weight:bold; }
+.clean { text-decoration:none; border:none; }
 
 /*
  bibtex style
