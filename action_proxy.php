@@ -81,7 +81,7 @@ if(array_key_exists('action',$_GET)){
          *  Add an entry to the basket
          */
         case 'add_to_basket':
-            add_to_basket($_GET['id']);
+            add_to_basket(explode("*",$_GET['id']));
             // use javascript to redirect to the previous page
             echo "<head><script language='javascript'>history.back()</script></head>";
             break;
@@ -201,6 +201,23 @@ if(array_key_exists('action',$_GET)){
             $_SESSION['message'] = "Database ".$_SESSION['message']." deleted.";
             echo header("Location: index.php?mode=result&".session_name()."=".session_id());
             break;
+           
+        /**
+         *  Import referencese
+         */
+        case 'import':
+            echo 'importing references';
+            $file = bibfilename($_SESSION['bibname']);
+            // make a copy of the original bibfile
+            copy($file, $file.'.bak');
+            // add the bibtex data at the end of the file
+            $bibfile = fopen($file,"a");
+            fwrite($bibfile,$_GET['bibval']);
+            fclose($bibfile);
+            //update the xml file
+            update_xml($_SESSION['bibname']);
+            echo header("Location: bibindex.php?mode=welcome&".session_name()."=".session_id());
+            break;
             
         /**
          * Default => error
@@ -270,7 +287,26 @@ if(array_key_exists('action',$_POST)){
                 }
             }
             break;
-            
+        
+        /**
+         *  Import references by appending a file to the .bib file
+         */
+        case 'import':
+            if(file_exists($_FILES['bibfile']['tmp_name'])){
+                // load the content of the uploaded file
+                $content = load_file($_FILES['bibfile']['tmp_name']);
+                $file = bibfilename($_SESSION['bibname']);
+                // make a copy of the original bibfile
+                copy($file, $file.'.bak');
+                // add the bibtex data at the end of the file
+                $bibfile = fopen($file,"a");
+                fwrite($bibfile,$content);
+                fclose($bibfile);
+                //update the xml file
+                update_xml($_SESSION['bibname']);
+            }
+            echo header("Location: bibindex.php?mode=welcome&".session_name()."=".session_id());
+            break;
         default:
             break;
     }

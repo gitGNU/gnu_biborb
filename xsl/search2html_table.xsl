@@ -65,25 +65,42 @@
   
     <xsl:template match="/">
         <xsl:variable name='bibname' select='@name'/>
+        <!-- search entries matching the query -->
+        <xsl:variable name="result">
+            <xsl:for-each select="//bibtex:entry">
+                <xsl:sort select="@id" order="ascending" data-type="text"/>
+                <xsl:variable name="authornames">
+                    <xsl:value-of select="translate(.//bibtex:author,$ucletters,$lcletters)"/>
+                </xsl:variable>
+                <xsl:variable name="titlenames">
+                    <xsl:value-of select="translate(.//bibtex:title,$ucletters,$lcletters)"/>
+                </xsl:variable>
+                <xsl:variable name="keywordsnames">
+                    <xsl:value-of select="translate(.//bibtex:keywords,$ucletters,$lcletters)"/>
+                </xsl:variable>
+                <xsl:if test="(contains($authornames,$authorsearch) and (string-length($authorsearch) != 0)) or (contains($titlenames,$titlesearch) and (string-length($titlesearch) != 0)) or (contains($keywordsnames,$keywordssearch) and (string-length($keywordssearch)!=0))">
+                    <!--<xsl:apply-templates select="."/>-->
+                    <xsl:copy-of select="."/>
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <!-- add a link to add all entries to basket -->
+        <xsl:variable name="ids">
+            <xsl:for-each select="$result//bibtex:entry">
+                <xsl:value-of select="@id"/>
+                <xsl:if test="position() != last()">*</xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <div class="addtobasket">
+            <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}">Add all entries to basket</a>
+        </div>
         <!-- begining of the table -->
         <table id="bibtex_table">
             <tbody>
-                <xsl:for-each select="//bibtex:entry">
-                    <xsl:sort select="@id" order="ascending" data-type="text"/>
-                    <xsl:variable name="authornames">
-                        <xsl:value-of select="translate(.//bibtex:author,$ucletters,$lcletters)"/>
-                    </xsl:variable>
-                    <xsl:variable name="titlenames">
-                        <xsl:value-of select="translate(.//bibtex:title,$ucletters,$lcletters)"/>
-                    </xsl:variable>
-                    <xsl:variable name="keywordsnames">
-                        <xsl:value-of select="translate(.//bibtex:keywords,$ucletters,$lcletters)"/>
-                    </xsl:variable>
-                    <xsl:if test="(contains($authornames,$authorsearch) and (string-length($authorsearch) != 0)) or (contains($titlenames,$titlesearch) and (string-length($titlesearch) != 0)) or (contains($keywordsnames,$keywordssearch) and (string-length($keywordssearch)!=0))">
-                        <xsl:apply-templates select="."/>
-                    </xsl:if>
+                <xsl:for-each select="$result">
+                    <xsl:apply-templates/>
                 </xsl:for-each>
-        </tbody>
+            </tbody>
         </table>
     </xsl:template>
   

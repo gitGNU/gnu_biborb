@@ -51,6 +51,17 @@
     
     <xsl:template match="/">
         <!-- start the table -->
+        <!-- a link to add all entries to the basket -->
+        <xsl:variable name="list" select="//bibtex:entry[(.//bibtex:group)=$group]/@id"/>
+        <xsl:variable name="ids">
+            <xsl:for-each select="$list">
+                <xsl:value-of select="."/>
+                <xsl:if test="position() != last()">*</xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <div class="addtobasket">
+            <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}">Add all entries to basket</a>
+        </div>
         <table id="bibtex_table">
             <tbody>
                 <!-- select only entries of the given group -->

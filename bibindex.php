@@ -274,6 +274,13 @@ switch($_SESSION["mode"])
         break;
     
     /**
+     * Import references
+     */
+    case 'import':
+        echo bibindex_import();
+        break;
+        
+    /**
      * By default
      */
     default:
@@ -394,6 +401,7 @@ function bibindex_menu()
     //      | -> Add an entry (if admin)
     //      | -> Update from BibTeX (if admin)
     //      | -> Update from XML (if admin)
+    //      | -> Import a bibtex file (if admin)
     //      | -> Logout (if admin and authentication disabled
     $html .= "<li><a href='".bibindex_href('manager')."'>Manager</a>";
     $html .= "<ul>";
@@ -404,6 +412,7 @@ function bibindex_menu()
         $html .= "<li><a class='admin' href='".bibindex_href('addentry')."'>Add an entry</a></li>";
         $html .= "<li><a class='admin' href='".bibindex_href('update_xml_from_bibtex')."'>Update from BibTeX</a></li>";
         $html .= "<li><a class='admin' href='".bibindex_href('update_bibtex_from_xml')."'>Update from XML</a></li>";
+        $html .= "<li><a class='admin' href='".bibindex_href('import')."'>Import BibTeX</a></li>";
     }
     if($_SESSION['usermode']=='admin' && !$GLOBALS['disable_authentication']){
         $html .= "<li><a href='".bibindex_href('logout')."'>Logout</a></li>";
@@ -603,7 +612,8 @@ function bibindex_display_by_group(){
         $main_content .= ">".$gr."</option>";
     }
     $main_content .= "</select>";
-    $main_content .="<input type='submit' value='Display'/>";
+    $main_content .= "<input type='submit' value='Display'/>";
+//    $main_content .= "<input type='submit' value=''/>";
     $main_content .= "</fieldset>";
     $main_content .="</form><br/>";
     
@@ -762,4 +772,32 @@ function bibindex_update_entry(){
     echo $html;
 }
 
+/**
+ * bibindex_import
+ * Interface to import references (bibtex file or textfields)
+ */
+function bibindex_import(){
+    $html = bibheader();
+    $html .= bibindex_menu();
+    $title = "Import References";
+    $content = "Select a BibTeX file or edit entries in the text area. Entries will be added to the current bibliography.";
+    $content .= "<h3>File</h3>";
+    $content .= "<form method='post' action='action_proxy.php' enctype='multipart/form-data'><fieldset title='file'>";
+    $content .= "<input type='file' name='bibfile'/>";
+    $content .= "<br/>";
+    $content .= "<div style='text-align:center'>";
+    $content .= "<input type='submit' name='action' value='import'/>";
+    $content .= "</div>";
+    $content .= "</fieldset></form>";
+    $content .="<h3>BibTeX</h3>";
+    $content .= "<form method='get' action='action_proxy.php'><fieldset title='BibTeX'>";
+    $content .= "<textarea name='bibval' cols='60' rows='15'></textarea>";
+    $content .= "<div style='text-align:center'>";
+    $content .= "<input type='submit' name='action' value='import'/>";
+    $content .= "</div>";
+    $content .= "</fieldset></form>";
+    $html .= main($title,$content);
+    $html .= html_close();
+    echo $html;
+}
 ?>

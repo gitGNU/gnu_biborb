@@ -52,11 +52,13 @@ function reset_basket(){
 }
 
 /**
- * Add a BibTeX id to the basket
+ * Add BibTeX ids to the basket
  */
-function add_to_basket($bibid){
-    if(!in_array($bibid,$_SESSION['basket'])){
-        array_push($_SESSION['basket'],$bibid);
+function add_to_basket($bibids){
+    foreach($bibids as $bibid){
+        if(!in_array($bibid,$_SESSION['basket'])){
+            array_push($_SESSION['basket'],$bibid);
+        }
     }
 }
 

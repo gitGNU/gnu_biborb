@@ -281,7 +281,7 @@ html > body #menu {position:fixed;}
 
 
 
-#bibtex_table a, #bibtex_table a:hover,#bibtex_table a:hover,#bibtex_table a:active,#bibtex_table a:visited,#bibtex_table a:focus {
+#bibtex_table a, #bibtex_table a:hover,#bibtex_table a:active,#bibtex_table a:visited,#bibtex_table a:focus {
     text-decoration:none;
     display:inline;
     padding-left:2px;
@@ -291,8 +291,16 @@ html > body #menu {position:fixed;}
     font-weight:bold;
 }
 
+.addtobasket {
+    color:navy;
+    text-align:right;    
+}
 
-
+.addtobasket a,.addtobasket a:hover,.addtobasket a:active,.addtobasket a:visited,.addtobasket a:focus {
+    text-decoration:none;
+    color:navy;
+    font-family:serif;
+}
 /**
  * Style for the simple output
  */
