@@ -68,7 +68,7 @@ function bibtex2xml($bibtext,$group=NULL){
         // recode &, <, >
         $patterns = array('&','<','>');
         $replace = array('&amp;','&lt;','&gt;');    
-        $line = str_replace($patterns,$replace,$content[$i]);
+        $line = stripslashes(str_replace($patterns,$replace,$content[$i]));
 	
         //new entry @(alphanum){(anychar),
         if(preg_match("/@\s?(\w*)\s?{(.*),/",$line,$matches)){
