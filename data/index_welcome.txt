@@ -4,11 +4,14 @@ BibORB is a tool to manage and consult BibTeX bibliographies using a web browser
 It has been designed first to share bibliographies within a local network. Creation, deletion of bibliographies and edition of BibTeX entries were added to create a simple web front-end to BibTeX.
 </p>
 
-Consequently, BibORB supports to way of use: 
+BibORB supports to way of use: 
 <ul>
     <li>all actions using the web interface</li>
     <li>edition of the bibtex file "by hand" using your favorite text editor, and consultation using the web interface.</li>
 </ul>
 
 <p><span style='color:red;'>IMPORTANT!</span> Presently, BibOrb has not been designed so that different users may 'securely' modified the same bibliography. Concurrent access is not supported. (may be in a latter version)  
+</p>
+
+<p>BibORB also provides a basic authentication method based on databases to restrict write access to bibliographies.
 </p>

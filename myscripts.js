@@ -23,3 +23,4 @@ function toggle_element(id)
         }
     }
 }
+

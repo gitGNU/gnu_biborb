@@ -94,8 +94,8 @@
                             <xsl:variable name="cpt" select="count(*)"/>
                             <xsl:for-each select="*">
                                 <tr>
-                                    <td><xsl:value-of select="name()"/>:</td>
-                                    <td><input name="_{name(.)}"/></td>
+                                    <td class="optional-entry"><xsl:value-of select="name()"/>:</td>
+                                    <td class="optional-value"><input name="_{name(.)}"/></td>
                                 </tr>
                                 <xsl:if test="not(position() = $cpt)">
                                     <tr><td><div style="text-align:center;">or/and</div></td></tr>
@@ -107,8 +107,8 @@
                             <xsl:variable name="cpt" select="count(*)"/>
                             <xsl:for-each select="*">
                                 <tr>
-                                    <td><xsl:value-of select="name()"/>:</td>
-                                    <td><input name="_{name(.)}"/></td>
+                                    <td class="optional-entry"><xsl:value-of select="name()"/>:</td>
+                                    <td class="optional-value"><input name="_{name(.)}"/></td>
                                 </tr>
                                 <xsl:if test="not(position() = $cpt)">
                                     <tr><td><div style="text-align:center;">or/and</div></td></tr>
@@ -131,8 +131,9 @@
         
         <!-- additional fields -->
         <b>BibORB Additional Fields</b>
+        
         <script type="text/javascript">&lt;!--
-        document.write(&quot;&lt;a style=\&quot;text-decoration:none;color:navy;\&quot; href=\&quot;javascript:toggle_element(\'additional\')\&quot;&gt;display/hide &lt;/a&gt;&quot;);
+        document.write(&quot;&lt;a style=\&quot;text-decoration:none;color:navy;\&quot; href=\&quot;javascript:toggle_element(\'additional\')\&quot;&gt; display/hide &lt;/a&gt;&quot;);
         //--&gt;</script>
             <noscript></noscript>
         <div id="additional">

@@ -145,8 +145,11 @@ html > body #menu {position:fixed;}
     background-color:#eef;
 }
 
-#main_title {
-  color:black;
+.main_title {
+  color:navy;
+  text-align:center;
+  border-bottom:dashed 2px gray;
+  margin-bottom:2em;
 }
 
 #error_title {
@@ -182,6 +185,10 @@ html > body #menu {position:fixed;}
     padding:1em;
 }
 
+#content {
+    margin:auto;
+}
+
 /**
  * Style for the table recording available databases
  */
@@ -202,6 +209,7 @@ html > body #menu {position:fixed;}
 
 #available_bibliographies a, #available_bibliographies a:hover,#available_bibliographies a:hover,#available_bibliographies a:active,#available_bibliographies a:visited,#available_bibliographies a:focus {
     text-decoration:none;
+    color:navy;
 }
 
 /**
@@ -216,10 +224,8 @@ html > body #menu {position:fixed;}
 }
 
 #bibtex_table .bibtex_start {
-//    border:solid 1px #333;
     border-top:solid 2px navy;
     color:navy;
-//    background-color:#bbb;
 }
 
 #bibtex_table .bibtex_key {
@@ -228,7 +234,7 @@ html > body #menu {position:fixed;}
     border-bottom:none;
     background-color:#ccc;
     font-weight:bold;
-    font-size:xx-small;
+    font-size:x-small;
     padding:1px;
 }
 
@@ -257,7 +263,7 @@ html > body #menu {position:fixed;}
 }
 
 #bibtex_table .bibtex_button input {
-    font-size:xx-small;
+    font-size:x-small;
     display:relative;
 }
 
@@ -281,10 +287,11 @@ html > body #menu {position:fixed;}
 }
 
 #bibtex_table .bibtex_abstract {
-    font-size:xx-small;
+    font-size:x-small;
     background-color:#eee;
     border-left:solid 1px #333;
     border-right:solid 1px #333;
+    font-family:verdana;
 }
 
 #bibtex_table .bibtex_keywords {
@@ -301,6 +308,14 @@ html > body #menu {position:fixed;}
     font-size:5px;
 }
 
+.images {
+    display:inline;
+    border:0;
+}
+
+.text {
+    display:none;
+}
 
 #bibtex_table a, #bibtex_table a:hover,#bibtex_table a:active,#bibtex_table a:visited,#bibtex_table a:focus {
     text-decoration:none;
@@ -308,7 +323,7 @@ html > body #menu {position:fixed;}
     padding-left:2px;
     padding-right:2px;
     color:#088;
-    font-size:xx-small;
+    font-size:x-small;
     font-weight:bold;
 }
 
@@ -405,3 +420,5 @@ html > body #menu {position:fixed;}
 .current, .newfile { 
   border:1px solid black;
 }
+
+

@@ -1,8 +1,23 @@
-This menu give access to an HTML representation of the BibTeX bibliography.
+<p>
+This menu give access to an HTML representation of the bibliography.
+</p>
 
-You can:
 <ul>
-    <li>display all entries,</li>
-    <li>display entries of a given group,</li>
-    <li>search the database for an entry.</li>
+    <li><strong>All</strong>:  all entries are displayed by increasing id,</li>
+    <li><strong>Groups</strong>: display entries of a given group,</li>
+    <li><strong>Search</strong>: search the database for an entry (title, keywords, authors).</li>
 </ul>
+
+Several actions may be available for each displayed entry:
+
+<ul>
+    <li>Download a ps/ps.gz/pdf</li>
+    <li>Access the abstract</li>
+    <li>Get the BibTeX source code</li>
+    <li>Go to a related webpage (Home pages)</li>
+    <li>Go to a local page on the web server</li>
+    <li>Edit the entry to update information (need authentication mode disabled or authenticated user)</li>
+    <li>Remove the entry (need authentication mode disabled or authenticated user) <span style="color:red">No Warning!!</span></li>
+    <li>Add the entry to the basket</li>
+</ul>
+    

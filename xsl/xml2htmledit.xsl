@@ -63,8 +63,8 @@
                             <xsl:for-each select='*'>
                                 <xsl:variable name="field" select="name()"/>
                                 <tr>
-                                    <td width="required-entry"><xsl:value-of select="$field"/>:</td>
-                                    <td class='required-value'>
+                                    <td class="required-entry"><xsl:value-of select="$field"/>:</td>
+                                    <td class="required-value">
                                         <xsl:variable name="val" select="$bibfile//*[local-name() = $field]"/>
                                         <input name="_{name()}" value="{$val}" />
                                     </td>
@@ -80,7 +80,7 @@
                             <xsl:for-each select='*'>
                                 <xsl:variable name="field" select="name()"/>
                                 <tr>
-                                    <td width="required-entry"><xsl:value-of select="$field"/>:</td>
+                                    <td class="required-entry"><xsl:value-of select="$field"/>:</td>
                                     <td class='required-value'>
                                         <xsl:variable name="val" select="$bibfile//*[local-name() = $field]"/>                                            
                                         <input name="_{name()}" value="{$val}" />
@@ -156,7 +156,7 @@
                                 <xsl:variable name="field" select="name()"/>
                                 <tr>
                                     <td class='optional-entry'><xsl:value-of select="$field"/>:</td>
-                                    <td class='required-valu'>
+                                    <td class='optional-value'>
                                         <xsl:variable name="val" select="$bibfile//*[local-name() = $field]"/>
                                         <input name="_{name()}" value='{$val}' />
                                     </td>
@@ -187,7 +187,7 @@
     
         <b>BibORB Additional Fields</b>
         <script type="text/javascript">&lt;!--
-        document.write(&quot;&lt;a style=\&quot;text-decoration:none;color:navy;\&quot; href=\&quot;javascript:toggle_element(\'additional\')\&quot;&gt;display/hide &lt;/a&gt;&quot;);
+        document.write(&quot;&lt;a style=\&quot;text-decoration:none;color:navy;\&quot; href=\&quot;javascript:toggle_element(\'additional\')\&quot;&gt; display/hide &lt;/a&gt;&quot;);
         //--&gt;</script>
             <noscript></noscript>
     

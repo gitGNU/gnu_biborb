@@ -1,2 +1,18 @@
-This menu give access to management functions. If you logged in or use BiBORB wihtout authentication, you may add, edit or delete entries.
-<br/>
+<p>
+    This menu give access to management functions. If you logged in or use BiBORB wihtout authentication, you may add, edit or delete entries.
+<p>
+
+Available actions are:
+
+<ul>
+    <li><strong>Login</strong>, authenticate to get write access to the bibligraphy (if authentication activated)</li>
+    <li><strong>Logout</strong> (if authentication activated)</li>
+    <li><strong>Add an entry</strong></li>
+    <li><strong>Import BibTeX</strong> allows to add to the database a given bibliography. The BibTeX entries may be added by copy/paste in a text field or by choosing a BibTeX source file.</li>
+</ul>
+
+<span style="color:red"><strong>Warning!</strong></span>
+<ul>
+    <li>BibORB will not detect errors nor duplicate BibTeX keys.</li>
+    <li>BibORB does not support <code>@String</code> nor <code>@preamble</code>.</li>
+<ul>

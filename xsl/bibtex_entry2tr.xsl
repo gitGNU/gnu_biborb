@@ -64,14 +64,43 @@
                 </xsl:variable>
 
                 <xsl:if test="$mode='admin'">
-                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=edit"><img src="./data/images/stock_edit-16.png" alt="edit" border="0"/></a>
-                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=delete"><img src="./data/images/stock_delete-16.png" alt="delete" border="0"/></a>
+
+                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=edit">
+                        <div class="images">
+                            <img src="./data/images/stock_edit-16.png" alt="edit" border="0"/>
+                        </div>
+                        <div class="text">
+                            edit
+                        </div>
+                    </a>
+                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=delete">
+                        <div class="images">
+                            <img src="./data/images/stock_delete-16.png" alt="delete" border="0"/>
+                        </div>
+                        <div class="text">
+                            delete
+                        </div>
+                    </a>
                 </xsl:if>
                 <xsl:if test="$basket = '' and $basket != 'no'">
-                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=add_to_basket"><img src="./data/images/cvs-add-16.png" alt="add to basket" border="0"/></a>
+                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=add_to_basket">
+                        <div class="images">
+                            <img src="./data/images/cvs-add-16.png" alt="add to basket" border="0"/>
+                        </div>
+                        <div class="text">
+                            +
+                        </div>
+                    </a>
                 </xsl:if>
                 <xsl:if test="$basket != '' and $basket != 'no'">
-                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=delete_from_basket"><img src="./data/images/cvs-remove-16.png" alt="remove from basket" border="0"/></a>
+                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=delete_from_basket">
+                        <div class="images">
+                            <img src="./data/images/cvs-remove-16.png" alt="remove from basket" border="0"/>
+                        </div>
+                        <div class="text">
+                            -
+                        </div>
+                    </a>
                 </xsl:if>
             </td>
         </tr>

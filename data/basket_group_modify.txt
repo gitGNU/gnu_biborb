@@ -1,5 +1,3 @@
-<h3>Groups modification</h3>
-
 
 <form style='display:inline;' action='action_proxy.php' method='get'>
 <fieldset style='border:none;'>

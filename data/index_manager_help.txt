@@ -1,1 +1,16 @@
-The manager allows to create or delete bibliographies if the user is authenticated.
+<p>
+The manager allows to create or delete bibliographies.
+</p>
+
+<h3>Create</h3>
+<p>
+    Biborb will create any necessary files to store the bibliography.
+</p>
+
+<h3>Delete</h3>
+<p>
+    Biborb will move the selected bibliography in the <code>bibs/.trash</code> directory. The bibliography will be removed from the list of available bibliographies.<br/>
+    
+    In order to definitively remove it, the <code>bibs/.trash</code> has to be cleaned manually.
+</p>
+
