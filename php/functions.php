@@ -41,8 +41,9 @@ require_once("php/utilities.php");
 require_once("php/bibtex.php");
 
 
-/**
- * Extract bibtex field from an array
+/*
+    Extract bibtex fields from an array.
+    Valid bibtex fields are values contained in $GLOBALS['bibtex_entries']
  */
 function extract_bibtex_data($tab){
     $result = array();
@@ -84,8 +85,8 @@ function upload_file($bibname,$type,$id)
     return $res;
 }
 
-/**
- * Create the main panel
+/*
+    Create the main panel
  */
 function main($title,$content,$error = null,$message = null)
 {
@@ -99,7 +100,7 @@ function main($title,$content,$error = null,$message = null)
 }
 
 
-/**
+/*
     Del a directory
  */
 function deldir($dir) {
@@ -116,7 +117,7 @@ function deldir($dir) {
     rmdir($dir);
 }
 
-/**
+/*
     Remove accents of a string.
  */
 function remove_accents($string){
@@ -125,9 +126,9 @@ function remove_accents($string){
                 "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy");
 }
 
-/**
+/*
     Generate the add all to basket div section
-*/
+ */
 
 function add_all_to_basket_div($ids,$mode,$extraparam=null){
     // ensure localization is set up
@@ -146,9 +147,9 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
     return $html;
 }
 
-/**
-    Generate a XHTLM div containing sort functions
-*/
+/*
+    Generate a XHTML div containing sort functions
+ */
 function sort_div($selected_sort,$selected_order,$mode,$misc){
     // ensure the localization is set up
     load_i18n_config($_SESSION['language']);
@@ -197,7 +198,7 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
     return $html;
 }
 
-/**
+/*
     Analyze a .dot aux file and return an array of bibtex ids
  */
 function bibtex_keys_from_aux($auxfile){
@@ -206,7 +207,7 @@ function bibtex_keys_from_aux($auxfile){
     return $res[1];
 }
 
-/**
+/*
     Create the nav bar
 */
 function create_nav_bar($current_page,$max_page,$mode,$extraparam=null){

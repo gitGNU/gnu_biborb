@@ -27,6 +27,7 @@
 
 */
 
+// list of available locales
 $available_locales = array('fr_FR' => 'Français',
                            'en_US' => 'English',
                            'it_IT' => 'Italiano',

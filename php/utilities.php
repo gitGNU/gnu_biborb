@@ -33,11 +33,7 @@
  * 
  */
  
-
-
-
-
-/**
+/*
     Use to change the base name of a file, keeping its extension
     returns the new file name
  */
@@ -52,7 +48,7 @@ function get_new_name($filename,$newbasename) {
     return $newfilename;
 }
 
-/**
+/*
     Close an HTML page.
  */
 function html_close() {
@@ -75,6 +71,7 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL
     if($style){
         $html .= "<link href='$style' rel='stylesheet' type='text/css'/>";
     }  
+    // define the title
     if($title){
         $html .= "<title>$title</title>";
     }
@@ -94,7 +91,7 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL
     return $html;  
 }
 
-/**
+/*
     Load a text file
  */
 function load_file($filename) {

@@ -833,7 +833,6 @@ function bibindex_display_search(){
 
     $searchvalue = array_key_exists('search',$_GET) ? trim(htmlentities(remove_accents($_GET['search']))) :"";
     
-    print_r($searchvalue);
     $title = msg("BIBINDEX_SIMPLE_SEARCH_TITLE");
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
@@ -1653,7 +1652,7 @@ function bibindex_display_xpath_search()
     if(array_key_exists("xpath_query",$_GET)){
         // store the ids in session if we come from an other page.
         if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_xpath_search(myhtmlentities($_GET['xpath_query'])),$GLOBALS['max_ref']);
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_xpath_search(htmlentities($_GET['xpath_query'])),$GLOBALS['max_ref']);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);

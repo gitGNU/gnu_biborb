@@ -149,7 +149,6 @@ if(isset($_GET['action'])){
             if(!array_key_exists('user_is_admin',$_SESSION) || !$_SESSION['user_is_admin']){
                 trigger_error("You are not authorized to delete bibliographies!",ERROR);
             }
-            
             $error_or_message['message'] = delete_database($_GET['database_name']);
             break;
         
