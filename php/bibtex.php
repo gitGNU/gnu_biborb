@@ -175,18 +175,26 @@ class BibTeX_Tools
         return $res;
     }
     
+    /**
+        Convert an array to bibtex
+        @param $tab An array of references
+        @param $fields_to_export Array of fields to export
+        @return A bibtex formated string.
+     */
     function array_to_bibtex_string($tab,$fields_to_export){
         $export = "";
         foreach($tab as $entry){
             $entry_exported = "";
-            $export .= "@".$entry['___type']."{".$entry['id'].",\n";
+            $export .= "@".$entry['___type']."{".$entry['id'];
             foreach($fields_to_export as $field){
-
-                if(array_key_exists($field,$tab)){
-                    $export .= "    ".$field." = {".$entry[$field]." }";
+                if(array_key_exists($field,$entry)){
+                    $export .= ",\n";
+                    $export .= "\t".$field." = {".$entry[$field]."}";
                 }
             }
+            $export .= "\n}\n";
         }
+        return $export;
     }
     
 }

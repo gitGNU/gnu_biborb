@@ -1,6 +1,6 @@
 <?php
 /**
-*
+ *
  * This file is part of BibORB
  * 
  * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
@@ -41,8 +41,10 @@ require_once("php/xslt_processor.php"); //xslt processor
 require_once("php/third_party/PARSECREATORS.php"); // split Bibtex names
 require_once("php/bibtex.php"); //parse bibtex string
 
+// list of sort attributes
 $sort_values = array('author','title','ID','year','dateAdded','lastDateModified');
-// Bibtex Database manager
+
+//Bibtex Database manager
 class BibORB_DataBase {
 	
     // Should a BibTeX file be generated.
@@ -53,6 +55,9 @@ class BibORB_DataBase {
     
     // the biblio directory
     var $biblio_dir;
+    
+    // the changelog file;
+    var $changelog;
     
     // Sort method used to sort entries
     var $sort;
@@ -79,6 +84,7 @@ class BibORB_DataBase {
     function BibORB_DataBase($bibname,$genBibtex = true){
         $this->biblio_name = $bibname;
         $this->biblio_dir = "./bibs/$bibname/";
+        $this->changelog = "./bibs/$bibname/changelog.txt";
         $this->generate_bibtex = $genBibtex;
         $this->read_status = 'any';
         $this->ownership = 'any';
@@ -107,15 +113,18 @@ XSLT_END;
             $bt = new BibTeX_Tools();
             $pc = new PARSECREATORS();
             $entries = $bt->xml_to_bibtex_array($xml);
-            // get the name of the first author
+
             for($i=0;$i<count($entries);$i++){
+                // get the name of the first author
                 if(array_key_exists('author',$entries[$i])){
                     list($creatorArray, $etAl) = $pc->parse($entries[$i]['author']);
                     $entries[$i]['lastName'] = $creatorArray[0][2];
                 }
+                // set dateAdded and lastDateModified attributes
                 $entries[$i]['dateAdded'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
                 $entries[$i]['lastDateModified'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
             }
+            // convert to XML
             $data = $bt->entries_array_to_xml($entries);
             // save the new xml file
             rename($this->xml_file(),$this->xml_file().".save");
@@ -133,7 +142,6 @@ XSLT_END;
             $sort = 'ID';
         }
         $this->sort = $sort;
-        
     }
     
     /**
@@ -416,9 +424,11 @@ XSLT_END;
             $result = $xsltp->transform($xml,$xsl,$param);
             $xsltp->free();
 	    
+            // save xml
             $fp = fopen($this->xml_file(),"w");
             fwrite($fp,$result);
             fclose($fp);
+            
             // update bibtex file
             if($this->generate_bibtex){$this->update_bibtex_file();}
 	    
@@ -831,7 +841,7 @@ XSLT_END;
     }
 
     /**
-     Change the type of a given entry
+        Change the type of a given entry
     */
     function change_type($id,$newtype){	
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
@@ -856,7 +866,7 @@ XSLT_END;
     }
 
     /**
-     Change the bibtex key
+        Change the bibtex key
     */
     function change_id($id,$newid){
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
@@ -1052,6 +1062,7 @@ function create_database($name,$description){
             $name = remove_accents($name);
             $name = str_replace(' ','_',$name);
             umask(DMASK);
+            // create directory
             $res = mkdir("./bibs/$name");
             if($res){
                 $resArray['message'] = msg("BIB_CREATION_SUCCESS");
@@ -1059,19 +1070,26 @@ function create_database($name,$description){
             else{
                 $resArray['message'] = msg("BIB_CREATION_ERROR");
             }
+            // papers directory
             mkdir("./bibs/$name/papers");
+            
+            // xml and bibtex files
             umask(UMASK);
             copy("./data/template/template.bib","./bibs/$name/$name.bib");
             copy("./data/template/template.xml","./bibs/$name/$name.xml");
             
+            // description
             $fp = fopen("./bibs/$name/description.txt","w");
             fwrite($fp,htmlentities($description));
             fclose($fp);
+            
+            // init xml file
             $xml = load_file("./bibs/$name/$name.xml");
             $xml = str_replace("template",$name,$xml);
             $fp = fopen("./bibs/$name/$name.xml","w");
             fwrite($fp,$xml);
             fclose($fp);
+            
         }
         else{
             $resArray['error'] = msg("BIB_EXISTS");
@@ -1089,7 +1107,7 @@ function create_database($name,$description){
 function delete_database($name){
     //check if $name is a valid bibliography name
     if(!in_array($name,get_databases_names())){
-        trigger_error("Wrong database name: $name");
+        trigger_error("Wrong database name: $name",ERROR);
     }
     // create .trash folder if it does not exit
     if(!file_exists("./bibs/.trash")){
@@ -1099,7 +1117,8 @@ function delete_database($name){
         umask($oldmask);
     }
     // save the bibto .trash folder
-    rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or trigger_error("Error while moving $name to .trash folder");
+    rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or trigger_error("Error while moving $name to .trash folder",ERROR);
+    // result message
     $res = sprintf(msg("Database %s moved to trash."),$name)."<br/>";
     $res .= sprintf(msg("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>");
     return $res;

@@ -642,34 +642,10 @@ if(isset($_POST['action'])){
                 // basket not empty -> processing
                 // get entries
                 $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
-//                $bt = new BibTeX_Tools();
-//                $tab = $bt->xml_to_bibtex_array($entries);
-//                $bibtex_string = $bt->array_to_bibtex_string($tab);
-//                die();
-                
-                // xslt transformation
-                $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
-                $param = $GLOBALS['xslparam'];
-                // hide basket actions
-                $param['display_basket_actions'] = 'no';
-                // hide edition/delete
-                $param['mode'] = 'user';
-                // create a parameter containing fields to export
-                $toexport = ".";
-                foreach($GLOBALS['bibtex_entries'] as $field){
-                    if(array_key_exists($field,$_POST)){
-                        $toexport .= $field.".";
-                    }
-                }
-	    
-                $param['fields_to_export'] = $toexport;
-                //process
-                $content = $xsltp->transform($entries,load_file("./xsl/xml2bibtex_advanced.xsl"),$param);
-                $xsltp->free();
-                
-                // bibtex output
+                $bt = new BibTeX_Tools();
+                $tab = $bt->xml_to_bibtex_array($entries);
                 header("Content-Type: text/plain");
-                echo $content;
+                echo $bt->array_to_bibtex_string($tab,$GLOBALS['fields_to_export']);
                 exit();
             }
             else{
@@ -797,13 +773,11 @@ switch($mode) {
     
     // bibtex of a given entry
     case 'bibtex':
+        $bt = new BibTeX_Tools();
         $entries = $_SESSION['bibdb']->entry_with_id($_GET['id']);
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
-        $bibtex = $xsltp->transform($entries,load_file("./xsl/xml2bibtex.xsl"));
-        $bibtex = preg_replace(array('/(\s*\\1)?/','/ +/'),array("\\1",' '),$bibtex);
-        $xsltp->free();
+        $tab = $bt->xml_to_bibtex_array($entries);
         header("Content-Type: text/plain");
-        echo $bibtex;
+        echo $bt->array_to_bibtex_string($tab,$GLOBALS['fields_to_export']);
         break;
     
     // Export the basket to html

@@ -52,7 +52,8 @@
 */
 
 /**
-    Class Auth: a genreic class to check authorizations.
+ * Class Auth: a genreic class to check authorizations.
+ *   
  */
 class Auth
 {
@@ -60,7 +61,7 @@ class Auth
     var $f_access;
     
     /**
-        Constructor
+     *   Constructor
      */
     function Auth(){
         $this->f_users = "./data/auth_files/bib_users.txt";

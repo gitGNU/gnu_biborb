@@ -1491,9 +1491,10 @@ function bibindex_import(){
     $content .= "<br/><br/>";
     
     // import from a BibTeX file
-    $content .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_FILE_TITLE")."</h3>";
+//    $content .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_FILE_TITLE")."</h3>";
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data'>";
-    $content .= "<fieldset class='fieldset-bordered' title='".msg("File")."'>";
+    $content .= "<fieldset style='border:solid 1px navy;' title='".msg("File")."'>";
+    $content .= "<legend style='font-weight:bold;color:navy'>".msg("File")."</legend>";
     $content .= "<div style='text-align:left;'>";
     $content .= msg("BIBINDEX_IMPORT_FILE_DESC")."&nbsp;";
     $content .= "<input type='file' name='bibfile'/>";
@@ -1506,9 +1507,10 @@ function bibindex_import(){
     $content .= "<br/>";
     
     // import from a BibTeX string
-    $content .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_TXT_TITLE")."</h3>";
+//    $content .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_TXT_TITLE")."</h3>";
     $content .= "<form method='post' action='bibindex.php'>";
-    $content .= "<fieldset class='fieldset-bordered' title='BibTeX'>";
+    $content .= "<fieldset style='border:solid 1px navy;text-align:center;' title='BibTeX'>";
+    $content .= "<legend style='font-weight:bold;color:navy'>BibTeX</legend>";
     $content .= "<div style='text-align:left'>".msg("BIBINDEX_IMPORT_TXT_DESC")."</div>";
     $content .= "<textarea name='bibval' cols='55' rows='15'></textarea>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
@@ -1532,37 +1534,38 @@ function bibindex_export_basket_to_bibtex(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = msg("BIBINDEX_EXPORT_TO_BIBTEX_TITLE");
-    
     $content = "<span class='emphit'>".msg("Select fields to include in the exported BibTeX:")."</span>";
+    // create the form to select which fields to export
     $content .= "<form action='bibindex.php' method='post'>";
-    $content .= "<fieldset style='border:none'>";
+    $content .= "<fieldset style='border:solid 1px navy;'>";
+    $content .= "<legend style='font-weight:bold;color:navy;'>".msg("Available BibTeX fields")."</legend>";
     $content .= "<table>";
     $content .= "<tbody>";
     $cpt = 0;
     for($i=0;$i<count($GLOBALS['bibtex_entries']);$i++){
-	if(strcmp($GLOBALS['bibtex_entries'][$i],'id') != 0){
-	    $field = $GLOBALS['bibtex_entries'][$i];
-	    if($cpt == 0){
-            $content .= "<tr>";
-	    }
-	    $content .= "<td title='$field'><input type='checkbox' name='$field'";
-	    if(!(array_search($field,$GLOBALS['fields_to_export']) === false)){
-            $content .= " checked='checked' ";
-	    }
-	    $content .= " />".msg($field)."</td>";
-	    $cpt++;
-	    if($cpt == 4){
-		$content .= "</tr>";
-		$cpt = 0;
-	    }
-	}
+        if(strcmp($GLOBALS['bibtex_entries'][$i],'id') != 0){
+            $field = $GLOBALS['bibtex_entries'][$i];
+            if($cpt == 0){
+                $content .= "<tr>";
+            }
+            $content .= "<td title='$field'><input type='checkbox' name='$field'";
+            if(!(array_search($field,$GLOBALS['fields_to_export']) === false)){
+                $content .= " checked='checked' ";
+            }
+            $content .= " />".msg($field)."</td>";
+            $cpt++;
+            if($cpt == 6){
+                $content .= "</tr>";
+                $cpt = 0;
+            }
+        }
     }
     if($cpt != 0){
-	while($cpt != 4){
-	    $cpt++;
-	    $content .= "<td/>"; 
-	}
-	$content .= "</tr>";
+        while($cpt != 6){
+            $cpt++;
+            $content .= "<td/>"; 
+        }
+        $content .= "</tr>";
     }
 
     $content .= "</tbody>";
