@@ -61,7 +61,7 @@ define("DISPLAY_LANG_SELECTION",TRUE);
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-define("DISABLE_AUTHENTICATION",FALSE);
+define("DISABLE_AUTHENTICATION",TRUE);
 
 /**
  * Authentication methods: mysql, files
@@ -212,4 +212,8 @@ define("UMASK",0111);
  */
 define("DMASK",0000);
 
+/**
+ *  List of file types that can be uploaded
+ */
+$valid_upload_extensions = array('ps','pdf','gz','bz2','zip');
 ?>

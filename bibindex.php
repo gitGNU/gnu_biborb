@@ -513,6 +513,7 @@ if(isset($_POST['action'])){
                     $param['mode'] = "user";
                     $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
                     $xsltp->free();
+                    $error = $res['message'];
                 }
                 else{
                     $error = $res['message'];
@@ -540,6 +541,7 @@ if(isset($_POST['action'])){
                     $param['mode'] = "user";
                     $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
                     $xsltp->free();
+                    $error = $res['message'];
                 }
                 else{
                     $error = $res['message'];

@@ -39,6 +39,8 @@
 
 require_once("php/xslt_processor.php"); //xslt processor
 require_once("php/third_party/PARSECREATORS.php"); // split Bibtex names
+require_once("php/bibtex.php"); //parse bibtex string
+
 // Bibtex Database manager
 class BibORB_DataBase {
 	
@@ -311,7 +313,7 @@ class BibORB_DataBase {
         $bibid = trim($dataArray['id']);
         // check if the entry is already present
         $inbib = $this->is_bibtex_key_present($bibid);
-	
+        
         // error, ID already exists or empty value
         if( $inbib|| strlen($bibid) == 0 || $bibid == null){
             if($inbib){
@@ -326,21 +328,42 @@ class BibORB_DataBase {
         else{
             // upload files if they are present
             if(array_key_exists('up_url',$_FILES) && file_exists($_FILES['up_url']['tmp_name'])){
-                $dataArray['url'] = upload_file($this->biblio_name,'up_url',$dataArray['id']);
+                $fileInfo = pathinfo($_FILES['up_url']['name']);
+                if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
+                    $dataArray['url'] = upload_file($this->biblio_name,'up_url',$dataArray['id']);
+                }
+                else{
+                    $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_url']['name']);
+                    $res['message'] .= "<br/>";
+                }
             }
             else if(array_key_exists('ad_url',$dataArray)){
                 $dataArray['url'] = $dataArray['ad_url'];
             }
             
             if(array_key_exists('up_urlzip',$_FILES) && file_exists($_FILES['up_urlzip']['tmp_name'])){
-                $dataArray['urlzip'] = upload_file($this->biblio_name,'up_urlzip',$dataArray['id']);
+                $fileInfo = pathinfo($_FILES['up_urlzip']['name']);
+                if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
+                    $dataArray['urlzip'] = upload_file($this->biblio_name,'up_urlzip',$dataArray['id']);
+                }
+                else{
+                    $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_urlzip']['name']);
+                    $res['message'] .= "<br/>";
+                }
             }
             else if(array_key_exists('ad_urlzip',$dataArray)){
                 $dataArray['urlzip'] = $dataArray['ad_urlzip'];
             }
             
             if(array_key_exists('up_pdf',$_FILES) && file_exists($_FILES['up_pdf']['tmp_name'])){
-                $dataArray['pdf'] = upload_file($this->biblio_name,'up_pdf',$dataArray['id']);;
+                $fileInfo = pathinfo($_FILES['up_pdf']['name']);
+                if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
+                    $dataArray['pdf'] = upload_file($this->biblio_name,'up_pdf',$dataArray['id']);
+                }
+                else{
+                    $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_pdf']['name']);
+                    $res['message'] .= "<br/>";
+                }
             }
             else if(array_key_exists('ad_url',$dataArray)){
                 $dataArray['pdf'] = $dataArray['ad_pdf'];
@@ -349,15 +372,23 @@ class BibORB_DataBase {
             // add the new entry
             $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $bt = new BibTeX_Tools();
+            
+            // extract real bibtex values from the array
             $bibtex_val = extract_bibtex_data($dataArray);
+            
+            // get first lastname author
             if(array_key_exists('author',$bibtex_val)){
                 $pc = new PARSECREATORS();
-                list($authors,$etal) = $pc->creators($bibtex_val['author']);
+                list($authors,$etal) = $pc->parse($bibtex_val['author']);
                 $bibtex_val['lastName'] = $authors[0][2];
             }
+            // set its type
             $bibtex_val['___type'] = $dataArray['add_type'];
+            // date added
             $bibtex_val['dateAdded'] = date("Y-m-d");
+            // date modified
             $bibtex_val['dateModified'] = date("Y-m-d");
+            // convert to xml
             $data = $bt->entries_array_to_xml(array($bibtex_val));
             $xml = $data[2];
             $xsl = load_file("./xsl/add_entries.xsl");
@@ -372,7 +403,7 @@ class BibORB_DataBase {
             if($this->generate_bibtex){$this->update_bibtex_file();}
 	    
             $res['added'] = true;
-            $res['message'] = "";
+            $res['message'] .= "";
             $res['id'] = $dataArray['id'];
         }
         return $res;
@@ -490,21 +521,43 @@ class BibORB_DataBase {
         }
         else{
             if(array_key_exists('up_url',$_FILES) && file_exists($_FILES['up_url']['tmp_name'])){
-                $dataArray['url'] = upload_file($this->biblio_name,'up_url',$dataArray['id']);
+                $fileInfo = pathinfo($_FILES['up_url']['name']);
+                if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
+                    $dataArray['url'] = upload_file($this->biblio_name,'up_url',$dataArray['id']);
+                }
+                else{
+                    $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_url']['name']);
+                    $res['message'] .= "<br/>";
+                }
             }
             else if(array_key_exists('ad_url',$dataArray)){
                 $dataArray['url'] = $dataArray['ad_url'];
             }
             
             if(array_key_exists('up_urlzip',$_FILES) && file_exists($_FILES['up_urlzip']['tmp_name'])){
-                $dataArray['urlzip'] = upload_file($this->biblio_name,'up_urlzip',$dataArray['id']);
+                $fileInfo = pathinfo($_FILES['up_urlzip']['name']);
+                if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
+                    $dataArray['urlzip'] = upload_file($this->biblio_name,'up_urlzip',$dataArray['id']);
+                }
+                else{
+                    $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_urlzip']['name']);
+                    $res['message'] .= "<br/>";
+                }
             }
             else if(array_key_exists('ad_urlzip',$dataArray)){
                 $dataArray['urlzip'] = $dataArray['ad_urlzip'];
             }
             
             if(array_key_exists('up_pdf',$_FILES) && file_exists($_FILES['up_pdf']['tmp_name'])){
-                $dataArray['pdf'] = upload_file($this->biblio_name,'up_pdf',$dataArray['id']);;
+                $fileInfo = pathinfo($_FILES['up_pdf']['name']);
+                if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
+                    $dataArray['pdf'] = upload_file($this->biblio_name,'up_pdf',$dataArray['id']);
+                }
+                else{
+                    $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_pdf']['name']);
+                    $res['message'] .= "<br/>";
+                }
+                
             }
             else if(array_key_exists('ad_url',$dataArray)){
                 $dataArray['pdf'] = $dataArray['ad_pdf'];
@@ -535,7 +588,7 @@ class BibORB_DataBase {
             if($this->generate_bibtex){$this->update_bibtex_file();}
             
             $res['updated'] = true;
-            $res['message'] = "";
+            $res['message'] .= "";
             $res['id'] = $dataArray['id'];
         }
         return $res;

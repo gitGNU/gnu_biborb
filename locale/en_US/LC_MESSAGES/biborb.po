@@ -1125,3 +1125,5 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
+msgid "%s not uploaded: invalid file type."
+msgstr ""
