@@ -93,7 +93,10 @@ if(get_magic_quotes_gpc()) {
 /**
  *  i18n
  */
-if(!array_key_exists('language',$_GET)){
+if(array_key_exists('user_pref',$_SESSION)){
+    $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
+}
+else if(!array_key_exists('language',$_GET)){
     if(!array_key_exists('language',$_SESSION) || !DISPLAY_LANG_SELECTION){
         $_SESSION['language'] = DEFAULT_LANG;
     }
@@ -105,7 +108,7 @@ load_i18n_config($_SESSION['language']);
 
 
 /**
- * Global variables to store an error message or a standad message.
+ * Global variables to store an error message or a standard message.
  */
 $error = null;
 $message = null;
@@ -195,31 +198,57 @@ $_SESSION['update_authorizations'] = FALSE;
 
 
 /**
-* Default paramaters for XSLT transformation
+ * Default paramaters for XSLT transformation
  */
-$abst = array_key_exists('abstract',$_GET) ? $_GET['abstract'] : DISPLAY_ABSTRACT;
+//
+if(array_key_exists('user_pref',$_SESSION)){
+    $max_ref = $_SESSION['user_pref']['max_ref_by_page'];
+}
+else{
+    $max_ref = MAX_REFERENCES_BY_PAGE;
+}
 
+//abstract
+if(array_key_exists('user_pref',$_SESSION)){
+    $abst = $_SESSION['user_pref']['display_abstract'];
+}
+else{
+    $abst = array_key_exists('abstract',$_GET) ? $_GET['abstract'] : DISPLAY_ABSTRACT;
+}
+// sort
 $sort = DEFAULT_SORT;
 $sort_order = DEFAULT_SORT_ORDER;
-if(array_key_exists('sort',$_GET)){$sort = $_GET['sort'];}
+if(array_key_exists('user_pref',$_SESSION)){$sort = $_SESSION['user_pref']['default_sort'];}
+else if(array_key_exists('sort',$_GET)){$sort = $_GET['sort'];}
 else if(array_key_exists('sort',$_POST)){$sort = $_POST['sort'];}
-if(array_key_exists('sort_order',$_GET)){$sort_order = $_GET['sort_order'];}
+// sort order
+if(array_key_exists('user_pref',$_SESSION)){$sort_order = $_SESSION['user_pref']['default_sort_order'];}
+else if(array_key_exists('sort_order',$_GET)){$sort_order = $_GET['sort_order'];}
 else if(array_key_exists('sort_order',$_POST)){$sort_order = $_POST['sort_order'];}
+
 $_SESSION['bibdb']->set_sort($sort);
 $_SESSION['bibdb']->set_sort_order($sort_order);
 
+$display_images = DISPLAY_IMAGES;
+$display_txt = DISPLAY_TEXT;
+$display_shelf_actions = SHELF_MODE;
+if(array_key_exists('user_pref',$_SESSION)){
+    $display_images = ($_SESSION['user_pref']['display_images'] == "yes");
+    $display_txt = $_SESSION['user_pref']['display_txt'] == "yes";
+    $display_shelf_actions = $_SESSION['user_pref']['display_shelf_actions'] == "yes";
+}
 
 $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'bibnameurl' => $_SESSION['bibdb']->xml_file(),
-                    'display_images' => DISPLAY_IMAGES,
-                    'display_text' => DISPLAY_TEXT,
+                    'display_images' => $display_images,
+                    'display_text' => $display_txt,
                     'abstract' => $abst,
                     'display_add_all'=> 'true',
                     'sort' => $sort,
                     'sort_order' => $sort_order,
                     'can_modify' => $_SESSION['user_can_modify'] || $_SESSION['user_is_admin'],
                     'can_delete' => $_SESSION['user_can_delete'] || $_SESSION['user_is_admin'],
-                    'shelf-mode' => SHELF_MODE);
+                    'shelf-mode' => $display_shelf_actions);
 
 /**
  * Action are given by GET/POST method.
@@ -322,11 +351,12 @@ if(isset($_GET['action'])){
             break;
 	
         case 'logout':
-            unset($_SESSION['user']);
             $_SESSION['user_can_add'] = FALSE;
             $_SESSION['user_can_delete'] = FALSE;
             $_SESSION['user_can_modify'] = FALSE;
             $_SESSION['user_is_admin'] = FALSE;
+            unset($_SESSION['user']);
+            unset($_SESSION['user_pref']);
             break;
 	
         case 'update_type':

@@ -64,7 +64,10 @@ if(get_magic_quotes_gpc()) {
 /**
  *  i18n
  */
-if(!array_key_exists('language',$_GET)){
+if(array_key_exists('user_pref',$_SESSION)){
+    $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
+}
+else if(!array_key_exists('language',$_GET)){
     if(!array_key_exists('language',$_SESSION) || !DISPLAY_LANG_SELECTION){
         $_SESSION['language'] = DEFAULT_LANG;
     }
@@ -145,6 +148,10 @@ if(isset($_GET['action'])){
         case "logout":
             unset($_SESSION['user']);
             $_SESSION['user_is_admin'] = FALSE;
+            unset($_SESSION['user']);
+            unset($_SESSION['user_pref']);
+            $_SESSION['language'] = DEFAULT_LANG;
+            load_i18n_config($_SESSION['language']);
             break;
             
         default:
@@ -172,13 +179,25 @@ if(isset($_POST['action'])){
                 $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
                 if($loggedin){
                     $_SESSION['user'] = $login;
-                    $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($_SESSION['user']);
+                    $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($login);
+                    $_SESSION['user_pref'] = $_SESSION['auth']->get_preferences($login);
+                    $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
+                    load_i18n_config($_SESSION['language']);
                 }
                 else {
                     $error_or_message['error'] = msg("LOGIN_WRONG_USERNAME_PASSWORD");
                     $mode = "login";
                 }
             }
+            break;
+        
+        case 'update_preferences':
+            $_SESSION['auth']->set_preferences($_POST,$_SESSION['user']);
+            $_SESSION['user_pref'] = $_SESSION['auth']->get_preferences($_SESSION['user']);
+            $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
+            load_i18n_config($_SESSION['language']);
+            $mode = "preferences";
+            $message = msg("Preferences updated.");
             break;
             
         default:
@@ -215,6 +234,9 @@ switch($mode){
 	// Generic page to display result of operations (add, delete, ...)
     case 'result': echo index_result(); break;
     
+    // Preferences
+    case 'preferences': echo index_preferences(); break;
+        
 	// By default, load the welcome page
     default: echo index_welcome(); break;
 }

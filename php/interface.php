@@ -252,12 +252,18 @@ function index_menu(){
     }
     $html .= "</ul>";
     $html .= "</li>";
+    // 
+    if(array_key_exists('user',$_SESSION)){
+        $html .= "<li>";
+        $html .= "<a href='index.php?mode=preferences'>Preferences</a>";
+        $html .= "</li>";
+    }
     $html .= "</ul>";
     if(DISPLAY_LANG_SELECTION){
         $html .= "<form id='language_form' action='index.php' method='get'>";
         $html .= "<fieldset>";
         $html .= "<label for='lang'>".msg("Language:")."</label>";
-        $html .= lang_html_select($_SESSION['language'],true);
+        $html .= lang_html_select($_SESSION['language'],'lang','javascript:change_lang_index(this.value)');
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
         $html .= "<noscript><div><input class='submit' type='submit' value='".msg("Select")."'/></div></noscript>";
         $html .= "</fieldset>";
@@ -268,6 +274,19 @@ function index_menu(){
     return $html;  
 }
 
+function index_preferences(){
+    $html = html_header("Biborb",CSS_FILE);
+    $html .= index_menu();
+    if(isset($GLOBALS['message'])){
+        $html .= main(msg("PREFERENCES_TITLE"),pref_content(),null,$GLOBALS['message']);
+    }
+    else{
+        $html .= main(msg("PREFERENCES_TITLE"),pref_content());
+    }
+    $html .= html_close();
+    
+    return $html;
+}
 
 
 
@@ -484,7 +503,7 @@ function bibindex_menu($bibname)
         $html .= "<form id='language_form' action='bibindex.php' method='get'>";
         $html .= "<fieldset>";
         $html .= "<label for='lang'>".msg("Language:")."</label>";
-        $html .= lang_html_select($_SESSION['language']);
+        $html .= lang_html_select($_SESSION['language'],'lang','javascript:change_lang(this.value)');
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
         $html .= "<noscript><div><input class='submit' type='submit' value='".msg("Select")."'/></div></noscript>";
         $html .= "</fieldset>";
@@ -590,8 +609,8 @@ function bibindex_display_all(){
     // store the ids in session if we come from an other page.
     // the bibtex keys are retreived from the database the first time that display_all is called
     if(!isset($_GET['page'])){
-    	// split the array so that we display only MAX_REFERENCES_BY_PAGE
-        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->all_bibtex_ids(),MAX_REFERENCES_BY_PAGE);
+    	// split the array so that we display only $GLOBALS['max_ref']
+        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->all_bibtex_ids(),$GLOBALS['max_ref']);
         // go to the first page
         $_GET['page'] = 0;
     }
@@ -698,7 +717,7 @@ function bibindex_display_by_group(){
     }
     // store the ids in session if we come from an other page.
     if(!isset($_GET['page'])){
-        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_group($group),MAX_REFERENCES_BY_PAGE);
+        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_group($group),$GLOBALS['max_ref']);
         $_GET['page'] = 0;
     }
 
@@ -934,7 +953,7 @@ function bibindex_display_search(){
 	
         // store the ids in session if we come from an other page.
         if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_search($searchvalue,$fields),MAX_REFERENCES_BY_PAGE);
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_search($searchvalue,$fields),$GLOBALS['max_ref']);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);
@@ -1114,7 +1133,7 @@ function bibindex_display_advanced_search(){
     if(count($searchArray) > 1){
         // store the ids in session if we come from an other page.
         if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_advanced_search($searchArray),MAX_REFERENCES_BY_PAGE);
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_advanced_search($searchArray),$GLOBALS['max_ref']);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);
@@ -1195,7 +1214,7 @@ function bibindex_display_basket(){
     
     // store the ids in session if we come from an other page.
     if(!isset($_GET['page'])){
-        $_SESSION['ids'] = array_chunk($_SESSION['basket']->items,MAX_REFERENCES_BY_PAGE);
+        $_SESSION['ids'] = array_chunk($_SESSION['basket']->items,$GLOBALS['max_ref']);
         $_GET['page'] = 0;
     }
     $flatids = flatten_array($_SESSION['ids']);
@@ -1623,7 +1642,7 @@ function bibindex_display_xpath_search()
     if(array_key_exists("xpath_query",$_GET)){
         // store the ids in session if we come from an other page.
         if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_xpath_search(myhtmlentities($_GET['xpath_query'])),MAX_REFERENCES_BY_PAGE);
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_xpath_search(myhtmlentities($_GET['xpath_query'])),$GLOBALS['max_ref']);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);
@@ -1699,4 +1718,148 @@ function bibindex_display_tools(){
     echo $html;
 }
 
+function pref_content(){
+    $pref = $_SESSION['auth']->get_preferences($_SESSION['user']);
+    
+    $content = "<form id='preferences' method='post' action='index.php'>";
+    $content .= "<fieldset>";
+    
+    $content .= "<table>";
+    
+    // CSS File
+    //$content .= "<tr>";
+    //$content .= "<td>".msg("Select a CSS stype.")."</td>";
+    //$content .= "<td><select name='css_file'>";
+    //if($pref['css_file']=='style.css'){
+    //    $content .= "<option value='style.css' selected='selected'>".msg("Default")."</option>";
+    //}
+    //$content .= "</select></td>";
+    //$content .= "</tr>";
+    
+    // Default language
+    $content .= "<tr>";
+    $content .= "<td>".msg("Select your language.")."</td>";
+    $content .= "<td>".lang_html_select($pref['default_language'],'default_language')."</td>";
+    $content .= "</tr>";
+    
+    // Default database
+    $content .= "<tr>";
+    $content .= "<td>".msg("Select the default database to open once logged in.")."</td>";
+    $names = get_databases_names();
+    $content .= "<td><select name='default_database'>";
+    foreach($names as $name){
+        if($pref['default_database'] == $name){
+            $content .= "<option selected='selected'>$name</option>";
+        }
+        else{
+            $content .= "<option>$name</option>";
+        }
+    }
+    $content .= "</select></td>";
+    $content .= "<tr/>";
+    
+    // Display images
+    $content .= "<tr>";
+    $content .= "<td>".msg("Display icons commands.")."</td>";
+    $content .= "<td>";
+    $content .= "<input type='radio' name='display_images' value='yes' ".($pref['display_images'] == "yes" ? "checked='checked'" : "" ).">".msg("Yes")."</input>";
+    $content .= "<input type='radio' name='display_images' value='no' ".($pref['display_images'] == "no" ? "checked='checked'" : "" ).">".msg("No")."</input>";
+    $content .= "</td></tr>";
+    
+    // Display text
+    $content .= "<tr>";
+    $content .= "<td>".msg("Display text commands.")."</td>";
+    $content .= "<td>";
+    $content .= "<input type='radio' name='display_txt' value='yes' ".($pref['display_txt'] == "yes" ? "checked='checked'" : "" ).">".msg("Yes")."</input>";
+    $content .= "<input type='radio' name='display_txt' value='no' ".($pref['display_txt'] == "no" ? "checked='checked'" : "" ).">".msg("No")."</input>";
+    $content .= "</td></tr>";
+    
+    // Display abstract
+    $content .= "<tr>";
+    $content .= "<td>".msg("Display abstract.")."</td>";
+    $content .= "<td>";
+    $content .= "<input type='radio' name='display_abstract' value='yes' ".($pref['display_abstract'] == "yes" ? "checked='checked'" : "" ).">".msg("Yes")."</input>";
+    $content .= "<input type='radio' name='display_abstract' value='no' ".($pref['display_abstract'] == "no" ? "checked='checked'" : "" ).">".msg("No")."</input>";
+    $content .= "</td></tr>";
+    
+    // Warn before deleting
+    $content .= "<tr>";
+    $content .= "<td>".msg("Warn before deleting.")."</td>";
+    $content .= "<td>";
+    $content .= "<input type='radio' name='warn_before_deleting' value='yes' ".($pref['warn_before_deleting'] == "yes" ? "checked='checked'" : "" ).">".msg("Yes")."</input>";
+    $content .= "<input type='radio' name='warn_before_deleting' value='no' ".($pref['warn_before_deleting'] == "no" ? "checked='checked'" : "" ).">".msg("No")."</input>";
+    $content .= "</td></tr>";
+    
+    // Sort id
+    $content .= "<tr>";
+    $content .= "<td>".msg("Default sort attribute.")."</td>";
+    $content .= "<td>";
+    $content .= "<select name='default_sort'>";
+    if($pref['default_sort'] == "ID"){
+        $content .= "<option selected='selected' value='ID'>".msg("ID")."</option>";
+    }
+    else{
+        $content .= "<option value='ID'>".msg("ID")."</option>";
+    }
+    if($pref['default_sort'] == "title"){
+        $content .= "<option selected='selected' value='title'>".msg("title")."</option>";
+    }
+    else{
+        $content .= "<option value='title'>".msg("title")."</option>";
+    }
+    if($pref['default_sort'] == "year"){
+        $content .= "<option selected='selected' value='year'>".msg("year")."</option>";
+    }
+    else{
+        $content .= "<option value='year'>".msg("year")."</option>";
+    }
+    $content .= "</select>";
+    $content .= "</td>";
+    $content .= "</tr>";
+    
+    // sort order
+    $content .= "<tr>";
+    $content .= "<td>".msg("Default sort order.")."</td>";
+    $content .= "<td>";
+    $content .= "<select name='default_sort_order'>";
+    if($pref['default_sort_order'] == 'ascending'){
+        $content .= "<option selected='selected' value='ascending'>".msg("ascending")."</option>";
+    }
+    else{
+        $content .= "<option value='ascending'>".msg("ascending")."</option>";
+    }
+    if($pref['default_sort_order'] == 'descending'){
+        $content .= "<option selected='selected' value='descending'>".msg("descending")."</option>";
+    }
+    else{
+        $content .= "<option value='descending'>".msg("descending")."</option>";
+    }
+    $content .= "</select>";
+    $content .= "</td>";
+    $content .= "</tr>";
+    
+    // max ref by pages
+    $content .= "<tr>";
+    $content .= "<td>".msg("Number of references by page.")."</td>";
+    $content .= "<td><input size='3' name='max_ref_by_page' value='".$pref['max_ref_by_page']."'/></td>";
+    $content .= "</tr>";
+    
+    // shelf mode
+    $content .= "<tr>";
+    $content .= "<td>".msg("Display shelf actions.")."</td>";
+    $content .= "<td>";
+    $content .= "<input type='radio' name='display_shelf_actions' value='yes' ".($pref['display_shelf_actions'] == "yes" ? "checked='checked'" : "" ).">".msg("Yes")."</input>";
+    $content .= "<input type='radio' name='display_shelf_actions' value='no' ".($pref['display_shelf_actions'] == "no" ? "checked='checked'" : "" ).">".msg("No")."</input>";
+    $content .= "</td></tr>";
+    
+    $content .= "</table>";
+    $content .= "</fieldset>";
+    $content .= "<input type='hidden' name='action' value='update_preferences'/>";
+    $content .= "<div style='text-align:center'>";
+    $content .= "<input class='submit' type='submit' value='".msg("Update")."'/>";
+    $content .= "</div>";
+    $content .= "</form>";
+    
+    return $content;
+}
 ?>

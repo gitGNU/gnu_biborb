@@ -166,6 +166,92 @@ class Auth
 
         return $users;
     }
+    
+    /**
+     *
+     */
+    function get_preferences($user){
+        $prefFile = "./data/users_pref/pref_".$user.".txt";
+        $pref = array();
+        if(file_exists($prefFile)){
+            $lines = file($prefFile);
+            foreach($lines as $line){
+                if(preg_match("/css_file:(.*)/",$line,$match)){
+                    $pref['css_file'] = $match[1];
+                }
+                if(preg_match("/default_language:(.*)/",$line,$match)){
+                    $pref['default_language'] = $match[1];
+                }
+                if(preg_match("/default_database:(.*)/",$line,$match)){
+                    $pref['default_database'] = $match[1];
+                }
+                if(preg_match("/display_images:(.*)/",$line,$match)){
+                    $pref['display_images'] = $match[1];
+                }
+                if(preg_match("/display_txt:(.*)/",$line,$match)){
+                    $pref['display_txt'] = $match[1];
+                }
+                if(preg_match("/display_abstract:(.*)/",$line,$match)){
+                    $pref['display_abstract'] = $match[1];
+                }
+                if(preg_match("/warn_before_deleting:(.*)/",$line,$match)){
+                    $pref['warn_before_deleting'] = $match[1];
+                }
+                if(preg_match("/default_sort:(.*)/",$line,$match)){
+                    $pref['default_sort'] = $match[1];
+                }
+                if(preg_match("/default_sort_order:(.*)/",$line,$match)){
+                    $pref['default_sort_order'] = $match[1];
+                }
+                if(preg_match("/max_ref_by_page:(.*)/",$line,$match)){
+                    $pref['max_ref_by_page'] = $match[1];
+                }
+                if(preg_match("/display_shelf_actions:(.*)/",$line,$match)){
+                    $pref['display_shelf_actions'] = $match[1];
+                }
+            }
+        }
+        else{
+            //default preferences
+            $pref['css_file'] = "style.css";
+            $pref['default_language'] = "en_US";
+            $pref['default_database'] = "";
+            $pref['display_images'] = "yes";
+            $pref['display_txt'] = "no";
+            $pref['display_abstract'] = "no";
+            $pref['warn_before_deleting'] = "yes";
+            $pref['default_sort'] = "ID";
+            $pref['default_sort_order'] = "ascending";
+            $pref['max_ref_by_page'] = "10";
+            $pref['display_shelf_actions'] = "no";
+            $this->set_preferences($pref,$user);
+        }
+        
+        return $pref;
+    }
+    
+    /**
+        
+     */
+    function set_preferences($pref,$user){
+        $prefTxt = "";
+        $prefTxt .= "css_file:".(array_key_exists("css_file",$pref) ? $pref['css_file'] : "style.css")."\n";
+        $prefTxt .= "default_language:".(array_key_exists("default_language",$pref) ? $pref['default_language'] : "en_US")."\n";
+        $prefTxt .= "default_database:".(array_key_exists("default_database",$pref) ? $pref['default_database'] : "")."\n";
+        $prefTxt .= "display_images:".(array_key_exists("display_images",$pref) ? $pref['display_images'] : "true")."\n";
+        $prefTxt .= "display_txt:".(array_key_exists("display_txt",$pref) ? $pref['display_txt'] : "no")."\n";
+        $prefTxt .= "display_abstract:".(array_key_exists("display_abstract",$pref) ? $pref['display_abstract'] : "false")."\n";
+        $prefTxt .= "warn_before_deleting:".(array_key_exists("warn_before_deleting",$pref) ? $pref['warn_before_deleting'] : "true")."\n";
+        $prefTxt .= "default_sort:".(array_key_exists("default_sort",$pref) ? $pref['default_sort'] : "ID")."\n";
+        $prefTxt .= "default_sort_order:".(array_key_exists("default_sort_order",$pref) ? $pref['default_sort_order'] : "ascending")."\n";
+        $prefTxt .= "max_ref_by_page:".(array_key_exists("max_ref_by_page",$pref) ? $pref['max_ref_by_page'] : "10")."\n";
+        $prefTxt .= "display_shelf_actions:".(array_key_exists("display_shelf_actions",$pref) ? $pref['display_shelf_actions'] : "false")."\n";
+        
+        $fp = fopen("./data/users_pref/pref_".$user.".txt",'w');
+        fwrite($fp,$prefTxt);
+        fclose($fp);
+    }
+    
 }
 
 ?>

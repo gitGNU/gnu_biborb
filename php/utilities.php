@@ -136,16 +136,16 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
     Generate a HTML Select tag containing locales name.
     On click call javascript to change the language
  */
-function lang_html_select($lang,$index = false){
+function lang_html_select($lang,$name,$onchange = false){
     $names = array('fr_FR' => 'Français',
                    'de_DE' => 'Deutsch',
                    'en_US' => 'English',
                    'it_IT' => 'Italiano');
-    if($index){
-        $res = "<select name='lang' id='lang' onchange='javascript:change_lang_index(this.value)'>";
+    if($onchange){
+        $res = "<select name='$name' id='$name' onchange='javascript:change_lang_index(this.value)'>";
     }
     else{
-        $res = "<select name='lang' id='lang' onchange='javascript:change_lang(this.value)'>";
+        $res = "<select name='$name' id='$name'>";
     }
     foreach(get_locales() as $locale){
         if($lang == $locale){

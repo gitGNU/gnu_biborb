@@ -1002,7 +1002,43 @@ msgid "Buy"
 msgstr "A Acheter"
 
 msgid "Choose a file:"
-msgstr ""
+msgstr "Choisir un fichier :"
 
 msgid "Enter an url:"
-msgstr ""
+msgstr "Saisir une URL :"
+
+msgid "PREFERENCES_TITLE"
+msgstr "Préférences utilisateur"
+
+msgid "Preferences updated."
+msgstr "Préférences mises à jour."
+
+msgid "Select your language."
+msgstr "Sélectionner la langue."
+
+msgid "Select the default database to open once logged in."
+msgstr "Sélectionner la bibliograpie à ouvrir par défaut."
+
+msgid "Display icons commands."
+msgstr "Afficher les icones de commande."
+
+msgid "Display text commands."
+msgstr "Afficher les textes de commande."
+
+msgid "Display abstract."
+msgstr "Afficher les abstract."
+
+msgid "Warn before deleting."
+msgstr "Avertir avant suppression."
+
+msgid "Default sort attribute."
+msgstr "Critère de tri."
+
+msgid "Default sort order."
+msgstr "Ordre du tri."
+
+msgid "Number of references by page."
+msgstr "Nombre de références par page."
+
+msgid "Display shelf actions."
+msgstr "Affichers les actions du mode 'Etagère'"
