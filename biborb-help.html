@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="description" content="biborb HELP"/>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+  <style type="text/css" >
+<!--
+#container{
+    margin:auto;
+    width:95%;
+//    background-color:#eef;
+}
+
+#main{
+    padding:1em;
+}
+
+.topic{
+}
+
+.topic_title{
+    font-weight:bold;
+    font-size:large;
+    border-bottom:solid 2px navy;
+}
+
+.topic_content{
+    margin-left:2em;
+    text-align:justify;
+}
+
+pre{
+    background-color:#ddd;
+}
+
+.emphcode{
+    font-weight:bold;
+    color:red;
+}
+-->
+</style>
+  <title>BibORB</title>
+</head>
+<body>
+<div id="container">
+
+<div id="main">
+<h2>BibORB Help</h2>
+
+<h3>Index</h3>
+<ul>
+    <li><a href="#help_icons">Display Icons/Text</a></li>
+    <li><a href="#help_abstract">Display abstract</a></li>
+    <li><a href="#help_authentication">Authentication</a></li>
+    <li><a href="#help_sort">Sorting entries</a></li>
+    <li><a href="#help_export">Export entries to <acronym>BibTeX</acronym></a></li>
+    <li><a href="#help_add_fields">Add new fields</a></li>
+</ul>
+
+
+<div class="topic" id="help_icons">
+<div class="topic_title">Display Icons/Text</div>
+<div class="topic_content">
+Actions for an entry (edit, delete, get ps, ps.gz, pdf ...) are available in both text format or icons. By default, icons are displayed. This can be modified by editing the <code>config.php</code> file and changing these two variables:
+<pre>
+$display_images = TRUE;
+$display_text = FALSE;
+</pre>
+</div>
+</div>
+
+
+<div class="topic" id="help_abstract">
+<div class="topic_title">Display abstract</div>
+<div class="topic_content">
+By default, abstract are not displayed. If you browser supports javascript, clicking on the abstract link or icons will show it in the same page. If the browser doesn't support javascript, a new page will be open to display the abstract.
+
+To always show abstract, change the value of <code>$display_abstract</code> to <code>TRUE</code> in the <code>config.php</code> file.
+</div>
+</div>
+
+<div class="topic" id="help_authentication">
+<div class="topic_title">Authentication</div>
+<div class="topic_content">
+If you want to share your bibliography within a local network, you may not want other people to edit or even delete your data. A simple authentication is available with biborb to manage authorized "admin" users. Unauthorized visitor may consult bibliographies but won't be able to modify it.
+<br/>
+You will need a database and adapt the different variables in the <code>config.php</code> file:
+
+<pre>
+$disable_authentication = FALSE;
+$host = xxx;
+$dbuser = xxx;
+$pass = xxxx;
+$db = xxxx;
+$table = xxxx;
+</pre>
+
+<code>biborb.sql</code> in admin directory contains <acronym>SQL</acronym> instructions to create the needded table. You then have to add manually users to the database.
+</div>
+</div>
+
+
+
+<div class="topic" id="help_sort">
+<div class="topic_title">Sorting entries.</div>
+<div class="topic_content">
+It is possible to select which is the default sort method to display entries. Presently, three sort method are provided: title, year, bibtex id. This can be configure in the <code>config.php</code> file:
+<pre>
+/**
+ * Default sort method: ID,title,year
+ */
+$DEFAULT_SORT="ID";
+</pre>
+
+You can also choose to display the sort function when entries are displayed.
+<pre>
+/**
+ * Display sort in all/group/search view
+ * If no, displayed only on search
+ * true/no
+ */
+$DISPLAY_SORT="no";
+</pre>
+</div>
+</div>
+
+<div class="topic" id="help_export">
+<div class="topic_title">Export entries to <acronym>BibTeX</acronym></div>
+<div class="topic_content">
+When exporting the basket to bibtex, you can select which <acronym>BibTeX</acronym> fields are exported. Default fields to export can be set up in the <code>config.php</code> file. Add the name of fields you want to export by default.
+<pre>
+/**
+ * Choose which fields to save when exporting an entry to bibtex
+ * By default all fields are exported
+ */
+$fields_to_export = array('author',
+                          'address',
+                          'annote',
+                          'author',
+                          'booktitle',
+                          'chapter',
+                          'crossref',
+                          'edition',
+                          'editor',
+                          'howpublished',
+                          'institution',
+                          'journal',
+                          'key',
+                          'month',
+                          'note',
+                          'number',
+                          'organisation',
+                          'pages',
+                          'publisher',
+                          'school',
+                          'series',
+                          'title',
+                          'type',
+                          'volume',
+                          'year');
+</pre>
+</div>
+</div>
+
+
+<div class="topic" id="help_add_fields">
+<div class="topic_title">Add new fields</div>
+<div class="topic_content">
+It is possible to customize <acronym>BibORB</acronym> by adding new fields. This can be realize in two steps. Let's assume you want to add an ISBN field for the <acronym>BibTeX</acronym> entry "book":
+<ul>
+    <li>Add '_isbn' to the <code>bibtex_entries</code> variable in the <code>config.php</code> file.
+    <pre>
+    $bibtex_entries = array(
+    "_id",
+    ...
+    "_link",
+    <span class="emphcode">"_isbn" // <-- add the "_isbn" value</span>
+);
+    </pre>
+    </li>
+    <li>Add the XML field tag <code>&lt;isbn/&gt;</code> to the book entry in <code>model.xml</code>. For this example, I want it to be an optional field:
+    <pre>
+&lt;entry type="book"&gt;
+    &lt;required&gt;
+      &lt;id/&gt;
+      &lt;exalternative&gt;
+        &lt;author/&gt;&lt;editor/&gt;
+      &lt;/exalternative&gt;
+      &lt;title/&gt;&lt;publisher/&gt;&lt;year/&gt;
+      <span class="emphcode">&lt;!-- place here if isbn is a required field -- &gt;</span>
+    &lt;/required&gt;
+    &lt;optional&gt;
+      &lt;exalternative&gt;
+        &lt;volume/>&lt;number/&gt;
+      &lt;/exalternative&gt;
+      &lt;series/&gt;&lt;address/&gt;&lt;edition/&gt;&lt;month/>&lt;note/&gt;
+      <span class="emphcode">&lt;!-- place here if isbn is an optional field -- &gt;
+      &lt;isbn/&gt; </span>
+    &lt;/optional&gt;
+    &lt;additional&gt;
+      &lt;groups/&gt;&lt;abstract/&gt;&lt;keywords/&gt;
+      &lt;url/&gt;&lt;urlzip/&gt;&lt;pdf/&gt;&lt;website/&gt;&lt;link/&gt;&lt;longnotes/&gt;
+      <span class="emphcode">&lt;!-- place here if isbn is an additional field -- &gt;</span>
+    &lt;/additional&gt;
+  &lt;/entry&gt;
+    </pre>
+    </li>
+</ul>
+
+</div>
+</div>
+
+<div class="topic">
+<div class="topic_title"></div>
+<div class="topic_content">
+
+</div>
+</div>
+
+
+
+</div><!-- end main -->
+
+</div> <!-- end container -->
+</body> 
+</html>

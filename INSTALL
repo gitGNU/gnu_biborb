@@ -1,0 +1,28 @@
+INSTALLATION
+------------
+
+As the tool is based on PHP, XML, XSL and CSS you shoule ensure that :
+	* XSL functions are activate in your PHP(>=4.0.3)
+configuration (xslt.so/xslt.dll)
+	* You have a CSS2 compliant web browser so that the interface
+behaves "normally"
+
+
+    1. Decompress the archive in any web accessible folder (for
+instance ~/public_html, /var/www or anywhere you want).
+
+    2. Check that the directory "bibs" is writable by the group to
+which belong the http server (www-data or www or apache ....).
+
+If you want account management, set $disable_authentication to FALSE
+in the config.php file. If you set it to TRUE, skip the next
+paragraph.
+
+Then the next step is to setup the database to activate account
+management. You will have to create a new database called
+"biborb". Then use the "biborb.sql" to create the table that will
+store people who will be allowed to edit/add/modify the
+bibliography. Last step is to edit the config.php script and adapt
+variables to your configuration
+($host,$dbuser,$pass,$db,$table). Finally, add needed account to the
+database.

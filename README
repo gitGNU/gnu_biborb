@@ -17,7 +17,7 @@ bibliography:
 The tool may be used in two different mode:
 
 	* Any people connecting to the webpage will be authorized to
-	consult regitered bibliographies.
+	view bibliographies.
 	* By login in, people may modify, add or even delete bibtex
 	entries.
 
@@ -26,7 +26,7 @@ that their prefered text editor to write their biliographies, BibORB
 can be use to offer a more convenient output and to access quickly
 electronic papers. 
 
-BibORB si designed to provide a bibliographic "browser". It also may
+BibORB is designed to provide a bibliographic "browser". It also may
 be used to access directly bibtex entry.
 For instance, creating the following link within an html page:
 	bibindex.php?bibname=example&id=paper1&mode=details&abstract=1
