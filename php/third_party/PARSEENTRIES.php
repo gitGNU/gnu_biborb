@@ -111,7 +111,7 @@ class PARSEENTRIES
         if($this->parseFile){
             if(!feof($this->fid)){
                 do{
-                    $line = trim(fgets($this->fid),1024);
+                    $line = trim(fgets($this->fid));
                     $isComment = (strlen($line)>0) ? $line[0] == '%' : FALSE;
                 }
                 while(!feof($this->fid) && $isComment);
@@ -206,7 +206,7 @@ class PARSEENTRIES
 	function fullSplit($entry)
 	{
 		$matches = preg_split("/@(.*)\s*[{(](.*),/U", $entry, 2, PREG_SPLIT_DELIM_CAPTURE);
-		$this->entries[$this->count]['type'] = strtolower($matches[1]);
+		$this->entries[$this->count]['___type'] = strtolower($matches[1]);
 		$this->entries[$this->count]['id'] = $matches[2];
 		$matches = $this->reduceFields($matches[3]);
 	}
