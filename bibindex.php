@@ -154,7 +154,7 @@ if(!$disable_authentication){
     if(!array_key_exists('auth',$_SESSION)){
         $_SESSION['auth'] = new Auth();
     }
-    
+
     if($update_auth){
         if(!array_key_exists('user',$_SESSION)){
             $_SESSION['user_is_admin'] = FALSE;
@@ -163,21 +163,21 @@ if(!$disable_authentication){
             $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($_SESSION['user']);
         }
         if(!array_key_exists('user',$_SESSION)){
-            $_SESSION['user_can_add'] = FALSE;
+            $_SESSION['user_can_add'] = $_SESSION['auth']->can_add_entry("",$_SESSION['bibdb']->name());
         }
         else{
             $_SESSION['user_can_add'] = $_SESSION['auth']->can_add_entry($_SESSION['user'],$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
         }
         
         if(!array_key_exists('user',$_SESSION)){
-            $_SESSION['user_can_delete'] = FALSE;
+            $_SESSION['user_can_delete'] = $_SESSION['auth']->can_delete_entry("",$_SESSION['bibdb']->name());
         }
         else{
             $_SESSION['user_can_delete'] = $_SESSION['auth']->can_delete_entry($_SESSION['user'],$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
         }
         
         if(!array_key_exists('user',$_SESSION)){
-            $_SESSION['user_can_modify'] = FALSE;
+            $_SESSION['user_can_modify'] = $_SESSION['auth']->can_modify_entry("",$_SESSION['bibdb']->name());
         }
         else{
             $_SESSION['user_can_modify'] = $_SESSION['auth']->can_modify_entry($_SESSION['user'],$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
@@ -511,7 +511,11 @@ if(isset($_POST['action'])){
                 // basket not empty -> processing
                 // get entries
                 $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
-	    
+//                $bt = new BibTeX_Tools();
+//                $tab = $bt->xml_to_bibtex_array($entries);
+//                $bibtex_string = $bt->array_to_bibtex_string($tab);
+//                die();
+                
                 // xslt transformation
                 $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
                 $param = $GLOBALS['xslparam'];
