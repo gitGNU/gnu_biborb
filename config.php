@@ -35,9 +35,10 @@
 
 /**
  * Localisation
- * Default: en
+ * Default: en_US
+ * Available: fr_FR
  */
-$language = "en";
+$language = "en_US";
 
 /**
  * Display a selection of language on BibORB pages
