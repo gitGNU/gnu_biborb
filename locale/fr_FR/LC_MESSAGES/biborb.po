@@ -1058,6 +1058,9 @@ msgstr "Naviguer"
 msgid "BIBINDEX_MENU_BROWSE_HELP"
 msgstr "Naviguer dans la bibliographie."
 
+msgid "BIBINDEX_BROWSE_TITLE"
+msgstr "Explorer"
+
 msgid "Years"
 msgstr ""
 

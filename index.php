@@ -56,6 +56,7 @@ session_start();
 
 // Set the error_handler
 set_error_handler("biborb_error_handler");
+
 /**
 
  */
@@ -120,13 +121,14 @@ else{
     $_SESSION['user_is_admin'] = TRUE;
 }
 
-
-
 /*
     Look in $_GET for an action to be performed
  */
 if(isset($_GET['action'])){
     switch($_GET['action']){
+        /*
+            Select the lang
+         */
         case 'select_lang':
             $_SESSION['language'] = $_GET['lang'];
             load_i18n_config($_SESSION['language']);

@@ -61,13 +61,13 @@ define("DISPLAY_LANG_SELECTION",TRUE);
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-define("DISABLE_AUTHENTICATION",TRUE);
+define("DISABLE_AUTHENTICATION",FALSE);
 
 /**
  * Authentication methods: mysql, files
  * Used if DISABLE_AUTHENTICATION = FALSE
  */
-define("AUTH_METHOD",'files');
+define("AUTH_METHOD",'mysql');
 
 /**
  *  Should a confirmation be displayed when deleting entries
@@ -201,6 +201,16 @@ define("GEN_BIBTEX",TRUE);
  */
 define("SHELF_MODE",FALSE);
 
+/**
+ * umask - Set the mask to use when creating files.
+ *
+ */
+define("UMASK",0111);
+
+/**
+ * dmask - Set the mask to use when creating directories.
+ */
+define("DMASK",0000);
 
 /**
  * Name of the PHP SESSION

@@ -1097,6 +1097,9 @@ msgstr ""
 msgid "BIBINDEX_MENU_BROWSE_HELP"
 msgstr ""
 
+msgid "BIBINDEX_BROWSE_TITLE"
+msgstr ""
+
 msgid "Years"
 msgstr ""
 
