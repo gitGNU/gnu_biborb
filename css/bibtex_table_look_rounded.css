@@ -217,7 +217,6 @@ fieldset.required {
 
 .required input {
     width:80%;
-    border:1px solid black;
     margin:0.1em;
 }
 
@@ -242,7 +241,6 @@ fieldset.optional {
 
 .optional input {
     width:80%;
-    border:1px solid black;
     margin:0.1em;
 }
 
@@ -267,14 +265,12 @@ fieldset.additional {
 
 .additional input {
     width:80%;
-    border:1px solid black;
     margin:0.1em;
 }
 
 .additional textarea {
     height:165px;
     width:80%;
-    border:1px solid black;
     margin:0.1em;
 }
 
