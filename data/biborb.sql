@@ -39,4 +39,4 @@ CREATE TABLE `biborb_users` (
   UNIQUE KEY `numero` (`id`)
 ) TYPE=MyISAM;
 
-INSERT INTO `biborb_users` (`id`, `login`, `password`, `name`, `firstname`) VALUES (1, 'admin', md5('admin'), '', '','Y');
+INSERT INTO `biborb_users` (`id`, `login`, `password`, `name`, `firstname`, `admin`) VALUES (1, 'admin', md5('admin'), '', '','Y');
