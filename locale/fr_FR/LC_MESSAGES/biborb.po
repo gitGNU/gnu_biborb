@@ -755,5 +755,20 @@ msgstr "Références n'appartenant à aucun groupe :"
 msgid "Orphans"
 msgstr "Orphelins"
 
-msgid "AUX_TO_BIBTEX_DESC"
-msgstr "Générer un fichier BibTeX contenant les références présentes dans le fichier <code>.aux</code> : "
+msgid "TOOL_XPATH_TITLE"
+msgstr "Requète XPath"
+
+msgid "TOOL_XPATH_HELP"
+msgstr ""
+
+msgid "TOOL_AUX2BIBTEX_TITLE"
+msgstr ".aux vers BibTeX"
+
+msgid "TOOL_AUX2BIBTEX_HELP"
+msgstr "Lors de la compilation d'un fichier LaTeX (<code>article.tex</code>), "
+"les références citées sont enregistrées dans le fichier <code>article.aux</code>. "
+"Vous pouvez utiliser le formulaire suivant pour soumettre ce dernier "
+" afin de télécharger le fichier BibTeX contenant les références de votre article."
+
+msgid "BIBINDEX_TOOLS_TITLE"
+msgstr "Outils"

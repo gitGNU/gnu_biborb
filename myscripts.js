@@ -167,6 +167,26 @@ function validate_bibtex2aux_form(lang){
     }
 }
 
+function validate_xpath_form(lang){
+    var msg;
+    var group = document.forms['xpath_form'].elements['xpath_query'].value;
+    
+    if(lang == 'fr_FR'){
+		msg = "Requète XPath vide!";
+	}
+	else if(lang == 'en_US'){
+		msg = "Empty XPath query!";
+	}
+    
+	if(trim(group) == ""){
+		alert(msg);
+		return false;
+	}
+    else{
+        return true;
+    }
+}
+
 //
 function trim(str)
 {

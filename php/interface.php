@@ -1384,28 +1384,29 @@ function bibindex_export_basket_to_html(){
 function bibindex_display_tools(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
-    $title = _("BIBINDEX_EXPORT_TO_BIBTEX_TITLE");
+    $title = _("BIBINDEX_TOOLS_TITLE");
     
-    $content = "<h4 class='tool_name'>XPath query</h4>";
+    $content = "<h4 class='tool_name'>"._("TOOL_XPATH_TITLE")."</h4>";
     $content .= "<div class='tool_help'>";
-    $content .= "A small help on XPath";
+    $content .= _("TOOL_XPATH_HELP");
     $content .= "</div>";
-    $content .= "<form method='get' action='bibindex.php' id='xpath_form'>";
+    $content .= "<form class='tool_form' method='get' action='bibindex.php' id='xpath_form' onsubmit='return validate_xpath_form(\"".$_SESSION['language']."\")'>";
     $content .= "<fieldset>";
-    $content .= "<label>"._("XPath query")."</label>";
-    $content .= "&nbsp;<input type='text' name='xpath_query' value='contains(author, \" someone\" and year >= 2004'/>";
-    $content .= "&nbsp;<input type='submit' class='submit' value='"._("Search")."'/>";
+    $content .= "<textarea cols='50' rows='5' name='xpath_query'>";
+    $content .= "contains(author, \"someone\") and year >= 2004";
+    $content .= "</textarea><br/>";
+    $content .= "<input type='hidden' name='action' value='xpath_query'/>";
+    $content .= "<input type='submit' class='submit' value='"._("Search")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     
-    $content .= "<h4 class='tool_name'>AUX to BibTeX</h4>";
+    $content .= "<h4 class='tool_name'>"._("TOOL_AUX2BIBTEX_TITLE")."</h4>";
     $content .= "<div class='tool_help'>";
-    $content .= "A small help on Aux file";
+    $content .= _("TOOL_AUX2BIBTEX_HELP");
     $content .= "</div>";
-    $content .= "<form method='post' enctype='multipart/form-data' action='bibindex.php'  onsubmit='return validate_bibtex2aux_form(\"".$_SESSION['language']."\")' id='bibtex2aux_form'>";
+    $content .= "<form class='tool_form' method='post' enctype='multipart/form-data' action='bibindex.php'  onsubmit='return validate_bibtex2aux_form(\"".$_SESSION['language']."\")' id='bibtex2aux_form'>";
     $content .= "<fieldset>";
-    $content .= "<label>"._("AUX_TO_BIBTEX_DESC")."</label><br/>";
-    $content .= "&nbsp;<input type='file' name='aux_file'/>";
+    $content .= "<input type='file' name='aux_file'/>";
     $content .= "<input type='hidden' name='action' value='bibtex_from_aux'/>";
     $content .= "&nbsp;<input type='submit' class='submit' value='"._("Download")."'/>";
     $content .= "</fieldset>";

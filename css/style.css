@@ -204,7 +204,9 @@ html > body #menu {position:fixed;}
  * Style for the Tools section
  */
 .tool_name {display:block;border-bottom:black 1px dotted;text-decoration:none;color:navy;font-weight:bold; margin:0;padding:0;}
-
+.tool_help {text-align:justify;color:#333;}
+.tool_form {margin:1em;padding:0;}
+.tool_form fieldset {border:none;margin:auto;text-align:center;}
 
 /**
  * Generic style

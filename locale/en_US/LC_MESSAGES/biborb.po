@@ -755,5 +755,20 @@ msgstr ""
 msgid "Orphans"
 msgstr ""
 
-msgid "AUX_TO_BIBTEX_DESC"
-msgstr "Generate a BibTeX file containing references present in an <code>.aux</code> file: "
+msgid "TOOL_XPATH_TITLE"
+msgstr "XPath Query"
+
+msgid "TOOL_XPATH_HELP"
+msgstr ""
+
+msgid "TOOL_AUX2BIBTEX_TITLE"
+msgstr ".aux to BibTeX"
+
+msgid "TOOL_AUX2BIBTEX_HELP"
+msgstr "When compiling a LaTeX file (<code>article.tex</code>), cited references are "
+"recorded in the <code>article.aux</code> file. Submit your <code>.aux </code> file"
+" in the following formulary to download the BibTeX file containing references "
+" used by your article."
+
+msgid "BIBINDEX_TOOLS_TITLE"
+msgstr "Tools"
