@@ -47,6 +47,7 @@
         <xsl:variable name="updated_id" select="//@id"/>
         <xsl:element name="bibtex:file">
             <xsl:attribute name="name"><xsl:value-of select="$bibfile/bibtex:file/@name"/></xsl:attribute>
+            <xsl:attribute name="version"><xsl:value-of select='$biborb_xml_version'/></xsl:attribute>
             <xsl:copy>
                 <!-- copy all unchanged elements -->
                 <xsl:apply-templates select="$bibfile//bibtex:entry[not(@id = $updated_id)]"/>

@@ -46,6 +46,7 @@
         <!-- look for all id in the xml file and output the corresponding bibtex entry -->
         <xsl:element name="bibtex:file">
             <xsl:attribute name="name"><xsl:value-of select="$bibfile/bibtex:file/@name"/></xsl:attribute>
+            <xsl:attribute name="version"><xsl:value-of select='$biborb_xml_version'/></xsl:attribute>
             <xsl:copy>
                 <xsl:apply-templates select="$bibfile//bibtex:entry[@id=$list_id]" />
             </xsl:copy>

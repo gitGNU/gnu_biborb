@@ -51,12 +51,14 @@
 		<xsl:variable name="entry" select="//bibtex:entry"/>
 		<!-- get the entry's type -->
 		<xsl:variable name="type" select="local-name($entry/*[position()=1])"/>
-
+        <!-- date Added -->
+        <xsl:variable name="dateAdded" select="//bibtex:dateAdded"/>
         <!-- Display required fields -->
         <fieldset id="required_ref" class="required">
             
             <input type="hidden" name="id" value="{$id}"/>
             <input type="hidden" name="type_ref" value="{$type}"/>
+            <input type="hidden" name="dateAdded" value="{$dateAdded}"/>
             <legend><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_REQUIRED_FIELDS");</xsl:processing-instruction></legend>
             <!-- Process all required entries -->
             <xsl:for-each select="$model//entry[@type=$type]/required/*">

@@ -111,7 +111,7 @@ class BibTeX_Tools
     function entries_array_to_xml($tab){
         $ids = array();
         $xml_content = "<?xml version='1.0' encoding='ISO-8859-1'?>";
-        $xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/'>";
+        $xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' version='".BIBORB_XML_VERSION."' >";
         foreach($tab as $entry){
             $xml_content .= $this->entry_array_to_xml($entry);
             array_push($ids,$entry['id']);

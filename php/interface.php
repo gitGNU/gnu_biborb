@@ -250,7 +250,7 @@ function index_menu(){
     }
     if(array_key_exists('user',$_SESSION)){
         $html .= "<li>";
-        $html .= "<a href='index.php?mode=preferences'>Preferences</a>";
+        $html .= "<a href='index.php?mode=preferences' title='".msg("INDEX_MENPREFERENCES_HELP")."' >".msg("INDEX_MENU_PREFERENCES")."</a>";
         $html .= "</li>";
     }
     if(!DISABLE_AUTHENTICATION && array_key_exists('user',$_SESSION)){
@@ -1809,23 +1809,13 @@ function pref_content(){
     $content .= "<td>".msg("Default sort attribute.")."</td>";
     $content .= "<td>";
     $content .= "<select name='default_sort'>";
-    if($pref['default_sort'] == "ID"){
-        $content .= "<option selected='selected' value='ID'>".msg("ID")."</option>";
-    }
-    else{
-        $content .= "<option value='ID'>".msg("ID")."</option>";
-    }
-    if($pref['default_sort'] == "title"){
-        $content .= "<option selected='selected' value='title'>".msg("title")."</option>";
-    }
-    else{
-        $content .= "<option value='title'>".msg("title")."</option>";
-    }
-    if($pref['default_sort'] == "year"){
-        $content .= "<option selected='selected' value='year'>".msg("year")."</option>";
-    }
-    else{
-        $content .= "<option value='year'>".msg("year")."</option>";
+    foreach($GLOBALS['sort_values'] as $sortval){
+        if($pref['default_sort'] == $sortval){
+            $content .= "<option selected='selected' value='$sortval'>".msg("$sortval")."</option>";
+        }
+        else{
+            $content .= "<option value='$sortval'>".msg("$sortval")."</option>";
+        }
     }
     $content .= "</select>";
     $content .= "</td>";

@@ -133,4 +133,7 @@
     <!-- An XPath query -->
     <xsl:param name="xpath_query"/>
     
+    <!-- XML version -->
+    <xsl:param name="biborb_xml_version"/>
+    
 </xsl:stylesheet>

@@ -1062,16 +1062,22 @@ msgid "BIBINDEX_BROWSE_TITLE"
 msgstr "Explorer"
 
 msgid "Years"
-msgstr ""
+msgstr "Années"
 
 msgid "Authors"
-msgstr ""
+msgstr "Auteurs"
 
 msgid "Series"
-msgstr ""
+msgstr "Séries"
 
 msgid "Journals"
-msgstr ""
+msgstr "Revues"
 
 msgid "Groups"
-msgstr ""
+msgstr "Groupes"
+
+msgid "INDEX_MENU_PREFERENCES"
+msgstr "Préférences"
+
+msgid "INDEX_MENU_PREFERENCES_HELP"
+msgstr "Définir les préférences utilisateur."

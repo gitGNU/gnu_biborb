@@ -1114,3 +1114,12 @@ msgstr ""
 
 msgid "Groups"
 msgstr ""
+
+msgid "%s not uploaded: invalid file type."
+msgstr ""
+
+msgid "INDEX_MENU_PREFERENCES"
+msgstr ""
+
+msgid "INDEX_MENU_PREFERENCES_HELP"
+msgstr ""

@@ -43,6 +43,7 @@
     <xsl:template match="/">
         <xsl:element name="bibtex:file">
             <xsl:attribute name="name"><xsl:value-of select="bibtex:file/@name"/></xsl:attribute>
+            <xsl:attribute name="version"><xsl:value-of select='$biborb_xml_version'/></xsl:attribute>
             <xsl:for-each select="//bibtex:entry[@id!=$id]">
                 <xsl:call-template name="entry"/>
             </xsl:for-each>

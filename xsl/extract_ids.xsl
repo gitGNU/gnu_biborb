@@ -81,7 +81,7 @@
             <!-- Sort by last date modified -->
             <xsl:when test="$sort = 'lastDateModified'">
                 <xsl:for-each select="XPATH_QUERY">
-                    <xsl:sort select="number(translate(.//bibtex:dateModified,'-',''))" order="{$sort_order}" data-type="number"/>
+                    <xsl:sort select="number(translate(.//bibtex:lastDateModified,'-',''))" order="{$sort_order}" data-type="number"/>
                     <xsl:value-of select='@id'/><xsl:if test='position()!=last()'>|</xsl:if>
                 </xsl:for-each>
             </xsl:when>

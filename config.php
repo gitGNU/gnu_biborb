@@ -36,8 +36,9 @@
 /**
  * Version of Biborb
  */
+define("BIBORB_XML_VERSION",1);
 define("BIBORB_VERSION","CVS");
-define("BIBORB_RELEASE_DATE","4 February 2005");
+define("BIBORB_RELEASE_DATE","5 February 2005");
 
 /**
  * Path where is install biborb
@@ -61,7 +62,7 @@ define("DISPLAY_LANG_SELECTION",TRUE);
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-define("DISABLE_AUTHENTICATION",TRUE);
+define("DISABLE_AUTHENTICATION",FALSE);
 
 /**
  * Authentication methods: mysql, files

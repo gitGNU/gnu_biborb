@@ -41,6 +41,7 @@ require_once("php/xslt_processor.php"); //xslt processor
 require_once("php/third_party/PARSECREATORS.php"); // split Bibtex names
 require_once("php/bibtex.php"); //parse bibtex string
 
+$sort_values = array('author','title','ID','year','dateAdded','lastDateModified');
 // Bibtex Database manager
 class BibORB_DataBase {
 	
@@ -82,11 +83,26 @@ class BibORB_DataBase {
         $this->read_status = 'any';
         $this->ownership = 'any';
         
-        // Version 1.3.3, add the first author lastname in a separate field
-        // to sort by author
-        $xml = $this->all_entries();
-        // add the lastName if not present (earlier version of biborb)
-        if(!(strpos($xml,'bibtex:author') === FALSE) && strpos($xml,'bibtex:lastName') === FALSE){
+        // check the version of biborb files
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+        $xml_content = $this->all_entries();
+        $xsl_content = <<< XSLT_END
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:bibtex="http://bibtexml.sf.net/" version="1.0">
+    <xsl:output method="text" encoding="iso-8859-1"/>
+    <xsl:template match="/bibtex:file">
+            <xsl:value-of select="@version"/>
+    </xsl:template>
+</xsl:stylesheet>
+XSLT_END;
+            
+        $val = trim($xsltp->transform($xml_content,$xsl_content));
+        $xsltp->free();
+        if($val != 1){
+                
+            // * add the first author lastname in a separate field
+            // to sort by author
+            // * set date added and last modified to yesterday
+            $xml = $this->all_entries();
             // load all data in an array form
             $bt = new BibTeX_Tools();
             $pc = new PARSECREATORS();
@@ -97,6 +113,8 @@ class BibORB_DataBase {
                     list($creatorArray, $etAl) = $pc->parse($entries[$i]['author']);
                     $entries[$i]['lastName'] = $creatorArray[0][2];
                 }
+                $entries[$i]['dateAdded'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
+                $entries[$i]['lastDateModified'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
             }
             $data = $bt->entries_array_to_xml($entries);
             // save the new xml file
@@ -262,7 +280,8 @@ class BibORB_DataBase {
         // do the transformation
         $param = array('group'=>$groupname,
                        'sort' => $this->sort,
-                       'sort_order' => $this->sort_order);
+                       'sort_order' => $this->sort_order,
+                       'biborb_xml_version' => BIBORB_XML_VERSION);
         $res =  $xsltp->transform($xml_content,$xsl_content,$param);
         $xsltp->free();
         return remove_null_values(explode('|',$res));
@@ -387,12 +406,13 @@ class BibORB_DataBase {
             // date added
             $bibtex_val['dateAdded'] = date("Y-m-d");
             // date modified
-            $bibtex_val['dateModified'] = date("Y-m-d");
+            $bibtex_val['lastDateModified'] = date("Y-m-d");
             // convert to xml
             $data = $bt->entries_array_to_xml(array($bibtex_val));
             $xml = $data[2];
             $xsl = load_file("./xsl/add_entries.xsl");
-            $param = array('bibname' => $this->xml_file());
+            $param = array('bibname' => $this->xml_file(),
+                           'biborb_xml_version' => BIBORB_XML_VERSION);
             $result = $xsltp->transform($xml,$xsl,$param);
             $xsltp->free();
 	    
@@ -425,7 +445,8 @@ class BibORB_DataBase {
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $bt = new BibTeX_Tools();
         $xsl = load_file("./xsl/add_entries.xsl");
-        $param = array('bibname' => $this->xml_file());
+        $param = array('bibname' => $this->xml_file(),
+                       'biborb_xml_version' => BIBORB_XML_VERSION);
         
         // entries to add
         $entries_to_add = $bt->get_array_from_string($bibtex); 
@@ -441,7 +462,7 @@ class BibORB_DataBase {
                     $entry['lastName'] = $authors[0][2];
                 }
                 $entry['dateAdded'] = date("Y-m-d");
-                $entryl['dateModified'] = date("Y-m-d");
+                $entryl['lastDateModified'] = date("Y-m-d");
                 $data = $bt->entries_array_to_xml(array($entry));
                 $result = $xsltp->transform($data[2],$xsl,$param);
                 $fp = fopen($this->xml_file(),"w"); 
@@ -469,7 +490,8 @@ class BibORB_DataBase {
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->all_entries();
         $xsl_content = load_file("./xsl/delete_entries.xsl");
-        $param = array('id'=>$bibtex_id);  
+        $param = array('id'=>$bibtex_id,
+                       'biborb_xml_version' => BIBORB_XML_VERSION);  
         $newxml = $xsltp->transform($xml_content,$xsl_content,$param);
         
         // detect all file corresponding to this id.
@@ -572,12 +594,13 @@ class BibORB_DataBase {
                 $bibtex_val['lastName'] = $authors[0][2];
             }
             $bibtex_val['___type'] = $dataArray['type_ref'];
-            $bibtex_val['dateModified'] = date("Y-m-d");
+            $bibtex_val['lastDateModified'] = date("Y-m-d");
             $data = $bt->entries_array_to_xml(array($bibtex_val));
             $xml = $data[2];
 
             $xsl = load_file("./xsl/update_xml.xsl");
-            $param = array('bibname' => $this->xml_file());
+            $param = array('bibname' => $this->xml_file(),
+                           'biborb_xml_version' => BIBORB_XML_VERSION);
             $result = $xsltp->transform($xml,$xsl,$param);
             $xsltp->free();
             
@@ -648,7 +671,8 @@ class BibORB_DataBase {
         $xsl_content = load_file("./xsl/addgroup.xsl");
         
         $param = array( 'bibname' => $this->xml_file(),
-                'group' => $group);
+                        'group' => $group,
+                        'biborb_xml_version' => BIBORB_XML_VERSION);
         // new xml file
         $result = $xsltp->transform($xml_content,$xsl_content,$param); 
         
@@ -675,7 +699,8 @@ class BibORB_DataBase {
         }
         $xml_content .= "</listofids>";
         $xsl_content = load_file("./xsl/resetgroup.xsl");
-        $param = array( 'bibname' => $this->xml_file());
+        $param = array( 'bibname' => $this->xml_file(),
+                        'biborb_xml_version' => BIBORB_XML_VERSION);
         $result = $xsltp->transform($xml_content,$xsl_content,$param); 
         
         // update the xml file
@@ -818,7 +843,8 @@ class BibORB_DataBase {
         $xml_content = str_replace("bibtex:$oldtype","bibtex:$newtype",$xml_content);
         // update the xml
         $xsl = load_file("./xsl/update_xml.xsl");
-        $param = array('bibname' => $this->xml_file());
+        $param = array('bibname' => $this->xml_file(),
+                       'biborb_xml_version' => BIBORB_XML_VERSION);
         $result = $xsltp->transform($xml_content,$xsl,$param);
         $xsltp->free();
         // save it
@@ -862,7 +888,8 @@ class BibORB_DataBase {
         }    
         // update the xml
         $xsl = load_file("./xsl/update_xml.xsl");
-        $param = array('bibname' => $this->xml_file());
+        $param = array('bibname' => $this->xml_file(),
+                       'biborb_xml_version' => BIBORB_XML_VERSION);
         $result = $xsltp->transform($xml_content,$xsl,$param);
         $xsltp->free();
          // save it
@@ -899,7 +926,8 @@ class BibORB_DataBase {
         }
         // update the xml
         $xsl = load_file("./xsl/update_xml.xsl");
-        $param = array('bibname' => $this->xml_file());
+        $param = array('bibname' => $this->xml_file(),
+                       'biborb_xml_version' => BIBORB_XML_VERSION);
         $result = $xsltp->transform($xml_content,$xsl,$param);
         $xsltp->free();
         // save it
@@ -927,7 +955,8 @@ class BibORB_DataBase {
         }
         // update the xml
         $xsl = load_file("./xsl/update_xml.xsl");
-        $param = array('bibname' => $this->xml_file());
+        $param = array('bibname' => $this->xml_file(),
+                       'biborb_xml_version' => BIBORB_XML_VERSION);
         $result = $xsltp->transform($xml_content,$xsl,$param);
         $xsltp->free();
         // save it
