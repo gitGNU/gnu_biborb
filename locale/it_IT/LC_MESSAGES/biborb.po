@@ -23,8 +23,8 @@ msgstr "S&igrave;"
 
 #: bibindex.php:280
 #, php-format
-msgid "The following elemento was deleted: <pre>%s</pre>"
-msgstr "Il seguente elemento &egrave; stato cancellato: <pre>%s</pre>"
+msgid "The following entry was deleted: <pre>%s</pre>"
+msgstr "L&prime;elemento seguente &egrave; stato cancellato: <pre>%s</pre>"
 
 #: bibindex.php:285 bibindex.php:295 bibindex.php:368 bibindex.php:378
 msgid "No"
@@ -32,11 +32,11 @@ msgstr "No"
 
 #: bibindex.php:290
 #, php-format
-msgid "cancella this elemento? <pre>%s</pre>"
+msgid "Delete this elemento? <pre>%s</pre>"
 msgstr "Elimina questo elemento? <pre>%s</pre>"
 
 #: php/interface.php:1185 php/interface.php:1198 php/interface.php:1273
-msgid "aggiungi"
+msgid "Add"
 msgstr "Aggiungi"
 
 #: bibindex.php:315
@@ -58,32 +58,32 @@ msgstr "La chiave BibTeX <code>%s</code> esiste gi&agrave;"
 
 #: bibindex.php:364
 #, php-format
-msgid "The following elementi were deleted: <pre>%s</pre>"
+msgid "The following entries were deleted: <pre>%s</pre>"
 msgstr "I seguenti elementi sono stati cancellati: <pre>%s</pre>"
 
 #: bibindex.php:373
-msgid "cancella the following elementi?"
+msgid "Delete the following entries?"
 msgstr "Elimina gli elementi seguenti?"
 
 #: bibindex.php:402
-msgid "elemento_ADDED_SUCCESS"
-msgstr "L'elemento seguente &egrave; stato aggiunto:"
+msgid "ENTRY_ADDED_SUCCESS"
+msgstr "Il seguente elemento &egrave; stato aggiunto:"
 
 #: php/interface.php:1322 php/interface.php:1332 php/interface.php:1341
 msgid "Update"
 msgstr "Aggiorna"
 
 #: bibindex.php:425
-msgid "The following elemento was updated:"
-msgstr "L'elemento seguente è stato aggiornato:"
+msgid "The following entry was updated:"
+msgstr "L&prime;elemento seguente è stato aggiornato:"
 
 #: bibindex.php:470
-msgid "The following elemento was added to the database:"
-msgstr "L'elemento seguente &egrave; stato aggiunto al database:"
+msgid "The following entry was added to the database:"
+msgstr "L&prime;elemento seguente &egrave; stato aggiunto al database:"
 
 #: bibindex.php:473
-msgid "The following elementi were added to the database:"
-msgstr "I seguenti elementi sono stati aggiunti al database"
+msgid "The following entries were added to the database:"
+msgstr "I seguenti elementi sono stati aggiunti al database:"
 
 #: php/interface.php:53 php/interface.php:349
 msgid "Login"
@@ -99,7 +99,7 @@ msgstr "Username o password errati!"
 
 #: php/interface.php:1439
 msgid "Export"
-msgstr "esporta"
+msgstr "Esporta"
 
 #: bibindex.php:626 php/interface.php:262 php/interface.php:489
 #: php/interface.php:1234
@@ -125,15 +125,15 @@ msgstr "Nessun nome fornito per la bibliografia!"
 #: php/biborbdb.php:816
 #, php-format
 msgid "Database %s moved to trash."
-msgstr "Il database &s %egrave; stato spostato nel cestino."
+msgstr "Il database %s &egrave; stato spostato nel cestino."
 
 #: php/biborbdb.php:817
 #, php-format
-msgid "Remove %s to definitively cancella it."
+msgid "Remove %s to definitively delete it."
 msgstr "Rimuovi %s per cancellarlo definitivamente."
 
 #: php/functions.php:137
-msgid "aggiungi all elementi to the basket."
+msgid "Add all entries to the basket."
 msgstr "Aggiungi tutti gli elementi al cestino"
 
 #: php/functions.php:160 php/interface.php:796 php/interface.php:958
@@ -224,7 +224,7 @@ msgstr "Pagina di benvenuto (Help)"
 
 #: php/interface.php:230
 msgid "INDEX_MENU_WELCOME"
-msgstr "Welcome"
+msgstr "Benvenuto"
 
 #: php/interface.php:232
 msgid "INDEX_MENU_BIBS_LIST_HELP"
@@ -396,11 +396,11 @@ msgstr "Login"
 
 #: php/interface.php:468
 msgid "BIBINDEX_MENU_ADMIN_ADD_HELP"
-msgstr "aggiungi un nuovo elemento"
+msgstr "Aggiungi un nuovo elemento"
 
 #: php/interface.php:468
 msgid "BIBINDEX_MENU_ADMIN_ADD"
-msgstr "aggiungi un elemento"
+msgstr "Aggiungi un elemento"
 
 #: php/interface.php:471
 msgid "BIBINDEX_MENU_ADMIN_UPDATE_HELP"
@@ -467,7 +467,7 @@ msgid "Available groups"
 msgstr "Gruppi disponibili"
 
 #: php/interface.php:648
-msgid "Show"
+msgid "Display"
 msgstr "Mostra"
 
 #: php/interface.php:732
@@ -538,7 +538,7 @@ msgstr "Un elemento nel carrello."
 #: php/interface.php:1139
 #, php-format
 msgid "%d entries in the basket."
-msgstr "%d elementi nel carrello"
+msgstr "%d elementi nel carrello."
 
 #: php/interface.php:1144
 msgid "Delete all from database"
@@ -550,7 +550,7 @@ msgstr "Gestione dei gruppi"
 
 #: php/interface.php:1173
 msgid "Reset the groups field of each entry in the basket. "
-msgstr "Azzera il campo groups di ogni elemento del carrello."
+msgstr "Azzera il campo gruppi di ogni elemento del carrello."
 
 #: php/interface.php:1177
 msgid "Add all entries in the basket to a group:"
@@ -574,7 +574,7 @@ msgstr "Crea un nuovo elemento (selezione del tipo)"
 
 #: php/interface.php:1233
 msgid "Select an entry type: "
-msgstr "Scegli un tipo per l'elemento: "
+msgstr "Scegli un tipo per l&prime;elemento: "
 
 #: php/interface.php:1264
 msgid "BIBINDEX_ADD_ENTRY_TITLE"
@@ -598,11 +598,20 @@ msgstr "Importa riferimenti BibTeX"
 
 #: php/interface.php:1363
 msgid "BIBINDEX_IMPORT_HELP"
-msgstr "Seleziona un file BibTeX o modifica gli elementi nell'area di testo. Gli elementi saranno aggiunti alla bibliografia corrente."
+msgstr "Importa elementi da un file o da una stringa BibTeX."
 
 #: php/interface.php:1365 php/interface.php:1367
-msgid "File"
+msgid "BIBINDEX_IMPORT_FILE_TITLE"
 msgstr "File"
+
+msgid "BIBINDEX_IMPORT_TXT_DESC"
+msgstr "Copia una stringa BibTeX."
+
+msgid "BIBINDEX_IMPORT_TXT_TITLE"
+msgstr "BibTeX"
+
+msgid "BIBINDEX_IMPORT_FILE_DESC"
+msgstr "Seleziona un file da importare:"
 
 #: php/interface.php:1401
 msgid "BIBINDEX_EXPORT_TO_BIBTEX_TITLE"
@@ -610,7 +619,7 @@ msgstr "Esporta il carrello a BibTeX"
 
 #: php/interface.php:1403
 msgid "Select fields to include in the exported BibTeX:"
-msgstr "Seleziona i campi da includere nell'esportazione:"
+msgstr "Seleziona i campi da includere nell&prime;esportazione:"
 
 #: php/interface.php:1077
 msgid "BIBINDEX_ADVANCED_SEARCH_TITLE"
@@ -620,7 +629,7 @@ msgid "BIBORB_OUTPUT_REQUIRED_FIELDS"
 msgstr "Campi obbligatori"
 
 msgid "BIBORB_OUTPUT_OPTIONAL_FIELDS"
-msgstr "Campo opzionali"
+msgstr "Campi opzionali"
 
 msgid "BIBORB_OUTPUT_ADDITIONAL_FIELDS"
 msgstr "Campi aggiuntivi"
@@ -638,7 +647,7 @@ msgid "BIBORB_OUTPUT_ABSTRACT_ALT"
 msgstr "Abstract"
 
 msgid "BIBORB_OUTPUT_ABSTRACT_TITLE"
-msgstr "Mostra l'abstract"
+msgstr "Mostra l&prime;abstract"
 
 msgid "BIBORB_OUTPUT_PS_ALT"
 msgstr "ps"
@@ -659,13 +668,13 @@ msgid "BIBORB_OUTPUT_PDF_TITLE"
 msgstr "Ottieni il file PDF"
 
 msgid "BIBORB_OUTPUT_EDIT_ALT"
-msgstr "Modifica"
+msgstr "modifica"
 
 msgid "BIBORB_OUTPUT_EDIT_TITLE"
 msgstr "Modifica questo elemento"
 
 msgid "BIBORB_OUTPUT_DELETE_ALT"
-msgstr "Elimina"
+msgstr "elimina"
 
 msgid "BIBORB_OUTPUT_DELETE_TITLE"
 msgstr "Cancella questo riferimento"
@@ -689,7 +698,7 @@ msgid "BIBORB_OUTPUT_NEW_FILE"
 msgstr "Nuovo File"
 
 msgid "BIBORB_OUTPUT_WEBSITE_ALT"
-msgstr "Sito"
+msgstr "sito"
 
 msgid "BIBORB_OUTPUT_WEBSITE_TITLE"
 msgstr "Sito collegato"
@@ -716,7 +725,7 @@ msgstr "Curatore"
 
 #: php/interface.php:938
 msgid "Connector:"
-msgstr "connector:"
+msgstr "Connector:"
 
 #: php/interface.php:944 php/interface.php:948 php/interface.php:954
 msgid "and"
@@ -753,7 +762,7 @@ msgstr "Nessun risultato"
 
 #: php/biborbdb.php:279
 msgid "BibTeX ID already present, select a different one."
-msgstr "L'ID BibTeX &egrave; già presente, selezionarne un'altra."
+msgstr "L&prime;ID BibTeX &egrave; già presente, selezionarne un&prime;altra."
 
 #: php/biborbdb.php:283 php/biborbdb.php:399
 msgid "Null BibTeX ID for an elemento not allowed."
@@ -813,7 +822,7 @@ msgstr "Scarica la bibliografia"
 msgid "TOOL_GET_ARCHIVE_HELP"
 msgstr ""
 "Scarica un archivio compresso (<code>tar.gz</code>) della "
-"bibliografia corrente. L'archivio conterrà sia i dati BibTeX sia i file caricati "
+"bibliografia corrente. L&prime;archivio conterrà sia i dati BibTeX sia i file caricati "
 "(PS, PDF ...)."
 
 #: php/interface.php:1021 php/interface.php:1507
@@ -838,7 +847,7 @@ msgstr "discendente"
 
 #: php/interface.php:416
 msgid "BIBINDEX_MENU_TOOLS_HELP"
-msgstr "BIBINDEX_MENU_TOOLS_HELP"
+msgstr ""
 
 #: php/interface.php:621
 msgid "No entries."
@@ -903,7 +912,7 @@ msgid "institution"
 msgstr "istituzione"
 
 msgid "journal"
-msgstr "giornale"
+msgstr "rivista"
 
 msgid "key"
 msgstr "chiave"
@@ -971,32 +980,26 @@ msgstr "long notes"
 msgid "link"
 msgstr "link"
 
-msgid "BIBORB_OUTPUT_NOTOWN_ALT"
-msgstr "Non mio"
-
-msgid "BIBORB_OUTPUT_NOTREAD_ALT"
-msgstr "Non letto"
-
-msgid "BIBORB_OUTPUT_READNEXT_ALT"
-msgstr "Leggi prox"
-
-msgid "BIBORB_OUTPUT_BORROW_ALT"
-msgstr "Prestito"
-
 msgid "BIBORB_OUTPUT_OWN_ALT"
 msgstr "Mio"
 
 msgid "BIBORB_OUTPUT_OWN_TITLE"
 msgstr "Stato: Mio. Clicca per settare a Non mio."
 
+msgid "BIBORB_OUTPUT_BORROW_ALT"
+msgstr "Prestito"
+
 msgid "BIBORB_OUTPUT_BORROW_TITLE"
-msgstr "Stato: prestito: Clicca per settare a Comprare."
+msgstr "Stato: Prestito. Clicca per settare a Comprare."
 
 msgid "BIBORB_OUTPUT_BUY_ALT"
-msgstr "Comprare"
+msgstr "Compra"
 
 msgid "BIBORB_OUTPUT_BUY_TITLE"
-msgstr "Stato: Comprare. Clicca per settare a Mio."
+msgstr "Stato: Compra. Clicca per settare a Mio."
+
+msgid "BIBORB_OUTPUT_NOTOWN_ALT"
+msgstr "Non mio"
 
 msgid "BIBORB_OUTPUT_NOTOWN_TITLE"
 msgstr "Stato: Non mio. Clicca per settare a Prestito."
@@ -1007,134 +1010,140 @@ msgstr "Letto"
 msgid "BIBORB_OUTPUT_READ_TITLE"
 msgstr "Stato: Letto. Clicca per settare a Non letto."
 
+msgid "BIBORB_OUTPUT_READNEXT_ALT"
+msgstr "Leggi prox"
+
 msgid "BIBORB_OUTPUT_READNEXT_TITLE"
 msgstr "Stato: Leggi prox. Clicca per settare a Letto."
+
+msgid "BIBORB_OUTPUT_NOTREAD_ALT"
+msgstr "Non letto"
 
 msgid "BIBORB_OUTPUT_NOTREAD_TITLE"
 msgstr "Stato: Non letto. Clicca per settare a Leggi prox."
 
 msgid "Read Status"
-msgstr ""
+msgstr "Stato lettura"
 
 msgid "Ownership"
-msgstr ""
+msgstr "Propriet&agrave;"
 
 msgid "Read"
-msgstr ""
+msgstr "Letto"
 
 msgid "Not Read"
-msgstr ""
+msgstr "Non letto"
 
 msgid "Read Next"
-msgstr ""
+msgstr "Leggi Prox."
 
 msgid "Not Own"
-msgstr ""
+msgstr "Non mio"
 
 msgid "Own"
-msgstr ""
+msgstr "Mio"
 
 msgid "Borrowed"
-msgstr ""
+msgstr "Prestito"
 
 msgid "Buy"
-msgstr ""
+msgstr "Compra"
 
 msgid "Choose a file:"
-msgstr ""
+msgstr "Scegli un file:"
 
 msgid "Enter an url:"
-msgstr ""
+msgstr "Immetti una url:"
 
 msgid "PREFERENCES_TITLE"
-msgstr "User Preferences"
+msgstr "Preferenze utente"
 
 msgid "Preferences updated."
-msgstr ""
+msgstr "Preferenze aggiornate."
 
 msgid "Select your language."
-msgstr ""
+msgstr "Scegli la tua lingua."
 
 msgid "Select the default database to open once logged in."
-msgstr ""
+msgstr "Seleziona il database da aprire di default al login."
 
 msgid "Display icons commands."
-msgstr ""
+msgstr "Mostra le icone dei comandi."
 
 msgid "Display text commands."
-msgstr ""
+msgstr "Mostra il testo dei comandi."
 
 msgid "Display abstract."
-msgstr ""
+msgstr "Mostra l&prime;abstract."
 
 msgid "Warn before deleting."
-msgstr ""
+msgstr "Avverti prima di cancellare."
 
 msgid "Default sort attribute."
-msgstr ""
+msgstr "Attributo di default per l&prime;ordinamento."
 
 msgid "Default sort order."
-msgstr ""
+msgstr "Ordinamento di default."
 
 msgid "Number of references by page."
-msgstr ""
+msgstr "Numero di elementi per pagina."
 
 msgid "Display shelf actions."
-msgstr ""
+msgstr "Mostra azioni di scaffale."
 
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 msgid "dateAdded"
-msgstr "Date Added"
+msgstr "Data di immissione"
 
 msgid "lastDateModified"
-msgstr "Last Date Modified"
+msgstr "Data ultima modifica"
 
 msgid "BIBINDEX_MENU_BROWSE"
-msgstr ""
+msgstr "Naviga"
 
 msgid "BIBINDEX_MENU_BROWSE_HELP"
-msgstr ""
+msgstr "Naviga attraverso la bibliografia."
 
 msgid "BIBINDEX_BROWSE_TITLE"
-msgstr ""
+msgstr "Naviga"
 
 msgid "Years"
-msgstr ""
+msgstr "Anni"
 
 msgid "Authors"
-msgstr ""
+msgstr "Autori"
 
 msgid "Series"
-msgstr ""
+msgstr "Serie"
 
 msgid "Journals"
-msgstr ""
+msgstr "Riviste"
 
 msgid "Groups"
-msgstr ""
+msgstr "Gruppi"
 
 msgid "%s not uploaded: invalid file type."
-msgstr ""
+msgstr "%s non caricato: tipo di file invalido."
 
 msgid "INDEX_MENU_PREFERENCES"
-msgstr ""
+msgstr "Preferenze"
 
 msgid "INDEX_MENU_PREFERENCES_HELP"
-msgstr ""
+msgstr "Definisce le preferenze degli utenti"
 
 msgid "Existing years:"
-msgstr ""
+msgstr "Anni esistenti:"
 
 msgid "Existing authors:"
-msgstr ""
+msgstr "Autori esistenti:"
 
 msgid "Existing journals:"
-msgstr ""
+msgstr "Riviste esistenti:"
 
 msgid "Existing groups:"
-msgstr ""
+msgstr "Gruppi esistenti:"
 
 msgid "Existing series:"
-msgstr ""
+msgstr "Serie esistenti:"

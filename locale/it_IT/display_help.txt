@@ -78,7 +78,15 @@ Diverse azioni possono essere disponibili per ogni elemento visualizzato:
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/dialog_info.png" alt="remarks"></th>
-        <td>Mostra i dati nel campo BibTeX field <code>longnotes</code>.</td>
+        <td>Mostra i dati nel campo BibTeX <code>longnotes</code>.</td>
+    </tr>
+    <tr>
+        <th class='img'><img src="data/images/stock_readnext.png" alt="readnext"/><img src="data/images/stock_read.png" alt="read"/><img src="data/images/stock_notread.png" alt="not read"/></th>
+        <td>Stato di lettura dell'elemento.</td>
+    </tr>
+    <tr class='colored'>
+        <th class='img'><img src="data/images/stock_notown.png" alt="Not Own"/><img src="data/images/stock_borrow.png" alt="Borrowed"/><img src="data/images/stock_buy.png" alt="To Buy"/><img src="data/images/stock_own.png" alt="Own"/></th>
+        <td>Stato di possesso dell'elemento.</td>
     </tr>
     </tbody>
 </table>

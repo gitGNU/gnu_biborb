@@ -1,5 +1,5 @@
 <p>
-Questo menu d&agrave; accesso alle funzionalità del carrello. Puoi selezionare alcuni elementi ed eseguire azioni su di loro:
+Questo menu d&agrave; accesso alle funzionalit&agrave; del carrello. Puoi selezionare alcuni elementi ed eseguire azioni su di essi:
 </p>
 
 <table class="help">
