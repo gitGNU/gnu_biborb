@@ -341,8 +341,8 @@ function add_entry(){
         else{
             $_SESSION['error'] = "Null ID not allowed. <br/>";
         }
-        $_SESSION['error'] .= "<A HREF='javascript:history.back()'>Modify</A> or <a href='bibindex.php?mode=welcome&amp;".session_name()."=".session_id()."'>Cancel</a>";
-	$_SESSION['error'] .= get_bibentry($_SESSION['bibname'],$_POST['_id'],$_GLOBALS['abstract'],'',$_SESSION['usermode']);
+        $_SESSION['error'] .= "<a href='javascript:history.back()'>Modify</a> or <a href='bibindex.php?mode=welcome&amp;".session_name()."=".session_id()."'>Cancel</a>";
+	$_SESSION['error'] .= "<br/><br/>".get_bibentry($_SESSION['bibname'],$_POST['_id'],$_GLOBALS['abstract'],'',$_SESSION['usermode']);
     }
     else {
         // Ok, id not present
