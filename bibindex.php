@@ -21,11 +21,6 @@
  * 
  */
 
-/*
- alrid
- */
-
-
 /**
  * 
  * File: bibindex.php

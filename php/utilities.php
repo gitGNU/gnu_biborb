@@ -178,7 +178,7 @@ function load_i18n_config($language)
     // load only if necessary
     if(!isset($GLOBALS[$language])){
         $default = "./locale/en_US/LC_MESSAGES/biborb.po";
-        $i18nfile = "./locale/".$_SESSION['language']."/LC_MESSAGES/biborb.po";
+        $i18nfile = "./locale/".$language."/LC_MESSAGES/biborb.po";
         $i18nfile = file_exists($i18nfile) ? file($i18nfile) : file($default);
         $lines_count = count($i18nfile);
         $current_line = 0;
