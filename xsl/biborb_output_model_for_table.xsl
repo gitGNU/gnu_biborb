@@ -288,7 +288,7 @@
         </xsl:if>
         <xsl:if test="$display_text">
             <a href="{node()}" title='BIBORB_OUTPUT_LINK_TITLE'>
-                BIBORB_OUTPUT_TITLE_ALT
+                BIBORB_OUTPUT_LINK_ALT
             </a>
         </xsl:if>
     </xsl:template>

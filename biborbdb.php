@@ -180,12 +180,12 @@ class BibORB_DataBase {
         // error, ID already exists or empty value
         if( $inbib|| strlen($bibid) == 0 || $bibid == null){
             if($inbib){
-                $res['message'] = "ID already present, select a different one.";
-                $res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>Back</a></div>";
+                $res['message'] = _("BibTeX ID already present, select a different one.");
+                $res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>"._("Back")."</a></div>";
             }
             else{
-                $res['message'] = "Null ID not allowed.";
-                $res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>Back</a></div>";
+                $res['message'] = _("Null BibTeX ID for an entry not allowed.");
+                $res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>"._("Back")."</a></div>";
             }
         }
         else{
@@ -297,7 +297,7 @@ class BibORB_DataBase {
 		     'message'=>"");
         if($dataArray['_id'] == null){
             $res['updated'] = false;
-            $res['message'] = "Null id for an entry not allowed.";
+            $res['message'] = _("Null BibTeX ID for an entry not allowed.");
         }
         else{
             $urlfile = null;

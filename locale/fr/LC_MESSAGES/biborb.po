@@ -128,17 +128,17 @@ msgstr "Cette bibliographie existe déjà!"
 
 #: biborbdb.php:633
 msgid "BIB_EMPTY_NAME"
-msgstr "Pas de nom fourni pour la bibliographie!"
+msgstr "Vous devez saisir un nom pour la nouvelle bibliographie!"
 
 #: biborbdb.php:648
 #, php-format
 msgid "Database %s moved to trash."
-msgstr "Bibliographie %s déplacée dans la corbeille."
+msgstr "La bibliographie %s a été déplacée dans la corbeille."
 
 #: biborbdb.php:649
 #, php-format
 msgid "Remove %s to definitively delete it."
-msgstr "Supprimer %s pour l'effacer définitivement."
+msgstr "Supprimer le répertoire %s pour l'effacer définitivement."
 
 #: functions.php:354
 msgid "Add all entries to the basket."
@@ -298,7 +298,7 @@ msgstr "Affichage"
 
 #: interface.php:410
 msgid "BIBINDEX_MENU_DISPLAY_ALL_HELP"
-msgstr "Afficher toutes les entrées"
+msgstr "Afficher toutes les références"
 
 #: interface.php:410
 msgid "BIBINDEX_MENU_DISPLAY_ALL"
@@ -306,7 +306,7 @@ msgstr "Tout Afficher"
 
 #: interface.php:411
 msgid "BIBINDEX_MENU_DISPLAY_BY_GROUP_HELP"
-msgstr "Afficher les entrées par groupe"
+msgstr "Afficher les références par groupe"
 
 #: interface.php:411
 msgid "BIBINDEX_MENU_DISPLAY_BY_GROUP"
@@ -362,7 +362,7 @@ msgstr "Exporter vers BibTeX"
 
 #: interface.php:430
 msgid "BIBINDEX_MENU_BASKET_HTML_HELP"
-msgstr "Export le panier en HTML"
+msgstr "Exporter le panier en HTML"
 
 #: interface.php:430
 msgid "BIBINDEX_MENU_BASKET_HTML"
@@ -511,7 +511,7 @@ msgstr "Une concordance pour %s"
 #: interface.php:797
 #, php-format
 msgid "%d match for %s."
-msgstr "%d concordance pour %s."
+msgstr "%d concordances pour %s."
 
 #: interface.php:801
 #, php-format
@@ -599,7 +599,7 @@ msgstr "Importer des références BibTeX"
 msgid ""
 "Select a BibTeX file or edit entries in the text area. Entries will be added "
 "to the current bibliography."
-msgstr "Sélectionner un fichier BibTeX ou copier les références dans la zone de texte."
+msgstr "Sélectionner un fichier BibTeX ou copier les références dans la zone de texte. "
 "Les références seront ajoutées à la bibliographie."
 
 #: interface.php:1241
@@ -614,6 +614,8 @@ msgstr "Exporter le panier vers BibTeX"
 msgid "Select fields to include in the exported BibTeX:"
 msgstr "Sélectionner les champs à inclure dans l'exportation BibTeX"
 
+msgid "BIBINDEX_ADVANCED_SEARCH_TITLE"
+msgstr "Recherche Avancée"
 
 msgid "BIBORB_OUTPUT_REQUIRED_FIELDS"
 msgstr "Champs Obligatoires"
@@ -686,3 +688,57 @@ msgstr "Fichier actuel"
 
 msgid "BIBORB_OUTPUT_NEW_FILE"
 msgstr "Nouveau fichier"
+
+msgid "BIBORB_OUTPUT_WEBSITE_ALT"
+msgstr "site web"
+
+msgid "BIBORB_OUTPUT_WEBSITE_TITLE"
+msgstr "Lien vers une page web associée"
+
+msgid "BIBORB_OUTPUT_LINK_ALT"
+msgstr "lien"
+
+msgid "BIBORB_OUTPUT_LINK_TITLE"
+msgstr "Lien vers une page locale"
+
+msgid "Import"
+msgstr "Importer"
+
+msgid "Editor"
+msgstr "Editeur"
+
+msgid "Connector:"
+msgstr "Connecteur:"
+
+msgid "and"
+msgstr "et"
+
+msgid "or"
+msgstr "ou"
+
+msgid "BibTeX Fields"
+msgstr "Champs BibTeX"
+
+msgid "BibORB Fields"
+msgstr "Champs BibORB"
+
+msgid "Display/ Hide search form"
+msgstr "Cacher/Afficher le formulaire de recherche"
+
+msgid "One match."
+msgstr "Une référence trouvée."
+
+msgid "%d matches."
+msgstr "%d références trouvées."
+
+msgid "No match."
+msgstr "Aucune référence ne vérifie la recherche."
+
+msgid "BibTeX ID already present, select a different one."
+msgstr "Clé BibTeX déjà présente, saisissez une clé différente."
+
+msgid "Null BibTeX ID for an entry not allowed."
+msgstr "Une Clé BibTeX vide n'est pas autorisée!"
+
+msgid "Back"
+msgstr "Retour"

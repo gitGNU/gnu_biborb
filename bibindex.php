@@ -362,7 +362,7 @@ if(isset($_POST['action'])){
         /*
             Import bibtex entries.
         */
-        case 'import':
+        case _("Import"):
             if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
                 die("Error, no bibtex data provided!");
             }
@@ -381,7 +381,7 @@ if(isset($_POST['action'])){
                 $param = $GLOBALS['xslparam'];
                 $param['bibindex_mode'] = "displaybasket";
                 $param['mode'] = "admin";
-                $formated = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+                $formated = replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
                 $xsltp->free();
                 if($res == 1){
                     $message = _("The following entry was added to the database:");
@@ -389,7 +389,6 @@ if(isset($_POST['action'])){
                 else {
                     $message = _("The following entries were added to the database:");
                 }
-                //$message .= "<br/><pre>".print_r($bibtex_data)."</pre>";
                 $message .= $formated;
             }
             break;

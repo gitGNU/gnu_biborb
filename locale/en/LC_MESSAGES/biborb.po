@@ -613,6 +613,8 @@ msgstr "Export the Basket to BibTeX"
 msgid "Select fields to include in the exported BibTeX:"
 msgstr ""
 
+msgid "BIBINDEX_ADVANCED_SEARCH_TITLE"
+msgstr "Advanced Search"
 
 msgid "BIBORB_OUTPUT_REQUIRED_FIELDS"
 msgstr "Required Fields"
@@ -685,3 +687,57 @@ msgstr "Current File"
 
 msgid "BIBORB_OUTPUT_NEW_FILE"
 msgstr "New File"
+
+msgid "BIBORB_OUTPUT_WEBSITE_ALT"
+msgstr "website"
+
+msgid "BIBORB_OUTPUT_WEBSITE_TITLE"
+msgstr "Go to a related website"
+
+msgid "BIBORB_OUTPUT_LINK_ALT"
+msgstr "link"
+
+msgid "BIBORB_OUTPUT_LINK_TITLE"
+msgstr "Go to an internal link"
+
+msgid "Import"
+msgstr ""
+
+msgid "Editor"
+msgstr ""
+
+msgid "Connector:"
+msgstr ""
+
+msgid "and"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "BibTeX Fields"
+msgstr ""
+
+msgid "BibORB Fields"
+msgstr ""
+
+msgid "Display/ Hide search form"
+msgstr ""
+
+msgid "One match."
+msgstr ""
+
+msgid "%d matches."
+msgstr ""
+
+msgid "No match."
+msgstr ""
+
+msgid "BibTeX ID already present, select a different one."
+msgstr ""
+
+msgid "Null BibTeX ID for an entry not allowed."
+msgstr ""
+
+msgid "Back"
+msgstr ""
