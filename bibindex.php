@@ -609,7 +609,7 @@ function bibindex_display_by_group(){
     
     // if the group is defined, display the entries matching it
     if($_SESSION['group']){
-        $main_content .= get_bibentries_of_group($_SESSION['bibname'],$_SESSION['group'],$_SESSION['usermode'],true);
+        $main_content .= get_bibentries_of_group($_SESSION['bibname'],$_SESSION['group'],$_SESSION['usermode'],$_SESSION['abstract']);
     }
     $html .= main($title,$main_content);
     $html .= html_close();

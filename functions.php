@@ -326,7 +326,7 @@ function get_bibentries_of_group($bibname,$groupname,$mode,$abstract)
     $xsl_content = load_file("./xsl/by_group2html_table.xsl");  
     $param = array('group'=>$groupname, 'mode' => $mode, 'bibname' => $bibname);
     if($abstract){
-        $param['type'] = "details";
+        $param['abstract'] = "true";
     }
  
     return xslt_transform($xml_content,$xsl_content,$param);
@@ -351,7 +351,7 @@ function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mo
     $param["mode"] = $mode;
     $param['bibname'] = $bibname;
     if($abstract){
-        $param['type'] = "details";
+        $param['abstract'] = "true";
     }
 
     return xslt_transform($xml_content,$xsl_content,$param);
