@@ -276,12 +276,12 @@ class BibORB_DataBase {
         // error, ID already exists or empty value
         if( $inbib|| strlen($bibid) == 0 || $bibid == null){
             if($inbib){
-                $res['message'] = _("BibTeX ID already present, select a different one.");
-                $res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>"._("Back")."</a></div>";
+                $res['message'] = msg("BibTeX ID already present, select a different one.");
+                $res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>".msg("Back")."</a></div>";
             }
             else{
-                $res['message'] = _("Null BibTeX ID for an entry not allowed.");
-                $res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>"._("Back")."</a></div>";
+                $res['message'] = msg("Null BibTeX ID for an entry not allowed.");
+                $res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>".msg("Back")."</a></div>";
             }
         }
         else{
@@ -396,7 +396,7 @@ class BibORB_DataBase {
 		     'message'=>"");
         if($dataArray['id'] == null){
             $res['updated'] = false;
-            $res['message'] = _("Null BibTeX ID for an entry not allowed.");
+            $res['message'] = msg("Null BibTeX ID for an entry not allowed.");
         }
         else{
             $urlfile = null;
@@ -774,10 +774,10 @@ function create_database($name,$description){
         if(!in_array($name,$databases_names)){
             $res = mkdir("./bibs/$name",0775);
             if($res){
-                $resArray['message'] = _("BIB_CREATION_SUCCESS");
+                $resArray['message'] = msg("BIB_CREATION_SUCCESS");
             }
             else{
-                $resArray['message'] = _("BIB_CREATION_ERROR");
+                $resArray['message'] = msg("BIB_CREATION_ERROR");
             }
             
             mkdir("./bibs/$name/papers",0775);
@@ -796,11 +796,11 @@ function create_database($name,$description){
             fclose($fp);
         }
         else{
-            $resArray['error'] = _("BIB_EXISTS");
+            $resArray['error'] = msg("BIB_EXISTS");
         }
     }
     else {
-        $resArray['error'] = _("BIB_EMPTY_NAME");
+        $resArray['error'] = msg("BIB_EMPTY_NAME");
     }
     return $resArray;
 }
@@ -813,8 +813,8 @@ function delete_database($name){
     if(!file_exists("./bibs/.trash")){mkdir("./bibs/.trash",0775);}
     // save the bibto .trash folder
     rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or die("BibORB Error: Error while moving $name to .trash folder");
-    $res = sprintf(_("Database %s moved to trash."),$name)."<br/>";
-    $res .= sprintf(_("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>");
+    $res = sprintf(msg("Database %s moved to trash."),$name)."<br/>";
+    $res .= sprintf(msg("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>");
     return $res;
 }
 

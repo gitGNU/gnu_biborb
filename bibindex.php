@@ -266,7 +266,7 @@ if(isset($_GET['action'])){
             else{
                 $confirm = FALSE;
                 if(array_key_exists('confirm_delete',$_GET)){
-                    $confirm = (strcmp($_GET['confirm_delete'],_("Yes")) == 0);
+                    $confirm = (strcmp($_GET['confirm_delete'],msg("Yes")) == 0);
                 }
             
                 $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");		
@@ -277,24 +277,24 @@ if(isset($_GET['action'])){
                     // delete it
                     $_SESSION['bibdb']->delete_entry($_GET['id']);
                     // update message
-                    $message = sprintf(_("The following entry was deleted: <pre>%s</pre>"),$bibtex);
+                    $message = sprintf(msg("The following entry was deleted: <pre>%s</pre>"),$bibtex);
                     // if present, remvove entries from the basket
                     $_SESSION['basket']->remove_item($_GET['id']);
                     $_GET['mode'] = "operationresult";
             }
-            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],_("No")) == 0){
+            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],msg("No")) == 0){
                 $_GET['mode'] = "welcome";
             }
             else{
                 $theid = $_GET['id'];
-                $message = sprintf(_("Delete this entry? <pre>%s</pre>"),$bibtex);
+                $message = sprintf(msg("Delete this entry? <pre>%s</pre>"),$bibtex);
                 $message .= "<form action='bibindex.php' method='get' style='margin:auto;'>";
                 $message .= "<fieldset style='border:none;text-align:center'>";
                 $message .= "<input type='hidden' name='action' value='delete'/>";
                 $message .= "<input type='hidden' name='id' value='$theid'/>";
-                $message .= "<input type='submit' name='confirm_delete' value='"._("No")."'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='".msg("No")."'/>";
                 $message .= "&nbsp;";
-                $message .= "<input type='submit' name='confirm_delete' value='"._("Yes")."'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='".msg("Yes")."'/>";
                 $message .= "</fieldset>";
                 $message .= "</form>";
 
@@ -312,7 +312,7 @@ if(isset($_GET['action'])){
                 $gval = trim($_GET['newgroupvalue']);
             }
             if(!isset($gval)){
-                die(_("No group specified!"));
+                die(msg("No group specified!"));
             }
             else if($gval != ""){
                 $_SESSION['bibdb']->add_to_group($_SESSION['basket']->items,$gval);
@@ -343,7 +343,7 @@ if(isset($_GET['action'])){
                 $_GET['id'] = $_GET['bibtex_key'];
             }
             else{
-                $error = sprintf(_("BibTeX key <code>%s</code> already exists."),$_GET['bibtex_key']);
+                $error = sprintf(msg("BibTeX key <code>%s</code> already exists."),$_GET['bibtex_key']);
                 $_GET['mode'] = 'operationresult';
             }
             break;
@@ -351,7 +351,7 @@ if(isset($_GET['action'])){
         case 'delete_basket':
             $confirm = FALSE;
             if(array_key_exists('confirm_delete',$_GET)){
-                $confirm = (strcmp($_GET['confirm_delete'],_("Yes"))==0);
+                $confirm = (strcmp($_GET['confirm_delete'],msg("Yes"))==0);
             }
             $ids_to_remove = $_SESSION['basket']->items;
             $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -361,22 +361,22 @@ if(isset($_GET['action'])){
                 $_SESSION['bibdb']->delete_entries($ids_to_remove);
                 // update message
                 $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
-                $message = sprintf(_("The following entries were deleted: <pre>%s</pre>"),$bibtex);
+                $message = sprintf(msg("The following entries were deleted: <pre>%s</pre>"),$bibtex);
                 $_SESSION['basket']->reset();
                 $_GET['mode'] = "operationresult";
             }
-            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],_("No")) == 0){
+            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],msg("No")) == 0){
                 $_GET['mode'] = "welcome";
             }
             else{
                 $html_entries = replace_localized_strings($xsltp->transform($xml_content,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$GLOBALS['xslparam']));
-                $message = _("Delete the following entries?");
+                $message = msg("Delete the following entries?");
                 $message .= $html_entries;
                 $message .= "<form action='bibindex.php' method='get' style='margin:auto;'>";
                 $message .= "<fieldset style='border:none;'>";
                 $message .= "<input type='hidden' name='action' value='delete_basket'/>";
-                $message .= "<input type='submit' name='confirm_delete' value='"._("No")."'/>";
-                $message .= "<input type='submit' name='confirm_delete' value='"._("Yes")."'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='".msg("No")."'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='".msg("Yes")."'/>";
                 $message .= "</fieldset>";
                 $message .= "</form>";
         		  $_GET['mode'] = "operationresult";
@@ -399,7 +399,7 @@ if(isset($_POST['action'])){
             if(isset($_POST['ok'])){
                 $res = $_SESSION['bibdb']->add_new_entry($_POST);
                 if($res['added']){
-                    $message = _("ENTRY_ADDED_SUCCESS")."<br/>";
+                    $message = msg("ENTRY_ADDED_SUCCESS")."<br/>";
                     $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
                     $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
                     $param = $GLOBALS['xslparam'];
@@ -422,7 +422,7 @@ if(isset($_POST['action'])){
             if(isset($_POST['ok'])){
                 $res = $_SESSION['bibdb']->update_entry($_POST);
                 if($res['updated']){
-                    $message = _("The following entry was updated:")."<br/>";
+                    $message = msg("The following entry was updated:")."<br/>";
                     $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
                     $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
                     $param = $GLOBALS['xslparam'];
@@ -467,10 +467,10 @@ if(isset($_POST['action'])){
                 $formated = replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
                 $xsltp->free();
                 if($res == 1){
-                    $message = _("The following entry was added to the database:");
+                    $message = msg("The following entry was added to the database:");
                 }
                 else {
-                    $message = _("The following entries were added to the database:");
+                    $message = msg("The following entries were added to the database:");
                 }
                 $message .= $formated;
             }
@@ -483,7 +483,7 @@ if(isset($_POST['action'])){
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
             if($login=="" || $mdp==""){
-                $error = _("LOGIN_MISSING_VALUES");
+                $error = msg("LOGIN_MISSING_VALUES");
             }
             else {
                 $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
@@ -496,7 +496,7 @@ if(isset($_POST['action'])){
                     $_SESSION['user_can_modify'] = $_SESSION['auth']->can_modify_entry($login,$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
                 }
                 else {
-                    $error = _("LOGIN_WRONG_USERNAME_PASSWORD");
+                    $error = msg("LOGIN_WRONG_USERNAME_PASSWORD");
                 }
             }
             break;
@@ -623,7 +623,7 @@ switch($mode) {
     case 'addentry':echo bibindex_entry_to_add(); break;
     
     // Select the type of the new entry to add
-    case _("Select"):
+    case msg("Select"):
         echo bibindex_add_entry($_GET['type']); break;
     
     // Update an entry

@@ -869,4 +869,4 @@ msgstr ""
 
 #: php/interface.php:1487
 msgid "BIBINDEX_XPATH_SEARCH_TITLE"
-msgstr ""
+msgstr "XPath Search"

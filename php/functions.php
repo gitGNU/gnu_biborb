@@ -134,7 +134,7 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
     load_i18n_config($_SESSION['language']);
 
     $html = "<div class='addtobasket'>";
-    $html .= _("Add all entries to the basket.");
+    $html .= msg("Add all entries to the basket.");
     $addalllink = "bibindex.php?mode=$mode&amp;action=add_to_basket&amp;id=";
     foreach($ids as $id){
         $addalllink .= "$id*";
@@ -157,7 +157,7 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
     load_i18n_config($_SESSION['language']);
 
     $html = "<div class='sort'>";
-    $html .= _("Sort by:");
+    $html .= msg("Sort by:");
     $html .= "<form method='get' action='bibindex.php'>";
     $html .= "<fieldset>";
     $html .= "<select name='sort' size='1'>";
@@ -170,17 +170,17 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
     }
     
     if($selected_sort == 'title'){
-        $html .= "<option value='title' selected='selected'>"._("Title")."</option>";
+        $html .= "<option value='title' selected='selected'>".msg("Title")."</option>";
     }
     else{
-        $html .= "<option value='title'>"._("Title")."</option>";
+        $html .= "<option value='title'>".msg("Title")."</option>";
     }
     
     if($selected_sort == 'year'){
-        $html .= "<option value='year' selected='selected'>"._("Year")."</option>";
+        $html .= "<option value='year' selected='selected'>".msg("Year")."</option>";
     }
     else{
-        $html .= "<option value='year'>"._("Year")."</option>";
+        $html .= "<option value='year'>".msg("Year")."</option>";
     }
     $html .= "</select>";
     $html .= "<input type='hidden' name='mode' value='$mode'/>";
@@ -191,19 +191,19 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
     }
     $html .= "<select name='sort_order'>";
     if($selected_order=='ascending'){
-        $html .= "<option value='ascending' selected='selected'>"._("ascending")."</option>";
+        $html .= "<option value='ascending' selected='selected'>".msg("ascending")."</option>";
     }
     else{
-        $html .= "<option value='ascending'>"._("ascending")."</option>";
+        $html .= "<option value='ascending'>".msg("ascending")."</option>";
     }
     if($selected_order=='descending'){
-        $html .= "<option value='descending' selected='selected'>"._("descending")."</option>";
+        $html .= "<option value='descending' selected='selected'>".msg("descending")."</option>";
     }
     else{
-        $html .= "<option value='descending'>"._("descending")."</option>";
+        $html .= "<option value='descending'>".msg("descending")."</option>";
     }
     $html .= "</select>";
-    $html .= "<input type='submit' value='"._("Sort")."'/>";
+    $html .= "<input type='submit' value='".msg("Sort")."'/>";
     $html .= "</fieldset>";
     $html .= "</form>";
     $html .= "</div>";

@@ -127,7 +127,7 @@ if(isset($_GET['action'])){
         /*
             Create a database
          */
-        case _("Create"):
+        case msg("Create"):
             $error_or_message = create_database($_GET['database_name'],
                                                 $_GET['description']);
             break;
@@ -135,7 +135,7 @@ if(isset($_GET['action'])){
         /*
             Delete a database
          */
-        case _("Delete"):
+        case msg("Delete"):
             $error_or_message['message'] = delete_database($_GET['database_name']);
             break;
         
@@ -165,7 +165,7 @@ if(isset($_POST['action'])){
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
             if($login=="" || $mdp==""){
-                $error_or_message['error'] = _("LOGIN_MISSING_VALUES");
+                $error_or_message['error'] = msg("LOGIN_MISSING_VALUES");
                 $mode = "login";
             }
             else {
@@ -175,7 +175,7 @@ if(isset($_POST['action'])){
                     $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($_SESSION['user']);
                 }
                 else {
-                    $error_or_message['error'] = _("LOGIN_WRONG_USERNAME_PASSWORD");
+                    $error_or_message['error'] = msg("LOGIN_WRONG_USERNAME_PASSWORD");
                     $mode = "login";
                 }
             }

@@ -144,12 +144,54 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
  */
 function load_i18n_config($language)
 {
+    /*
 	setlocale(LC_ALL,$language);
     putenv("LANG=$language");
     setlocale(LC_MESSAGES, $language);
     $domain = 'biborb';
     bindtextdomain($domain,'./locale');
     textdomain($domain);
+     */
+    // As gettext not correctly supported on both php config
+    // I parse the good .po file and load it into an array
+    // load only if necessary
+    if(!isset($GLOBALS[$language])){
+        $default = "./locale/en_US/LC_MESSAGES/biborb.po";
+        $i18nfile = "./locale/".$_SESSION['language']."/LC_MESSAGES/biborb.po";
+        $i18nfile = file_exists($i18nfile) ? file($i18nfile) : file($default);
+        $lines_count = count($i18nfile);
+        $current_line = 0;
+        $key = null;
+        while($current_line < $lines_count){
+            $line = trim($i18nfile[$current_line]);
+            if(preg_match("/msgid \"(.*)\"/",$line,$matches)){
+                if($key){
+                    $GLOBALS[$language][$key] = (trim($translation) == "" ? $key : $translation);
+                }
+                $key = $matches[1];
+                $translation = "";
+            }
+            else if(preg_match("/msgstr \"(.*)\"/",$line,$matches)){
+                $translation .= $matches[1];
+            }
+            else if(preg_match("/\"(.*)\"/",$line,$matches)){
+                $translation .= $matches[1];
+            }
+            $current_line++;
+        }
+        if($key){
+            $GLOBALS[$language][$key] = ($translation == "" ? $key : $translation);
+        }
+    }
+}
+
+/**
+    Translate a localized string
+ */
+function msg($string)
+{
+    // should return _($string) if gettext well supported
+    return $GLOBALS[$_SESSION['language']][$string];
 }
 
 /**
@@ -179,7 +221,7 @@ function replace_localized_strings($string)
     $keys = array_unique($matches[0]);
     // get the localized value for each element and replace it
     foreach($keys as $val){
-        $string = str_replace($val,_("$val"),$string);
+        $string = str_replace($val,msg("$val"),$string);
     }
     return $string;
 }
