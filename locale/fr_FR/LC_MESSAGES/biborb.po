@@ -1001,3 +1001,8 @@ msgstr "Emprunté"
 msgid "Buy"
 msgstr "A Acheter"
 
+msgid "Choose a file:"
+msgstr ""
+
+msgid "Enter an url:"
+msgstr ""

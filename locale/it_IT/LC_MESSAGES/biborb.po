@@ -1040,3 +1040,9 @@ msgstr ""
 msgid "Buy"
 msgstr ""
 
+msgid "Choose a file:"
+msgstr ""
+
+msgid "Enter an url:"
+msgstr ""
+

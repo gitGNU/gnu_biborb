@@ -127,17 +127,31 @@ html > body #menu {position:fixed;}
 #f_bib_creation input.submit {margin:3px;padding:0;width:auto;}
 
 /**
+ * Style for the search tabs
+ */
+#search_tabs {padding:0;margin:0;}
+#search_tabs ul {list-style-type:none;margin:0;padding:0;}
+#search_tabs ul li.notselected {display:inline;border:solid 1px gray;padding: 0.3em 0.3em 0 0.3em;background-color:#eef;color:black;font-weight:bold;}
+#search_tabs ul li.selected {display:inline;border:solid 1px gray;padding: 0.3em 0.3em 0 0.3em;background-color:#dde;font-weight:bold;color:navy;}
+#search_tabs ul li a, #search_tabs ul li a:visited {text-decoration:none;color:black;}
+#search_tabs ul li a:hover {color:navy;text-decoration:underline;}
+
+
+/**
+ * Style for search container
+ */
+.search_content {margin:auto;border:solid 1px gray;background-color:#dde;padding:1em;}
+
+/**
  * Style for simple search
  */
-#simple_search_form {padding:0;margin:auto;}
-#simple_search_form fieldset {border:none;padding:0;text-align:center;margin:auto;}
+#simple_search_form fieldset {border:none;padding:1em 0 0 0;text-align:center;margin:auto;}
 #simple_search_form table {width:300px;padding:0;margin:auto;text-align:left;}
 #simple_search_form input {border:solid black 1px;}
 
 /**
  * Style for the advanced search form
  */
-#search_form {padding:0;margin:0;}
 #search_form fieldset {border:none;margin:0;padding:0;text-align:center;}
 #search_form strong {text-align:left;float:left;}
 #search_form label {text-align:right;width:80px;float:left;margin:3px;}

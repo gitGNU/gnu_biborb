@@ -808,7 +808,16 @@ function bibindex_display_search(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     
-    $main_content = "<form id='simple_search_form' action='bibindex.php' method='get' style='text-align:center'>";
+    // search tabs
+    $main_content = "<div id='search_tabs'>";
+    $main_content .= "<ul>";
+    $main_content .= "<li class='selected'>".msg("Simple Search")."</li>";
+    $main_content .= "<li class='notselected'><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
+    $main_content .= "<li class='notselected'><a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
+    $main_content .= "</ul>";
+    $main_content .= "</div>"; 
+    
+    $main_content .= "<form id='simple_search_form' class='search_content' action='bibindex.php' method='get' style='text-align:center'>";
     $main_content .= "<fieldset>";
     $main_content .= "<input type='hidden' name='mode' value='displaysearch' />";
     $main_content .= "<input name='search' value='".$searchvalue."' />&nbsp;";
@@ -886,8 +895,6 @@ function bibindex_display_search(){
         
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
-    
-    $main_content .= "<a class='cleanref' href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a>, <a class='cleanref' href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a>.<br/><br/>";
     
     if($searchvalue){
         $fields =array();
@@ -981,16 +988,27 @@ function bibindex_display_advanced_search(){
     
     // if the result of a search is being displayed, hide the search form
     // display a link to show it again
-    $content ="";
+    $content = "";
     if(array_key_exists('searched',$_GET)){
         $extraparam .= "searched=1&";
+        $content .= "<div style='float:right;'>";
         $content .= "<script type='text/javascript'><!--
     document.write(\"<a class='cleanref' href=\\\"javascript:toggle_element(\'search_form\')\\\">";
         $content .= msg("Display/ Hide search form")."</a>\");\n--></script>";
         $content .= "<noscript><pre> </pre></noscript>";
-
+        $content .= "</div>";
     }
-    $content .= "<div id='search_form'>";
+    
+    // search tabs
+    $content .= "<div id='search_tabs'>";
+    $content .= "<ul>";
+    $content .= "<li class='notselected'><a class='cleanref' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
+    $content .= "<li class='selected'>".msg("Advanced Search")."</li>";
+    $content .= "<li class='notselected'><a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
+    $content .= "</ul>";
+    $content .= "</div>";
+
+    $content .= "<div id='search_form' class='search_content'>";
     $content .= "<form action='bibindex.php' method='get'>";
     $content .= "<fieldset>";
     $content .= "<em>".msg("Connector:")." </em>";
@@ -1076,7 +1094,6 @@ function bibindex_display_advanced_search(){
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "</div><br/>";
-    $content .= "<a class='cleanref' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a>, <a class='cleanref' href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a>.<br/><br/>";
     
     $searchArray = array();
     foreach($bibtex_fields as $val){
@@ -1573,7 +1590,16 @@ function bibindex_display_xpath_search()
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = msg("BIBINDEX_XPATH_SEARCH_TITLE");
     
-    $content = "<h4 class='tool_name'>".msg("TOOL_XPATH_TITLE")."</h4>";
+    //tabs
+    $content = "<div id='search_tabs'>";
+    $content .= "<ul>";
+    $content .= "<li class='notselected'><a class='cleanref' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
+    $content .= "<li class='notselected'><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
+    $content .= "<li class='selected'>".msg("XPath Search")."</li>";
+    $content .= "</ul>";
+    $content .= "</div>";
+    $content .= "<div class='search_content'>";
+    $content .= "<h4 class='tool_name'>".msg("TOOL_XPATH_TITLE")."</h4>";
     $content .= "<div class='tool_help'>";
     $content .= msg("TOOL_XPATH_HELP");
     $content .= "</div>";
@@ -1591,7 +1617,7 @@ function bibindex_display_xpath_search()
     $content .= "<input type='submit' class='submit' value='".msg("Search")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "<a class='cleanref' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a>, <a class='cleanref' href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a>.<br/><br/>";
+    $content .= "</div>";
     
     // execute an Xpath query
     if(array_key_exists("xpath_query",$_GET)){
