@@ -65,8 +65,8 @@ if(get_magic_quotes_gpc()) {
  *  i18n
  */
 if(!array_key_exists('language',$_GET)){
-    if(!array_key_exists('language',$_SESSION) || !$GLOBALS['display_language_selection']){
-        $_SESSION['language'] = $GLOBALS['language'];
+    if(!array_key_exists('language',$_SESSION) || !DISPLAY_LANG_SELECTION){
+        $_SESSION['language'] = DEFAULT_LANG;
     }
 }
 else{
@@ -99,7 +99,7 @@ else{
  *  user => only for read purpose
  */
 
-if(!$disable_authentication){
+if(!DISABLE_AUTHENTICATION){
     if(!array_key_exists('auth',$_SESSION)){
         $_SESSION['auth'] = new Auth();
     }

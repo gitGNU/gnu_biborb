@@ -39,7 +39,7 @@
  * Create the page to display for authentication
  */
 function index_login(){
-    $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
+    $html = html_header("Biborb",CSS_FILE);
     $html .= index_menu();
     $title = msg("INDEX_MENU_LOGIN_TITLE");
 
@@ -66,12 +66,12 @@ function index_login(){
  * The text is loaded from ./data/index_welcome.txt
  */
 function index_welcome(){
-    $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
+    $html = html_header("Biborb",CSS_FILE);
     $title = "BibORB: BibTeX On-line References Browser";
     $content = load_localized_file("index_welcome.txt");
     // get the version and the date
-    $content = str_replace('$biborb_version',$GLOBALS['biborb_version'],$content);
-    $content = str_replace('$date_release',$GLOBALS['date_release'],$content);
+    $content = str_replace('$biborb_version',BIBORB_VERSION,$content);
+    $content = str_replace('$date_release',BIBORB_RELEASE_DATE,$content);
     $html .= index_menu();
     $html .= main($title,$content);
     $html .= html_close();
@@ -84,7 +84,7 @@ function index_welcome(){
  * Create the page to add a new bibliography.
  */
 function index_add_database(){
-    $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
+    $html = html_header("Biborb",CSS_FILE);
     $title = msg("INDEX_CREATE_BIB_TITLE");
     // create the form to create a new bibliography
     $content = "<form method='get' action='index.php' id='f_bib_creation' onsubmit='return validate_bib_creation(\"".$_SESSION['language']."\")'>";
@@ -111,7 +111,7 @@ function index_add_database(){
  * Display the bibliographies in a combo box to select which one to delete.
  */
 function index_delete_database(){
-    $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
+    $html = html_header("Biborb",CSS_FILE);
     $title = msg("INDEX_DELETE_BIB_TITLE");
     
     // get all bibliographies and create a form to select which one to delete
@@ -144,7 +144,7 @@ function index_delete_database(){
  * Display an help for the manager submenu. This help is loaded from a file.
  */
 function index_manager_help(){
-    $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
+    $html = html_header("Biborb",CSS_FILE);
     $title = msg("INDEX_MANAGER_HELP_TITLE");
     $content = load_localized_file("index_manager_help.txt");
     $html .= index_menu();
@@ -160,7 +160,7 @@ function index_manager_help(){
  * Will only display information recorded into $error_or_message
  */
 function index_result(){
-    $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
+    $html = html_header("Biborb",CSS_FILE);
     $html .= index_menu();
     $html .= main(msg("INDEX_RESULTS_TITLE"),null,
                   $GLOBALS['error_or_message']['error'],
@@ -176,7 +176,7 @@ function index_result(){
  * CSS => The ID 'available_bibliographies' is used for the table
  */
 function index_select(){
-    $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
+    $html = html_header("Biborb",CSS_FILE);
     $title = msg("INDEX_AVAILABLE_BIBS_TITLE");
     $html .= index_menu();
 
@@ -240,20 +240,20 @@ function index_menu(){
     //      | -> Logout     (if administrator and $disable_authentication set to false)
     $html .= "<li><a title='".msg("INDEX_MENU_MANAGER_HELP")."' href='index.php?mode=manager_help'>".msg("INDEX_MENU_MANAGER")."</a>";
     $html .= "<ul>";
-    if(!$GLOBALS['disable_authentication'] && !array_key_exists('user',$_SESSION)){
+    if(!DISABLE_AUTHENTICATION && !array_key_exists('user',$_SESSION)){
         $html .= "<li><a title=\"".msg("INDEX_MENU_LOGIN_HELP")."\" href='index.php?mode=login'>".msg("INDEX_MENU_LOGIN")."</a></li>";
     }
     if($_SESSION['user_is_admin']){
         $html .= "<li><a title='".msg("INDEX_MENU_ADD_BIB_HELP")."' class='admin' href='index.php?mode=add_database'>".msg("INDEX_MENU_ADD_BIB")."</a></li>";
         $html .= "<li><a title='".msg("INDEX_MENU_DELETE_BIB_HELP")."' class='admin' href='index.php?mode=delete_database'>".msg("INDEX_MENU_DELETE_BIB")."</a></li>";
     }
-    if(!$GLOBALS['disable_authentication'] && array_key_exists('user',$_SESSION)){
+    if(!DISABLE_AUTHENTICATION && array_key_exists('user',$_SESSION)){
         $html .= "<li><a title='".msg("INDEX_MENU_LOGOUT_HELP")."' href='index.php?mode=welcome&amp;action=logout'>".msg("INDEX_MENU_LOGOUT")."</a></li>";
     }
     $html .= "</ul>";
     $html .= "</li>";
     $html .= "</ul>";
-    if($GLOBALS['display_language_selection']){
+    if(DISPLAY_LANG_SELECTION){
         $html .= "<form id='language_form' action='index.php' method='get'>";
         $html .= "<fieldset>";
         $html .= "<label for='lang'>".msg("Language:")."</label>";
@@ -284,7 +284,7 @@ function bibindex_details()
 
     // get the bibname
     if(!array_key_exists('bibname',$_GET)){die("No bibliography name provided");}
-    $bibdb = new BibORB_DataBase($_GET['bibname'],$GLOBALS['GEN_BIBTEX']);
+    $bibdb = new BibORB_DataBase($_GET['bibname'],GEN_BIBTEX);
     
     // get the parameters
     $param = $GLOBALS['xslparam'];
@@ -424,7 +424,7 @@ function bibindex_menu($bibname)
     $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_HELP")."' href='bibindex.php?mode=basket'>".msg("BIBINDEX_MENU_BASKET")."</a>";
     $html .= "<ul>";
     $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_DISPLAY_HELP")."' href='bibindex.php?mode=displaybasket'>".msg("BIBINDEX_MENU_BASKET_DISPLAY")."</a></li>";
-    if($_SESSION['user_can_modify'] || $GLOBALS['disable_authentication']){
+    if($_SESSION['user_can_modify'] || DISABLE_AUTHENTICATION){
         $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_GROUP_HELP")."' class='admin' href='bibindex.php?mode=groupmodif'>".msg("BIBINDEX_MENU_BASKET_GROUP")."</a></li>";
     }
     $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_BIBTEX_HELP")."' href='bibindex.php?mode=exportbaskettobibtex'>".msg("BIBINDEX_MENU_BASKET_BIBTEX")."</a></li>";
@@ -461,7 +461,7 @@ function bibindex_menu($bibname)
     //      | -> Logout (if admin and authentication disabled
     $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_HELP")."' href='bibindex.php?mode=manager'>".msg("BIBINDEX_MENU_ADMIN")."</a>";
     $html .= "<ul>";
-    if(!array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){
+    if(!array_key_exists('user',$_SESSION) && !DISABLE_AUTHENTICATION){
         $html .= "<li><a title=\"".msg("BIBINDEX_MENU_ADMIN_LOGIN_HELP")."\" href='bibindex.php?mode=login'>".msg("BIBINDEX_MENU_ADMIN_LOGIN")."</a></li>";
     }
     if($_SESSION['user_can_add']){
@@ -473,14 +473,14 @@ function bibindex_menu($bibname)
     if($_SESSION['user_can_add']){
         $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_IMPORT_HELP")."' class='admin' href='bibindex.php?mode=import'>".msg("BIBINDEX_MENU_ADMIN_IMPORT")."</a></li>";
     }
-    if(array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){
+    if(array_key_exists('user',$_SESSION) && !DISABLE_AUTHENTICATION){
         $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_LOGOUT_HELP")."' href='bibindex.php?mode=welcome&amp;action=logout'>".msg("BIBINDEX_MENU_ADMIN_LOGOUT")."</a></li>";
     }
     $html .= "</ul>";
     $html .= "</li>";
     $html .= "</ul>";
     
-    if($GLOBALS['display_language_selection']){
+    if(DISPLAY_LANG_SELECTION){
         $html .= "<form id='language_form' action='bibindex.php' method='get'>";
         $html .= "<fieldset>";
         $html .= "<label for='lang'>".msg("Language:")."</label>";
@@ -501,7 +501,7 @@ function bibindex_menu($bibname)
  */
 function bibheader($inbody = NULL)
 {
-  $html = html_header("BibORB - ".$_SESSION['bibdb']->name(),$GLOBALS['CSS_FILE'],NULL,$inbody);
+  $html = html_header("BibORB - ".$_SESSION['bibdb']->name(),CSS_FILE,NULL,$inbody);
   return $html;  
 }
 
@@ -516,7 +516,7 @@ function bibindex_welcome()
     $title = "BibORB: ". $_SESSION['bibdb']->name();
     $content = "";
     //$content = msg("This is the bibliography").": <strong>".$_SESSION['bibdb']->name()."</strong>.<br/>";
-    if(array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){      
+    if(array_key_exists('user',$_SESSION) && !DISABLE_AUTHENTICATION){      
         $content .= msg("You are logged as").": <em>".$_SESSION['user']."</em>.";
 /*
         $content .= "<br/>";
@@ -591,7 +591,7 @@ function bibindex_display_all(){
     // the bibtex keys are retreived from the database the first time that display_all is called
     if(!isset($_GET['page'])){
     	// split the array so that we display only MAX_REFERENCES_BY_PAGE
-        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->all_bibtex_ids(),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->all_bibtex_ids(),MAX_REFERENCES_BY_PAGE);
         // go to the first page
         $_GET['page'] = 0;
     }
@@ -616,7 +616,7 @@ function bibindex_display_all(){
     
         // create the header: sort function + add all to basket
         $start = "<div class='result_header'>";
-        if($GLOBALS['DISPLAY_SORT']){
+        if(DISPLAY_SORT){
             $start = sort_div($GLOBALS['sort'],$GLOBALS['sort_order'],$_GET['mode'],null).$start;
         }
         $start .= add_all_to_basket_div($flatids,$_GET['mode'],"sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."&amp;page=".$_GET['page']);
@@ -698,7 +698,7 @@ function bibindex_display_by_group(){
     }
     // store the ids in session if we come from an other page.
     if(!isset($_GET['page'])){
-        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_group($group),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_group($group),MAX_REFERENCES_BY_PAGE);
         $_GET['page'] = 0;
     }
 
@@ -768,7 +768,7 @@ function bibindex_display_by_group(){
             $extra['group'] = $group;
         }
                 
-        if($GLOBALS['DISPLAY_SORT']){
+        if(DISPLAY_SORT){
             $start = sort_div($GLOBALS['sort'],$GLOBALS['sort_order'],$_GET['mode'],$extra).$start;
         }
         $start .= add_all_to_basket_div($flatids,$_GET['mode'],$extraparam);
@@ -927,7 +927,7 @@ function bibindex_display_search(){
 	
         // store the ids in session if we come from an other page.
         if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_search($searchvalue,$fields),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_search($searchvalue,$fields),MAX_REFERENCES_BY_PAGE);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);
@@ -1097,7 +1097,7 @@ function bibindex_display_advanced_search(){
     if(count($searchArray) > 1){
         // store the ids in session if we come from an other page.
         if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_advanced_search($searchArray),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_advanced_search($searchArray),MAX_REFERENCES_BY_PAGE);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);
@@ -1178,7 +1178,7 @@ function bibindex_display_basket(){
     
     // store the ids in session if we come from an other page.
     if(!isset($_GET['page'])){
-        $_SESSION['ids'] = array_chunk($_SESSION['basket']->items,$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+        $_SESSION['ids'] = array_chunk($_SESSION['basket']->items,MAX_REFERENCES_BY_PAGE);
         $_GET['page'] = 0;
     }
     $flatids = flatten_array($_SESSION['ids']);
@@ -1401,7 +1401,8 @@ function bibindex_update_entry(){
     $content .= "</fieldset>";
     $content .= "</form>";
     
-    $content .= "<form method='get' id='new_bibtex_key' action='bibindex.php' class='f_default_form' onsubmit='return validate_new_bibtex_key(\"".$_SESSION['language']."\")'>";
+    // form to update the bibtex key
+    $content .= "<form method='get' id='new_bibtex_key' action='bibindex.php' class='f_default_form' onsubmit='return validate_new_bibtex_key(\"".$_SESSION['language']."\")' >";
     $content .= "<fieldset>";
     $content .= "<label>".msg("BibTeX Key:")."</label>";
     $content .= "&nbsp;<input name='bibtex_key' value='$theid'/>";
@@ -1552,7 +1553,7 @@ function bibindex_export_basket_to_html(){
 		$xsltp->free();
 		
 		// HTML output
-		$html = html_header(null,$GLOBALS['CSS_FILE'],null);
+		$html = html_header(null,CSS_FILE,null);
 		$html .= $content;
 		$html .= html_close();
 		echo $html;
@@ -1596,7 +1597,7 @@ function bibindex_display_xpath_search()
     if(array_key_exists("xpath_query",$_GET)){
         // store the ids in session if we come from an other page.
         if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_xpath_search(myhtmlentities($_GET['xpath_query'])),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_xpath_search(myhtmlentities($_GET['xpath_query'])),MAX_REFERENCES_BY_PAGE);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);

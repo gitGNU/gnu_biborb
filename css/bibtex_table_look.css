@@ -41,12 +41,13 @@
     width:100%;
     border-collapse:collapse;
     border-spacing:0;
+    font-size:small;
 }
 
 /* Look of the first row (the one that contains is, ps, pdf, and miscelaneous
 links */
 #bibtex_table .bibtex_start {
-    border-top:solid 2px navy;
+    border-top:solid 1px navy;
     color:navy;
 }
 
@@ -178,6 +179,9 @@ links */
 	background-color: #f7f3b6;
 }
 
+/* result header */
+.result_header {
+}
 
 /* look of sort form */
 .sort {font-size:x-small}

@@ -36,8 +36,8 @@
 /**
  * Version of Biborb
  */
-$biborb_version = "CVS";
-$date_release = "22 November 2004";
+define("BIBORB_VERSION","CVS");
+define("BIBORB_RELEASE_DATE","22 November 2004");
 
 /**
  * Name of the PHP SESSION
@@ -49,23 +49,23 @@ $session_id = "SID";
  * Localization
  * Available: en_US, fr_FR, de_DE, it_IT
  */
-$language = "en_US";
+define("DEFAULT_LANG",'en_US');
 
 /**
  * Show available languages on BibORB pages
  * TRUE/FALSE
  */
-$display_language_selection = TRUE;
+define("DISPLAY_LANG_SELECTION",TRUE);
 
 /**
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = TRUE;
+define("DISABLE_AUTHENTICATION",TRUE);
 
 /**
  * Authentication methods: mysql, files
- * Used if $disable_authentication = FALSE
+ * Used if DISABLE_AUTHENTICATION = FALSE
  */
 define("AUTH_METHOD",'files');
 
@@ -77,7 +77,7 @@ define("WARN_BEFORE_DELETING",TRUE);
 /**
  * Should the abstract be present for each entry.
  */
-define("DISPLAY_ASTRACT",FALSE);
+define("DISPLAY_ABSTRACT",FALSE);
 
 /**
  * Should action be represented by icons or not.
@@ -165,33 +165,33 @@ $fields_to_export = array('author',
 /**
  * The CSS style file to use.
  */
-$CSS_FILE="css/style.css";
+define("CSS_FILE","css/style.css");
 
 /**
  * Display sort in all/group/search view
  * If no, displayed only on search
  * TRUE/FALSE
  */
-$DISPLAY_SORT=TRUE;
+define("DISPLAY_SORT",TRUE);
 
 /**
  * Default sort method: ID,title,year
  * and order: ascending/descending
  */
-$DEFAULT_SORT="ID";
-$DEFAULT_SORT_ORDER="ascending";
+define("DEFAULT_SORT","ID");
+define("DEFAULT_SORT_ORDER","ascending");
 
 /**
  * Max number of references by page.
  */
-$MAX_REFERENCES_BY_PAGE=10;
+define("MAX_REFERENCES_BY_PAGE",10);
 
 /**
  * Keep an up-to-date BibTeX file.
  * If true, each time a bibliography is modified, a BibTeX file is updated
  * in its 'bibs' directory.
  */
-$GEN_BIBTEX=TRUE;
+define("GEN_BIBTEX",TRUE);
 
 /**
  *  Activate the shelf mode.

@@ -150,9 +150,7 @@
                 <xsl:variable name="field" select="name()"/>
                 <label title='{$field}'>
                     <xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:
-                    <xsl:if test="name() = 'website'">
-                        <span style='font-size:9px;'>(http://)</span>
-                    </xsl:if>
+                    <xsl:if test="name() = 'website'"><span style='font-size:9px;'>(http://)</span></xsl:if>
                 </label>
                 <xsl:choose>
                     <!-- abstract or longnotes -->
@@ -165,11 +163,38 @@
                     <!-- url, urlzip pdf -->
                     <xsl:when test="$field = 'url' or $field = 'urlzip' or $field = 'pdf'">
                         <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
-                        <!--<label for="current_{name()}">BIBORB_OUTPUT_CURRENT_FILE</label>-->
-                        <input name="current_{name()}" value='{$val}' /><br/>
-                        <!--<label for="{name()}">BIBORB_OUTPUT_NEW_FILE</label>-->
-                        <label><xsl:text> </xsl:text></label>
-                        <input name="{name()}" type='file'/>
+                        <table style='font-size:x-small;font-weight:normal;color:black;width:80%'>
+                            <tr>
+                                <td>
+                                    <xsl:if test="$field = 'urlzip' and $val ">
+                                        <a href="{$val}">
+                                            <img src="./data/images/tar.png" alt="ps.gz"/>
+                                        </a>
+                                    </xsl:if>
+                                    <xsl:if test="$field = 'pdf' and $val">
+                                        <a href="{$val}">
+                                            <img src="./data/images/pdf-document.png" aldt="pdf"/>
+                                        </a>
+                                    </xsl:if>
+                                    <xsl:if test="$field = 'url' and $val">
+                                        <a href="{$val}">
+                                            <img src="./data/images/stock-book-16.png" aldt="url"/>
+                                        </a>
+                                    </xsl:if>
+                                    <xsl:text> </xsl:text>
+                                    <xsl:value-of select="$val"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><xsl:processing-instruction name="php">echo msg("Change (upload):");</xsl:processing-instruction> <input name="up_{name()}" type='file' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><xsl:processing-instruction name="php">echo msg("Change (address):");</xsl:processing-instruction> <input name="ad_{name()}" />
+                                </td>
+                            </tr>
+                        </table>
+                        <input type='hidden' name="{name()}" value="$val"/>
                     </xsl:when>
                     <!-- groups -->
                     <xsl:when test="$field = 'groups'">

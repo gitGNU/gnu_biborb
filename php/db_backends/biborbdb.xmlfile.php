@@ -320,17 +320,25 @@ class BibORB_DataBase {
         }
         else{
             // upload files if they are present
-            if(array_key_exists('url',$_FILES) && file_exists($_FILES['url']['tmp_name'])){
-                $urlfile=upload_file($this->biblio_name,'url',$dataArray['id']);
-                $dataArray['url'] = $urlfile;
+            if(array_key_exists('up_url',$_FILES) && file_exists($_FILES['up_url']['tmp_name'])){
+                $dataArray['url'] = upload_file($this->biblio_name,'up_url',$dataArray['id']);
             }
-            if(array_key_exists('urlzip',$_FILES) && file_exists($_FILES['urlzip']['tmp_name'])){
-                $urlzipfile=upload_file($this->biblio_name,'urlzip',$dataArray['id']);
-                $dataArray['urlzip'] = $urlzipfile;
-            }  
-            if(array_key_exists('pdf',$_FILES) && file_exists($_FILES['pdf']['tmp_name'])){
-                $pdffile=upload_file($this->biblio_name,'pdf',$dataArray['id']);
-                $dataArray['pdf'] = $pdffile;
+            else if(array_key_exists('ad_url',$dataArray)){
+                $dataArray['url'] = $dataArray['ad_url'];
+            }
+            
+            if(array_key_exists('up_urlzip',$_FILES) && file_exists($_FILES['up_urlzip']['tmp_name'])){
+                $dataArray['urlzip'] = upload_file($this->biblio_name,'up_urlzip',$dataArray['id']);
+            }
+            else if(array_key_exists('ad_urlzip',$dataArray)){
+                $dataArray['urlzip'] = $dataArray['ad_urlzip'];
+            }
+            
+            if(array_key_exists('up_pdf',$_FILES) && file_exists($_FILES['up_pdf']['tmp_name'])){
+                $dataArray['pdf'] = upload_file($this->biblio_name,'up_pdf',$dataArray['id']);;
+            }
+            else if(array_key_exists('ad_url',$dataArray)){
+                $dataArray['pdf'] = $dataArray['ad_pdf'];
             }
 	    
             // add the new entry
@@ -450,43 +458,35 @@ class BibORB_DataBase {
         Update an entry.
     */
     function update_entry($dataArray){
-		// check if the id value is null
+
         $res = array('updated'=>false,
-		     'message'=>"");
+                     'message'=>"");
+        
+        // check if the id value is null
         if($dataArray['id'] == null){
             $res['updated'] = false;
             $res['message'] = msg("Null BibTeX ID for an entry not allowed.");
         }
         else{
-            $urlfile = null;
-            $urlzipfile = null;
-            $pdffile = null;
-            
-            if(array_key_exists('url',$_FILES) && file_exists($_FILES['url']['tmp_name'])){
-                $urlfile = upload_file($this->biblio_name,'url',$dataArray['id']);
-                $dataArray['url'] = $urlfile;
+            if(array_key_exists('up_url',$_FILES) && file_exists($_FILES['up_url']['tmp_name'])){
+                $dataArray['url'] = upload_file($this->biblio_name,'up_url',$dataArray['id']);
             }
-            else if($dataArray['current_url'] != null){
-                $urlfile = $dataArray['current_url'];
-                $dataArray['url'] = $urlfile;
+            else if(array_key_exists('ad_url',$dataArray)){
+                $dataArray['url'] = $dataArray['ad_url'];
             }
             
-            if(array_key_exists('urlzip',$_FILES) && file_exists($_FILES['urlzip']['tmp_name'])){
-                $urlzipfile = upload_file($this->biblio_name,'urlzip',$dataArray['id']);
-                $dataArray['urlzip'] = $urlzipfile;
+            if(array_key_exists('up_urlzip',$_FILES) && file_exists($_FILES['up_urlzip']['tmp_name'])){
+                $dataArray['urlzip'] = upload_file($this->biblio_name,'up_urlzip',$dataArray['id']);
             }
-            else if($_POST['current_urlzip'] != null){
-                $urlzipfile = $dataArray['current_urlzip'];
-                $dataArray['urlzip'] = $urlzipfile;
-            }  
+            else if(array_key_exists('ad_urlzip',$dataArray)){
+                $dataArray['urlzip'] = $dataArray['ad_urlzip'];
+            }
             
-            if(array_key_exists('pdf',$_FILES) && file_exists($_FILES['pdf']['tmp_name'])){
-                $pdffile = upload_file($this->biblio_name,'pdf',$dataArray['id']);
-                $dataArray['pdf'] = $pdffile;
+            if(array_key_exists('up_pdf',$_FILES) && file_exists($_FILES['up_pdf']['tmp_name'])){
+                $dataArray['pdf'] = upload_file($this->biblio_name,'up_pdf',$dataArray['id']);;
             }
-            else if($_POST['current_pdf'] != null){
-                $pdffile= $dataArray['current_pdf'];
-                $dataArray['pdf'] = $pdffile;
+            else if(array_key_exists('ad_url',$dataArray)){
+                $dataArray['pdf'] = $dataArray['ad_pdf'];
             }
             
             $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");

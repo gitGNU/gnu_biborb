@@ -94,8 +94,8 @@ if(get_magic_quotes_gpc()) {
  *  i18n
  */
 if(!array_key_exists('language',$_GET)){
-    if(!array_key_exists('language',$_SESSION) || !$GLOBALS['display_language_selection']){
-        $_SESSION['language'] = $GLOBALS['language'];
+    if(!array_key_exists('language',$_SESSION) || !DISPLAY_LANG_SELECTION){
+        $_SESSION['language'] = DEFAULT_LANG;
     }
 }
 else{
@@ -135,11 +135,11 @@ if(!array_key_exists('update_authorizations',$_SESSION)){
 
 if(array_key_exists('bibname',$_GET)){
     if(!array_key_exists('bibdb',$_SESSION)){
-        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],$GLOBALS['GEN_BIBTEX']);
+        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],GEN_BIBTEX);
         $_SESSION['basket']->reset();
     }
     else if($_SESSION['bibdb']->name()!=$_GET['bibname']){
-        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],$GLOBALS['GEN_BIBTEX']);
+        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],GEN_BIBTEX);
         $_SESSION['basket']->reset();
     }
     $update_auth = TRUE;
@@ -150,7 +150,7 @@ if(array_key_exists('bibname',$_GET)){
  *  admin => may modify, create or delete
  *  user => only for read purpose
  */
-if(!$disable_authentication){
+if(!DISABLE_AUTHENTICATION){
     if(!array_key_exists('auth',$_SESSION)){
         $_SESSION['auth'] = new Auth();
     }
@@ -199,8 +199,8 @@ $_SESSION['update_authorizations'] = FALSE;
  */
 $abst = array_key_exists('abstract',$_GET) ? $_GET['abstract'] : DISPLAY_ABSTRACT;
 
-$sort = $DEFAULT_SORT;
-$sort_order = $DEFAULT_SORT_ORDER;
+$sort = DEFAULT_SORT;
+$sort_order = DEFAULT_SORT_ORDER;
 if(array_key_exists('sort',$_GET)){$sort = $_GET['sort'];}
 else if(array_key_exists('sort',$_POST)){$sort = $_POST['sort'];}
 if(array_key_exists('sort_order',$_GET)){$sort_order = $_GET['sort_order'];}

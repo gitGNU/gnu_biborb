@@ -28,8 +28,8 @@
  */
 require_once("config.php");
 
-if(!$GLOBALS['disable_authentication']){
-    switch($GLOBALS['authentication_method']){
+if(!DISABLE_AUTHENTICATION){
+    switch(AUTH_METHOD){
         // Use file authentication system
         case 'files':
             require_once("php/auth_backends/auth.file.php");

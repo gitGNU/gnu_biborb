@@ -233,4 +233,4 @@ a.admin, a.admin:visited, a.admin:hover {color:red;text-decoration:none;}
 .fieldset-bordered {border: dotted 1px navy;text-align:center;margin:0;padding:1em;}
 input {border:solid 1px black;font-size:inherit;}
 select {font-size:inherit;}
-textarea {border:solid 1px black;}
+textarea {border:solid 1px black;font-size:inherit;}
