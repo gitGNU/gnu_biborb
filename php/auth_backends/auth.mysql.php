@@ -188,7 +188,7 @@ class Auth
         else{
             $user = ($user == "" ? "_anonymous_" : $user);
             
-            $query = "SELECT id FROM ".$this->users_table." WHERE login='".addslashed($user)."'";
+            $query = "SELECT id FROM ".$this->users_table." WHERE login='".addslashes($user)."'";
             $result = mysql_query($query,$connect) or trigger_error("Invalid SQL request.");
             
             if(mysql_num_rows($result) != 0){
