@@ -418,8 +418,8 @@ function bibindex_menu()
     }
     if($_SESSION['usermode']=='admin'){
         $html .= "<li><a class='admin' href='".bibindex_href('addentry')."'>Add an entry</a></li>";
-        $html .= "<li><a class='admin' href='".bibindex_href('update_xml_from_bibtex')."'>Update from BibTeX</a></li>";
-        $html .= "<li><a class='admin' href='".bibindex_href('update_bibtex_from_xml')."'>Update from XML</a></li>";
+        //$html .= "<li><a class='admin' href='".bibindex_href('update_xml_from_bibtex')."'>Update from BibTeX</a></li>";
+        //$html .= "<li><a class='admin' href='".bibindex_href('update_bibtex_from_xml')."'>Update from XML</a></li>";
         $html .= "<li><a class='admin' href='".bibindex_href('import')."'>Import BibTeX</a></li>";
     }
     if($_SESSION['usermode']=='admin' && !$GLOBALS['disable_authentication']){
@@ -481,7 +481,7 @@ function search_menu()
  * Create the form to select which type of entry to add.
  */
 function select_entry_type(){
-    $html = "<form method='get' action='bibindex.php'>
+    $html = "<div style='text-align:center'><form method='get' action='bibindex.php'>
         <fieldset style='border:none'>
     <input name='".session_name()."' value='".session_id()."' type='hidden'/>
 Select an entry type:
@@ -502,12 +502,12 @@ Select an entry type:
         <option value='unpublished'>unpublished</option>
     </select>
     <br/>
-    <div style='text-align:center'>
+    <br/>
         <input type='submit' name='mode' value='cancel'/>
         <input type='submit' name='mode' value='select'/>
-    </div>
+    
     </fieldset>
-</form>";
+</form></div>";
     return $html;
 }
 
@@ -561,7 +561,7 @@ function bibindex_welcome()
 function bibindex_operation_result(){
     $html = bibheader();  
     $html .= bibindex_menu();
-    $title = null;
+    $title = "BibORB message";
     $html .= main($title,null);
     $html .= html_close();    
     return $html;
@@ -604,12 +604,13 @@ function bibindex_display_by_group(){
     $html = bibheader();
     $html .= bibindex_menu();
     // create a form with all groups present in the bibliography
-    $main_content = "<form method='get' action='bibindex.php'>";
+    $main_content = "<div style='text-align:center;'>";
+    $main_content .= "<form method='get' action='bibindex.php'>";
     $main_content .="<fieldset style='border:none'>";
     $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibname']."'/>";
     $main_content .= "<input type='hidden' name='".session_name()."' value='".session_id()."'/>";
     $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
-    $main_content .= "<h3 style='display:inline;'>Available groups:</h3>";
+    $main_content .= "<h3 style='display:inline;'>Available groups:</h3> ";
     $main_content .= "<select name='group' size='1'>";
     // set Select values to groups available
     foreach($_SESSION['group_list'] as $gr){
@@ -623,7 +624,7 @@ function bibindex_display_by_group(){
     $main_content .= "<input type='submit' value='Display'/>";
 //    $main_content .= "<input type='submit' value=''/>";
     $main_content .= "</fieldset>";
-    $main_content .="</form><br/>";
+    $main_content .="</form></div><br/>";
     
     // if the group is defined, display the entries matching it
     if($_SESSION['group']){
@@ -692,7 +693,7 @@ function bibindex_display_basket(){
  * Display the page to modify groups of entries in the basket
  */
 function bibindex_basket_modify_group(){
-    $title = null;
+    $title = "Groups management";
     $html = bibheader();
     $html .= bibindex_menu();
     
@@ -725,7 +726,7 @@ function bibindex_manager_help(){
 function bibindex_entry_to_add(){
     $html = bibheader();
     $html .= bibindex_menu();
-    $title = null;
+    $title = "New entry";
     $content = select_entry_type();
     $html .= main($title,$content);
     $html .= html_close();
@@ -739,7 +740,7 @@ function bibindex_entry_to_add(){
 function bibindex_add_entry(){
     $html = bibheader("onLoad=\"javascript:toggle_element('additional')\"");
     $html .= bibindex_menu();
-    $title = null;
+    $title = "New entry";
     $content = "<form method='post' action='action_proxy.php' enctype='multipart/form-data'>";
     $content .= "<fieldset style='border:none'>";
     $content .= "<input name='".session_name()."' value='".session_id()."' type='hidden'/>";

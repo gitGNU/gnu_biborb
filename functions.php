@@ -815,14 +815,14 @@ function main($title,$content)
   if(array_key_exists('error',$_SESSION)){
     if($_SESSION['error'] != null){
       $html .= "<div id='error'>";
-      $html .= "<span id='error_title'>Error!</span>";
+//      $html .= "<span id='error_title'>Error!</span>";
       $html .= $_SESSION['error'];
       $html .= "</div>";
     }
   }
   if(array_key_exists('message',$_SESSION)){
     if($_SESSION['message'] != null){
-      $html .= "<span id='message_title'>Message:</span>";
+//      $html .= "<span id='message_title'>Message:</span>";
       $html .= "<div id='message'>";
       $html .= $_SESSION['message'];
       $html .= "</div>";

@@ -249,12 +249,15 @@ function index_delete_database(){
     
     // get all bibliographies and create a form to select which one to delete
     $databases = get_databases_names();
-    $content  = "<form method='get' action='action_proxy.php'>";
+    $content = "<div style='text-align:center;'>";
+    $content .= "<form method='get' action='action_proxy.php'>";
     $content .= "<fieldset style='border:none;'>";
     $content .= "<input type='hidden' name='".session_name()."' value='".session_id()."'/>";
     $content .= "<select name='database_name' size='1'>";
     foreach($databases as $name){
-        $content .= "<option value='$name'>$name</option>";
+        if($name != ".trash"){
+            $content .= "<option value='$name'>$name</option>";
+        }
     }
     $content .= "</select>";
     $content .= "<input type='submit' name='action' value='remove'/>";
@@ -317,17 +320,20 @@ function index_select(){
 
     // get all bibliographies and create an array
     $databases = get_databases_names();
-    $content = "<div style='text-align:left;'>";
-    $content .= "<table id='available_bibliographies'>";
+    $content = "<div id='available_bibliographies'>";
+    $content .= "<table>";
     $content .= "<thead><tr><th>Name</th><th>Description</th><th>Sources(BibTeX)</th></tr></thead>";
     $content .= "<tbody>";
     foreach($databases as $name){
-        $description = load_file("./bibs/$name/description.txt");
-        $content .= "<tr>";
-        $content .= "<td><a href='./bibindex.php?mode=welcome&amp;bibname=$name&amp;".session_name()."=".session_id()."'>$name</a></td>";
-        $content .= "<td>$description</td>";
-        $content .= "<td><a href='./bibs/$name/$name.bib'>Download</td>";
-        $content .= "</tr>";
+        // do not parse the trash directory
+        if($name != ".trash"){
+            $description = load_file("./bibs/$name/description.txt");
+            $content .= "<tr>";
+            $content .= "<td><a href='./bibindex.php?mode=welcome&amp;bibname=$name&amp;".session_name()."=".session_id()."'>$name</a></td>";
+            $content .= "<td>$description</td>";
+            $content .= "<td><a href='./bibs/$name/$name.bib'>Download</td>";
+            $content .= "</tr>";
+        }
     }
     $content .= "</tbody></table>";
     $content .= "</div>";

@@ -59,7 +59,7 @@ if(array_key_exists('action',$_GET)){
         /** 
          *  Delete an entry from the database
          */
-        case 'delete': 
+        case 'delete':
             // save the bibtex entry to show which entry has been deleted
             $bibtex = get_bibtex($_SESSION['bibname'],$_GET['id']);
             // delete it
@@ -69,7 +69,7 @@ if(array_key_exists('action',$_GET)){
             // redirect to result page
             echo header("Location: bibindex.php?mode=operationresult&bibname=".$_SESSION['bibname']."&".session_name()."=".session_id());
             break;
-            
+    
         /**
          *  Edit a given entry: redirection whith needed GET variables
          */
@@ -197,8 +197,14 @@ if(array_key_exists('action',$_GET)){
          *  Remove a bibliography
          */
         case 'remove':
-            deldir("./bibs/".$_GET['database_name']);
-            $_SESSION['message'] = "Database ".$_SESSION['message']." deleted.";
+            // create .trash folder if it does not exit
+            if(!file_exists("./bibs/.trash")){
+                mkdir("./bibs/.trash");
+            }
+            // save the bibto .trash folder
+            rename("./bibs/".$_GET['database_name'],"./bibs/.trash/".$_GET['database_name']);
+            $_SESSION['message'] = "Database ".$_SESSION['message']." deleted.<br/>";
+            $_SESSION['message'] .= "Remove <code>./bibs/.trash/".$_GET['database_name']."</code> to definitively delete it.";
             echo header("Location: index.php?mode=result&".session_name()."=".session_id());
             break;
            
