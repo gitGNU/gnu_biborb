@@ -2,6 +2,7 @@
 #uncomment to prevent folder content to be displayed
 #Options -Indexes
 
+#uncomment to prevent anyon to access .ht* files (.htaccess, .htpasswd...)
 #<Files .ht*>
 #  order allow,deny
 #  deny from all

@@ -42,6 +42,7 @@ class BibTeX_Tools
 {
     /**
         Return an array of entries.
+        $string is a BibTeX string
      */
     function get_array_from_string($string){
         $bibtex_parser = new PARSEENTRIES();
@@ -63,6 +64,7 @@ class BibTeX_Tools
         
     /**
         Return an array of entries
+        $filename is a BibTeX file
      */
     function get_array_from_file($filename){
         $bibtex_parser = new PARSEENTRIES();

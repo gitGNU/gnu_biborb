@@ -850,7 +850,7 @@ msgid "howpublished"
 msgstr ""
 
 msgid "institution"
-msgstr "Instituion"
+msgstr "Institution"
 
 msgid "journal"
 msgstr "Revue"
@@ -860,6 +860,7 @@ msgstr "Clé"
 
 msgid "month"
 msgstr "Mois"
+
 
 msgid "note" 
 msgstr "Note"

@@ -33,13 +33,13 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:bibtex="http://bibtexml.sf.net/"> 
 
-    <xsl:output method="text" encoding="iso-8859-1"/>
+    <xsl:output method="text" encoding="iso-8859-1" indent="yes"/>
   
     <!-- include generic parameters -->
 	<xsl:include href="xsl/parameters.xsl"/>
+    <xsl:preserve-space elements="bibtex:*"/>
 
     <xsl:template match="/bibtex:file">
-        <xsl:text> </xsl:text>
         <xsl:choose>
             <xsl:when test="$id != ''">
                 <xsl:apply-templates select="//bibtex:entry[@id=$id]/bibtex:*"/>
@@ -50,19 +50,11 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="bibtex:*">
-        @<xsl:value-of select="local-name()"/>{<xsl:value-of select="../@id"/>,
-        <xsl:for-each select="*">
-            <xsl:choose>
-                <xsl:when test="local-name() = 'groups'">
-                    groups = {<xsl:for-each select="bibtex:group">
-                        <xsl:value-of select="."/>
-                        <xsl:if test="position() != last()">,</xsl:if>
-                    </xsl:for-each>}
-                </xsl:when><xsl:otherwise><xsl:value-of select="local-name()"/> = {<xsl:value-of select="node()"/>}</xsl:otherwise>
-            </xsl:choose>
-            <xsl:if test="position() != last()">,
-            </xsl:if>
+    <xsl:template match="bibtex:*">@<xsl:value-of select="local-name()"/>{<xsl:value-of select="../@id"/>,
+<xsl:for-each select="*">
+            <xsl:choose><xsl:when test="local-name() = 'groups'">groups = {<xsl:for-each select="bibtex:group"><xsl:value-of select="."/><xsl:if test="position() != last()">,</xsl:if>
+                    </xsl:for-each>}</xsl:when><xsl:otherwise><xsl:value-of select="local-name()"/> = {<xsl:value-of select="node()"/>}</xsl:otherwise></xsl:choose><xsl:if test="position() != last()">,
+</xsl:if>
         </xsl:for-each>
 }
     </xsl:template>
