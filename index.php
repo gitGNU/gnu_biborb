@@ -39,14 +39,13 @@
  *
  */
 
-require_once("config.php");     // load configuration variables
-require_once("php/functions.php");  // load needed functions
-require_once("php/biborbdb.php");   // load biborb database
-require_once("php/interface.php");  // load function to generate the interface
-require_once("php/auth.php");       // load authentication class
-require_once("php/i18n.php");       // load i18n functions
-require_once("php/error.php");
-
+require_once("config.php");          // load configuration variables
+require_once("php/functions.php");   // load needed functions
+require_once("php/biborbdb.php");    // load biborb database
+require_once("php/interface.php");   // load function to generate the interface
+require_once("php/auth.php");        // load authentication class
+require_once("php/i18n.php");        // load i18n functions
+require_once("php/error.php");       // load biborb error handler
 
 
 /*
@@ -79,17 +78,16 @@ if(!array_key_exists('language',$_SESSION)){
 }
 
 
-
-/**
- * To store an error or a message. (mode=result)
+/*
+    To store an error or a message. (mode=result)
  */
 $error_or_message = array('error' => null,
                           'message' => null);
 
-/**
- * Get a value for 'mode' in the $_GET array.
- * If not in $_GET, receive null
- * The 'mode' variable sets which page to display
+/*
+    Get a value for 'mode' in the $_GET array.
+    If not in $_GET, receive null
+    The 'mode' variable sets which page to display
  */
 if(array_key_exists('mode',$_GET)){
 	$mode = $_GET['mode'];
@@ -98,17 +96,17 @@ else{
 	$mode = null;
 }
 
-/**
- * Select the user's mode:
- *  admin => may modify, create or delete
- *  user => only for read purpose
+/*
+    Select the user's mode:
+    admin => may modify, create or delete
+    user => only for read purpose
  */
-
 if(!DISABLE_AUTHENTICATION){
+    // create a new Auth object if needed
     if(!array_key_exists('auth',$_SESSION)){
         $_SESSION['auth'] = new Auth();
     }
-        
+    
     if(!array_key_exists('user',$_SESSION)){
         $_SESSION['user_is_admin'] = FALSE;
     }
@@ -160,6 +158,9 @@ if(isset($_GET['action'])){
          */
         case 'logout':
             $_SESSION['user_is_admin'] = FALSE;
+            $_SESSION['user_can_add'] = FALSE;
+            $_SESSION['user_can_modidy'] = FALSE;
+            $_SESSION['user_can_delete'] = FALSE;
             unset($_SESSION['user']);
             unset($_SESSION['user_pref']);
             $_SESSION['language'] = DEFAULT_LANG;
@@ -188,6 +189,7 @@ if(isset($_POST['action'])){
                 $mode = "login";
             }
             else {
+                // check the user name
                 $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
                 if($loggedin){
                     $_SESSION['user'] = $login;
@@ -203,6 +205,9 @@ if(isset($_POST['action'])){
             }
             break;
         
+        /*
+            Update user's preferences.
+         */
         case 'update_preferences':
             $_SESSION['auth']->set_preferences($_POST,$_SESSION['user']);
             $_SESSION['user_pref'] = $_SESSION['auth']->get_preferences($_SESSION['user']);
@@ -237,7 +242,7 @@ switch($mode){
 	// Delete a bibliography
     case 'delete_database': echo index_delete_database(); break;
     
-	// Litlle help on what is available for the administrator mode
+	// Little help on what is available for the administrator mode
     case 'manager_help': echo index_manager_help(); break;
     
 	// Login form
@@ -246,7 +251,7 @@ switch($mode){
 	// Generic page to display result of operations (add, delete, ...)
     case 'result': echo index_result(); break;
     
-    // Preferences
+    // User's Preferences panel
     case 'preferences': echo index_preferences(); break;
         
 	// By default, load the welcome page
