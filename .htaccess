@@ -1,6 +1,14 @@
+
+#uncomment to prevent folder content to be displayed
 #Options -Indexes
 
 #<Files .ht*>
 #  order allow,deny
 #  deny from all
 #</Files>
+
+#Uncomment to restrict access using apache authentication
+#AuthName BibORB Restricted Area
+#AuthType Basic
+#AuthUserFile /path/to/htpasswd
+#require valid-user

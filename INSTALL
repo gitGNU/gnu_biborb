@@ -5,7 +5,29 @@ standards. Consequently, you should ensure that:
 
 	* PHP (>=4.0.3) is installed on your webserver.
 	* PHP XSLT functions are available.
+    * PHP Pear functions are available.
 	* MySQL or any other database if you wish to use authentication.
+
+
+PHP XSLT
+--------
+    It appears that XSLT support is not always enabled in some PHP distributions.
+You will have to check that PHP is compiled with the option --with-sablot or
+--with-xslt-sablot. http://www.php.net/xslt is a good starting point to get
+information on the install process. Various linux distibutions also provide this
+support by a php package (php4-xslt on debian for instance)
+    Once XSLT support is enabled, you'll have to activate XSLT module in the 
+configuration of PHP (php.ini):
+        - on *nix add (or uncomment) the line:
+            extension=xslt.so
+        - on Windows add (or uncomment) the line:
+            extension=php_xslt.so
+
+PHP PEAR
+--------
+    PHP Pear package may be available on your OS distributions. Otherwise
+http://pear.php.net/ provides instructions to install it on your system.
+
 
 
 INSTALLATION
@@ -22,7 +44,7 @@ instance)
             chmod g+w bibs
         
         - or allow anyone to have a write access (not recommended for security
-        reasons!)
+        reasons)
             chmod a+w bibs
 
     3. Edit the "config.php" file and customize BibORB to feet your needs.

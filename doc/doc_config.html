@@ -30,7 +30,7 @@
 <div id="content">
 
 <div class="topic" id="help_localization">
-    <h3>Internationalization</h3>
+    <h3>Localization</h3>
     <div class="topic_content">
         <pre>
 /**
@@ -57,23 +57,14 @@ $display_language_selection = TRUE;</pre>
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = TRUE;</pre>
-        <p>If you want to share your bibliography within a local network, you may not want other people to edit or even delete your data. If <code class='variable'>$disable_authentication</code> is set to <code class='constant'>FALSE</code>, user must login to be able to add, delete or update references.</p>
-        
-        <p>At the moment, only a MySQL authentication is supported. If you want to use authentication, you have to set MySQL variables in <code class='file'>php/auth.php</code>:</p>
-            <pre>
+$disable_authentication = TRUE;
+
 /**
-    The database configuration
-*/
-$host = "localhost";
-$dbuser = "biborb-admin";
-$pass = "biborbdev";
-$db = "biborb";
-$table = "biborb_users";
-$auth_table = "biborb_auth";</pre>
-        <p><code class='file'>data/biborb.sql</code> contains <acronym>SQL</acronym>
-        instructions to create the needded tables. You then have to add manually
-        users to the database.</p>
+ * Authentication methods: mysql, files
+ * Used if $disable_authentication = FALSE
+ */
+$authentication_method = files;</pre>
+        <p>If you want to share your bibliography within a local network, you may not want other people to edit or even delete your data. If <code class='variable'>$disable_authentication</code> is set to <code class='constant'>FALSE</code>, user must login to be able to add, delete or update references. See <a href='./doc_auth.html'>Authentication Help</a> to set up correctly BibORB to use the authentication method defined (<code class='variable'>$authentication_method</code>).</p>
     </div>
 </div>
 
@@ -82,7 +73,7 @@ $auth_table = "biborb_auth";</pre>
     <div class="topic_content">
         <pre>
 /**
- *  Should a confirmation may be displayed when deleting entries
+ *  Should a confirmation be displayed when deleting entries
  */
 $warn_before_deleting = TRUE;</pre>
         <p>When a user has the authorization to delete entries, a confirmation message may be display when deleting entries. Set this variable to <code class='constant'>TRUE</code> if you want this message to be displayed.</p>

@@ -76,7 +76,7 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL
         $html .= "<title>$title</title>";
     }
     // define the javascript ressource
-    $html .= "<script type='text/javascript' src='./myscripts.js'></script>";
+    $html .= "<script type='text/javascript' src='./biborb.js'></script>";
     
     $html .= "</head>";
     $html .= "<body";
@@ -122,7 +122,7 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
     $result .= ">";
     foreach($tab as $val){
         if(!strcmp($val,$selected)){
-            $result .= "<option  selected='selected'>$val</option>";
+            $result .= "<option selected='selected'>$val</option>";
         }
         else{
             $result .= "<option>$val</option>";

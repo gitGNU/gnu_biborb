@@ -1,2 +1,2 @@
-testuser:testpass,0
+testuser:zZr5f6icuqhXI,0
 admin:admin,1

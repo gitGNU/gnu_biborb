@@ -48,15 +48,17 @@ locale. Its name must be of type <code class='constant'>lg_CO</code> where:
             msgstr "Mettre à jour"</pre>
         </li>
             
-        <li>Compile the <code class='file'>biborb.po</code> file.
-        <pre>
-        msgfmt -o biborb.mo biborb.po</pre>
+        <li><span style='text-decoration:line-through'>Compile the <code class='file'>biborb.po</code> file.
+        <pre style='text-decoration:line-through'>
+        msgfmt -o biborb.mo biborb.po</pre></span>
+        <span style='font-style:italic;color:red'>Due to some problems in correctly setting up i18n and PHP, PHP gettext methods are not called. Only the translation file (.po) suffices to localize BibORB.</span>
         </li>
+        
     
         <li>Edit the <code class='file'>config.php</code> file and set the <code class='variable'>$language</code> variable to the name of your locale (if you want it to be selected by default) or select it within BibORB if you have set <code class='variable'>$display_language_selection</code> to <code class='constant'>TRUE</code>.</li>
     
-        <li>If the localization doesn't show, restart the web server to force it to reload the localization data.</li>
-
+        <li><span style='text-decoration:line-through'>If the localization doesn't show, restart the web server to force it to reload the localization data.</span></li>
+        <li><code class='file'>biborb.js</code> also contains strings to be translated.</li>
         <li>If everything is OK, you could send me an archive of your newly created locale directory, I will add it to future releases of BibORB :).</li>
     </ol>
     </div>

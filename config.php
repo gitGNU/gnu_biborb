@@ -57,7 +57,6 @@ $language = "en_US";
  */
 $display_language_selection = TRUE;
 
-
 /**
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
@@ -65,7 +64,13 @@ $display_language_selection = TRUE;
 $disable_authentication = TRUE;
 
 /**
- *  Should a confirmation may be displayed when deleting entries
+ * Authentication methods: mysql, files
+ * Used if $disable_authentication = FALSE
+ */
+$authentication_method = 'files';
+
+/**
+ *  Should a confirmation be displayed when deleting entries
  */
 $warn_before_deleting = TRUE;
 

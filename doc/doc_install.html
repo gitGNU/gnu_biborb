@@ -18,6 +18,8 @@
     <h3>Index</h3>
     <ul>
         <li><a href="#help_requirements">Requirements</a></li>
+        <li><a href="#help_xslt">PHP XSLT</a></li>
+        <li><a href="#help_pear">PHP Pear</a></li>
         <li><a href="#help_install">Installation</a></li>
     </ul>
 </div>
@@ -32,28 +34,54 @@ standards. Consequently, you should ensure that:
         <ul>
             <li>PHP (>=4.0.3) is installed on your webserver.</li>
             <li>PHP XSLT functions are available.</li>
+            <li>PHP Pear functions are available.</li>
             <li>MySQL or any other database if you wish to use authentication.</li>
         </ul>
     </div>
 </div>
 
+<div class="topic" id="help_xslt">
+    <h3>PHP XSLT</h3>
+    <div class="topic_content">
+    <p>It appears that XSLT support is not always enabled in some PHP distributions. You will have to check that PHP is compiled with the option <code>--with-sablot</code> or <code>--with-xslt-sablot</code>. <a href='http://www.php.net/xslt'>http://www.php.net/xslt</a> is a good starting point to get information on the install process.</p>
+    <p>Once XSLT support is enabled, you'll have to activate XSLT module in the configuration of PHP (<code class='file'>php.ini</code>):</p>
+        <ul>
+            <li>on *nix add (or uncomment) the line:<pre>extension=xslt.so</pre></li>
+            <li>on Windows add (or uncomment) the line:<pre>extension=php_xslt.so</pre></li>
+        </ul>
+    </div>
+</div>
+
+<div class="topic" id="help_pear">
+    <h3>PHP Pear</h3>
+    <div class="topic_content">
+    <p>PHP Pear package may be available on your OS distributions. Otherwise
+<a href='http://pear.php.net'>http://pear.php.net</a> provides instructions to install it on your system.</p>
+    </div>
+</div>
+
+
 <div class="topic" id="help_install">
     <h3>Install</h3>
     <div class="topic_content">
-    <p>The <code class='file'>bibs</code> directory contains all bibliographies created by BibORB as well as the electronic releases of papers that would have been uploaded.</p>
-
-    <p>Under the hypothesis that the bibliography named "test" exists, the directory <code class='file'>bibs</code> is structured as follows:</p>
-    <pre>
-    bibs/
-     |->test/
-         |->test.bib
-         |->test.xml
-         |->description.txt
-         |->papers/
-             |->...lots of pdf, ps, ps.gz :) ...
-     |->otherdatabases.....</pre>
-
-    <p>References are stored in the <code class='file'>test.xml</code> but a BibTeX copy can be maintained up-to-date for convenience. It is also possible to modify directly the <code class='file'>test.bib</code> file to modify your bibliography and then use "Update from BibTeX" in the Admin BibORB menu to update the BibORB bibliography. (it may be usefull for users who edit their BibTeX file with other tools).</p>
+    
+    <ol>
+        <li>Untar the archive: <code>tar -xvzf biborb-x.tar.gz</code> to your webserver's document root (<code class='file'>/var/www</code> for instance) or your personal web directory ( <code class='file'>~/public_html</code> for instance)</li>
+        <li>Make the <code class='file'>bibs</code> directory writable by the webserver. You can:
+            <ul>
+                <li>change its group to the webserver's group and give this group write access to <code class='file'>bibs</code>:
+<pre>chgrp www-data bibs
+chmod g+w bibs</pre>
+                </li>
+                <li>allow anyone to have a write access (not recommended for security
+        reasons):<pre>chmod a+w bibs</pre>
+                </li>
+            </ul>
+        </li>
+        
+        <li>By default, authentication is not activated. Edit the <code class='file'>config.php</code> file and customize BibORB to feet your needs. (See <a href='./doc_config.html'>Configuration Help</a>)</li>
+        
+    </ol>
     </div>
 </div>
 

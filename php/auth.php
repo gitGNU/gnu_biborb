@@ -26,10 +26,18 @@
     Licence: GPL
 
  */
+require_once("config.php");
 
-// Use file authentication system
-require_once("php/auth_backends/auth.file.php");
+switch($GLOBALS['authentication_method']){
+    // Use file authentication system
+    case 'files':
+        require_once("php/auth_backends/auth.file.php");
+        break;
 
-// Use mysql authentication system
-//require_once("php/auth_backends/auth.mysql.php");
+    // Use mysql authentication system
+    case 'mysql':
+        require_once("php/auth_backends/auth.mysql.php");
+        break;
+}
+
 ?>
