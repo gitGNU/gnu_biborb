@@ -49,6 +49,16 @@ $disable_authentication = TRUE;
 $display_abstract = FALSE;
 
 /**
+ * Should action be represented by icons or not.
+ */
+$display_images = TRUE;
+
+/**
+ *  Sould action be represented by text or not.
+ */
+$display_text = TRUE;
+
+/**
  * Name of the PHP SESSION
  */
 $session_id = "SID";

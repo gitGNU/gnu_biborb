@@ -36,7 +36,7 @@
     exclude-result-prefixes="bibtex"
     version="1.0"> 
    
-    <xsl:output method="html" encoding="iso-8859-1"/>
+    <xsl:output method="xml" encoding="iso-8859-1"/>
     
     <!-- Possible input parameters -->
     <xsl:param name="bibname"/>
@@ -49,6 +49,8 @@
     <xsl:param name="abstract"/>
     <xsl:param name="session_id"/>
     <xsl:param name="session_name"/>
+    <xsl:param name="display_images"/>
+    <xsl:param name="display_text"/>
 
     <!-- every parameter values to lower case -->
     <xsl:variable name="lcletters">abcdefghijklmnopqrstuvwxyz</xsl:variable>
@@ -108,7 +110,7 @@
         
         <xsl:if test="$cpt != 0">
             <div class="addtobasket">
-                Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" align="center" border="0"/></a>
+                Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" /></a>
             </div>
         
             <!-- begining of the table -->

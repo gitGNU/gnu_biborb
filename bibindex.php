@@ -738,7 +738,7 @@ function bibindex_entry_to_add(){
  * Display a form to edit the value of each BibTeX fields
  */
 function bibindex_add_entry(){
-    $html = bibheader("onLoad=\"javascript:toggle_element('additional')\"");
+    $html = bibheader("onload='javascript:toggle_element(\"additional\")'");
     $html .= bibindex_menu();
     $title = "New entry";
     $content = "<form method='post' action='action_proxy.php' enctype='multipart/form-data'>";
@@ -759,7 +759,7 @@ function bibindex_add_entry(){
  * Display a form to modify fields of an entry
  */
 function bibindex_update_entry(){
-    $html = bibheader("onLoad=\"javascript:toggle_element('additional')\"");
+    $html = bibheader("onload='javascript:toggle_element(\"additional\")'");
     $html .= bibindex_menu();
     $title = "Update an entry";
     $content = "<form method='post' action='action_proxy.php' enctype='multipart/form-data'>";

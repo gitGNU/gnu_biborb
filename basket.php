@@ -101,7 +101,9 @@ function basket_to_html($usermode,$abstract){
                     'session_id' => session_id(),
                     'basket' => 'true',
                     'mode' => $usermode,
-                    'abstract' => $abstract);
+                    'abstract' => $abstract,
+                    'display_images' => $GLOBALS['display_images'],
+                    'display_text' => $GLOBALS['display_text']);
     
     //return the HTML table
     return xslt_transform($xml_content,$xsl_content,$param);    

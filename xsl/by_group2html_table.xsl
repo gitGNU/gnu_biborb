@@ -38,7 +38,7 @@
     exclude-result-prefixes="bibtex"
     version="1.0">
   
-    <xsl:output method="html" encoding="iso-8859-1"/>
+    <xsl:output method="xml" encoding="iso-8859-1"/>
     
     <!-- session name and id -->
     <xsl:param name="session_name"/>
@@ -51,6 +51,8 @@
     <xsl:param name="basket"/>
     <xsl:param name="abstract"/>
     <xsl:param name="bibname"/>
+    <xsl:param name="display_images"/>
+    <xsl:param name="display_text"/>
     
     <xsl:template match="/">
         <!-- get entries of the given group -->
@@ -78,7 +80,7 @@
             </xsl:for-each>
         </xsl:variable>
         <div class="addtobasket">
-            Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" align="center" border="0"/></a>
+            Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" /></a>
         </div>
         
         <!-- start the table -->

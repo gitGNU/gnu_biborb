@@ -33,7 +33,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:bibtex="http://bibtexml.sf.net/" version="1.0">
     
-    <xsl:output method="html" encoding="iso-8859-1"/>
+    <xsl:output method="xml" encoding="iso-8859-1"/>
     
     <xsl:param name="bibname"/>
     <xsl:param name="bibnameurl"/>

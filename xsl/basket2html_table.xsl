@@ -36,7 +36,7 @@
     exclude-result-prefixes="bibtex"
     version="1.0">
   
-    <xsl:output method="html" encoding="iso-8859-1"/>
+    <xsl:output method="xml" encoding="iso-8859-1"/>
     
     <!-- the name of the bibliography -->
     <xsl:param name="bibname"/>
@@ -47,6 +47,8 @@
     <xsl:param name="mode"/>
     <xsl:param name="basket"/>
     <xsl:param name="abstract"/>
+    <xsl:param name="display_images"/>
+    <xsl:param name="display_text"/>
 
     <xsl:template match="/entrylist">
         <!-- load the xml file into a variable -->

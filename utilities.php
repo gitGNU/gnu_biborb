@@ -82,7 +82,7 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL
     if($title){
         $html .= "<title>$title</title>";
     }
-    $html .= "<SCRIPT LANGUAGE=Javascript SRC='./myscripts.js'> </SCRIPT>";
+    $html .= "<script type='text/javascript' src='./myscripts.js'></script>";
     $html .= "</head>";
     $html .= "<body";
     if($bodyclass){    

@@ -33,7 +33,7 @@
 <xsl:stylesheet version="1.0" 
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   
-    <xsl:output method="html" encoding="iso-8859-1"/>
+    <xsl:output method="xml" encoding="iso-8859-1"/>
 
     <xsl:param name="typeentry"/>
   
@@ -132,10 +132,12 @@
         <!-- additional fields -->
         <b>BibORB Additional Fields</b>
         
-        <script type="text/javascript">&lt;!--
-        document.write(&quot;&lt;a style=\&quot;text-decoration:none;color:navy;\&quot; href=\&quot;javascript:toggle_element(\'additional\')\&quot;&gt; display/hide &lt;/a&gt;&quot;);
-        //--&gt;</script>
-            <noscript></noscript>
+        <script type="text/javascript">
+            <xsl:comment><![CDATA[
+                document.write("<a style=\'text-decoration:none;color:navy;\' href=\"javascript:toggle_element(\'additional\')\"> display/hide </a>");]]>
+            </xsl:comment>
+        </script>
+
         <div id="additional">
         <table class="additional">
             <tbody>

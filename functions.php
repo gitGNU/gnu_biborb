@@ -315,7 +315,10 @@ function get_all_bibentries($bibname,$mode,$abstract)
 {
     $xml_content = load_xml_bibfile($bibname);
     $xsl_content = load_file("./xsl/all_sorted_by_id2html_table.xsl");
-    $param = array('mode' => $mode, 'bibname' => $bibname);
+    $param = array('mode' => $mode,
+                   'bibname' => $bibname,
+                   'display_images' => $GLOBALS['display_images'],
+                   'display_text' => $GLOBALS['display_text']);
     
     if($abstract){
         $param['abstract'] = "true";
@@ -331,7 +334,11 @@ function get_bibentries_of_group($bibname,$groupname,$mode,$abstract)
 {
     $xml_content = load_xml_bibfile($bibname);    
     $xsl_content = load_file("./xsl/by_group2html_table.xsl");  
-    $param = array('group'=>$groupname, 'mode' => $mode, 'bibname' => $bibname);
+    $param = array('group'=>$groupname,
+                   'mode' => $mode, 
+                   'bibname' => $bibname,
+                   'display_images' => $GLOBALS['display_images'],
+                   'display_text' => $GLOBALS['display_text']);
     if($abstract){
         $param['abstract'] = "true";
     }
@@ -360,6 +367,8 @@ function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mo
     if($abstract){
         $param['abstract'] = "true";
     }
+    $param['display_images'] = $GLOBALS['display_images'];
+    $param['display_text'] = $GLOBALS['display_text'];
 
     return xslt_transform($xml_content,$xsl_content,$param);
 }

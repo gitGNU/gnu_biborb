@@ -236,7 +236,6 @@ html > body #menu {position:fixed;}
     font-weight:bold;
     font-size:x-small;
     padding:1px;
-    padding-bottom:2px;
 }
 
 #bibtex_table .bibtex_button {
@@ -305,16 +304,13 @@ html > body #menu {position:fixed;}
     border-bottom:solid 1px #333;
 }
 
+#bibtex_table img, img {
+    border:none;
+    vertical-align:middle;
+}
+
 .last {
     font-size:5px;
-}
-
-.images {
-    display:inline;
-}
-
-.text {
-    display:none;
 }
 
 #bibtex_table a, #bibtex_table a:hover,#bibtex_table a:active,#bibtex_table a:visited,#bibtex_table a:focus {
