@@ -120,7 +120,7 @@ function xml2bibtex($bibname){
     $nb = $record[0];
 
     $xml_content = load_file($xmlfile);
-    $xml_content = ereg_replace("<br/>","",$xml_content);
+//    $xml_content = ereg_replace("<br/>","\n",$xml_content);
     $xsl_content = load_file("./xsl/xml2bibtex.xsl");
 
     $xh = xslt_create();
@@ -215,7 +215,7 @@ function bibtex2xml($bibfile,$group=NULL){
                     $data_content = preg_replace("/\s+/"," ",$data_content);
                 }
                 else{
-                    $data_content = preg_replace("/\n\n/","<br/><br/>",$data_content);
+//                    $data_content = preg_replace("/\n\n/","<br/><br/>",$data_content);
                 }
                 // new version of biborb: need to create group field if multiple groups defined
                 if($key == 'groups'){
@@ -370,12 +370,12 @@ function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mo
 function get_bibtex($bibname,$bibid)
 {
     $xml_content = load_xml_bibfile($bibname);
-    $xml_content = ereg_replace("<br/>","",$xml_content);
     $xsl_content = load_file("./xsl/xml2bibtex.xsl");
+//    $xml_content = ereg_replace("<br/>","\n",$xml_content);
     $param = array('id'=>$bibid);
     $result = xslt_transform($xml_content,$xsl_content,$param); 
-    //remove empty lines and not needed spaces
-    $result = preg_replace(array('/(\r\n|\n|\r)(\s*\\1)?/','/ +/'),array("\\1",' '),$result);
+    //remove not needed spaces
+    $result = preg_replace(array('/(\s*\\1)?/','/ +/'),array("\\1",' '),$result);
     return $result;  
 }
 
