@@ -2,7 +2,7 @@
 <!--
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2004  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,7 +57,7 @@
 			the entry.
 			A different style is applied if the entry is in the basket
 		-->
-        <tr class="{$inbasket}">
+        <tr class="{$inbasket}" id="{@id}">
             <td class="bibtex_start">
 				<!-- The bibtex entry -->
                 <div class="bibtex_key">
@@ -133,12 +133,12 @@
 						<!-- if not present in basket, display the add action -->
 						<xsl:if test="$display_basket_actions = '' and contains($inbasket,'notinbasket')">
 							<xsl:if test="$display_images">
-								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}">
+								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}#{@id}">
 									<img src="./data/images/{$add-basket-image}" alt='BIBORB_OUTPUT_ADD_BASKET_ALT' title='BIBORB_OUTPUT_ADD_BASKET_TITLE' />
 								</a>
 							</xsl:if>
 							<xsl:if test="$display_text">
-								<a class="basket_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}" title='BIBORB_OUTPUT_ADD_BASKET_TITLE'>
+								<a class="basket_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_ADD_BASKET_TITLE'>
 									BIBORB_OUTPUT_ADD_BASKET_ALT
 								</a>
 							</xsl:if>
@@ -147,12 +147,12 @@
 						<!-- if present in basket display the remove action -->
 						<xsl:if test="$display_basket_actions != '' or not( contains($inbasket,'notinbasket'))">
 							<xsl:if test="$display_images">
-								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}">
+								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}#{@id}">
 									<img src="./data/images/{$remove-basket-image}" alt='BIBORB_OUTPUT_REMOVE_BASKET_ALT' title='BIBORB_OUTPUT_REMOVE_BASKET_TITLE' />
 								</a>
 							</xsl:if>
 							<xsl:if test="$display_text">
-								<a class="basket_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}" title='BIBORB_OUTPUT_REMOVE_BASKET_TITLE'>
+								<a class="basket_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_REMOVE_BASKET_TITLE'>
 									BIBORB_OUTPUT_REMOVE_BASKET_ALT
 								</a>
 							</xsl:if>
@@ -309,7 +309,7 @@
 			<!-- if javascript is supported -->
             <script type="text/javascript">
                 <xsl:comment><![CDATA[
-                    document.write("<a href=\"javascript:toggle_abstract(\']]><xsl:value-of select="$id"/><![CDATA[\')\"><img src=\"data/images/stock_about-16.png\" alt=\'BIBORB_OUTPUT_ABSTRACT_ALT\' title=\'BIBORB_OUTPUT_ABSTRACT_TITLE\' /></a>");]]>
+                    document.write("<a href=\"javascript:toggle_abstract(\'abs_]]><xsl:value-of select="$id"/><![CDATA[\')\"><img src=\"data/images/stock_about-16.png\" alt=\'BIBORB_OUTPUT_ABSTRACT_ALT\' title=\'BIBORB_OUTPUT_ABSTRACT_TITLE\' /></a>");]]>
                 </xsl:comment>
 				<!-- easy to insert javasacript in XSL, isn'it? :-D -->
             </script>
@@ -370,7 +370,7 @@
         <xsl:choose>
 			<!-- display the abstract if abstract should always be present -->
             <xsl:when test="$abstract != ''">
-                <span id="{$id}">
+                <span id="abs_{$id}">
 					<!-- replacing text empty lines with HTML empty lines -->
                     <xsl:call-template name="string-replace">
                         <xsl:with-param name="string" select="translate(string(.//bibtex:abstract),'&#xD;','@#xA;')"/>
@@ -381,7 +381,7 @@
             </xsl:when>
 			<!-- create the abstract but hide it  -->
             <xsl:otherwise>
-                <span id="{$id}" style="display:none;">
+                <span id="abs_{$id}" style="display:none;">
 					<!-- replacing text empty lines with HTML empty lines -->
                     <xsl:call-template name="string-replace">
                         <xsl:with-param name="string" select="translate(string(.//bibtex:abstract),'&#xD;','@#xA;')"/>
