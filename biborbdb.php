@@ -189,6 +189,7 @@ XML;
 		// add the new entry
 		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
 		$data = bibtex2xml($bibtex);
+		
 		$xsl = load_file("./xsl/add_entries.xsl");
 		$param = array('bibname' => $this->xml_file());
 		$result = $xsltp->transform($data[2],$xsl,$param);
@@ -198,8 +199,8 @@ XML;
 		$fp = fopen($this->xml_file(),"w");
 		fwrite($fp,$result);
 		fclose($fp);
-        // update bibtex file
-        xml2bibtex($this->biblio_name);
+		// update bibtex file
+		xml2bibtex($this->biblio_name);
 		return $data[1];
 	}
 	

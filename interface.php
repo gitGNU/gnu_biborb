@@ -1023,7 +1023,7 @@ Select a BibTeX file or edit entries in the text area. Entries will be added to 
 	</fieldset>
 </form>
 <h3>BibTeX</h3>
-<form method='get' action='bibindex.php'>
+<form method='post' action='bibindex.php'>
 	<fieldset title='BibTeX'>
 		<textarea name='bibval' cols='55' rows='15'></textarea>
 		<input type='hidden' name='mode' value='operationresult'/>

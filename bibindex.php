@@ -226,31 +226,7 @@ if(isset($_GET['action'])){
 			$_SESSION['bibdb']->reset_groups($_SESSION['basket']->items);
 			break;
 		
-		case 'import':				// Import bibtex entries
-			if(!array_key_exists('bibval',$_GET)){
-				die("Error, no bibtex data provided!");
-			}
-			else{
-				// add the new entry
-				$res = $_SESSION['bibdb']->add_bibtex_entries($_GET['bibval']);
-				print_r($res);
-				$entries = $_SESSION['bibdb']->entries_with_ids($res);
-				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-				$param = $GLOBALS['xslparam'];
-				$param['bibindex_mode'] = "displaybasket";
-				$param['mode'] = "user";
-				$formated = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-				$xsltp->free();
-				if($res == 1){
-					$message = "The following entry was added to the database:";
-				}
-				else {
-					$message = "The following entries were added to the database:";
-				}
-				$message .= "<br/><pre>".$_GET['bibval']."</pre>";
-				$message .= $formated;
-			}
-			break;
+
 			
 		default:
 			break;
@@ -299,7 +275,31 @@ if(isset($_POST['action'])){
 			else{
 				$error = $res['message'];
 			}
-				
+
+		case 'import':				// Import bibtex entries
+			if(!array_key_exists('bibval',$_POST)){
+				die("Error, no bibtex data provided!");
+			}
+			else{
+				// add the new entry			 
+				$res = $_SESSION['bibdb']->add_bibtex_entries(explode("\n",$_POST['bibval']));
+				$entries = $_SESSION['bibdb']->entries_with_ids($res);
+				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+				$param = $GLOBALS['xslparam'];
+				$param['bibindex_mode'] = "displaybasket";
+				$param['mode'] = "admin";
+				$formated = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+				$xsltp->free();
+				if($res == 1){
+					$message = "The following entry was added to the database:";
+				}
+				else {
+					$message = "The following entries were added to the database:";
+				}
+				$message .= "<br/><pre>".$_POST['bibval']."</pre>";
+				$message .= $formated;
+			}
+			break;				
 		default:
 			break;
 	}

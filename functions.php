@@ -144,8 +144,7 @@ function xml2bibtex($bibname){
  * Transform a BibTeX string into an XML string
  */
 function bibtex2xml($bibtext,$group=NULL){
-	
-	
+    
     $content = $bibtext;          // content to analyse
     
 	$first = 1;							// is it the first entry analyzed?
@@ -170,7 +169,7 @@ function bibtex2xml($bibtext,$group=NULL){
         $patterns = array('&','<','>');
         $replace = array('&amp;','&lt;','&gt;');    
         $line = str_replace($patterns,$replace,$content[$i]);
-
+	
         //new entry @(alphanum){(anychar),
         if(preg_match("/@\s?(\w*)\s?{(.*),/",$line,$matches)){
 			$entries_count++;
@@ -264,7 +263,7 @@ function bibtex2xml($bibtext,$group=NULL){
         $xml_content .= end_bibentry($type);
     }
 	$xml_content .= "</bibtex:file>";
-	print_r($ids);
+	
     return array($entries_count,$ids,$xml_content);
 }
 
