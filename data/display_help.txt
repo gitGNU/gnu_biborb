@@ -1,23 +1,81 @@
 <p>
-This menu give access to an HTML representation of the bibliography.
+This menu gives access to the bibliography.
 </p>
 
-<ul>
-    <li><strong>All</strong>:  all entries are displayed by increasing id,</li>
-    <li><strong>Groups</strong>: display entries of a given group,</li>
-    <li><strong>Search</strong>: search the database for an entry (title, keywords, authors).</li>
-</ul>
+<table style='margin:auto'>
+  <tbody>
+    <tr style='background-color:#ddd'>
+      <td style='font-weight:bold;font-family:serif;'>All</td>
+      <td>All entries are displayed.</td>
+    </tr>
+    <tr>
+       <td style='font-weight:bold;font-family:serif;'>Groups</td>
+       <td>Display entries of a given group.</td>
+    </tr>
+    <tr style='background-color:#ddd'>
+      <td style='font-weight:bold;font-family:serif;'>Search</td>
+      <td>Search the database for an entry (title, keywords, authors ...).</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+Have a look to the <code>config.php</code> file to select the default sort method (ID, year, title).
+</p>
 
+<p>
 Several actions may be available for each displayed entry:
+</p>
 
-<ul>
-    <li>Download a postscript <img src="data/images/stock_book-16.png" alt="ps"/>, a compressed postscript <img src="data/images/tar.png" alt="ps.gz"/>, a PDF <img src="data/images/pdf-document.png" alt="pdf"/> release of the paper.</li>
-    <li><img src="data/images/stock_about-16.png" alt="abstract"/> Display the abstract.</li>
-    <li><img src="data/images/stock_convert-16.png" alt="BibTeX"/> Get the BibTeX source code.</li>
-    <li><img src="data/images/link-url-16.png" alt="webpage"/> Go to a related webpage (Home pages for instance).</li>
-    <li><img src="data/images/stock_jump-to-16.png" alt="Local link"/> Go to a local page on the web server.</li>
-    <li><img src="data/images/stock_edit-16.png" alt="edit"/> Edit the entry to update information (need authentication mode disabled or authenticated user).</li>
-    <li><img src="data/images/stock_delete-16.png" alt="delete"/> Remove the entry (need authentication mode disabled or authenticated user) <span style="color:red">No Warning!!</span>.</li>
-    <li><img src="data/images/cvs-add-16.png" alt="add"/> Add the entry to the basket.</li>
-</ul>
+<table style='margin:auto;width:400px;'>
+  <tbody>
+    <tr style='background-color:#ddd'>
+       <td><img src="data/images/stock_book-16.png" alt="ps"/></td>
+       <td>Download a postscript release of the paper.</td>
+   </tr>
+   <tr>
+       <td><img src="data/images/tar.png" alt="ps.gz"/></td>
+       <td>Download a compressed postscript release of the paper.</td>
+   </tr>
+     <tr style='background-color:#ddd'>
+       <td><img src="data/images/pdf-document.png" alt="pdf"/></td>
+       <td>Download a PDF release of the paper.</td>
+     </tr>
+     <tr>
+    <td><img src="data/images/stock_about-16.png" alt="abstract"/></td>
+    <td> Display the abstract.</td>
+    </tr>
+    <tr style='background-color:#ddd'>
+    <td><img src="data/images/stock_convert-16.png" alt="BibTeX"/></td>
+    <td>Get the BibTeX source code.</td>
+    </tr>
+    <tr>
+    <td><img src="data/images/link-url-16.png" alt="webpage"/></td>
+    <td>Go to a related webpage (Home pages for instance).</td>
+    </tr>
+    <tr style='background-color:#ddd'>
+    <td><img src="data/images/stock_jump-to-16.png" alt="Local link"/></td>
+    <td>Go to a local page on the web server.</td>
+    </tr>
+    <tr>
+    <td><img src="data/images/stock_edit-16.png" alt="edit"/></td>
+    <td>Edit the entry to update information (need authentication mode disabled or authenticated user).</td>
+    </tr>
+    <tr style='background-color:#ddd'>
+    <td><img src="data/images/stock_delete-16.png" alt="delete"/></td>
+    <td>Remove the entry (need authentication mode disabled or authenticated user) <span style="color:red">No Warning!!</span>.</td>
+    </tr>
+    <tr>
+    <td><img src="data/images/cvs-add-16.png" alt="add"/></td>
+    <td>Add the entry to the basket.</td>
+    </tr>
+    <tr style='background-color:#ddd'>
+    <td><img src="data/images/cvs-remove-16.png" alt="add"/></td>
+    <td>Remove the entry from the basket.</td>
+    </tr>
+    <tr>
+    <td><img src="data/images/add.png" alt="add"/></td>
+    <td> Add all entries to the basket.</td>
+    </tr>
+    </tbody>
+</table>
     

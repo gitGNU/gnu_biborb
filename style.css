@@ -133,10 +133,12 @@ html > body #menu {position:fixed;}
 
 #menu li li a:hover{
     background-color:#ade;
+    color:black;
 }
 
 #menu li li a.admin:hover {
-    background-color:red;
+    background-color:#e44;
+    color:black;
 }
 
 
@@ -210,6 +212,12 @@ html > body #menu {position:fixed;}
 
 #available_bibliographies th {
     border-bottom:3px solid black;
+#    background-color:#ccc;
+    margin:2px;
+}
+
+#available_bibliographies tr:hover {
+    background-color:#ccc;
 }
 
 #available_bibliographies td {
@@ -217,10 +225,21 @@ html > body #menu {position:fixed;}
     border-bottom:dashed 1px black;
 }
 
-#available_bibliographies a, #available_bibliographies a:hover,#available_bibliographies a:hover,#available_bibliographies a:active,#available_bibliographies a:visited,#available_bibliographies a:focus {
+a.download, a:visited.download {
+    color:blue;
+    text-decoration:none;
+}
+
+a.bibname, a:visited.bibname { 
     text-decoration:none;
     color:navy;
+    font-weight:bold;
 }
+
+.bib_description {
+    font-style:italic;
+}
+
 
 
 /**
@@ -276,3 +295,8 @@ html > body #menu {position:fixed;}
   border:1px solid black;
 }
 
+.biborb {
+    font-weight:bold;
+//    font-family:serif;
+    color:navy;
+}

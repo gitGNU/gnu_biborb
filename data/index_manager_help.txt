@@ -4,12 +4,12 @@ The manager allows to create or delete bibliographies.
 
 <h3>Create</h3>
 <p>
-    Biborb will create any necessary files to store the bibliography.
+    Necessary files will be created to store the bibliography. An existing BibTeX bibliography may be then imported using the import menu.
 </p>
 
 <h3>Delete</h3>
 <p>
-    Biborb will move the selected bibliography in the <code>bibs/.trash</code> directory. The bibliography will be removed from the list of available bibliographies.<br/>
+    The selected bibliography will be moved in the <code>bibs/.trash</code> directory. The bibliography will be removed from the list of available bibliographies.<br/>
     
     In order to definitively remove it, the <code>bibs/.trash</code> has to be cleaned manually.
 </p>

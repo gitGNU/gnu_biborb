@@ -213,9 +213,9 @@ HTML;
             $content .= <<<HTML
                 
             <tr>
-                <td><a href="./bibindex.php?mode=welcome&amp;bibname=$name">$name</a></td>
-                <td>$description</td>
-                <td><a href="./bibs/$name/$name.bib">Download</a></td>
+                <td><a class='bibname' href="./bibindex.php?mode=welcome&amp;bibname=$name">$name</a></td>
+                <td><span class='bib_description'>$description</span></td>
+                <td><a class='download' href="./bibs/$name/$name.bib">Download</a></td>
             </tr>
 HTML;
         }

@@ -1,13 +1,13 @@
-BibORB is a tool to manage and consult BibTeX bibliographies using a web
+<span class='biborb'>BibORB</span> is a tool to manage and consult BibTeX bibliographies using a web
 browser.
 
-<p> The main aims in the design of BibORB were to allow sharing of
+<p> The main aims in its design were to allow sharing of
 bibliographies on a local network and accessing easily electronic releases of 
 papers. It grew from this to permit; creation and deletion of bibliographies, 
 then the facilities to edit BibTeX entries were added thus creating a simple 
 web front-end to BibTeX.  </p>
 
-BibORB presently supports: 
+<span class='biborb'>BibORB</span> presently supports: 
 <ul>
     <li> Extensive functions via the web based interface including:
    	<ul>
@@ -38,26 +38,25 @@ BibORB presently supports:
     </li>
 
     <li> You can also use your favorite text editor to edit the bib file and
-    then click on Update from BiBTeX to update BibORB. This bibliography can
+    then click on Update from BiBTeX to update the database. This bibliography can
     then be browsed etc. as above.
     </li>
 </ul>
 
-BibORB does not support:
+<span class='biborb'>BibORB</span> does not support:
 <ul>
-    <li><span style='color:red;'>IMPORTANT!</span> Presently, BibORB has not
-    been designed so that different users may 'securely' modify the same
-    bibliography. Concurrent access is not supported. (may be in a latter
-    version) </li>
-    <li> No support for use of @string or @preamble </li>
+    <li>Concurrent access to the database. It has not
+    been designed so that different users may 'safely' modify the same
+    bibliography.</li>
+    <li>The use of @string or @preamble </li>
 </ul>
 
-<p>BibORB also provides a basic authentication method based on databases to
+<p><span class='biborb'>BibORB</span> also provides a basic authentication method based on databases to
 restrict write access to bibliographies.  </p>
 
 <hr/>
-<span style="font-family:serif"><strong>BibORB</strong> CVS release,
+<span style="font-family:serif"><span class='biborb'>BibORB</span> CVS release,
 5 May 2004<br/> Released under the GPL licence.<br/> Update and
-information available at <a href="http://www.nongnu.org/biborb">BibORB
+information available at <a href="http://www.nongnu.org/biborb"><span class='biborb'>BibORB</span>
 website</a> </span>
 

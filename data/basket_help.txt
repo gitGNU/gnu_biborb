@@ -3,12 +3,30 @@ This menu give access to the basket. The basket records entries you have selecte
 </p>
 
 
+<p>
 Actions that can be done on the basket are:
-<ul>
-    <li>Display all entries in the basket.</li>
-    <li><img src="data/images/cvs-remove-16.png" alt="remove" /> Remove entries from the basket.</li>
-    <li>Change the group of all entries in basket (classification).</li>
-    <li>Reset groups of all entries in the basket.</li>
-    <li>Export the selection to BibTeX.</li>
-    <li>Export the selection to HTML.</li>
-</ul>
+</p>
+<table style='margin:auto;border:collapse;'>
+	<tbody>
+		<tr style='background-color:#ddd'>
+			<td style='font-weight:bold;font-family:serif;'>Display All</td>
+			<td>Display all entries in the basket.</td>
+		</tr>
+		<tr>
+			<td style='font-weight:bold;font-family:serif;'>Group Modification</td>
+			<td>Change the group of all entries in basket (classification).</td>
+		</tr>
+		<tr style='background-color:#ddd'>
+			<td style='font-weight:bold;font-family:serif;'>Reset basket</td>
+			<td>Reset groups of all entries in the basket.</td>
+		</tr>
+		<tr>
+			<td style='font-weight:bold;font-family:serif;'>Export to BibTeX</td>
+			<td>Export the selection to BibTeX.</td>
+		</tr>
+		<tr style='background-color:#ddd'>
+			<td style='font-weight:bold;font-family:serif;'>Export to HTML</td>
+			<td>Export the selection to HTML.</td>
+		</tr>
+	</tbody>
+</table>

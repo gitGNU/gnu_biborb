@@ -1,16 +1,35 @@
 <p>
-    This menu give access to management functions. If you logged in or use BiBORB wihtout authentication, you may add, edit or delete entries.
+    This menu give access to management functions. If you logged in or use <span class='biborb'>BibORB</span> wihtout authentication, you may add, edit or delete entries.
 <p>
 
+<p>
 Available actions are:
+</p>
 
-<ul>
-    <li><strong>Login</strong>, authenticate to get write access to the bibliography (if authentication activated)</li>
-    <li><strong>Logout</strong> (if authentication activated)</li>
-    <li><strong>Add an entry</strong></li>
-    <li><strong>Update from BibTeX</strong> updates the bibliography according to the BibTeX file in the bibs directory. Use it when editing your bibliography in an alternative editor.</li>
-    <li><strong>Import BibTeX</strong> allows to add to the database a given bibliography. The BibTeX entries may be added by copy/paste in a text field or by choosing a BibTeX source file.</li>
-</ul>
+<table style='margin:auto;width:450px'>
+       <tbody>
+		<tr style='background-color:#ddd'>
+			<td style='font-weight:bold;font-family:serif;width:120px;'>Login</td>
+			<td>Authenticate to get write access to the bibliography (if authentication activated)</td>
+		</tr>
+		<tr>
+			<td style='font-weight:bold;font-family:serif;'>Logout</td>
+			<td>If authentication activated</td>
+		</tr>
+		<tr style='background-color:#ddd'>
+			<td style='font-weight:bold;font-family:serif;'>Add an entry</td>
+			<td/>
+		</tr>
+		<tr>
+			<td style='font-weight:bold;font-family:serif;'>Update from BibTeX</td>
+			<td>Updates the bibliography according to the BibTeX file in the bibs directory. Use it when editing your bibliography in an alternative editor.</td>
+		</tr>
+		<tr style='background-color:#ddd'>
+			<td style='font-weight:bold;font-family:serif;'>Import BibTeX</td>
+			<td>Allows to add to the database a given bibliography. The BibTeX entries may be added by copy/paste in a text field or by choosing a BibTeX source file.</td>
+		</tr>
+	</tbody>
+</table>
 
 <span style="color:red"><strong>Warning!</strong></span>
 <ul>
