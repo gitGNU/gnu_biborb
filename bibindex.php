@@ -783,6 +783,7 @@ switch($mode) {
         if(isset($_GET['start'])){
             if($_GET['start'] == 0){
                 unset($_SESSION['ids']);
+                unset($_SESSION['browse_history']);
                 $_SESSION['browse_ids'] = $_SESSION['bibdb']->all_bibtex_ids();
                 // extract values from the database
                 // save them into session
