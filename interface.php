@@ -813,7 +813,7 @@ HTML_TEXT;
  */
 function bibindex_manager_help(){
     $html = bibheader();  
-    $html .= bibindex_menu($_SESSION['bibname']);
+    $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = "Manager menu";
     $content = load_file("./data/manager_help.txt");
     $html .= main($title,$content);
