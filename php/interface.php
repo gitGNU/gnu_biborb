@@ -1500,7 +1500,7 @@ function bibindex_display_xpath_search()
         $content .= $_GET['xpath_query'];
     }
     else{
-        $content .= "contains(bibtex:*/bibtex:author, 'someone') and bibtex:*/bibtex:year=2004";
+        $content .= "contains(*/bibtex:author, 'someone') and */bibtex:year=2004";
     }
     $content .= "</textarea><br/>";
     $content .= "<input type='hidden' name='mode' value='displayxpathsearch'/>";
