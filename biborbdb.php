@@ -60,6 +60,12 @@ class BibORB_DataBase {
 	function xml_file(){
 		return $this->biblio_dir.$this->biblio_name.".xml";
 	}
+    /**
+        Generate the path of the bib file.
+     */
+	function bibtex_file(){
+		return $this->biblio_dir.$this->biblio_name.".bib";
+	}
 	
     /**
         Return the name of the bibliography.

@@ -91,10 +91,8 @@ function write_xml_file($xmlfile,$bibfile,$append = false){
   }
   else{
     $inf = pathinfo($xmlfile);
-    $xml_content ="<?xml version='1.0' encoding='iso-8859-1'?>\n";
-    $xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' name='".$bibname."'>\n";    
-    $xml_content .= bibtex2xml($bibfile);
-    $xml_content .= "</bibtex:file>\n";    
+    $res = bibtex2xml(file($bibfile));
+    $xml_content = $res[2];
     $fp = fopen($xmlfile,"w");
     fwrite($fp,$xml_content);
     fclose($fp);
@@ -263,8 +261,8 @@ function bibtex2xml($bibtext,$group=NULL){
     if($first == 0){
         $xml_content .= end_bibentry($type);
     }
-	$xml_content .= "</bibtex:file>";
-	
+    $xml_content .= "</bibtex:file>";
+    
     return array($entries_count,$ids,$xml_content);
 }
 

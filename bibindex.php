@@ -398,13 +398,13 @@ switch($mode)
     
 	// Update the XML file according to values present in the BibTeX file.
     case 'update_xml_from_bibtex':
-        update_xml($_SESSION['bibname']);
+        update_xml($_SESSION['bibdb']->name());
         echo bibindex_welcome();
         break;
     
      // Update the BibTeX file according to valued present in the BibTeX file.
     case 'update_bibtex_from_xml':
-        xml2bibtex($_SESSION['bibname']);
+
         echo bibindex_welcome();
         break;
         
