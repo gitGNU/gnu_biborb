@@ -48,6 +48,8 @@
     <xsl:param name="basket"/>
     <xsl:param name="abstract"/>
     <xsl:param name="id"/>
+    <xsl:param name="display_images"/>
+    <xsl:param name="display_text"/>
 
     <xsl:template match="/bibtex:file">
         <!-- start the table -->
