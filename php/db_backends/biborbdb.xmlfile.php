@@ -292,7 +292,7 @@ class BibORB_DataBase {
             $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
             $bt = new BibTeX_Tools();
             $bibtex_val = extract_bibtex_data($dataArray);
-            $bibtex_val['type'] = $dataArray['type_ref'];
+            $bibtex_val['type'] = $dataArray['add_type'];
             $data = $bt->entries_array_to_xml(array($bibtex_val));
             $xml = $data[2];
             $xsl = load_file("./xsl/add_entries.xsl");
