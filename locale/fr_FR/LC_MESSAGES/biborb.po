@@ -600,9 +600,7 @@ msgid "BIBINDEX_IMPORT_TITLE"
 msgstr "Importer des références BibTeX"
 
 #: interface.php:1240
-msgid ""
-"Select a BibTeX file or edit entries in the text area. Entries will be added "
-"to the current bibliography."
+msgid "BIBINDEX_IMPORT_HELP"
 msgstr "Sélectionner un fichier BibTeX ou copier les références dans la zone de texte. "
 "Les références seront ajoutées à la bibliographie."
 

@@ -598,10 +598,9 @@ msgid "BIBINDEX_IMPORT_TITLE"
 msgstr "Import BibTeX References"
 
 #: php/interface.php:1363
-msgid ""
-"Select a BibTeX file or edit entries in the text area. Entries will be added "
+msgid "BIBINDEX_IMPORT_HELP"
+msgstr "Select a BibTeX file or edit entries in the text area. Entries will be added "
 "to the current bibliography."
-msgstr ""
 
 #: php/interface.php:1365 php/interface.php:1367
 msgid "File"

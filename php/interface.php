@@ -1360,7 +1360,7 @@ function bibindex_import(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = msg("BIBINDEX_IMPORT_TITLE");
-    $content = msg("Select a BibTeX file or edit entries in the text area. Entries will be added to the current bibliography.");
+    $content = msg("BIBINDEX_IMPORT_HELP");
     $content .= "<br/><br/>";
     $content .= "<h3 style='padding:0;margin:0'>".msg("File")."</h3>";
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data'>";
