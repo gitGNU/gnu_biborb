@@ -793,3 +793,12 @@ msgid "TOOL_GET_ARCHIVE_HELP"
 msgstr "Download a compressed archive (<code>tar.gz</code>) of the current "
 " bibliography. The archive will contains the BibTeX data as well as "
 " uploaded data."
+
+msgid "Simple Search"
+msgstr ""
+
+msgid "Advanced Search"
+msgstr ""
+
+msgid "XPath Search"
+msgstr ""

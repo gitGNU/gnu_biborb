@@ -792,3 +792,12 @@ msgstr "Télécharger la bibliographie"
 msgid "TOOL_GET_ARCHIVE_HELP"
 msgstr "Télécharger une archive (<code>tar.gz</code>) de la bibliographie courante "
 " L'archive contiendra les données BibTeX ainsi que les données uploadées. "
+
+msgid "Simple Search"
+msgstr "Recherche Simple"
+
+msgid "Advanced Search"
+msgstr "Recherche Avancée"
+
+msgid "XPath Search"
+msgstr "Recherche XPath"

@@ -827,7 +827,7 @@ function bibindex_display_search(){
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
     
-    $main_content .= "Go to <a href='bibindex.php?mode=displayadvancedsearch'>Advanced Search</a>, <a href='bibindex.php?mode=displayxpathsearch'>XPath Search</a>.<br/><br/>";
+    $main_content .= "<a href='bibindex.php?mode=displayadvancedsearch'>"._("Advanced Search")."</a>, <a href='bibindex.php?mode=displayxpathsearch'>"._("XPath Search")."</a>.<br/><br/>";
     
     if($searchvalue){
         $fields =array();
@@ -1016,7 +1016,7 @@ function bibindex_display_advanced_search(){
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "</div><br/>";
-    $content .= "Go to <a href='bibindex.php?mode=displaysearch'>Simple Search</a>, <a href='bibindex.php?mode=displayxpathsearch'>XPath Search</a>.<br/><br/>";
+    $content .= "<a href='bibindex.php?mode=displaysearch'>"._("Simple Search")."</a>, <a href='bibindex.php?mode=displayxpathsearch'>"._("XPath Search")."</a>.<br/><br/>";
     
     $searchArray = array();
     foreach($bibtex_fields as $val){
@@ -1494,7 +1494,7 @@ function bibindex_display_xpath_search()
     $content .= "<input type='submit' class='submit' value='"._("Search")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "Go to <a href='bibindex.php?mode=displaysearch'>Simple Search</a>, <a href='bibindex.php?mode=displayadvancedsearch'>Advanced Search</a>.<br/><br/>";
+    $content .= "<a href='bibindex.php?mode=displaysearch'>"._("Simple Search")."</a>, <a href='bibindex.php?mode=displayadvancedsearch'>"._("Advanced Search")."</a>.<br/><br/>";
     
     // execute an Xpath query
     if(array_key_exists("xpath_query",$_GET)){
