@@ -40,7 +40,7 @@
 /**
  * Default style for <body>
  */
-body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:black;}
+body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:black;font-size:small}
 
 /**
  * Style for the Menu 
@@ -105,7 +105,8 @@ html > body #menu {position:fixed;}
  * Style for login_form
  */
 #login_form {width:250px;margin:auto;}
-#login_form fieldset {border:none;text-align:center;margin:0;padding:0;}
+#login_form fieldset {border:solid 1px navy;text-align:center;margin:0;padding:0;}
+#login_form legend {font-weight:bold;color:navy}
 #login_form label {text-align:right;width:100px;float:left;padding-top:0.3em;margin:0;font-weight:bold;font-style:italic;}
 #login_form input {width:100px;margin:3px;padding:0;border:solid 1px black;}
 #login_form input.submit {margin:3px;padding:0;width:auto;}

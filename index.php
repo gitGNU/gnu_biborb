@@ -104,7 +104,7 @@ else{
 if(!DISABLE_AUTHENTICATION){
     // create a new Auth object if needed
     if(!array_key_exists('auth',$_SESSION)){
-        $_SESSION['auth'] = new Auth();
+        $_SESSION['auth'] = new Auth(AUTH_CRYPT);
     }
     
     if(!array_key_exists('user',$_SESSION)){
@@ -183,11 +183,12 @@ if(isset($_POST['action'])){
         case 'login':
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
+            // check missing values
             if($login=="" || $mdp==""){
                 $error_or_message['error'] = msg("LOGIN_MISSING_VALUES");
                 $mode = "login";
             }
-            else {
+            else{
                 // check the user name
                 $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
                 if($loggedin){

@@ -53,11 +53,12 @@
 
 /**
     Class Auth: a genreic class to check authorizations.
-*/
+ */
 class Auth
 {
     var $f_users;
     var $f_access;
+    
     /**
         Constructor
      */
@@ -77,7 +78,20 @@ class Auth
             if($line != '' && $line[0] != '#'){
                 if(preg_match("/(\S*)\s*:\s*(\S*),([01])$/",$line,$match)){
                     if($match[1] == $user){
-                        return (crypt($pass,$match[2]) == $match[2]);
+                        // select the good salt
+                        if(CRYPT_STD_DES){
+                            $salt = substr(0,2,$match[2]);
+                        }
+                        if(CRYPT_EXT_DES){
+                            $salt = substr(0,9,$match[2]);
+                        }
+                        if(CRYPT_MD5){
+                            $salt = substr(0,12,$match[2]);
+                        }
+                        if(CRYPT_BLOWFISH){
+                            $salt = substr(0,16,$match[2]);
+                        }
+                        return crypt($pass,$match[2]) == $match[2];
                     }
                 }
             }

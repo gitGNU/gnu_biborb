@@ -34,7 +34,7 @@ define("ERROR", E_USER_WARNING);
 define("WARNING", E_USER_NOTICE);
 
 // add E_ALL for debugging
-error_reporting(FATAL | ERROR | WARNING);
+error_reporting(FATAL | ERROR | WARNING | E_ALL);
 
 /**
     Handler for biborb errors.

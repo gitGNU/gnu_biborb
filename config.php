@@ -43,10 +43,9 @@ define("BIBORB_RELEASE_DATE","5 February 2005");
 
 /**
  * Path where is install biborb
- * The end '/' is mandatory if you provide it
- *  "/path/to/biborb/"
+ * You shouldn't modify it
  */
-define("BIBORB_PATH","/Users/ggardey/Sites/biborbdev/biborb/");
+define("BIBORB_PATH",realpath("./index.php"));
 
 /**
  * Localization

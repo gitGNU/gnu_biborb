@@ -34,17 +34,17 @@
 
 /********************************** Interface for the index.php */
 
-/**
- * index_login()
- * Create the page to display for authentication
+/*
+    index_login()
+    Create the page to display for authentication
  */
 function index_login(){
     $html = html_header("Biborb",CSS_FILE);
     $html .= index_menu();
     $title = msg("INDEX_MENU_LOGIN_TITLE");
-
     $content = "<form id='login_form' action='index.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")'>";
     $content .= "<fieldset>";
+     $content .= "<legend>Login</legend>";
     $content .= "<label for='login'>".msg("LOGIN_USERNAME").":</label>";
     $content .= "<input type='text' name='login' id='login' /><br/>";
     $content .= "<label for='password'>".msg("LOGIN_PASSWORD").":</label>";
@@ -362,6 +362,7 @@ function bibindex_login(){
     $title = msg("INDEX_LOGIN_TITLE");
     $content = "<form id='login_form' action='bibindex.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")' >";
     $content .= "<fieldset>";
+    $content .= "<legend>Login</legend>";
     $content .= "<label for='login'>".msg("LOGIN_USERNAME").":</label>";
     $content .= "<input type='text' name='login' id='login' /><br/>";
     $content .= "<label for='password'>".msg("LOGIN_PASSWORD").":</label>";
@@ -370,7 +371,6 @@ function bibindex_login(){
     $content .= "<input type='submit' value=\"".msg("Login")."\" class='submit'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    
     $html .= main($title,$content,$GLOBALS['error']);
     $html .= html_close();
     return $html;
