@@ -1002,11 +1002,17 @@ function create_database($name,$description){
     Delete a bibliography
  */
 function delete_database($name){
+    //check if $name is a valid bibliography name
+    if(!in_array($name,get_databases_names())){
+        trigger_error("Wrong database name: $name");
+    }
     // create .trash folder if it does not exit
-    if(!file_exists("./bibs/.trash")){mkdir("./bibs/.trash",0775);}
+    if(!file_exists("./bibs/.trash")){
+        mkdir("./bibs/.trash",0775);
+    }
     // save the bibto .trash folder
-    rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or die("BibORB Error: Error while moving $name to .trash folder");
-    $res = sprintf(msg("Database %s moved to trash."),$name)."<br/>";
+    rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or trigger_error("Error while moving $name to .trash folder");
+    $res = sprintfs(msg("Database %s moved to trash."),$name)."<br/>";
     $res .= sprintf(msg("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>");
     return $res;
 }
