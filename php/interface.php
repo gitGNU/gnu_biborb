@@ -631,7 +631,7 @@ function bibindex_display_all(){
  */
 function bibindex_display_by_group(){
     
-	$group = get_value('group',$_GET);
+	$group = array_key_exists('group',$_GET) ? $_GET['group'] : null;
     if(isset($_GET['orphan'])){$group=null;}
     
     $title = msg("BIBINDEX_DISPLAY_BY_GROUPS_TITLE");

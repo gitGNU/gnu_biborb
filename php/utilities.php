@@ -33,20 +33,10 @@
  * 
  */
  
-/**
- * get values in an array, null if key does not exists
- */
-function get_value($key,$tab) {
-    $val = null;
-    if(array_key_exists($key,$tab)){
-        $val = $tab[$key];
-    }
-    return $val;
-}
 
 /**
- * Use to change the base name of a file, keeping its extension
- * returns the new file name
+    Use to change the base name of a file, keeping its extension
+    returns the new file name
  */
 function get_new_name($filename,$newbasename) {
     $elem = explode('.',$filename);
@@ -60,14 +50,14 @@ function get_new_name($filename,$newbasename) {
 }
 
 /**
- * Close an HTML page.
+    Close an HTML page.
  */
 function html_close() {
     return "</body></html>";  
 }
 
 /**
- * Create an HTML header
+    Create an HTML header
  */
 function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL) {
     $html  = '<?xml version="1.0" encoding="ISO-8859-1"?>';
@@ -102,12 +92,15 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL
 }
 
 /**
- * Load a text file
+    Load a text file
  */
 function load_file($filename) {
   return implode('',file($filename));  
 }
 
+/**
+    Replace special chars into their HTML representation.
+ */
 function myhtmlentities($str){
     $patterns = array('&','<','>');
     $replace = array('&amp;','&lt;','&gt;');    
@@ -226,7 +219,10 @@ function replace_localized_strings($string)
     return $string;
 }
 
-// return the locales supported by biborb
+/**
+    Parse the locale directory and return an array containing locales supported
+ by BibORB.
+ */
 function get_locales(){
     $locales = array();
     $path = './locale/';
@@ -241,17 +237,22 @@ function get_locales(){
     return $locales;
 }
 
+/**
+    Apply stripslashes to a variable or an array and returns the result.
+    If $value is an array, stripslashes is recursively called for each element
+ of the array.
+ */
 function stripslashes_deep($value){
     $value = is_array($value) ? array_map('stripslashes_deep', $value) : stripslashes($value);
     return $value;
 }
 
-function addslashes_deep($value){
-    $value = is_array($value) ? array_map('addslashes_deep', $value) : addslashes($value);
-    return $value;
-}
-
-
+/**
+    Flatten an array.
+    If $array = ( [key1] => array('el1','el2','el3'),
+                  [key2] => array('a1','a2,'a3'))
+    the function will return: array('el1','el2','el3','a1','a2','a3')
+ */
 function flatten_array($array){
     $flat = array();
     for($i=0;$i<count($array);$i++){
@@ -260,6 +261,9 @@ function flatten_array($array){
     return $flat;
 }
 
+/**
+    Defines the array_chunk function if not defined (PHP < 4.2)
+*/
 if (!function_exists('array_chunk')) {
     function array_chunk( $input, $size, $preserve_keys = false) {
         @reset( $input );
