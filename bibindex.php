@@ -385,11 +385,12 @@ if(isset($_POST['action'])){
 	    $param['mode'] = 'user';
 	    // create a parameter containing fields to export
 	    $toexport = ".";
-	    foreach($GLOBALS['fields_to_export'] as $field){
-		if(array_key_exists($field,$_POST)){
-		    $toexport .= $field.".";
+	    foreach($GLOBALS['bibtex_entries'] as $field){
+		if(array_key_exists(substr($field,1),$_POST)){
+		    $toexport .= substr($field,1).".";
 		}
 	    }
+	    
 	    $param['fields_to_export'] = $toexport;
 	    //process
 	    $content = $xsltp->transform($entries,load_file("./xsl/xml2bibtex_advanced.xsl"),$param);
