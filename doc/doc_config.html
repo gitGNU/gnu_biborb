@@ -28,13 +28,14 @@
         <li><a href="#help_nb_display">Select the number of references to display in a page</a></li>
         <li><a href="#help_gen_bibtex">Keep an up-to-date BibTeX copy of the database</a></li>
         <li><a href="#shelf_mode">Shelf mode</a></li>
+        <li><a href="#help_permissions">Permissions</a></li>
     </ul>
 </div>
 
 <div id="content">
 
 <div class="topic" id="help_localization">
-    <h3>Localization</h3>
+    <h3>BibORB Installation Path</h3>
     <div class="topic_content">
     <pre>
 /**
@@ -225,6 +226,32 @@ define("GEN_BIBTEX",TRUE);</pre>
 define("SHELF_MODE",TRUE);</pre>
     </div>
 </div>
+
+<div class="topic" id="help_permissions">
+    <h3>Tune BibORB files permissions</h3>
+    <div class="topic_content">
+    <pre>
+/**
+ * umask - Set the mask to use when creating files.
+ *
+ */
+define("UMASK",0111);
+
+/**
+ * dmask - Set the mask to use when creating directories.
+ */
+define("DMASK",0000);
+
+/**
+ *  List of file types that can be uploaded
+ */
+$valid_upload_extensions = array('ps','pdf','gz','bz2','zip');
+</pre>
+<p>See <code>umask</code> help.</p>
+<p>Add extension to <code class='variable'>$valid_upload_extensions</code> to allow new type of files to be uploaded.</p>
+    </div>
+</div>
+
 
 </div>
 </div>
