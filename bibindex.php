@@ -509,8 +509,8 @@ if(isset($_POST['action'])){
                 // create a parameter containing fields to export
                 $toexport = ".";
                 foreach($GLOBALS['bibtex_entries'] as $field){
-                    if(array_key_exists(substr($field,1),$_POST)){
-                        $toexport .= substr($field,1).".";
+                    if(array_key_exists($field,$_POST)){
+                        $toexport .= $field.".";
                     }
                 }
 	    
