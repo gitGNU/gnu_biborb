@@ -38,7 +38,7 @@
  */
 require_once("config.php");
 require_once("utilities.php");
-require_once("PARSEENTRIES.php");
+require_once("bibtex.php");
 
 /**
  * format bibtex data to xml
