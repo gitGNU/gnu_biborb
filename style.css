@@ -241,10 +241,41 @@ a.bibname, a:visited.bibname {
 }
 
 
+// style for the bibtex new/update form
+
+.form_menu {
+    background-color:white;
+    padding:1em;
+}
+
+
+div.form_item {
+    display:none;
+    margin-top:1.5em;
+}
+
+div.form_item:target {
+    display:block;
+}
 
 /**
  * Style for edition
  */
+
+a.required_item , a.required_item:visited{
+    text-decoration:none;
+    font-weight:bold;
+    color:red;
+    padding:0.5em;
+    margin:0.5em;
+    border-left:solid 5px transparent;
+    border-bottom:solid 2px transparent;
+}
+
+a.required_item:hover {
+    border-left:solid 5px red;
+    border-bottom:solid 2px red;
+}
 
 .required {
     padding:0;
@@ -257,6 +288,21 @@ a.bibname, a:visited.bibname {
     width:100%
 }
 
+a.optional_item , a.optional_item:visited{
+    text-decoration:none;
+    font-weight:bold;
+    color:navy;
+    padding:0.5em;
+    margin:0.5em;
+    border-left:solid 5px transparent;
+    border-bottom:solid 2px transparent;
+}
+
+a.optional_item:hover {
+    border-left:solid 5px navy;
+    border-bottom:solid 2px navy;
+}
+
 .optional {
     border-top:solid 2px navy;	
     color:navy;
@@ -265,6 +311,22 @@ a.bibname, a:visited.bibname {
     border-collapse:collapse;
     border-spacing:0;
     width:100%
+}
+
+
+a.additional_item , a.additional_item:visited{
+    text-decoration:none;
+    font-weight:bold;
+    color:green;
+    padding:0.5em;
+    margin:0.5em;
+    border-left:solid 5px transparent;
+    border-bottom:solid 2px transparent;
+}
+
+a.additional_item:hover {
+    border-left:solid 5px green;
+    border-bottom:solid 2px green;
 }
 
 .additional {
@@ -317,3 +379,6 @@ a.cleanref, a:hover.cleanref, a:visited.cleanref {
     color:navy;
     text-decoration:none;
 }
+
+
+

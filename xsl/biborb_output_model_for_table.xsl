@@ -98,13 +98,13 @@
 						<!-- Edit action -->
 						<!-- display images if necessary: $display_images!=null -->
 						<xsl:if test="$display_images">
-							<a href="./bibindex.php?mode=update&amp;id={@id}">
+							<a href="./bibindex.php?mode=update&amp;id={@id}#required_ref">
 								<img src="./data/images/{$edit-image}" alt="edit" title="Edit"  />
 							</a>
 						</xsl:if>
 						<!-- display text if necessary: $display_text != null -->
 						<xsl:if test="$display_text">
-							<a class="bibtex_action" href="./bibindex.php?mode=update&amp;id={@id}">
+							<a class="bibtex_action" href="./bibindex.php?mode=update&amp;id={@id}#required_ref">
 								edit
 							</a>
 						</xsl:if>

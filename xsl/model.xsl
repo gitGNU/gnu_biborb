@@ -39,7 +39,13 @@
     <xsl:template match="/entrylist">
         <input name="add_type" type="hidden" value="{$typeentry}"/>
         <!-- Required BibTeX fields -->
-        <b>Required Fields</b>
+        <div class="form_menu">
+            <a href="#required_ref" class="required_item">Required Fields</a>
+            <a href="#optional_ref" class="optional_item">Optional Fields</a>
+            <a href="#additional_ref" class="additional_item">Additional Fields</a>
+        </div>
+        
+        <div class="form_item" id="required_ref">
         <table class="required">
             <tbody>
                 <xsl:for-each select="entry[@type=$typeentry]/required/*">
@@ -81,10 +87,9 @@
                 </xsl:for-each>
             </tbody>
         </table>
+        </div>
         
-        <br/>
-        <!-- Optional fields -->
-        <b>Optional Fields</b>
+        <div class="form_item" id="optional_ref">
         <table class="optional">
             <tbody>
                 <xsl:for-each select="entry[@type=$typeentry]/optional/*">
@@ -126,19 +131,16 @@
                 </xsl:for-each>
             </tbody>
         </table>
-        
-        <br/>
+        </div>
         
         <!-- additional fields -->
-        <b>BibORB Additional Fields</b>
-        
-        <script type="text/javascript">
+        <div class="form_item" id="additional_ref">        
+        <!--<script type="text/javascript">
             <xsl:comment><![CDATA[
                 document.write("<a style=\'text-decoration:none;color:navy;\' href=\"javascript:toggle_element(\'additional\')\"> display/hide </a>");]]>
             </xsl:comment>
-        </script>
+        </script>-->
 
-        <div id="additional">
         <table class="additional">
             <tbody>
                 <xsl:for-each select="entry[@type=$typeentry]/additional/*">
@@ -167,7 +169,6 @@
             </tbody>
         </table>
         </div>
-        <br/>
         <br/>
   </xsl:template>
   

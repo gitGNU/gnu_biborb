@@ -1098,7 +1098,7 @@ function bibindex_entry_to_add(){
     $title = "New entry";
     $content =<<<HTML
 <div style='text-align:center'>
-	<form method='get' action='bibindex.php'>
+	<form method='get' action='bibindex.php#required_ref'>
 		<fieldset style='border:none'>
 			Select an entry type:
 			<select name='type' size='1'>
@@ -1147,7 +1147,7 @@ function bibindex_add_entry($type){
 	$fields = $xsltp->transform($xml_content,$xsl_content,$param);
 	$xsltp->free();
 	
-    $html = bibheader("onload='javascript:toggle_element(\"additional\")'");
+    $html = bibheader("");
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = "New entry";
     $content = <<<HTML
