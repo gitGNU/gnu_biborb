@@ -423,11 +423,13 @@ function bibindex_menu($bibname)
     // -> Display
     //      | -> All
     //      | -> by group
+    //      | -> browse
     //      | -> search
     $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_HELP")."' href='bibindex.php?mode=display'>".msg("BIBINDEX_MENU_DISPLAY")."</a>";
     $html .= "<ul>";
     $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_ALL_HELP")."' href='bibindex.php?mode=displayall'>".msg("BIBINDEX_MENU_DISPLAY_ALL")."</a></li>";
     $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_BY_GROUP_HELP")."'href='bibindex.php?mode=displaybygroup'>".msg("BIBINDEX_MENU_DISPLAY_BY_GROUP")."</a></li>";
+    $html .= "<li><a title='".msg("BIBINDEX_MENU_BROWSE_HELP")."'href='bibindex.php?mode=browse&amp;start=0'>".msg("BIBINDEX_MENU_BROWSE")."</a></li>";
     $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_SEARCH_HELP")."' href='bibindex.php?mode=displaysearch'>".msg("BIBINDEX_MENU_DISPLAY_SEARCH")."</a></li>";
 //    $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH_HELP")."' href='bibindex.php?mode=displayadvancedsearch'>".msg("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH")."</a></li>";
     $html .= "</ul>";
@@ -1372,7 +1374,7 @@ function bibindex_add_entry($type){
     $title = msg("BIBINDEX_ADD_ENTRY_TITLE");
     $content = "<form method='post' action='bibindex.php' enctype='multipart/form-data' onsubmit='return validate_new_entry_form(\"".$_SESSION['language']."\")' id='f_bibtex_entry'>";
 	$content .= "<fieldset class='clean'>";
-	$content .= "<input name='type' value='$type' type='hidden'/>";
+	$content .= "<input name='___type' value='$type' type='hidden'/>";
     $content .= "</fieldset>";
 	$content .= eval_php($fields);
 	$content .= "<fieldset class='clean'>";
@@ -1867,5 +1869,119 @@ function pref_content(){
     $content .= "</form>";
     
     return $content;
+}
+
+/*
+ */
+function bibindex_browse(){
+    $html = bibheader();
+    $html .= bibindex_menu($_SESSION['bibdb']->name());
+    $title = msg("BIBINDEX_BROWSE_TITLE");
+        
+    // extract values from the database
+    $years = $_SESSION['bibdb']->get_values_for('year');
+    $groups = $_SESSION['bibdb']->get_values_for('group');
+    $series = $_SESSION['bibdb']->get_values_for('series');
+    $journals = $_SESSION['bibdb']->get_values_for('journal');
+    
+    $content = "<div class='browse_history'>";
+    $content .= "&gt;&gt;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=0'>Start</a>";
+    if(array_key_exists('browse_history',$_SESSION)){
+        $cpt = 1;
+        foreach($_SESSION['browse_history'] as $hist){
+            $content .= "&nbsp;&gt;&gt;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=$cpt'>".$hist['value']."</a>";
+        }
+    }
+    $content .= "</div>";
+    $content .= "<div class='browse'>";
+    $content .= "<ul>";
+    $content .= "<li><a href='#years'>".msg("Year")."</a></li>";
+    $content .= "<li><a href='#series'>".msg("Series")."</a></li>";
+    $content .= "<li><a href='#journals'>".msg("Journal")."</a></li>";
+    $content .= "<li><a href='#groups'>".msg("Groups")."</a></li>";
+    $content .= "</ul>";
+    $content .= "</div>";
+    
+    $content .= "<div class='browse_items'>";
+    
+    // years
+    $content .= "<ul id='years'>".msg("Existing years:");
+    foreach($years as $year){
+        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=year&value=$year'>$year</a></li>";
+    }
+    $content .= "</ul>";
+    
+    // series
+    $content .= "<ul id='series'>".msg("Existing series:");
+    foreach($series as $serie){
+        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=series&value=$serie'>$serie</a></li>";
+    }
+    $content .= "</ul>";
+    
+    // journal
+    $content .= "<ul id='journals'>".msg("Existing journals:");
+    foreach($journals as $journal){
+        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=journal&value=$journal'>$journal</a></li>";
+    }
+    $content .= "</ul>";
+    
+    // groups
+    $content .= "<ul id='groups'>".msg("Existing groups:");
+    foreach($groups as $group){
+        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=group&value=$group'>$group</a></li>";
+    }
+    $content .= "</ul>";
+    $content .= "</div>";
+
+    // store the ids in session if we come from an other page.
+    // the bibtex keys are retreived from the database the first time that display_all is called
+    if(!isset($_GET['page'])){
+    	// split the array so that we display only $GLOBALS['max_ref']
+        $_SESSION['ids'] = array_chunk($_SESSION['browse_ids'],$GLOBALS['max_ref']);
+        // go to the first page
+        $_GET['page'] = 0;
+    }
+    
+    $flatids = flatten_array($_SESSION['ids']);
+
+    if(isset($_GET['page']) || $_GET['start']>0){
+        if(count($flatids)>0){
+            // get the data of the references to display
+            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+            // init an XSLT processor
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+                                              // set up XSLT parameters
+            $param = $GLOBALS['xslparam'];
+            $param['bibindex_mode'] = $_GET['mode'];
+            $param['basketids'] = $_SESSION['basket']->items_to_string();
+            $param['extra_get_param'] = "page=".$_GET['page'];
+            // do the transformation
+            $html_content = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+            // localize string
+            $html_content = replace_localized_strings($html_content);
+            $xsltp->free();
+            
+            // create the header: sort function + add all to basket
+            $start = "<div class='result_header'>";
+            /*if(DISPLAY_SORT){
+                $start = sort_div($GLOBALS['sort'],$GLOBALS['sort_order'],$_GET['mode'],null).$start;
+            }*/
+            $start .= add_all_to_basket_div($flatids,$_GET['mode'],"sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."&amp;page=".$_GET['page']);
+            $start .= "</div>";
+            
+            // create a nav bar to display entries
+            $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),"browse","sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."page=".$_GET['page']);
+            $content .= $start.$html_content;
+        }
+        else{
+            $content .= msg("No entries.");
+        }
+    }
+    
+    
+    
+    $html .= main($title,$content);
+    $html .= html_close();
+    echo $html;
 }
 ?>

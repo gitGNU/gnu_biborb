@@ -33,7 +33,7 @@ define("FATAL", E_USER_ERROR);
 define("ERROR", E_USER_WARNING);
 define("WARNING", E_USER_NOTICE);
 
-error_reporting(FATAL | ERROR | WARNING);
+error_reporting(FATAL | ERROR | WARNING | E_ALL);
 
 /**
     Handler for biborb errors.
@@ -43,6 +43,7 @@ function biborb_error_handler($errno, $errstr, $errfile, $errline){
     switch ($errno) {
         case FATAL:
         case ERROR:
+        default:
             $html = html_header("BibORB - Error",CSS_FILE,null,null);
             $html .= "<div class='error_report'>";
             $html .= "<b>An error occurred</b><br />";
@@ -50,9 +51,9 @@ function biborb_error_handler($errno, $errstr, $errfile, $errline){
             $html .= "<div class='error_content'>";
             $html .= "<b>Error: </b>";
             $html .= "$errstr<br /><br />";
+            $html .= "Error at line $errline of file ".basename($errfile)."<br/><br/>";
             $html .= "PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />";
             $html .= "BibORB ".BIBORB_VERSION." (".BIBORB_RELEASE_DATE.")<br/>";
-            $html .= "Error at line $errline of file ".basename($errfile)."<br/>";
             $html .= "</div>";
             $html .= "Consider reporting this error at <a href='http://savannah.nongnu.org/projects/biborb'>http://savannah.nongnu.org/projects/biborb</a> if it is reproductible.<br/><br/>";
             $html .= "Go Back to <a href='index.php'>BibORB</a>";
@@ -61,12 +62,12 @@ function biborb_error_handler($errno, $errstr, $errfile, $errline){
             echo $html;
             exit(1);
             break;
-        case WARNING:
+     /*   case WARNING:
             echo "<b>WARNING</b> [$errno] $errstr<br />\n";
             break;
         default:
             echo "Unkown error type: [$errno] $errstr<br />\n";
-            break;
+            break;*/
     }
 }
 ?>

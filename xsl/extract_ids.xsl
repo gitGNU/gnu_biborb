@@ -43,6 +43,13 @@
 
 	<xsl:template match="/">
         <xsl:choose>
+            <!-- Sort by Author -->
+            <xsl:when test="$sort = 'author'">
+                <xsl:for-each select="XPATH_QUERY">
+                    <xsl:sort select=".//bibtex:lastName" order="{$sort_order}" data-type="text"/>
+                    <xsl:value-of select='@id'/><xsl:if test='position()!=last()'>|</xsl:if>
+                </xsl:for-each>
+            </xsl:when>
             <!-- Sort by year -->
             <xsl:when test="$sort = 'year'">
                 <xsl:for-each select="XPATH_QUERY">

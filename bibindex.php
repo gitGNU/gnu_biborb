@@ -433,6 +433,39 @@ if(isset($_GET['action'])){
             $_SESSION['bibdb']->change_readstatus($_GET['id'], $_GET['readstatus']);
             break;
             
+        /*
+            Add a browse item.
+         */
+        case 'add_browse_item':
+            if(array_key_exists('type',$_GET) && array_key_exists('value',$_GET)){
+                $found = false;
+                $cpt = 0;
+                if(array_key_exists('browse_history',$_SESSION)){
+                    for($cpt=0;$cpt<count($_SESSION['browse_history']) && !$found; $cpt++){
+                        $found = $_SESSION['browse_history'][$cpt]['type'] == $_GET['type'];
+                    }
+                }
+                
+                if($found){
+                    $_SESSION['browse_history'][$cpt-1]['value'] = $_GET['value'];
+                    $_GET['start'] = $cpt;
+                    array_splice($_SESSION['browse_history'],$cpt);
+                    /*for($i=$cpt;$i<count($_SESSION['browse_history']);$i++){
+                        unset($_SESSION['browse_history'][$i]);
+                    }*/
+                    $_SESSION['browse_ids'] = $_SESSION['bibdb']->all_bibtex_ids();
+                    for($i=0;$i<count($_SESSION['browse_history']);$i++){
+                        $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$_GET['type'],$_GET['value']);
+                    }
+                }
+                else{
+                    $_SESSION['browse_history'][] = array('type'=>$_GET['type'],'value'=>$_GET['value']);
+                    $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$_GET['type'],$_GET['value']);
+                }
+                $_GET['start'] = count($_SESSION['browse_history']);
+            }
+            break;
+            
         default:
             break;
     }
@@ -745,6 +778,22 @@ switch($mode) {
     // Display Tools
     case 'displaytools': echo bibindex_display_tools();break;
     
+    // Browse mode
+    case 'browse': 
+        if(isset($_GET['start'])){
+            unset($_SESSION['ids']);
+            $_SESSION['browse_ids'] = $_SESSION['bibdb']->all_bibtex_ids();
+            if(isset($_SESSION['browse_history'])){
+                for($i=0;$i<$_GET['start'];$i++){
+                    $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$_SESSION['browse_history'][$i]['type'],$_SESSION['browse_history'][$i]['value']);
+                }
+                for($i=$_GET['start'];$i<count($_SESSION['browse_history']);$i++){
+                    unset($_SESSION['browse_history'][$i]);
+                }
+            }
+        }
+        echo bibindex_browse();break;
+        
     // By default
     default: echo bibindex_welcome(); break;
 }

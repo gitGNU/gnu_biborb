@@ -38,7 +38,7 @@
  */
 
 require_once("php/xslt_processor.php"); //xslt processor
-
+require_once("php/third_party/PARSECREATORS.php"); // split Bibtex names
 // Bibtex Database manager
 class BibORB_DataBase {
 	
@@ -53,7 +53,7 @@ class BibORB_DataBase {
     
     // Sort method used to sort entries
     var $sort;
-    var $sort_values = array('title','ID','year','dateAdded','lastDateModified');
+    var $sort_values = array('author','title','ID','year','dateAdded','lastDateModified');
     
     // Sort order method (ascending/descending)
     var $sort_order;
@@ -79,6 +79,30 @@ class BibORB_DataBase {
         $this->generate_bibtex = $genBibtex;
         $this->read_status = 'any';
         $this->ownership = 'any';
+        
+        // Version 1.3.3, add the first author lastname in a separate field
+        // to sort by author
+        $xml = $this->all_entries();
+        // add the lastName if not present (earlier version of biborb)
+        if(!(strpos($xml,'bibtex:author') === FALSE) && strpos($xml,'bibtex:lastName') === FALSE){
+            // load all data in an array form
+            $bt = new BibTeX_Tools();
+            $pc = new PARSECREATORS();
+            $entries = $bt->xml_to_bibtex_array($xml);
+            // get the name of the first author
+            for($i=0;$i<count($entries);$i++){
+                if(array_key_exists('author',$entries[$i])){
+                    list($creatorArray, $etAl) = $pc->parse($entries[$i]['author']);
+                    $entries[$i]['lastName'] = $creatorArray[0][2];
+                }
+            }
+            $data = $bt->entries_array_to_xml($entries);
+            // save the new xml file
+            rename($this->xml_file(),$this->xml_file().".save");
+            $fp = fopen($this->xml_file(),"w");
+            fwrite($fp,$data[2]);
+            fclose($fp);
+        }
     }
     
     /**
@@ -326,7 +350,13 @@ class BibORB_DataBase {
             $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $bt = new BibTeX_Tools();
             $bibtex_val = extract_bibtex_data($dataArray);
-            $bibtex_val['type'] = $dataArray['add_type'];
+            if(array_key_exists('author',$bibtex_val)){
+                $pc = new PARSECREATORS();
+                $authors = $pc->creators($bibtex_val['author']);
+                $bibtex_val['lastName'] = $authors[0][2];
+            }
+            $bibtex_val['lastName'] = $authors;
+            $bibtex_val['___type'] = $dataArray['add_type'];
             $bibtex_val['dateAdded'] = date("Y-m-d");
             $bibtex_val['dateModified'] = date("Y-m-d");
             $data = $bt->entries_array_to_xml(array($bibtex_val));
@@ -375,6 +405,11 @@ class BibORB_DataBase {
         // iterate and add ref which id is not present in the database
         foreach($entries_to_add as $entry){
             if(array_search($entry['id'],$dbids) === FALSE){
+                if(array_key_exists('author',$entry)){
+                    $pc = new PARSECREATORS();
+                    $authors = $pc->creators($entry);
+                    $entry['lastName'] = $authors[0][2];
+                }
                 $entry['dateAdded'] = date("Y-m-d");
                 $entryl['dateModified'] = date("Y-m-d");
                 $data = $bt->entries_array_to_xml(array($entry));
@@ -479,7 +514,12 @@ class BibORB_DataBase {
             $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $bt = new BibTeX_Tools();
             $bibtex_val = extract_bibtex_data($dataArray);
-            $bibtex_val['type'] = $dataArray['type_ref'];
+            if(array_key_exists('author',$bibtex_val)){
+                $pc = new PARSECREATORS();
+                $authors = $pc->creators($bibtex_val);
+                $bibtex_val['lastName'] = $authors[0][2];
+            }
+            $bibtex_val['___type'] = $dataArray['type_ref'];
             $bibtex_val['dateModified'] = date("Y-m-d");
             $data = $bt->entries_array_to_xml(array($bibtex_val));
             $xml = $data[2];
@@ -846,6 +886,38 @@ class BibORB_DataBase {
         if($this->generate_bibtex){$this->update_bibtex_file();}
     }
     
+    /**
+        Get all different values for a specific field in the database
+    */
+    function get_values_for($field){
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+        $xml_content = $this->all_entries();
+        $xsl_content = load_file("./xsl/extract_field_values.xsl");
+        $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry",$xsl_content);
+        $param = array('sort' => $this->sort,
+                       'sort_order' => $this->sort_order,
+                       'field' => $field);
+        $res = $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+        return remove_null_values(explode('|',$res));
+    }
+    
+    /**
+        Select among ids, entries that match $fied=$value
+     */
+    function filter($ids, $field, $value){
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+        $xml_content = $this->entries_with_ids($ids);
+        $xpath_query = ".//bibtex:$field='$value'";
+        $xsl_content = load_file("./xsl/extract_ids.xsl");
+        $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry[$xpath_query]",$xsl_content);
+        $param = array('sort' => $this->sort,
+                       'sort_order' => $this->sort_order);
+        $res = $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+        return remove_null_values(explode('|',$res));
+    }
+
 }
 
 

@@ -81,9 +81,9 @@ class BibTeX_Tools
      */
     function entry_array_to_xml($tab){
         $xml = "<bibtex:entry id='".$tab['id']."'>";
-        $xml .= "<bibtex:".$tab['type'].">";
+        $xml .= "<bibtex:".$tab['___type'].">";
         foreach($tab as $key => $value){
-            if($key != 'groups' && $key!= 'type' && $key != 'id'){
+            if($key != 'groups' && $key!= '___type' && $key != 'id'){
                 $xml .= "<bibtex:".$key.">";
                 $xml .= trim(myhtmlentities($value));
                 $xml .= "</bibtex:".$key.">";
@@ -99,7 +99,7 @@ class BibTeX_Tools
                 $xml .= "</bibtex:groups>";
             }
         }
-        $xml .= "</bibtex:".$tab['type'].">";
+        $xml .= "</bibtex:".$tab['___type'].">";
         $xml .= "</bibtex:entry>";
         return $xml;
     }
@@ -153,7 +153,7 @@ class BibTeX_Tools
             $ref_tab = array('id'=> $entries[1][$i]);
             // get the bibtex type
             preg_match("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/",$entry,$matches);
-            $ref_tab['type'] = $matches[1];
+            $ref_tab['___type'] = $matches[1];
 
             // get groups value
             $bibtex_fields = $matches[2];
@@ -179,7 +179,7 @@ class BibTeX_Tools
         $export = "";
         foreach($tab as $entry){
             $entry_exported = "";
-            $export .= "@".$entry['type']."{".$entry['id'].",\n";
+            $export .= "@".$entry['___type']."{".$entry['id'].",\n";
             foreach($fields_to_export as $field){
 
                 if(array_key_exists($field,$tab)){
