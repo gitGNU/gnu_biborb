@@ -62,7 +62,7 @@ $display_language_selection = TRUE;
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = FALSE;
+$disable_authentication = TRUE;
 
 /**
  *  Should a confirmation may be displayed when deleting entries
