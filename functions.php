@@ -200,7 +200,7 @@ function bibtex2xml($bibfile,$group=NULL){
             }
             // bibfield in several lines (data)
             else if(preg_match("/\s*{\s*(.*)/",$data,$matches) || preg_match("/\s*\"\s*(.*)/",$data,$matches)){	
-	           $data_content = $matches[1];	
+	           $data_content = $matches[1]."\n";	
 	           $openfield=true;
             }
         }

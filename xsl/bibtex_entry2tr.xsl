@@ -270,42 +270,44 @@
         <xsl:choose>
             <xsl:when test="$abstract != ''">
                 <span id="{$id}">
-                    <xsl:call-template name="substitute">
-                        <xsl:with-param name="string" select=".//bibtex:abstract"/>
+                    <xsl:call-template name="string-replace">
+                        <xsl:with-param name="string" select="translate(string(.//bibtex:abstract),'&#xD;','@#xA;')"/>
+                        <xsl:with-param name="from" select="'&#xA;'" />
+                        <xsl:with-param name="to" select="'&lt;BR/>'" />
                     </xsl:call-template>
                 </span>
             </xsl:when>
             <xsl:otherwise>
                 <span id="{$id}" style="display:none;">
-                    <xsl:call-template name="substitute">
-                        <xsl:with-param name="string" select=".//bibtex:abstract"/>
+                    <xsl:call-template name="string-replace">
+                        <xsl:with-param name="string" select="translate(string(.//bibtex:abstract),'&#xD;','@#xA;')"/>
+                        <xsl:with-param name="from" select="'&#xA;'" />
+                        <xsl:with-param name="to" select="'&lt;BR/>'" />
                     </xsl:call-template>
                 </span>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
-    <xsl:template name="substitute">
-        <xsl:param name="string" />
-<!--        <xsl:param name="from" select="'&#xA;'" />-->
-        <xsl:param name="from" select="'&#xA;&#xA;'"/>
-        <xsl:param name="to">
-            <br /><br />
-        </xsl:param>
+
+    <xsl:template name="string-replace">
+        <xsl:param name="string"/>
+        <xsl:param name="from"/>
+        <xsl:param name="to"/>
         <xsl:choose>
-            <xsl:when test="contains($string, $from)">
-                <xsl:value-of select="substring-before($string, $from)" />
-                <xsl:copy-of select="$to" />
-                <xsl:call-template name="substitute">
-                    <xsl:with-param name="string" select="substring-after($string, $from)" />
-                    <xsl:with-param name="from" select="$from" />
-                    <xsl:with-param name="to" select="$to" />
+            <xsl:when test="contains($string,$from)">
+                <xsl:value-of select="substring-before($string,$from)"/>
+                <xsl:value-of select="$to" disable-output-escaping="yes"/>
+                <xsl:call-template name="string-replace">
+                    <xsl:with-param name="string" select="substring-after($string,$from)"/>
+                    <xsl:with-param name="from" select="$from"/>
+                    <xsl:with-param name="to" select="$to"/>
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="$string" />
+                <xsl:value-of select="$string"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
+    
 </xsl:stylesheet>
