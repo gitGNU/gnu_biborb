@@ -124,7 +124,7 @@ Description:
             <tr>
               <td class='additional-entry'><xsl:value-of select="name()"/>:</td>
               <xsl:choose>
-                <xsl:when test="name() = 'abstract'">
+                <xsl:when test="name() = 'abstract' or name()='longnotes'">
                   <td class='additional-value'><textarea name="_{name(.)}" rows="5"/></td>
                 </xsl:when>
                 <xsl:when test="name() = 'url' or name() = 'urlzip' or name() = 'pdf'">
