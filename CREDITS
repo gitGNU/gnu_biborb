@@ -11,7 +11,8 @@ Author:
 Contributors:
 
         Arild Bergh
-                Shelf Mode extension.
+                Initial "Shelf Mode" extension (read status of references and
+            ownership).
     
         Oliver Otto
                 German translation.
