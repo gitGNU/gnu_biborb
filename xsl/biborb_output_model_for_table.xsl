@@ -95,8 +95,7 @@
 				<!-- Various command : edit, delete, add/remove from basket -->
 				<div class="command">
 					
-					<!-- Admin mode  $mode='admin' -->
-					<xsl:if test="$mode='admin'">
+					<xsl:if test="$can_modify">
 					
 						<!-- Edit action -->
 						<!-- display images if necessary: $display_images!=null -->
@@ -111,7 +110,9 @@
 								BIBORB_OUTPUT_EDIT_ALT
 							</a>
 						</xsl:if>
+                    </xsl:if>
 						
+                    <xsl:if test="$can_delete">
 						<!-- Delete action -->
 						<xsl:if test="$display_images">
 							<a href="./bibindex.php?mode={$bibindex_mode}&amp;id={@id}&amp;action=delete&amp;{$extra_get_param}">

@@ -259,14 +259,14 @@ function index_menu(){
     //      | -> Logout     (if administrator and $disable_authentication set to false)
     $html .= "<li><a title='"._("INDEX_MENU_MANAGER_HELP")."' href='index.php?mode=manager_help'>"._("INDEX_MENU_MANAGER")."</a>";
     $html .= "<ul>";
-    if($_SESSION['usermode']=='user'){
+    if(!$GLOBALS['disable_authentication'] && !array_key_exists('user',$_SESSION)){
         $html .= "<li><a title=\""._("INDEX_MENU_LOGIN_HELP")."\" href='index.php?mode=login'>"._("INDEX_MENU_LOGIN")."</a></li>";
     }
-    if($_SESSION['usermode']=='admin'){
+    if($_SESSION['user_is_admin']){
         $html .= "<li><a title='"._("INDEX_MENU_ADD_BIB_HELP")."' class='admin' href='index.php?mode=add_database'>"._("INDEX_MENU_ADD_BIB")."</a></li>";
         $html .= "<li><a title='"._("INDEX_MENU_DELETE_BIB_HELP")."' class='admin' href='index.php?mode=delete_database'>"._("INDEX_MENU_DELETE_BIB")."</a></li>";
     }
-    if($_SESSION['usermode']=='admin' && !$GLOBALS['disable_authentication']){
+    if(!$GLOBALS['disable_authentication'] && array_key_exists('user',$_SESSION)){
         $html .= "<li><a title='"._("INDEX_MENU_LOGOUT_HELP")."' href='index.php?mode=welcome&action=logout'>"._("INDEX_MENU_LOGOUT")."</a></li>";
     }
     $html .= "</ul>";
@@ -390,8 +390,7 @@ function bibindex_login(){
  */
 function bibindex_logout()
 {
-    $_SESSION['usermode'] = "user";
-    $_SESSIION['user'] = null;
+    unset($_SESSION['user']);
     
     bibindex_welcome();
 }
@@ -409,7 +408,24 @@ function bibindex_menu($bibname)
     $html .= "<span id='bibname'>".$bibname."</span>";
     $html .= "<ul>";
     // first menu item => Select a bibliography
-    $html .= "<li><a href='index.php?mode=select'>"._("BIBINDEX_MENU_SELECT_BIB")."</a><ul><li></li></ul></li>";
+    $html .= "<li><a href='index.php?mode=select'>"._("BIBINDEX_MENU_SELECT_BIB")."</a>";
+    $html .= "<ul>";
+    // jump to a given bibliography
+    $avbibs = get_databases_names();
+    $html .= "<li><select name='me' size='1' onchange='javascript:test()'>";
+    foreach($avbibs as $bib){
+        if($bib == $bibname){
+            $html .= "<option name='$bib' selected='selected'>$bib</option>";
+        }
+        else{
+            $html .= "<option name='$bib'>$bib</option>";
+        }
+    }
+    $html .= "</select></li>";
+    $html .= "</ul></li>";
+    
+    
+    
     // second item
     // -> Display
     //      | -> All
@@ -433,7 +449,7 @@ function bibindex_menu($bibname)
     $html .= "<li><a title='"._("BIBINDEX_MENU_BASKET_HELP")."' href='bibindex.php?mode=basket'>"._("BIBINDEX_MENU_BASKET")."</a>";
     $html .= "<ul>";
     $html .= "<li><a title='"._("BIBINDEX_MENU_BASKET_DISPLAY_HELP")."' href='bibindex.php?mode=displaybasket'>"._("BIBINDEX_MENU_BASKET_DISPLAY")."</a></li>";
-    if($_SESSION['usermode']=='admin' || $GLOBALS['disable_authentication']){
+    if($_SESSION['user_can_modify'] || $GLOBALS['disable_authentication']){
         $html .= "<li><a title='"._("BIBINDEX_MENU_BASKET_GROUP_HELP")."' class='admin' href='bibindex.php?mode=groupmodif'>"._("BIBINDEX_MENU_BASKET_GROUP")."</a></li>";
     }
     $html .= "<li><a title='"._("BIBINDEX_MENU_BASKET_BIBTEX_HELP")."' href='bibindex.php?mode=exportbaskettobibtex'>"._("BIBINDEX_MENU_BASKET_BIBTEX")."</a></li>";
@@ -470,15 +486,19 @@ function bibindex_menu($bibname)
     //      | -> Logout (if admin and authentication disabled
     $html .= "<li><a title='"._("BIBINDEX_MENU_ADMIN_HELP")."' href='bibindex.php?mode=manager'>"._("BIBINDEX_MENU_ADMIN")."</a>";
     $html .= "<ul>";
-    if($_SESSION['usermode']=='user' && !$GLOBALS['disable_authentication']){
+    if(!array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){
         $html .= "<li><a title=\""._("BIBINDEX_MENU_ADMIN_LOGIN_HELP")."\" href='bibindex.php?mode=login'>"._("BIBINDEX_MENU_ADMIN_LOGIN")."</a></li>";
     }
-    if($_SESSION['usermode']=='admin'){
+    if($_SESSION['user_can_add']){
         $html .= "<li><a title='"._("BIBINDEX_MENU_ADMIN_ADD_HELP")."' class='admin' href='bibindex.php?mode=addentry'>"._("BIBINDEX_MENU_ADMIN_ADD")."</a></li>";
+    }
+    if($_SESSION['user_is_admin']){
         $html .= "<li><a title=\""._("BIBINDEX_MENU_ADMIN_UPDATE_HELP")."\" class='admin' href='bibindex.php?mode=update_xml_from_bibtex'>"._("BIBINDEX_MENU_ADMIN_UPDATE")."</a></li>";
+    }
+    if($_SESSION['user_can_add']){
         $html .= "<li><a title='"._("BIBINDEX_MENU_ADMIN_IMPORT_HELP")."' class='admin' href='bibindex.php?mode=import'>"._("BIBINDEX_MENU_ADMIN_IMPORT")."</a></li>";
     }
-    if($_SESSION['usermode']=='admin' && !$GLOBALS['disable_authentication']){
+    if(array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){
         $html .= "<li><a title='"._("BIBINDEX_MENU_ADMIN_LOGOUT_HELP")."' href='bibindex.php?mode=welcome&action=logout'>"._("BIBINDEX_MENU_ADMIN_LOGOUT")."</a></li>";
     }
     $html .= "</ul>";
@@ -520,10 +540,14 @@ function bibindex_welcome()
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = "BibORB: BibTeX On-line References Browser";
     $content = _("This is the bibliography").": <b>".$_SESSION['bibdb']->name()."</b>.<br/>";
-    if($_SESSION['usermode'] == 'admin' && !$GLOBALS['disable_authentication']) {
-        if(array_key_exists('user',$_SESSION)){      
-            $content .= _("You are logged as").": <em>".$_SESSION['user']."</em>.";
-        }
+    if(array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){      
+        $content .= _("You are logged as").": <em>".$_SESSION['user']."</em>.";
+        $content .= "<br/>";
+        $content .= "Allowed to add entry: ".($_SESSION['user_can_add'] ? "YES" : "NO");
+        $content .= "<br/>";
+        $content .= "Allowed to modify entry: ".($_SESSION['user_can_modify'] ? "YES" : "NO");
+        $content .= "<br/>";
+        $content .= "Allowed to delete entry: ".($_SESSION['user_can_delete'] ? "YES" : "NO");
     }
 	$nb = $_SESSION['bibdb']->count_entries();
 	$nbpapers = $_SESSION['bibdb']->count_epapers();
@@ -1045,7 +1069,7 @@ function bibindex_display_basket(){
         else{
             $content = sprintf(_("%d entries in the basket."),$nb);
         }
-        if($_SESSION['usermode'] == "admin"){
+        if($_SESSION['user_can_delete']){
             $content .= "<div style='float:right;display:inline;'>";
             $content .= "<a class='admin' href='bibindex.php?mode=operation_result&action=delete_basket'>";
             $content .= _("Delete all from database");

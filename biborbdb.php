@@ -35,6 +35,7 @@
  *      The interface uses this xml to generate an HTML output.
  *
  */
+
 require_once("xslt_processor.php"); //xslt processor
 
 // Bibtex Database manager
@@ -58,11 +59,11 @@ class BibORB_DataBase {
         Generate the path of the xml file.
     */
     function xml_file(){
-	return $this->biblio_dir.$this->biblio_name.".xml";
+        return $this->biblio_dir.$this->biblio_name.".xml";
     }
     
     /**
-     Generate the path of the bib file.
+        Generate the path of the bib file.
     */
     function bibtex_file(){
         return $this->biblio_dir.$this->biblio_name.".bib";
@@ -657,7 +658,7 @@ function get_databases_names(){
     $dir = opendir("./bibs/");
     $databases_names = array();
     while($file = readdir($dir)){
-        if(is_dir("./bibs/".$file) && $file != '.' && $file != '..'){
+        if(is_dir("./bibs/".$file) && $file != '.' && $file != '..' && $file[0] != '.'){
             array_push($databases_names,$file);
         }
     }

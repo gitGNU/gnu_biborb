@@ -22,43 +22,33 @@
  */
  
 /**
- * 
- * File: basket.php
- * Author: Guillaume Gardey (ggardey@club-internet.fr)
- * Licence: GPL
- * 
- * Description:
- *
- *      Basket functions 
- * 
- */
+    File: basket.php
+    Author: Guillaume Gardey (ggardey@club-internet.fr)
+    Licence: GPL
 
-/********************************************************************************/
-/*                                                                              */
-/* Functions concerning the BibTeX basket.                                      */
-/* The basket is recorded in a SESSION variable: 'basket'                       */
-/*                                                                              */
-/********************************************************************************/
+    Description:
+        This file defines a Basket class. The basket stores distinct items. 
+ */
 
 class Basket {
     // an array of distinct items
 	var $items;
 	
-    /*
+    /**
         Contructor
      */
 	function Basket() {
 		$this->items = array();
 	}
 	
-    /*
+    /**
         Returns the number of items
      */
 	function count_items(){
 		return count($this->items);
 	}
 	
-    /*
+    /**
         Add an item. If present, not added.
      */
 	function add_item($item) {
@@ -67,7 +57,7 @@ class Basket {
 		}
 	}
 	
-    /*
+    /**
         Add items.
      */
 	function add_items($array){
@@ -76,7 +66,7 @@ class Basket {
 		}
 	}
 	
-    /*
+    /**
         Remove an item.
      */
 	function remove_item($item) {
@@ -89,7 +79,7 @@ class Basket {
 		array_pop($this->items);
 	}
 	
-    /*
+    /**
         Remove all items.
      */
 	function reset(){
@@ -99,7 +89,7 @@ class Basket {
 		}
 	}
 	
-    /*
+    /**
         Retun a string representing the list of items separated by a dot.
      */
 	function items_to_string(){

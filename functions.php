@@ -38,6 +38,7 @@
  */
 require_once("config.php");
 require_once("utilities.php");
+require_once("bibtexParse/PARSEENTRIES.php");
 
 /**
  * format bibtex data to xml
@@ -341,26 +342,6 @@ function remove_accents($string){
 }
 
 /**
- *  check_login($thelogin,$thepasswd)
- *  Authentication test
- */
-function check_login($thelogin,$thepasswd){
-  global $host,$dbuser,$pass,$db,$table;
-  
-  $connect = @mysql_connect($host,$dbuser,$pass) or die("Unable to connect to mysql");
-  $base = @mysql_select_db($db,$connect);
-  if(!$base){
-    echo "Unable to connect to the users database";
-    exit();
-  }
-  else {
-    $query = "SELECT login,password FROM $table WHERE login='$thelogin' AND password=md5('$thepasswd')";
-    $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
-    return (mysql_num_rows($result)>0);
-  }
-}
-
-/**
     Generate the add all to basket div section
 */
 
@@ -430,4 +411,51 @@ function sort_div($selected_sort,$mode,$group){
     return $html;
 }
 
+function convert_array_to_xml_entry($tab){
+    
+    $xml = "<bibtex:entry id='".$tab['bibtexCitation']."'>";
+    $xml .= "<bibtex:".$tab['bibtexEntryType'].">";
+    foreach($tab as $key => $value){
+        if($key != 'groups' && $key!= 'type' && $key != 'id'){
+            $xml .= "<bibtex:".$key.">";
+            $xml .= stripslashes(trim(myhtmlentities($value)));
+            $xml .= "</bibtex:".$key.">";
+        }
+        else if($key == 'groups') {
+            $xml .= "<bibtex:groups>";
+            $groupvalues = split(',',$value);
+            foreach($groupvalues as $gr){
+                $xml .= "<bibtex:group>";
+                $xml .= stripslashes(trim(myhtmlentities($gr)));
+                $xml .= "</bibtex:group>";
+            }
+            $xml .= "</bibtex:groups>";
+        }
+    }
+    $xml .= "</bibtex:".$tab['bibtexEntryType'].">";
+    $xml .= "</bibtex:entry>";
+    return $xml;
+}
+
+function convert_bibtex_to_xml($string){
+    $bibtex_parser = new PARSEENTRIES();
+	$bibtex_parser->loadString($string);
+	$bibtex_parser->extractEntries();
+    $res = $bibtex_parser->returnArrays();
+    echo "<pre>";
+    print_r($res[1]);
+    echo "</pre>";
+    $tab = $res[2];
+    echo "<pre>";
+    print_r($tab);
+    echo "</pre>";
+    $xml  = "<?xml version='1.0' encoding='iso-8859-1'?>";
+    $xml .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' name='temp'>";
+    foreach($tab as $entry){
+        $xml .= convert_array_to_xml_entry($entry);
+    }
+    $xml .= "</bibtex:file>";
+    die($xml);
+    return $xml;
+}
 ?>

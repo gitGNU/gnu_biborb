@@ -152,7 +152,7 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null)
 function load_i18n_config($language)
 {
     putenv("LANG=$language");
-    setlocale(LC_ALL, $language);
+    setlocale(LC_MESSAGES, $language);
     $domain = 'biborb';
     bindtextdomain($domain,'./locale');
     textdomain($domain);

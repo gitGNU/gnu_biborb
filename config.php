@@ -35,8 +35,7 @@
 
 /**
  * Localisation
- * Default: en_US
- * Available: fr_FR
+ * Available: en_US, fr_FR
  */
 $language = "en_US";
 
@@ -44,7 +43,7 @@ $language = "en_US";
  * Display a selection of language on BibORB pages
  * TRUE/FALSE
  */
-$display_language_selection = FALSE;
+$display_language_selection = TRUE;
 
 /**
  * Version of Biborb
@@ -84,17 +83,6 @@ $display_text = TRUE;
  * Name of the PHP SESSION
  */
 $session_id = "SID";
-
-/**
- * Database configuration.
- * Used when $disable_authentication set to FALSE.
- * The table biborb_users references 'administrator' users.
- */
-$host = "localhost";
-$dbuser = "biborb-admin";
-$pass = "biborbdev";
-$db = "biborb";
-$table = "biborb_users";
 
 /**
  * List of all possible fields in a BibTeX record.

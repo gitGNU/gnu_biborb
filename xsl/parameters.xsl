@@ -94,8 +94,8 @@
 	<xsl:param name="extra_get_param"/>
 	
     <!-- admin mode -->
-    <!-- if mode='admin', display edit and delete button -->
-    <xsl:param name="mode"/>
+    <xsl:param name="can_delete"/>
+    <xsl:param name="can_modify"/>
 
 	<!-- Which page to generate (welcome, groups...)  -->
 	<xsl:param name="bibindex_mode"/>

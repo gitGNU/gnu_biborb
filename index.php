@@ -43,6 +43,7 @@ require_once("config.php");     // load configuration variables
 require_once("functions.php");  // load needed functions
 require_once("biborbdb.php");   // load biborb database
 require_once("interface.php");  // load function to generate the interface
+require_once("auth.php");       // load authentication class
 
 /**
  * Load the session
@@ -57,6 +58,7 @@ if(!array_key_exists('language',$_SESSION) || !$GLOBALS['display_language_select
     $_SESSION['language'] = $GLOBALS['language'];
 }
 load_i18n_config($_SESSION['language']);
+
 
 /**
  * To store an error or a message. (mode=result)
@@ -81,14 +83,21 @@ else{
  *  admin => may modify, create or delete
  *  user => only for read purpose
  */
+
 if(!$disable_authentication){
-  if(!array_key_exists('usermode',$_SESSION)){
-      $_SESSION['usermode'] = "user";
-  }
+    if(!array_key_exists('auth',$_SESSION)){
+        $_SESSION['auth'] = new Auth();
+    }
+        
+    if(!array_key_exists('user',$_SESSION)){
+        $_SESSION['user_is_admin'] = FALSE;
+    }
 }
 else{
-  $_SESSION['usermode'] = "admin";
+    $_SESSION['user_is_admin'] = TRUE;
 }
+
+
 
 /*
     Look in $_GET for an action to be performed
@@ -119,7 +128,8 @@ if(isset($_GET['action'])){
             Logout
          */
         case "logout":
-            $_SESSION['usermode'] = "user";
+            unset($_SESSION['user']);
+            $_SESSION['user_is_admin'] = FALSE;
             break;
             
         default:
@@ -144,10 +154,10 @@ if(isset($_POST['action'])){
                 $mode = "login";
             }
             else {
-                $loggedin = check_login($login,$mdp);
+                $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
                 if($loggedin){
                     $_SESSION['user'] = $login;
-                    $_SESSION['usermode'] = "admin";
+                    $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($_SESSION['user']);
                 }
                 else {
                     $error_or_message['error'] = _("LOGIN_WRONG_USERNAME_PASSWORD");

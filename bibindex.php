@@ -73,6 +73,7 @@ require_once("basket.php"); // basket functions
 require_once("biborbdb.php"); // database
 require_once("xslt_processor.php"); // xslt processing
 require_once("interface.php"); // generate interface
+require_once("auth.php");
 
 /**
  * Session
@@ -87,6 +88,7 @@ if(!array_key_exists('language',$_SESSION) || !$GLOBALS['display_language_select
     $_SESSION['language'] = $GLOBALS['language'];
 }
 load_i18n_config($_SESSION['language']);
+
 
 /**
  * Global variables to store an error message or a standad message.
@@ -112,6 +114,11 @@ if(!isset($_SESSION['basket'])){
  * If the session variable 'bibdb' is not set, get the bibliography name from 
  * GET variables and create a new Biborb_Database.
  */
+$update_auth = FALSE;
+if(!array_key_exists('update_authorizations',$_SESSION)){
+    $update_auth = TRUE;
+}
+
 if(array_key_exists('bibname',$_GET)){
     if(!array_key_exists('bibdb',$_SESSION)){
         $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
@@ -121,10 +128,60 @@ if(array_key_exists('bibname',$_GET)){
         $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
         $_SESSION['basket']->reset();
     }
+    $update_auth = TRUE;
 }
 
 /**
- * Default paramaters for XSLT transformation
+ * Select the user's mode:
+ *  admin => may modify, create or delete
+ *  user => only for read purpose
+ */
+if(!$disable_authentication){
+    if(!array_key_exists('auth',$_SESSION)){
+        $_SESSION['auth'] = new Auth();
+    }
+    
+    if($update_auth){
+        if(!array_key_exists('user',$_SESSION)){
+            $_SESSION['user_is_admin'] = FALSE;
+        } 
+        else{
+            $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($_SESSION['user']);
+        }
+        if(!array_key_exists('user',$_SESSION)){
+            $_SESSION['user_can_add'] = FALSE;
+        }
+        else{
+            $_SESSION['user_can_add'] = $_SESSION['auth']->can_add_entry($_SESSION['user'],$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
+        }
+        
+        if(!array_key_exists('user',$_SESSION)){
+            $_SESSION['user_can_delete'] = FALSE;
+        }
+        else{
+            $_SESSION['user_can_delete'] = $_SESSION['auth']->can_delete_entry($_SESSION['user'],$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
+        }
+        
+        if(!array_key_exists('user',$_SESSION)){
+            $_SESSION['user_can_modify'] = FALSE;
+        }
+        else{
+            $_SESSION['user_can_modify'] = $_SESSION['auth']->can_modify_entry($_SESSION['user'],$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
+        }
+    }
+}
+else{
+    $_SESSION['user_can_delete'] = TRUE;
+    $_SESSION['user_can_add'] = TRUE;
+    $_SESSION['user_can_modify'] = TRUE;
+    $_SESSION['user_is_admin'] = TRUE;
+}
+
+$_SESSION['update_authorizations'] = FALSE;
+
+
+/**
+* Default paramaters for XSLT transformation
  */
 $abst = get_value('abstract',$_GET);
 if($abst==null){
@@ -139,7 +196,6 @@ else if(array_key_exists('sort',$_POST)){
     $sort = $_POST['sort'];
 }
 
-
 $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'bibnameurl' => $_SESSION['bibdb']->xml_file(),
                     'display_images' => $GLOBALS['display_images'],
@@ -148,23 +204,8 @@ $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'display_add_all'=> 'true',
                     'sort' => $sort,
                     'display_sort'=> $DISPLAY_SORT,
-                    'mode' => $_SESSION['usermode']);
-
-/**
- * Select the user's mode:
- *  admin => may modify, create or delete
- *  user => only for read purpose
- */
-if(!$disable_authentication){
-    if(!array_key_exists('usermode',$_SESSION)){
-        $_SESSION['usermode'] = "user";
-        $xslparam['mode'] = "user";
-    }
-}
-else{
-    $_SESSION['usermode'] = "admin";
-    $xslparam['mode'] = "admin";
-}
+                    'can_modify' => $_SESSION['user_can_modify'] || $_SESSION['user_is_admin'],
+                    'can_delete' => $_SESSION['user_can_delete'] || $_SESSION['user_is_admin']);
 
 /**
  * Action are given by GET/POST method.
@@ -260,7 +301,11 @@ if(isset($_GET['action'])){
             break;
 	
         case 'logout':
-            $_SESSION['usermode'] = "user";
+            unset($_SESSION['user']);
+            $_SESSION['user_can_add'] = FALSE;
+            $_SESSION['user_can_delete'] = FALSE;
+            $_SESSION['user_can_modify'] = FALSE;
+            $_SESSION['user_is_admin'] = FALSE;
             break;
 	    
         case _("Cancel"):
@@ -412,11 +457,14 @@ if(isset($_POST['action'])){
                 $error = _("LOGIN_MISSING_VALUES");
             }
             else {
-                $loggedin = check_login($login,$mdp);
+                $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
                 if($loggedin){
                     $_SESSION['user'] = $login;
-                    $_SESSION['usermode'] = "admin";
-                    $login_success = "welcome";	    
+                    $login_success = "welcome";
+                    $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($login);
+                    $_SESSION['user_can_add'] = $_SESSION['auth']->can_add_entry($login,$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
+                    $_SESSION['user_can_delete'] = $_SESSION['auth']->can_delete_entry($login,$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
+                    $_SESSION['user_can_modify'] = $_SESSION['auth']->can_modify_entry($login,$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
                 }
                 else {
                     $error = _("LOGIN_WRONG_USERNAME_PASSWORD");
