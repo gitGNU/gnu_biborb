@@ -96,6 +96,34 @@ if(isset($_GET['action'])){
     }
 }
 
+if(isset($_POST['action'])){
+    switch($_POST['action']){
+    case 'login':
+	$login = $_POST['login'];
+	$mdp = $_POST['mdp'];
+	if($login=="" || $mdp==""){
+	    $error_or_message['error'] = "You must fill both login and password!";
+	    $mode = "login";
+	}
+	else {
+	    $loggedin = check_login($login,$mdp);
+	    if($loggedin){
+		$_SESSION['user'] = $login;
+		$_SESSION['usermode'] = "admin";
+	    }
+	    else {
+		$error_or_message['error'] = "Wrong login or password";
+		$mode = "login";
+	    }
+	}
+	break; 
+    default:
+	break;
+    } 
+}
+
+
+
 /*********************************************** BEGINING OF THE HTML OUTPUT **/
 
 /**

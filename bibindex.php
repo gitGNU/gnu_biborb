@@ -227,7 +227,10 @@ if(isset($_GET['action'])){
 			break;
 		
 
-			
+	case 'logout':
+	    $_SESSION['usermode'] = "user";
+	    break;
+	    
 		default:
 			break;
 	}
@@ -300,8 +303,27 @@ if(isset($_POST['action'])){
 				$message .= $formated;
 			}
 			break;				
-		default:
-			break;
+	case 'login':
+	    $login = $_POST['login'];
+	    $mdp = $_POST['mdp'];
+	    if($login=="" || $mdp==""){
+		$error = "You must fill both login and password!";
+	    }
+	    else {
+		$loggedin = check_login($login,$mdp);
+		if($loggedin){
+		    $_SESSION['user'] = $login;
+		    $_SESSION['usermode'] = "admin";
+		    $login_success = "welcome";	    
+		}
+		else {
+		    $error = "Wrong login or password";
+		}
+	    }
+	    break; 
+
+	default:
+	    break;
 	}
 }
 
@@ -309,16 +331,20 @@ if(isset($_POST['action'])){
 /**
  * Select what to do according to the mode given in parameter.
  */
-if(array_key_exists('mode',$_GET)){
+if(isset($login_success)){
+    $mode = "welcome";
+}
+else if(array_key_exists('mode',$_GET)){
 	$mode = $_GET['mode'];
 }
 else if(array_key_exists('mode',$_POST)){
 	$mode = $_POST['mode'];
 }
-else{
-	$mode = "welcome";
+else {
+    $mode = "welcome";
 }
 
+    
 switch($mode)
 {
 	// Welcome page

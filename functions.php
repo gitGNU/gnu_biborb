@@ -522,4 +522,24 @@ function remove_accents($string){
                 "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy");
 }
 
+/**
+ *  check_login($thelogin,$thepasswd)
+ *  Authentication test
+ */
+function check_login($thelogin,$thepasswd){
+  global $host,$dbuser,$pass,$db,$table;
+  
+  $connect = @mysql_connect($host,$dbuser,$pass) or die("Unable to connect to mysql");
+  $base = @mysql_select_db($db,$connect);
+  if(!$base){
+    echo "Unable to connect to the users database";
+    exit();
+  }
+  else {
+    $query = "SELECT login,password FROM $table WHERE login='$thelogin' AND password=md5('$thepasswd')";
+    $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+    return (mysql_num_rows($result)>0);
+  }
+}
+
 ?>

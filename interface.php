@@ -43,7 +43,23 @@ function index_login(){
     $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
     $html .= index_menu();
     $title = "Login";
-    $html .= main($title,login_form("index.php"));
+    $content = <<<HTML
+<form action='index.php' method='post'>
+	<table style='margin:auto;'>
+	<tr>
+	<td>
+	<input type='text' name='login' size='15' maxlength='20' value='login'/><br/>
+	<input type='password' name='mdp' size='15' maxlength='20' value='mdp'/>
+	</td>
+	</tr>
+	<tr>
+	<td><div style='text-align:center;'><input type='submit' name='action' value='login'/></div>
+	</td></tr>
+	</table>
+</form>
+HTML;
+    
+    $html .= main($title,$content,$GLOBALS['error_or_message']['error']);
     $html .= html_close();
     
     return $html;
@@ -343,9 +359,26 @@ function bibindex_details()
  */
 function bibindex_login(){
     $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "<H2>BibORB Manager</H2>";
-    $html .= main($title,login_form("bibindex.php"));
+    $html .= bibindex_menu($_SESSION['bibdb']->name());
+    $title = "BibORB Manager";
+    $content = <<<HTML
+<form action='bibindex.php' method='post'>
+	<table style='margin:auto;'>
+	<tr>
+	<td>
+	<input type='hidden' name='mode' value='login'/>
+	<input type='text' name='login' size='15' maxlength='20' value='login'/><br/>
+	<input type='password' name='mdp' size='15' maxlength='20' value='mdp'/>
+	</td>
+	</tr>
+	<tr>
+	<td><div style='text-align:center;'><input type='submit' name='action' value='login'/></div>
+	</td></tr>
+	</table>
+</form>
+HTML;
+    
+    $html .= main($title,$content,$GLOBALS['error']);
     $html .= html_close();
     return $html;
 }
@@ -357,7 +390,9 @@ function bibindex_login(){
 function bibindex_logout()
 {
     $_SESSION['usermode'] = "user";
-    echo header("Location: bibindex.php?mode=welcome&amp;".session_name()."=".session_id());
+    $_SESSIION['user'] = null;
+    
+    bibindex_welcome();
 }
 
 /**

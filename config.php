@@ -44,7 +44,7 @@ $date_release = '5 May 2004';
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = TRUE;
+$disable_authentication = FALSE;
 
 
 /**
