@@ -61,13 +61,13 @@ define("DISPLAY_LANG_SELECTION",TRUE);
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-define("DISABLE_AUTHENTICATION",FALSE);
+define("DISABLE_AUTHENTICATION",TRUE);
 
 /**
  * Authentication methods: mysql, files
  * Used if DISABLE_AUTHENTICATION = FALSE
  */
-define("AUTH_METHOD",'mysql');
+define("AUTH_METHOD",'files');
 
 /**
  *  Should a confirmation be displayed when deleting entries

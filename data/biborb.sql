@@ -39,5 +39,28 @@ CREATE TABLE `biborb_users` (
   UNIQUE KEY `numero` (`id`)
 ) TYPE=MyISAM;
 
+
+-- 
+-- Table structure for table `user_preferences`
+-- 
+
+CREATE TABLE `user_preferences` (
+  `user_id` int(11) NOT NULL default '0',
+  `css_file` char(255) NOT NULL default '',
+  `default_language` char(255) NOT NULL default '',
+  `default_database` char(255) NOT NULL default '',
+  `display_images` char(1) NOT NULL default '',
+  `display_txt` char(1) NOT NULL default '',
+  `display_abstract` char(1) NOT NULL default '',
+  `warn_before_deleting` char(1) NOT NULL default '',
+  `default_sort` char(255) NOT NULL default '',
+  `default_sort_order` char(255) NOT NULL default '',
+  `max_ref_by_page` int(11) NOT NULL default '0',
+  `display_shelf_actions` char(1) NOT NULL default '',
+  PRIMARY KEY  (`user_id`)
+) TYPE=MyISAM;
+
+
+-- Default values
 INSERT INTO `biborb_users` (`id`, `login`, `password`, `name`, `firstname`, `admin`) VALUES (1, 'admin', md5('admin'), '', '','Y');
 INSERT INTO `biborb_users` (`login`, `admin`) VALUES ('_anonymous_', 'N');

@@ -211,11 +211,10 @@ function index_select(){
 }
 
 /**
- * index_menu()
- * Create the menu for each page generated. It is placed into a <div> tag of ID 'menu'.
+    index_menu()
+    Create the menu for each page generated. It is placed into a <div> tag of ID 'menu'.
  */
 function index_menu(){
-    
     // start of the div tag
     $html = "<div id='menu'>";
     // title to display => use ID 'title'
@@ -247,19 +246,20 @@ function index_menu(){
         $html .= "<li><a title='".msg("INDEX_MENU_ADD_BIB_HELP")."' class='admin' href='index.php?mode=add_database'>".msg("INDEX_MENU_ADD_BIB")."</a></li>";
         $html .= "<li><a title='".msg("INDEX_MENU_DELETE_BIB_HELP")."' class='admin' href='index.php?mode=delete_database'>".msg("INDEX_MENU_DELETE_BIB")."</a></li>";
     }
-    if(!DISABLE_AUTHENTICATION && array_key_exists('user',$_SESSION)){
-        $html .= "<li><a title='".msg("INDEX_MENU_LOGOUT_HELP")."' href='index.php?mode=welcome&amp;action=logout'>".msg("INDEX_MENU_LOGOUT")."</a></li>";
-    }
-    $html .= "</ul>";
-    $html .= "</li>";
-    // 
     if(array_key_exists('user',$_SESSION)){
         $html .= "<li>";
         $html .= "<a href='index.php?mode=preferences'>Preferences</a>";
         $html .= "</li>";
     }
+    if(!DISABLE_AUTHENTICATION && array_key_exists('user',$_SESSION)){
+        $html .= "<li><a title='".msg("INDEX_MENU_LOGOUT_HELP")."' href='index.php?mode=welcome&amp;action=logout'>".msg("INDEX_MENU_LOGOUT")."</a></li>";
+    }
     $html .= "</ul>";
-    if(DISPLAY_LANG_SELECTION){
+    $html .= "</li>";
+    $html .= "</ul>";
+    
+    // Display language selection if needed & and if the user is not logged in.
+    if(DISPLAY_LANG_SELECTION && !array_key_exists("user",$_SESSION)){
         $html .= "<form id='language_form' action='index.php' method='get'>";
         $html .= "<fieldset>";
         $html .= "<label for='lang'>".msg("Language:")."</label>";
@@ -477,6 +477,7 @@ function bibindex_menu($bibname)
     //      | -> Update from BibTeX (if admin)
     //      | -> Update from XML (if admin)
     //      | -> Import a bibtex file (if admin)
+    //      | -> Preferences
     //      | -> Logout (if admin and authentication disabled
     $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_HELP")."' href='bibindex.php?mode=manager'>".msg("BIBINDEX_MENU_ADMIN")."</a>";
     $html .= "<ul>";
@@ -492,6 +493,11 @@ function bibindex_menu($bibname)
     if($_SESSION['user_can_add']){
         $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_IMPORT_HELP")."' class='admin' href='bibindex.php?mode=import'>".msg("BIBINDEX_MENU_ADMIN_IMPORT")."</a></li>";
     }
+    if(array_key_exists('user',$_SESSION)){
+        $html .= "<li>";
+        $html .= "<a href='index.php?mode=preferences'>Preferences</a>";
+        $html .= "</li>";
+    }
     if(array_key_exists('user',$_SESSION) && !DISABLE_AUTHENTICATION){
         $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_LOGOUT_HELP")."' href='bibindex.php?mode=welcome&amp;action=logout'>".msg("BIBINDEX_MENU_ADMIN_LOGOUT")."</a></li>";
     }
@@ -499,7 +505,7 @@ function bibindex_menu($bibname)
     $html .= "</li>";
     $html .= "</ul>";
     
-    if(DISPLAY_LANG_SELECTION){
+    if(DISPLAY_LANG_SELECTION && !array_key_exists("user",$_SESSION)){
         $html .= "<form id='language_form' action='bibindex.php' method='get'>";
         $html .= "<fieldset>";
         $html .= "<label for='lang'>".msg("Language:")."</label>";

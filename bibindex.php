@@ -732,6 +732,7 @@ switch($mode) {
         
     // Display Tools
     case 'displaytools': echo bibindex_display_tools();break;
+    
     // By default
     default: echo bibindex_welcome(); break;
 }
