@@ -2,10 +2,14 @@
 #uncomment to prevent folder content to be displayed
 #Options -Indexes
 
-#uncomment to prevent anyon to access .ht* files (.htaccess, .htpasswd...)
+#uncomment to prevent anyone to access .ht* files (.htaccess, .htpasswd...)
 #<Files .ht*>
-#  order allow,deny
 #  deny from all
+#</Files>
+
+#uncomment to forbid access to authentication files
+#<Files bib_*.txt >
+#   Deny from all
 #</Files>
 
 #Uncomment to restrict access using apache authentication
