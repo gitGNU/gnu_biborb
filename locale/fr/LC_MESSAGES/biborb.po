@@ -52,14 +52,6 @@ msgstr "Réinitialiser"
 msgid "Cancel"
 msgstr "Annuler"
 
-#: bibindex.php:262 interface.php:1200
-msgid "update_type"
-msgstr "Mettre à jour le type"
-
-#: bibindex.php:268 interface.php:1205
-msgid "update_key"
-msgstr "Mettre à jour la clé"
-
 #: bibindex.php:275
 #, php-format
 msgid "BibTeX key <code>%s</code> already exists."
@@ -585,7 +577,7 @@ msgstr "Type BibTeX :"
 
 #: interface.php:1203
 msgid "BibTeX Key:"
-msgstr "Clé BibTeX"
+msgstr "Clé BibTeX: "
 
 #: interface.php:1226
 msgid "BIBINDEX_UPDATE_ENTRY_TITLE"

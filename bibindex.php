@@ -259,24 +259,25 @@ if(isset($_GET['action'])){
             $_GET['mode'] = "welcome";
             break;
 	
-        case _("update_type"):
+        case _("Update"):
+            if($_GET['object'] == 'type'){
             // get the entry
-            $_SESSION['bibdb']->change_type($_GET['bibtex_key'],$_GET['bibtex_type']);
-            $_GET['mode']='update';
-            break;
-	
-        case _("update_key"):
-            if(!$_SESSION['bibdb']->is_bibtex_key_present($_GET['bibtex_key'])){
-                $_SESSION['bibdb']->change_id($_GET['id'],$_GET['bibtex_key']);
+                $_SESSION['bibdb']->change_type($_GET['id'],$_GET['bibtex_type']);
                 $_GET['mode']='update';
-                $_GET['id'] = $_GET['bibtex_key'];
             }
-            else{
-                $error = sprintf(_("BibTeX key <code>%s</code> already exists."),$_GET['bibtex_key']);
-                $_GET['mode'] = 'operationresult';
+            else if($_GET['object'] == 'key'){
+                if(!$_SESSION['bibdb']->is_bibtex_key_present($_GET['bibtex_key'])){
+                    $_SESSION['bibdb']->change_id($_GET['id'],$_GET['bibtex_key']);
+                    $_GET['mode']='update';
+                    $_GET['id'] = $_GET['bibtex_key'];
+                }
+                else{
+                    $error = sprintf(_("BibTeX key <code>%s</code> already exists."),$_GET['bibtex_key']);
+                    $_GET['mode'] = 'operationresult';
+                }
             }
             break;
-	
+
         case 'delete_basket':
             $confirm = FALSE;
             if(array_key_exists('confirm_delete',$_GET)){

@@ -52,14 +52,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: bibindex.php:262 interface.php:1200
-msgid "update_type"
-msgstr ""
-
-#: bibindex.php:268 interface.php:1205
-msgid "update_key"
-msgstr ""
-
 #: bibindex.php:275
 #, php-format
 msgid "BibTeX key <code>%s</code> already exists."

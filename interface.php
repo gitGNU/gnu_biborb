@@ -1171,6 +1171,7 @@ function bibindex_update_entry(){
     
 	// get the entry
 	$entry = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+    // get existent types
 	$types = $_SESSION['bibdb']->entry_types();
     
 	// xslt transformation
@@ -1179,12 +1180,14 @@ function bibindex_update_entry(){
 	$param['id'] = $_GET['id'];
 	$param['modelfile'] = "file://".realpath("./xsl/model.xml");
 	$param['update'] = "true";
-	
 	$fields = $xsltp->transform($entry,load_file("./xsl/xml2htmledit.xsl"),$param);
     $fields = replace_localized_strings($fields);
 	$thetype = trim($xsltp->transform($entry,load_file("./xsl/get_bibtex_type.xsl")));
 	$xsltp->free();
+    
+    // get existent groups
 	$glist = $_SESSION['bibdb']->groups();
+    // put the groups HTML select in the form
 	array_push($glist,"");
 	$groups=xhtml_select("groupslist",1,$glist,"","addGroup()");
 	$fields = str_replace("#XHTMLGROUPSLIST",$groups,$fields);
@@ -1192,23 +1195,36 @@ function bibindex_update_entry(){
 	$listtypes = xhtml_select('bibtex_type',1,$types,$thetype);
 	
 	$theid = $_GET['id'];
+    // form to update the type
 	$content = "<form method='get' action='bibindex.php' style='border:none;margin:0;padding:0;'>";
     $content .= "<fieldset style='border:none;margin:0;padding:0;'>";
 	$content .= "<table>";
     $content .= "<tbody>";
     $content .= "<tr>";
-    $content .= "<th style='text-align:left'>"._("BibTeX type:")."</th>";
-    $content .= "<td>$listtypes</td>";
-    $content .= "<td><input class='misc_button' type='submit' name='action' value='"._("update_type")."'/></td>";
-    $content .= "</tr>";
-    $content .= "<tr>";
-    $content .= "<th style='text-align:left'>"._("BibTeX Key:")."</th>";
-    $content .= "<td><input name='bibtex_key' value='$theid'/></td>";
-    $content .= "<td><input class='misc_button' type='submit' name='action' value='"._("update_key")."'/></td>";
+    $content .= "<th style='text-align:left;width:100px;'>"._("BibTeX type:")."</th>";
+    $content .= "<td style='width:200px;'>$listtypes</td>";
+    $content .= "<td><input class='misc_button' type='submit' name='action' value='"._("Update")."'/></td>";
     $content .= "</tr>";
     $content .= "</tbody>";
     $content .= "</table>";
     $content .= "<input type='hidden' name='id' value='$theid'/>";
+    $content .= "<input type='hidden' name='object' value='type'/>";
+    $content .= "</fieldset>";
+    $content .= "</form>";
+    
+    $content .= "<form method='get' action='bibindex.php' style='border:none;margin:0;padding:0;'>";
+    $content .= "<fieldset style='border:none;margin:0;padding:0;'>";
+	$content .= "<table>";
+    $content .= "<tbody>";
+    $content .= "<tr>";
+    $content .= "<th style='text-align:left;width:100px;'>"._("BibTeX Key:")."</th>";
+    $content .= "<td style='width:200px;'><input name='bibtex_key' value='$theid'/></td>";
+    $content .= "<td><input class='misc_button' type='submit' name='action' value='"._("Update")."'/></td>";
+    $content .= "</tr>";
+    $content .= "</tbody>";
+    $content .= "</table>";
+    $content .= "<input type='hidden' name='id' value='$theid'/>";
+    $content .= "<input type='hidden' name='object' value='key'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields'>";
