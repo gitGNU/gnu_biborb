@@ -144,17 +144,11 @@ class BibORB_DataBase {
         $xml_content = $this->all_entries();    
         $xsl_content = load_file("./xsl/extract_ids.xsl");
         $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry",$xsl_content);
-            $param = array('sort' => $this->sort,
-                           'sort_order' => $this->sort_order);
-            $res = $xsltp->transform($xml_content,$xsl_content,$param);
-            $xsltp->free();
-            $res = explode('|',$res);
-            if($res[0] == ""){
-                return array();
-            }
-            else{
-                return $res;
-            }
+        $param = array('sort' => $this->sort,
+                       'sort_order' => $this->sort_order);
+        $res = $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+        return remove_null_values(explode('|',$res));
     }
     
     /**
@@ -178,13 +172,7 @@ class BibORB_DataBase {
                        'sort_order' => $this->sort_order);
         $res =  $xsltp->transform($xml_content,$xsl_content,$param);
         $xsltp->free();
-        $res = explode('|',$res);
-        if($res[0] == ""){
-            return array();
-        }
-        else{
-            return $res;
-        }
+        return remove_null_values(explode('|',$res));
     }
     
     
@@ -629,13 +617,7 @@ class BibORB_DataBase {
                        'sort_order' => $this->sort_order);
         $res =  $xsltp->transform($xml_content,$xsl_content,$param);
         $xsltp->free();
-        $res = explode('|',$res);
-        if($res[0] == ""){
-            return array();
-        }
-        else{
-            return $res;
-        }
+        return remove_null_values(explode('|',$res));
     }
     
     /**
