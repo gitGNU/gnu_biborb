@@ -179,23 +179,30 @@ if(isset($_GET['action'])){
 		case 'resetbasket':			// reset the basket
 			$_SESSION['basket']->reset();
 			break;
-			
-		case 'delete':				// delete an entry from the database
-			if(!isset($_GET['id'])){
-				die("Error while deleting: no Bibtex ID selected!");
-			}
-			else{
-				// save the bibtex entry to show which entry was deleted
-				$bibtex = $_SESSION['bibdb']->entry_with_id($_GET['id']);
-				// delete it
-				$_SESSION['bibdb']->delete_entry($_GET['id']);
-				// update message
-				$message = "The following entry was deleted: <pre>".$bibtex."</pre>";
-				// if present, remvove entries from the basket
-				$_SESSION['basket']->remove_item($_GET['id']);
-				$_GET['mode'] = "operationresult";
-			}
-			break;
+        
+        /**
+            Delete an entry from the database
+         */
+        case 'delete':
+            if(!isset($_GET['id'])){
+                die("Error while deleting: no Bibtex ID selected!");
+            }
+            else{
+                // save the bibtex entry to show which entry was deleted
+                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+                $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
+                $xsltp->free();
+                
+                // delete it
+                $_SESSION['bibdb']->delete_entry($_GET['id']);
+                // update message
+                $message = "The following entry was deleted: <pre>".$bibtex."</pre>";
+                // if present, remvove entries from the basket
+                $_SESSION['basket']->remove_item($_GET['id']);
+                $_GET['mode'] = "operationresult";
+            }
+            break;
 			
 		case 'Add':					// Add entries in the basket to a given group
 			if(!isset($_GET['groupvalue'])){
@@ -226,26 +233,27 @@ if(isset($_GET['action'])){
 // analyse POST
 if(isset($_POST['action'])){
 	switch($_POST['action']){
-		// Add an entry to the database
-		case 'add': 
-			$res = $_SESSION['bibdb']->add_new_entry($_POST);
-			if($res['added']){
-				$message = "The following entry was added:<br/>";
-				$entry = $_SESSION['bibdb']->entry_with_id($res['id']);
-				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-				$param = $GLOBALS['xslparam'];
-				$param['bibindex_mode'] = "displaybasket";
-				$param['display_add_all'] = "no";
-				$param['mode'] = "user";
+        /**
+            Add an entry to the database
+         */
+        case 'add': 
+            $res = $_SESSION['bibdb']->add_new_entry($_POST);
+            if($res['added']){
+                $message = "The following entry was added:<br/>";
+                $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
+                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                $param = $GLOBALS['xslparam'];
+                $param['bibindex_mode'] = "displaybasket";
+                $param['display_add_all'] = "no";
+                $param['mode'] = "user";
                 $param['display_sort'] = 'no';
-				$message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-				$xsltp->free();
-                
-			}
-			else{
-				$error = $res['message'];
-			}
-			break;
+                $message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+                $xsltp->free();
+            }
+            else{
+                $error = $res['message'];
+            }
+            break;
 		
 		// update an entry
 		case 'update':

@@ -37,7 +37,7 @@
  */
 require_once("xslt_processor.php"); //xslt processor
 
-// Bibtex DB manager
+// Bibtex Database manager
 
 class BibORB_DataBase {
 	
@@ -180,9 +180,11 @@ class BibORB_DataBase {
 		if( $inbib|| strlen($bibid) == 0 || $bibid == null){
 			if($inbib){
 				$res['message'] = "ID already present, select a different one.";
+				$res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>Back</a></div>";
 			}
 			else{
 				$res['message'] = "Null ID not allowed.";
+				$res['message'] .= "<div style='text-align:center'><a href='javascript:history.back()'>Back</a></div>";
 			}
 		}
 		else{
