@@ -155,6 +155,12 @@ links */
     font-weight:bold;
 }
 
+/* look for shelf mode */
+#bibtex_table .shelf_mode {
+    font-weight:bold;
+    font-size:x-small;
+}
+
 /* style for "add all entries to basket */
 .addtobasket {
     color:navy;

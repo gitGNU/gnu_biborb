@@ -47,7 +47,7 @@ $session_id = "SID";
 
 /**
  * Localization
- * Available: en_US, fr_FR, de_DE
+ * Available: en_US, fr_FR, de_DE, it_IT
  */
 $language = "en_US";
 
@@ -61,13 +61,13 @@ $display_language_selection = TRUE;
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = FALSE;
+$disable_authentication = TRUE;
 
 /**
  * Authentication methods: mysql, files
  * Used if $disable_authentication = FALSE
  */
-$authentication_method = 'mysql';
+$authentication_method = 'files';
 
 /**
  *  Should a confirmation be displayed when deleting entries
