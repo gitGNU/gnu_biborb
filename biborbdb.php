@@ -152,15 +152,15 @@ XML;
 		else{
 			// upload files if they are present
 			if(array_key_exists('url',$_FILES) && file_exists($_FILES['url']['tmp_name'])){
-				$urlfile=upload_file($_SESSION['bibname'],'url',$dataArray['_id']);
+				$urlfile=upload_file($this->biblio_name,'url',$dataArray['_id']);
 				$dataArray['_url'] = $urlfile;
 			}
 			if(array_key_exists('urlzip',$_FILES) && file_exists($_FILES['urlzip']['tmp_name'])){
-				$urlzipfile=upload_file($_SESSION['bibname'],'urlzip',$dataArray['_id']);
+				$urlzipfile=upload_file($this->biblio_name,'urlzip',$dataArray['_id']);
 				$dataArray['_urlzip'] = $urlzipfile;
 			}  
 			if(array_key_exists('pdf',$_FILES) && file_exists($_FILES['pdf']['tmp_name'])){
-				$pdffile=upload_file($_SESSION['bibname'],'pdf',$dataArray['_id']);
+				$pdffile=upload_file($this->biblio_name,'pdf',$dataArray['_id']);
 				$dataArray['_pdf'] = $pdffile;
 			}
 			
