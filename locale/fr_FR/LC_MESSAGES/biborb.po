@@ -808,3 +808,9 @@ msgstr "Divers outils"
 
 msgid "BIBINDEX_XPATH_SEARCH_TITLE"
 msgstr "Recherche XPath"
+
+msgid "ascending"
+msgstr "croissant"
+
+msgid "descending"
+msgstr "décroissant"

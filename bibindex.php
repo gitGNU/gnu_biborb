@@ -197,10 +197,7 @@ $_SESSION['update_authorizations'] = FALSE;
 /**
 * Default paramaters for XSLT transformation
  */
-$abst = get_value('abstract',$_GET);
-if($abst==null){
-    $abst = $GLOBALS['display_abstract'];
-} 
+$abst = array_key_exists('abstract',$_GET) ? $_GET['abstract'] : $GLOBALS['display_abstract'];
 
 $sort = $DEFAULT_SORT;
 $sort_order = $DEFAULT_SORT_ORDER;
