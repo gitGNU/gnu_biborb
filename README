@@ -89,13 +89,8 @@ behaves "normally"
 Now decompress the archive in any web accessible folder (for instance
 ~/public_html, /var/www or anywhere you want).
 
-Change permissions on the example files.
-Precisely, "papers" directory, ".bib" files and ".xml" files  must be
-writable by the group to which belong the http server (www-data or www
-or apache ....). So do a 'chmod a+w papers example.*' so into the
-bibs/example directory.  
-
-It is needed to allow the transformation BibTeX <-> XML 
+Check that the directory "bibs" is writable by the group to which belong 
+the http server (www-data or www or apache ....). 
 
 If you want account management, set $disable_authentication to FALSE
 in the config.php file. If you set it to TRUE, skip the next
@@ -109,8 +104,6 @@ config.php script and adapt variables to your
 configuration.($host,$dbuser,$pass,$db,$table) Finally, add needed
 account to the database.
 
-To create a new bibliography run the script 'create-new-bib.sh'. It
-will create necessary folders and files.
 
 BIBTEX - XML
 ------------
