@@ -158,8 +158,8 @@ $fields_to_export = array('author',
 /**
  * The CSS style file to use.
  */
-$CSS_FILE="css/style-rounded.css";
-//$CSS_FILE="css/style.css";
+//$CSS_FILE="css/style-rounded.css";
+$CSS_FILE="css/style.css";
 
 /**
  * Display sort in all/group/search view
