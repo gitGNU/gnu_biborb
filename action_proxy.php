@@ -160,14 +160,14 @@ if(array_key_exists('action',$_GET)){
 
             if($_GET['database_name'] != null){
                 if(!in_array($_GET['database_name'],$databases_names)){
-                    $res = mkdir("./bibs/".$_GET['database_name'],0755);
+                    $res = mkdir("./bibs/".$_GET['database_name'],0775);
                     if($res){
                         $_SESSION['message'] = "The database was successfully created.";
                     }
                     else{
                         $_SESSION['message'] = "Unabled to create the database.";
                     }
-                    mkdir("./bibs/".$_GET['database_name']."/papers",0777);
+                    mkdir("./bibs/".$_GET['database_name']."/papers",0775);
                     copy("./data/template/template.bib","./bibs/".$_GET['database_name']."/".$_GET['database_name'].".bib");
                     copy("./data/template/template.xml","./bibs/".$_GET['database_name']."/".$_GET['database_name'].".xml");
                     //copy("./data/template/description.txt","./bibs/".$_GET['database_name']."/description.txt");
@@ -199,7 +199,7 @@ if(array_key_exists('action',$_GET)){
         case 'remove':
             // create .trash folder if it does not exit
             if(!file_exists("./bibs/.trash")){
-                mkdir("./bibs/.trash");
+                mkdir("./bibs/.trash",0775);
             }
             // save the bibto .trash folder
             rename("./bibs/".$_GET['database_name'],"./bibs/.trash/".$_GET['database_name']);
