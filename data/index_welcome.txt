@@ -10,8 +10,15 @@ BibORB supports to way of use:
     <li>edition of the bibtex file "by hand" using your favorite text editor, and consultation using the web interface.</li>
 </ul>
 
-<p><span style='color:red;'>IMPORTANT!</span> Presently, BibOrb has not been designed so that different users may 'securely' modified the same bibliography. Concurrent access is not supported. (may be in a latter version)  
+<p><span style='color:red;'>IMPORTANT!</span> Presently, BibORB has not been designed so that different users may 'securely' modified the same bibliography. Concurrent access is not supported. (may be in a latter version)  
 </p>
 
 <p>BibORB also provides a basic authentication method based on databases to restrict write access to bibliographies.
 </p>
+
+<hr/>
+<span style="font-family:serif"/>
+<strong>BibORB</strong> CVS-release, 25 January 2003<br/>
+Released under the GPL licence.<br/>
+Update and information available at <a href="http://www.nongnu.org/biborb">BibORB website</a>
+</span>

@@ -786,7 +786,7 @@ function upload_file($bibname,$type,$id)
 function login_form($from){
     $content = "<div style='text-align:center;'>";
     $content .= "<form action='action_proxy.php?".session_name()."=".session_id()."' method='post'>";
-    $content .= "<table>";
+    $content .= "<table style='margin:auto;'>";
     $content .= "<tr>";
     $content .= "<td>";
     $content .= "<input type='hidden' name='from' value='".$from."'/>";

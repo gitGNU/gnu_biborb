@@ -5,9 +5,10 @@ This menu give access to the basket. The basket records entries you have selecte
 
 Actions that can be done on the basket are:
 <ul>
-    <li>Display all entries in the basket</li>
-    <li>Change the group of all entries in basket (classification)</li>
-    <li>Reset groups of all entries in the basket</li>
-    <li>Export the selection to BibTeX</li>
-    <li>Export the selection to HTML</li>
+    <li>Display all entries in the basket.</li>
+    <li><img src="data/images/cvs-remove-16.png" border="0" alt="remove" align="center"/> Remove entries from the basket.</li>
+    <li>Change the group of all entries in basket (classification).</li>
+    <li>Reset groups of all entries in the basket.</li>
+    <li>Export the selection to BibTeX.</li>
+    <li>Export the selection to HTML.</li>
 </ul>

@@ -11,13 +11,13 @@ This menu give access to an HTML representation of the bibliography.
 Several actions may be available for each displayed entry:
 
 <ul>
-    <li>Download a ps/ps.gz/pdf</li>
-    <li>Access the abstract</li>
-    <li>Get the BibTeX source code</li>
-    <li>Go to a related webpage (Home pages)</li>
-    <li>Go to a local page on the web server</li>
-    <li>Edit the entry to update information (need authentication mode disabled or authenticated user)</li>
-    <li>Remove the entry (need authentication mode disabled or authenticated user) <span style="color:red">No Warning!!</span></li>
-    <li>Add the entry to the basket</li>
+    <li>Download a postscript <img src="data/images/stock_book-16.png" align="center" alt="ps"/>, a compressed postscript <img src="data/images/tar.png" align="center" alt="ps.gz"/>, a PDF <img src="data/images/pdf-document.png" align="center" alt="pdf"/> release of the paper.</li>
+    <li><img src="data/images/stock_about-16.png" border="0" align="center" alt="abstract"/> Display the abstract.</li>
+    <li><img src="data/images/stock_convert-16.png" border="0" align="center" alt="BibTeX"/> Get the BibTeX source code.</li>
+    <li><img src="data/images/link-url-16.png" border="0" align="center" alt="webpage"/> Go to a related webpage (Home pages for instance).</li>
+    <li><img src="data/images/stock_jump-to-16.png" border="0" align="center" alt="Local link"/> Go to a local page on the web server.</li>
+    <li><img src="data/images/stock_edit-16.png" border="0" align="center" alt="edit"/> Edit the entry to update information (need authentication mode disabled or authenticated user).</li>
+    <li><img src="data/images/stock_delete-16.png" border="0" align="center" alt="delete"/> Remove the entry (need authentication mode disabled or authenticated user) <span style="color:red">No Warning!!</span>.</li>
+    <li><img src="data/images/cvs-add-16.png" border="0" align="center" alt="add"/> Add the entry to the basket.</li>
 </ul>
     
