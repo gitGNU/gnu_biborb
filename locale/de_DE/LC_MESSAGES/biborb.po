@@ -638,7 +638,7 @@ msgid "BIBORB_OUTPUT_ABSTRACT_ALT"
 msgstr "Abstrakt"
 
 msgid "BIBORB_OUTPUT_ABSTRACT_TITLE"
-msgstr "Zeige den Abstrkt"
+msgstr "Zeige den Abstrakt"
 
 msgid "BIBORB_OUTPUT_PS_ALT"
 msgstr "ps"
