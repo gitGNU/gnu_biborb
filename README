@@ -28,6 +28,7 @@ standards. Consequently, you should ensure that:
 
 	* PHP (>=4.0.3) is installed on your webserver.
 	* PHP XSLT functions are available.
+    * PHP Pear functions are available.
 	* MySQL or any other database if you wish to use authentication.
 
 

@@ -481,6 +481,7 @@ if(isset($_POST['action'])){
             $mdp = $_POST['mdp'];
             if($login=="" || $mdp==""){
                 $error = msg("LOGIN_MISSING_VALUES");
+                $_GET['mode'] = 'login';
             }
             else {
                 $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
@@ -494,6 +495,7 @@ if(isset($_POST['action'])){
                 }
                 else {
                     $error = msg("LOGIN_WRONG_USERNAME_PASSWORD");
+                    $_GET['mode'] = 'login';
                 }
             }
             break;

@@ -57,9 +57,6 @@
 	<!-- Display the basket actions					  -->
 	<xsl:param name="display_basket_actions"/>
 	
-	<!-- Display the "add all to basket" button  	  -->
-<!--	<xsl:param name="display_add_all"/>-->
-	
 	<!-- A group value								  -->
 	<xsl:param name="group"/>
 	

@@ -28,8 +28,8 @@
  */
 
 // Use file authentication system
-//require_once("php/auth_backends/auth.file.php");
+require_once("php/auth_backends/auth.file.php");
 
 // Use mysql authentication system
-require_once("php/auth_backends/auth.mysql.php");
+//require_once("php/auth_backends/auth.mysql.php");
 ?>
