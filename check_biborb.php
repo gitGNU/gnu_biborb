@@ -17,14 +17,11 @@ h1 {
     text-align:center;
 }
     
+h2 { text-align:center; }
+
 .report {
     margin:auto;
     border-collapse:collapse;
-}
-
-.report caption {
-    font-weight:bold;
-    font-size:large;
 }
 
 .report tr {
@@ -35,12 +32,12 @@ h1 {
     color:white;
     background-color:#777;
     text-align:left;
-    width:200px;
+//    width:200px;
 }
 
 .report td {
     text-align:left;
-    width:300px;
+//    width:300px;
     padding-left:1em;
     background-color:#ddd;
 }
@@ -51,6 +48,8 @@ h1 {
 
 <?php
 
+include("config.php");
+include("php/third_party/Tar.php");
 $OS_TYPE = strtoupper(substr(PHP_OS, 0, 3));
 $XSLT_LOADED = extension_loaded('xslt');
 if($OS_TYPE == "Win"){
@@ -64,10 +63,8 @@ $YES_REPORT = "<span class='ok'>YES</span>";
 $NO_REPORT = "<span class='error'>NO</span>";
 ?>
 
-<h1>Testing biborb installation</h1>
-
+<h2>Information</h2>
 <table class="report">
-    <caption>Information</caption>
     <tbody>
         <tr>
             <th>BibORB directory</th>
@@ -81,17 +78,11 @@ $NO_REPORT = "<span class='error'>NO</span>";
             <th>OS</th>
             <td><?php echo PHP_OS; ?></td>
         </tr>
-    </tbody>
-</table>
-
-<table class="report">
-    <caption>XSLT support</caption>
-    <tbody>
         <tr>
             <th>XSLT module loaded:</th>
             <td><?php echo ($XSLT_LOADED ? $YES_REPORT : $NO_REPORT) ?></td>
         </tr>
-            <?php                
+     <!--       <?php                
             if(!$XSLT_LOADED){
                 echo "<tr><th>Loading extensions is allowed?</th><td>";
                 if(!(bool)ini_get( "enable_dl" ) || (bool)ini_get( "safe_mode" )){
@@ -110,13 +101,11 @@ $NO_REPORT = "<span class='error'>NO</span>";
                 } 
                 echo "</td></tr>";
             }
-             ?>
-    </tbody>
-</table>
-
-<table class="report">
-    <caption>Testing BibORB</caption>
-    <tbody>
+             ?>-->
+        <tr>
+            <th>Pear Module</th>
+            <td><?php echo (class_exists('Archive_Tar') ? $YES_REPORT : $NO_REPORT); ?></td>
+        </tr>
         <tr>
             <th>Write access to bibs repository?</th>
             <td><?php echo (is_writable("./bibs") ? $YES_REPORT : $NO_REPORT); ?></td>
@@ -125,6 +114,33 @@ $NO_REPORT = "<span class='error'>NO</span>";
             <th>Write access to bibs/.trash repository?</th>
             <td><?php echo (is_writable("./bibs/.trash") ? $YES_REPORT : $NO_REPORT); ?></td>
         </tr>
+        <tr>
+            <th>Maximum size of uploadable files.</th>
+            <td><?php echo ini_get('upload_max_filesize');?></td>
+        </tr>
+        
+        <tr>
+            <th>Authentication activated</th>
+<td><?php echo (DISABLE_AUTHENTICATION ? $NO_REPORT : $YES_REPORT);?></td>
+        </tr>
+        
+        <?php
+if(!DISABLE_AUTHENTICATION){
+    echo "<tr>";
+    echo "<th>Authentication used</th>";
+    echo "<td>".AUTH_METHOD."</td>";
+    echo "</tr>";
+}
+if(AUTH_METHOD == "files" && !DISABLE_AUTHENTICATION){
+    
+    echo "<tr><th>biborb/data/auth_files/bib_users.txt exists?</th>";
+    echo "<td>".(file_exists("./data/auth_files/bib_users.txt") ? $YES_REPORT : $NO_REPORT)."</td></tr>";
+    echo "<tr><th>biborb/data/auth_files/bib_access.txt exists?</th>";
+    echo "<td>".(file_exists("./data/auth_files/bib_access.txt") ? $YES_REPORT : $NO_REPORT)."</td></tr>";
+    echo "<tr><th>Preferences can be created (auth_files write permission)?</th>";
+    echo "<td>".(is_writable("./data/auth_files/") ? $YES_REPORT : $NO_REPORT)."</td></tr>";
+}
+?>
     </tbody>
 </table>
 
