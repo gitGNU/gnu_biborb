@@ -38,6 +38,7 @@
     <xsl:param name="typeentry"/>
   
     <xsl:template match="/entrylist">
+        <input name="add_type" type="hidden" value="{$typeentry}"/>
         <!-- Required BibTeX fields -->
         <b>Required Fields</b>
         <table class="required">

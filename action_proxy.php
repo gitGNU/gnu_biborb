@@ -358,7 +358,7 @@ function add_entry(){
         }
     
         // add the entry 
-        add_new_entry($_SESSION['bibname'],$_SESSION['type'],$_POST,$urlfile,$urlzipfile,$pdffile);
+        add_new_entry($_SESSION['bibname'],$_POST['add_type'],$_POST,$urlfile,$urlzipfile,$pdffile);
     
         // set message
         $_SESSION['message'] = "The following entry was added:<br/>";
