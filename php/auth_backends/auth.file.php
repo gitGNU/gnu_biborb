@@ -62,8 +62,8 @@ class Auth
         Constructor
      */
     function Auth(){
-        $this->f_users = "./php/auth_backends/bib_users.txt";
-        $this->f_access = "./php/auth_backends/bib_access.txt";
+        $this->f_users = "./data/auth_files/bib_users.txt";
+        $this->f_access = "./data/auth_files/bib_access.txt";
     }
     
     /**

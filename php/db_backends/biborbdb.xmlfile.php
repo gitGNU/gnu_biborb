@@ -966,21 +966,21 @@ function create_database($name,$description){
         if(!in_array($name,$databases_names)){
             $name = remove_accents($name);
             $name = str_replace(' ','_',$name);
-            $res = mkdir("./bibs/$name",0775);
+            umask(DMASK);
+            $res = mkdir("./bibs/$name");
             if($res){
                 $resArray['message'] = msg("BIB_CREATION_SUCCESS");
             }
             else{
                 $resArray['message'] = msg("BIB_CREATION_ERROR");
             }
-            mkdir("./bibs/$name/papers",0775);
+            mkdir("./bibs/$name/papers");
+            umask(UMASK);
             copy("./data/template/template.bib","./bibs/$name/$name.bib");
             copy("./data/template/template.xml","./bibs/$name/$name.xml");
-            chmod("./bibs/$name/$name.bib",0666);
-            chmod("./bibs/$name/$name.xml",0666);
             
             $fp = fopen("./bibs/$name/description.txt","w");
-            fwrite($fp,$description);
+            fwrite($fp,htmlentities($description));
             fclose($fp);
             $xml = load_file("./bibs/$name/$name.xml");
             $xml = str_replace("template",$name,$xml);
@@ -1012,7 +1012,7 @@ function delete_database($name){
     }
     // save the bibto .trash folder
     rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or trigger_error("Error while moving $name to .trash folder");
-    $res = sprintfs(msg("Database %s moved to trash."),$name)."<br/>";
+    $res = sprintf(msg("Database %s moved to trash."),$name)."<br/>";
     $res .= sprintf(msg("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>");
     return $res;
 }
