@@ -31,117 +31,136 @@
  *
 -->
 <xsl:stylesheet version="1.0" 
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   
-  <xsl:output method="xml" encoding="iso-8859-1"/>
+    <xsl:output method="html" encoding="iso-8859-1"/>
 
-  <xsl:param name="typeentry"/>
+    <xsl:param name="typeentry"/>
   
-  <xsl:template match="/entrylist">
-    <b>Required Fields</b>
-    <!-- Required BibTeX fields -->
-    <table class="required">
-      <tbody>
-        <xsl:for-each select="entry[@type=$typeentry]/required/*">
-          <xsl:choose>
-            <xsl:when test="name() = 'alternative'">
-              <xsl:variable name="cpt"><xsl:value-of select="count(*)"/></xsl:variable>
-              <xsl:for-each select="*">
-                <tr>
-                  <td class="required-entry"><xsl:value-of select="name()"/>:</td>
-                  <td class="required-value"><input name="_{name(.)}"/></td>
-                </tr>
-                <xsl:if test="not(position() = $cpt)">
-                  <tr><td><div style="text-align:center;">or/and</div></td></tr>
-                </xsl:if>
-              </xsl:for-each>
-            </xsl:when>
-            <xsl:when test="name() = 'exalternative'">
-              <xsl:variable name="cpt"><xsl:value-of select="count(*)"/></xsl:variable>
-              <xsl:for-each select="*">
-                <tr>
-                  <td class="required-entry"><xsl:value-of select="name()"/>:</td>
-                  <td class="required-value"><input name="_{name(.)}"/></td>
-                </tr>
-                <xsl:if test="not(position() = $cpt)">
-                  <tr><td><div style="text-align:center;">or</div></td></tr>
-                </xsl:if>
-              </xsl:for-each>
-            </xsl:when>
-            <xsl:otherwise>
-              <tr>
-                <td class="required-entry"><xsl:value-of select="name()"/>:</td>
-                <td class="required-value"><input name="_{name(.)}" /></td>
-              </tr>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:for-each>
-      </tbody>
-    </table>
-    <br/>
-    <b>Optional Fields</b>
-    <table class="optional">
-      <tbody>
-        <xsl:for-each select="entry[@type=$typeentry]/optional/*">
-          <xsl:choose>
-            <xsl:when test="local-name() = 'alternative'">
-              <xsl:variable name="cpt"><xsl:value-of select="count(*)"/></xsl:variable>
-              <xsl:for-each select="*">
-                <tr>
-                  <td><xsl:value-of select="name()"/>:</td>
-                  <td><input name="_{name(.)}"/></td>
-                </tr>
-                <xsl:if test="not(position() = $cpt)">
-                  <tr><td><div style="text-align:center;">or/and</div></td></tr>
-                </xsl:if>
-              </xsl:for-each>
-            </xsl:when>
-            <xsl:when test="local-name() = 'exalternative'">
-              <xsl:variable name="cpt"><xsl:value-of select="count(*)"/></xsl:variable>
-              <xsl:for-each select="*">
-                <tr>
-                  <td><xsl:value-of select="name()"/>:</td>
-                  <td><input name="_{name(.)}"/></td>
-                </tr>
-                <xsl:if test="not(position() = $cpt)">
-                  <tr><td><div style="text-align:center;">or/and</div></td></tr>
-                </xsl:if>
-              </xsl:for-each>
-            </xsl:when>
-            <xsl:otherwise>
-                <tr>
-                  <td class="optional-entry"><xsl:value-of select="name()"/>:</td>
-                  <td class="optional-value"><input name="_{name(.)}"/></td>
-                </tr>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:for-each>
-      </tbody>
-    </table>
-    <br/>
-    <b>BibORB Additional Fields</b>
-    <table class="additional">
-      <tbody>
-        <xsl:for-each select="entry[@type=$typeentry]/additional/*">
-            <tr>
-              <td class="additional-entry"><xsl:value-of select="name()"/>:</td>
-              <xsl:choose>
-                <xsl:when test="name() = 'abstract' or name()='longnotes'">
-                  <td class="additional-value"><textarea name="_{name(.)}" rows="5" cols="20"><xsl:text> </xsl:text></textarea></td>
-                </xsl:when>
-                <xsl:when test="name() = 'url' or name() = 'urlzip' or name() = 'pdf'">
-                  <td>
-                    <input type="file" name="{name(.)}" size="45" />
-                  </td>
-                </xsl:when>
-                <xsl:otherwise>
-                  <td class="additional-value"><input name="_{name(.)}"/></td>
-                </xsl:otherwise>
-              </xsl:choose>
-            </tr>
-        </xsl:for-each>
-      </tbody>
-    </table>
+    <xsl:template match="/entrylist">
+        <!-- Required BibTeX fields -->
+        <b>Required Fields</b>
+        <table class="required">
+            <tbody>
+                <xsl:for-each select="entry[@type=$typeentry]/required/*">
+                    <xsl:choose>
+                        <!-- an alternative : or -->
+                        <xsl:when test="name() = 'alternative'">
+                            <xsl:variable name="cpt" select="count(*)"/>
+                            <xsl:for-each select="*">
+                                <tr>
+                                    <td class="required-entry"><xsl:value-of select="name()"/>:</td>
+                                    <td class="required-value"><input name="_{name(.)}"/></td>
+                                </tr>
+                                <xsl:if test="not(position() = $cpt)">
+                                    <tr><td><div style="text-align:center;">or/and</div></td></tr>
+                                </xsl:if>
+                            </xsl:for-each>
+                        </xsl:when>
+                        <!-- an exalternative: xor -->
+                        <xsl:when test="name() = 'exalternative'">
+                            <xsl:variable name="cpt" select="count(*)"/>
+                            <xsl:for-each select="*">
+                                <tr>
+                                    <td class="required-entry"><xsl:value-of select="name()"/>:</td>
+                                    <td class="required-value"><input name="_{name(.)}"/></td>
+                                </tr>
+                                <xsl:if test="not(position() = $cpt)">
+                                    <tr><td><div style="text-align:center;">or</div></td></tr>
+                                </xsl:if>
+                            </xsl:for-each>
+                        </xsl:when>
+                        <!-- all other fields -->
+                        <xsl:otherwise>
+                            <tr>
+                                <td class="required-entry"><xsl:value-of select="name()"/>:</td>
+                                <td class="required-value"><input name="_{name(.)}" /></td>
+                            </tr>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:for-each>
+            </tbody>
+        </table>
+        
+        <br/>
+        <!-- Optional fields -->
+        <b>Optional Fields</b>
+        <table class="optional">
+            <tbody>
+                <xsl:for-each select="entry[@type=$typeentry]/optional/*">
+                    <xsl:choose>
+                        <!-- an alternative: or -->
+                        <xsl:when test="name() = 'alternative'">
+                            <xsl:variable name="cpt" select="count(*)"/>
+                            <xsl:for-each select="*">
+                                <tr>
+                                    <td><xsl:value-of select="name()"/>:</td>
+                                    <td><input name="_{name(.)}"/></td>
+                                </tr>
+                                <xsl:if test="not(position() = $cpt)">
+                                    <tr><td><div style="text-align:center;">or/and</div></td></tr>
+                                </xsl:if>
+                            </xsl:for-each>
+                        </xsl:when>
+                        <!-- an exalternative : xor -->
+                        <xsl:when test="name() = 'exalternative'">
+                            <xsl:variable name="cpt" select="count(*)"/>
+                            <xsl:for-each select="*">
+                                <tr>
+                                    <td><xsl:value-of select="name()"/>:</td>
+                                    <td><input name="_{name(.)}"/></td>
+                                </tr>
+                                <xsl:if test="not(position() = $cpt)">
+                                    <tr><td><div style="text-align:center;">or/and</div></td></tr>
+                                </xsl:if>
+                            </xsl:for-each>
+                        </xsl:when>
+                        <!-- all other fields -->
+                        <xsl:otherwise>
+                            <tr>
+                                <td class="optional-entry"><xsl:value-of select="name()"/>:</td>
+                                <td class="optional-value"><input name="_{name(.)}"/></td>
+                            </tr>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:for-each>
+            </tbody>
+        </table>
+        
+        <br/>
+        
+        <!-- additional fields -->
+        <b>BibORB Additional Fields</b>
+        <script type="text/javascript">&lt;!--
+        document.write(&quot;&lt;a style=\&quot;text-decoration:none;color:navy;\&quot; href=\&quot;javascript:toggle_element(\'additional\')\&quot;&gt;display/hide &lt;/a&gt;&quot;);
+        //--&gt;</script>
+            <noscript></noscript>
+        <div id="additional">
+        <table class="additional">
+            <tbody>
+                <xsl:for-each select="entry[@type=$typeentry]/additional/*">
+                    <tr>
+                        <td class="additional-entry"><xsl:value-of select="name()"/>:</td>
+                        <xsl:choose>
+                            <xsl:when test="name() = 'abstract' or name()='longnotes'">
+                                <td class="additional-value"><textarea name="_{name(.)}" rows="5" cols="20"><xsl:text> </xsl:text></textarea></td>
+                            </xsl:when>
+                            <xsl:when test="name() = 'url' or name() = 'urlzip' or name() = 'pdf'">
+                                <td>
+                                    <input type="file" name="{name(.)}" size="45" />
+                                </td>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <td class="additional-value"><input name="_{name(.)}"/></td>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </tr>
+                </xsl:for-each>
+            </tbody>
+        </table>
+        </div>
+        <br/>
+        <br/>
   </xsl:template>
   
  
