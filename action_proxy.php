@@ -157,10 +157,9 @@ if(array_key_exists('action',$_GET)){
         case 'create':
             // check if the database already exists
             $databases_names = get_databases_names();
-            print_r($databases_names);
+
             if($_GET['database_name'] != null){
                 if(!in_array($_GET['database_name'],$databases_names)){
-                    echo 'creating...';
                     $res = mkdir("./bibs/".$_GET['database_name'],0755);
                     if($res){
                         $_SESSION['message'] = "The database was successfully created.";
