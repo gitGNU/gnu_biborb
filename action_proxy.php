@@ -212,7 +212,7 @@ if(array_key_exists('action',$_GET)){
          *  Import referencese
          */
         case 'import':
-            echo 'importing references';
+            //echo 'importing references';
             $file = bibfilename($_SESSION['bibname']);
             // make a copy of the original bibfile
             copy($file, $file.'.bak');
