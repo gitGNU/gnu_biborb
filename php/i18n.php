@@ -36,6 +36,7 @@ $available_locales = array('fr_FR' => 'Français',
 /*
     Load a localized strings for a lang.
     Load it into $_SESSION['$language'] as an array $msgid => $msgstr
+    @param $language Language code
  */
 function load_i18n_config($language = 'en_US') {
     /*
@@ -50,12 +51,15 @@ function load_i18n_config($language = 'en_US') {
     // I parse the good .po file and load it into an array
     // load only if necessary
     
-    // check $language is a valid lang
+    // check $language is a valid lang (set to en_US if not)
     if(!array_key_exists($language,$GLOBALS['available_locales'])){
         $language = 'en_US';
     }
+    //  load localized data
     $i18nfile = "./locale/".$language."/LC_MESSAGES/biborb.po";
     $i18nfile = file_exists($i18nfile) ? file($i18nfile) : file($default);
+    
+    // Parse data
     $lines_count = count($i18nfile);
     $current_line = 0;
     $key = null;

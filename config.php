@@ -63,7 +63,7 @@ define("DISPLAY_LANG_SELECTION",TRUE);
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-define("DISABLE_AUTHENTICATION",TRUE);
+define("DISABLE_AUTHENTICATION",FALSE);
 
 /**
  * Authentication methods: mysql, files

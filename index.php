@@ -46,6 +46,7 @@ require_once("php/interface.php");   // load function to generate the interface
 require_once("php/auth.php");        // load authentication class
 require_once("php/i18n.php");        // load i18n functions
 require_once("php/error.php");       // load biborb error handler
+//require_once("php/third_party/Cache/Lite/Output.php"); // cache system
 
 
 /*
@@ -55,6 +56,13 @@ require_once("php/error.php");       // load biborb error handler
 session_cache_limiter('nocache');
 session_name("SID");
 session_start();
+
+//$_SESSION['time'] = microtime();
+//$_SESSION['cache'] = new Cache_Lite_Output(array('cacheDir' => '/tmp/',
+//                                                 'lifeTime' => 7200,
+//                                                  'pearErrorMode' => CACHE_LITE_ERROR_DIE));
+//$_SESSION['cache']->clean();
+
 
 // Set the error_handler for biborb
 set_error_handler("biborb_error_handler");
@@ -104,7 +112,7 @@ else{
 if(!DISABLE_AUTHENTICATION){
     // create a new Auth object if needed
     if(!array_key_exists('auth',$_SESSION)){
-        $_SESSION['auth'] = new Auth(AUTH_CRYPT);
+        $_SESSION['auth'] = new Auth();
     }
     
     if(!array_key_exists('user',$_SESSION)){
@@ -192,11 +200,17 @@ if(isset($_POST['action'])){
                 // check the user name
                 $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
                 if($loggedin){
+                    // set user privileges
                     $_SESSION['user'] = $login;
                     $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($login);
                     $_SESSION['user_pref'] = $_SESSION['auth']->get_preferences($login);
+                    // select language
                     $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
                     load_i18n_config($_SESSION['language']);
+                    // redirect to the default database
+                    if($_SESSION['user_pref']['default_database'] != ""){
+                        header("Location:./bibindex.php?bibname=".$_SESSION['user_pref']['default_database']);
+                    }
                 }
                 else {
                     $error_or_message['error'] = msg("LOGIN_WRONG_USERNAME_PASSWORD");
@@ -231,10 +245,24 @@ if(isset($_POST['action'])){
  */
 switch($mode){
 	// This is the welcome page.
-    case 'welcome': echo index_welcome(); break;
+    case 'welcome': 
+//        if(!$_SESSION['cache']->start('index.php?mode=welcome')){
+            echo index_welcome();
+//            $_SESSION['cache']->end();
+//        }
+//        $ctime = microtime()-$_SESSION['time'];
+//        echo "<div style='position:absolute;bottom:0;font-weight:bold;'>$ctime secs</div>";
+        break;
     
 	// List of available bibliograpies
-    case 'select': echo index_select(); break;
+    case 'select': 
+//        if(!$_SESSION['cache']->start('index.php?mode=select')){
+            echo index_select();
+//            $_SESSION['cache']->end();
+//        }
+//        $ctime = microtime()-$_SESSION['time'];
+//        echo "<div style='position:absolute;bottom:0;font-weight:bold;'>$ctime secs</div>";
+        break;
     
     // Add a new bibliography
     case 'add_database': echo index_add_database(); break;
@@ -243,7 +271,14 @@ switch($mode){
     case 'delete_database': echo index_delete_database(); break;
     
 	// Little help on what is available for the administrator mode
-    case 'manager_help': echo index_manager_help(); break;
+    case 'manager_help':
+//        if(!$_SESSION['cache']->start('index.php?mode=manager_help')){
+            echo index_manager_help(); 
+//            $_SESSION['cache']->end();
+ //       }
+ //       $ctime = microtime()-$_SESSION['time'];
+ //       echo "<div style='position:absolute;bottom:0;font-weight:bold;'>$ctime secs</div>";
+        break;
     
 	// Login form
     case 'login': echo index_login(); break;

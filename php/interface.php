@@ -75,7 +75,6 @@ function index_welcome(){
     $html .= index_menu();
     $html .= main($title,$content);
     $html .= html_close();
-    
     return $html;
 }
 
@@ -1547,6 +1546,7 @@ function bibindex_export_basket(){
     $content .= "<option value='bibtex'>BibTeX</option>";
     $content .= "<option value='ris'>RIS</option>";
     $content .= "<option value='html'>HTML</option>";
+    $content .= "<option value='docbook'>DocBook</option>";
     $content .= "</select>";
     $content .= "<input type='hidden' name='action' value='export_basket'/>";
     $content .= "<input type='submit' value='".msg("Select")."'/>";
@@ -1773,7 +1773,7 @@ function pref_content(){
     
     $content = "<form id='preferences' method='post' action='index.php'>";
     $content .= "<fieldset>";
-    
+    $content .= "<legend>".msg("Preferences")."</legend>";
     $content .= "<table>";
     
     // CSS File
@@ -1793,7 +1793,7 @@ function pref_content(){
     $content .= "</tr>";
     
     // Default database
-  /*  $content .= "<tr>";
+    $content .= "<tr>";
     $content .= "<td>".msg("Select the default database to open once logged in.")."</td>";
     $names = get_databases_names();
     $content .= "<td><select name='default_database'>";
@@ -1806,7 +1806,7 @@ function pref_content(){
         }
     }
     $content .= "</select></td>";
-    $content .= "<tr/>";*/
+    $content .= "<tr/>";
     
     // Display images
     $content .= "<tr>";
@@ -1893,13 +1893,12 @@ function pref_content(){
     $content .= "</td></tr>";
     
     $content .= "</table>";
-    $content .= "</fieldset>";
     $content .= "<input type='hidden' name='action' value='update_preferences'/>";
     $content .= "<div style='text-align:center'>";
     $content .= "<input class='submit' type='submit' value='".msg("Update")."'/>";
     $content .= "</div>";
+    $content .= "</fieldset>";
     $content .= "</form>";
-    
     return $content;
 }
 

@@ -24,7 +24,7 @@
  * 
  * File: style.css
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
- * Year: 2003-2004
+ * Year: 2003-2005
  * Licence: GPL
  * 
  * Description:
@@ -233,7 +233,9 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 /**
     Preferences form
  */
-#preferences fieldset {border:0;margin:auto;}
+#preferences form {margin:auto;text-align:center;}
+#preferences fieldset {border:solid 1px navy;}
+#preferences legend {font-weight:bold;color:navy;}
 
 /**
     Error report
