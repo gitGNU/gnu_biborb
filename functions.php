@@ -397,7 +397,9 @@ function get_bibentry($bibname,$bibid,$abstract)
     $xsl_content = load_file("./xsl/one_entry2html.xsl");
     $param = array( 'bibname' => $bibname,
                     'id' => $bibid,
-                    'basket' => 'no');
+                    'basket' => 'no',
+                    'display_images' => $GLOBALS['display_images'],
+                    'display_text' => $GLOBALS['display_text']);
     if($abstract){
         $param['abstract'] = "true";
     }
