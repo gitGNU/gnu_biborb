@@ -3,7 +3,7 @@
 */
 function toggle_element(id){
     if(document.getElementById){
-        document.getElementById(id).style.display = (x.style.display == 'none') ? 'block' : 'none';
+        document.getElementById(id).style.display = (document.getElementById(id).style.display == 'none') ? 'block' : 'none';
     }
 }
 
