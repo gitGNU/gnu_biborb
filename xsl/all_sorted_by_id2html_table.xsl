@@ -55,7 +55,7 @@
 		
 		<xsl:if test="$cpt != 0">
             <div class="addtobasket">
-                Add all entries to basket <a href="bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" /></a>
+                Add all entries to basket <a href="bibindex.php?{$bibindex_mode}&amp;action=add_to_basket&amp;id={$ids}&amp;{$bibindex_mode}&amp;{$extra_get_param}"><img src="./data/images/add.png" alt="add" /></a>
             </div>
 		</xsl:if>
 		
