@@ -433,7 +433,9 @@ class BibORB_DataBase {
         }
         
         foreach($tab as $file){
-            unlink($this->papers_dir().$file);
+            if(file_exists($this->papers_dir().$file)){
+                unlink($this->papers_dir().$file);
+            }
         }
         
         // update the xml file.

@@ -413,13 +413,23 @@
 		Display a link(text/image) to the recorded pdf.
 	-->
     <xsl:template match="bibtex:pdf">
+        <xsl:variable name="link">
+            <xsl:choose>
+                <xsl:when test="contains(node(),'http://') or contains(node(),'https://') or contains(node(),'ftp://')">
+                    <xsl:value-of select="."/>
+                </xsl:when>
+                <xsl:otherwise>
+                    ./bibs/<xsl:value-of select="$bibname"/>/papers/<xsl:value-of select="."/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:if test="$display_images">
-            <a href="./bibs/{$bibname}/papers/{node()}">
+            <a href="{$link}">
                 <img src="data/images/{$pdf-image}" alt='BIBORB_OUTPUT_PDF_ALT' title='BIBORB_OUTPUT_PDF_ALT' />
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
-            <a href="./bibs/{$bibname}/papers/{node()}" title='BIBORB_OUTPUT_PDF_TITLE'>
+            <a href="{$link}" title='BIBORB_OUTPUT_PDF_TITLE'>
                 BIBORB_OUTPUT_PDF_ALT
             </a>
         </xsl:if>
@@ -430,13 +440,23 @@
 		Display a link(text/image) to the recorded url (ps file).
 	-->
     <xsl:template match="bibtex:url">
+        <xsl:variable name="link">
+            <xsl:choose>
+                <xsl:when test="contains(node(),'http://') or contains(node(),'https://') or contains(node(),'ftp://')">
+                    <xsl:value-of select="."/>
+                </xsl:when>
+                <xsl:otherwise>
+                    ./bibs/<xsl:value-of select="$bibname"/>/papers/<xsl:value-of select="."/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:if test="$display_images">
-            <a href="./bibs/{$bibname}/papers/{node()}">
+            <a href="{$link}">
                 <img src="data/images/{$ps-image}" alt='BIBORB_OUTPUT_PS_ALT' title='BIBORB_OUTPUT_PS_TITLE'/>
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
-            <a href="./bibs/{$bibname}/papers/{node()}" title='BIBORB_OUTPUT_PS_TITLE'>
+            <a href="{$link}" title='BIBORB_OUTPUT_PS_TITLE'>
                 BIBORB_OUTPUT_PS_ALT
             </a>
         </xsl:if>
@@ -447,13 +467,23 @@
 		Display a link(text/image) to the recorded urlzip (ps.gz file).
 	-->
     <xsl:template match="bibtex:urlzip">
+        <xsl:variable name="link">
+            <xsl:choose>
+                <xsl:when test="contains(node(),'http://') or contains(node(),'https://') or contains(node(),'ftp://')">
+                    <xsl:value-of select="."/>
+                </xsl:when>
+                <xsl:otherwise>
+                    ./bibs/<xsl:value-of select="$bibname"/>/papers/<xsl:value-of select="."/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:if test="$display_images">
-            <a href="./bibs/{$bibname}/papers/{node()}">
+            <a href="{$link}">
                 <img src="data/images/{$ps.gz-image}" alt='BIBORB_OUTPUT_PSGZ_ALT' title='BIBORB_OUTPUT_PSGZ_TITLE'/>
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
-            <a href="./bibs/{$bibname}/papers/{node()}" title='BIBORB_OUTPUT_PSGZ_TITLE'>
+            <a href="{$link}" title='BIBORB_OUTPUT_PSGZ_TITLE'>
                 BIBORB_OUTPUT_PSGZ_ALT
             </a>
         </xsl:if>
