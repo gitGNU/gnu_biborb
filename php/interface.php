@@ -43,20 +43,15 @@ function index_login(){
     $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
     $html .= index_menu();
     $title = _("INDEX_MENU_LOGIN_TITLE");
-    $content = "<form action='index.php' method='post'>";
-    $content .= "<table style='margin:auto;'>";
-    $content .= "<tr>";
-    $content .= "<td class='emphit'>"._("LOGIN_USERNAME").":</td>";
-    $content .= "<td><input class='misc_input' type='text' name='login' size='15' maxlength='20' value='login'/></td>";
-    $content .= "</tr>";
-    $content .= "<tr>";
-    $content .= "<td class='emphit'>"._("LOGIN_PASSWORD").":</td>";
-    $content .= "<td><input class='misc_input' type='password' name='mdp' size='15' maxlength='20' value='mdp'/></td>";
-    $content .= "</tr>";
-    $content .= "<tr>";
-    $content .=  "<td colspan='2' style='text-align:center;'><input class='misc_button' type='submit' name='action' value=\""._("Login")."\"/></td>";
-    $content .= "</tr>";
-	$content .= "</table>";
+
+    $content = "<form style='margin:auto;width:250px;' action='index.php' method='post'>";
+    $content .= "<fieldset class='fieldset'>";
+    $content .= "<label for='login'>"._("LOGIN_USERNAME").":</label>";
+    $content .= "<input type='text' name='login' value='login' class='textfield'/><br/>";
+    $content .= "<label for='password'>"._("LOGIN_PASSWORD").":</label>";
+    $content .= "<input type='password' name='mdp' value='mdp' class='textfield'/><br/>";
+    $content .= "<input type='submit' name='action' value=\""._("Login")."\" class='submit'/>";
+    $content .= "</fieldset>";
     $content .= "</form>";
     
     $html .= main($title,$content,$GLOBALS['error_or_message']['error']);
@@ -360,22 +355,14 @@ function bibindex_login(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("INDEX_LOGIN_TITLE");
-    $content = "<form action='bibindex.php' method='post'>";
-    $content .=	"<table style='margin:auto;'>";
-    $content .= "<tr>";
-    $content .= "<td class='emphit'>"._("LOGIN_USERNAME").":</td>";
-    $content .= "<td><input type='hidden' name='mode' value='login'/>";
-    $content .= "<input  class='misc_input' type='text' name='login' size='15' maxlength='20' value='login'/></td>";
-    $content .= "</tr>";
-    $content .= "<tr>";
-    $content .= "<td class='emphit'>"._("LOGIN_PASSWORD").":</td>";
-    $content .= "<td><input class='misc_input' type='password' name='mdp' size='15' maxlength='20' value='mdp'/></td>";
-    $content .= "</tr>";
-    $content .= "<tr>";
-    $content .= "<td colspan='2' style='text-align:center'><input  class='misc_button' type='submit' name='action' value=\""._("Login")."\"/>";
-    $content .= "</td>";
-    $content .= "</tr>";
-    $content .= "</table>";
+    $content = "<form style='margin:auto;width:250px;' action='bibindex.php' method='post'>";
+    $content .= "<fieldset class='fieldset'>";
+    $content .= "<label for='login'>"._("LOGIN_USERNAME").":</label>";
+    $content .= "<input type='text' name='login' value='login' class='textfield'/><br/>";
+    $content .= "<label for='password'>"._("LOGIN_PASSWORD").":</label>";
+    $content .= "<input type='password' name='mdp' value='mdp' class='textfield'/><br/>";
+    $content .= "<input type='submit' name='action' value=\""._("Login")."\" class='submit'/>";
+    $content .= "</fieldset>";
     $content .= "</form>";
     
     $html .= main($title,$content,$GLOBALS['error']);
@@ -387,10 +374,8 @@ function bibindex_login(){
  * bibindex_logout()
  * Change admin mode to user and redirect to welcome page
  */
-function bibindex_logout()
-{
+function bibindex_logout(){
     unset($_SESSION['user']);
-    
     bibindex_welcome();
 }
 
@@ -1152,18 +1137,13 @@ function bibindex_entry_to_add(){
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("BIBINDEX_SELECT_NEW_ENTRY_TITLE");
     $types = xhtml_select('type',1,$_SESSION['bibdb']->entry_types(),"");
-    
-    $content = "<div style='text-align:center'>";
-	$content .= "<form method='get' action='bibindex.php'>";
+	$content = "<form style='text-align:center' method='get' action='bibindex.php'>";
 	$content .= "<fieldset style='border:none'>";
-	$content .= _("Select an entry type: ").$types;
-	$content .= "<br/>";
-    $content .= "<br/>";
-    $content .= "<input class='misc_button' type='submit' name='mode' value='"._("Cancel")."'/>";
-    $content .= "&nbsp;<input class='misc_button' type='submit' name='mode' value='"._("Select")."'/>";
+	$content .= "<label for='mode'>"._("Select an entry type: ")."</label>".$types."<br/><br/>";
+    $content .= "<input class='submit' type='submit' name='mode' value='"._("Cancel")."'/>";
+    $content .= "&nbsp;<input class='submit' type='submit' name='mode' value='"._("Select")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "</div>";
 	
     $html .= main($title,$content);
     $html .= html_close();
@@ -1227,9 +1207,10 @@ function bibindex_update_entry(){
 	$param['id'] = $_GET['id'];
 	$param['modelfile'] = "file://".realpath("./xsl/model.xml");
 	$param['update'] = "true";
-	$fields = $xsltp->transform($entry,load_file("./xsl/xml2htmledit.xsl"),$param);
-    $fields = replace_localized_strings($fields);
 	$thetype = trim($xsltp->transform($entry,load_file("./xsl/get_bibtex_type.xsl")));
+    $param['type'] = $thetype;
+    $fields = $xsltp->transform($entry,load_file("./xsl/xml2htmledit.xsl"),$param);
+    $fields = replace_localized_strings($fields);
 	$xsltp->free();
     
     // get existent groups

@@ -102,7 +102,8 @@ class BibORB_DataBase {
         Reload the database according the bibtex file.
      */
     function reload_from_bibtex(){
-        $data = convert_bibtex_to_xml(file($this->bibtex_file()));
+        $bt = new BibTeX_Tools();
+        $data = $bt->bibtex_file_to_xml($this->bibtex_file());
         $fp = fopen($this->xml_file(),"w");
         fwrite($fp,$data[2]);
         fclose($fp);
@@ -174,7 +175,7 @@ class BibORB_DataBase {
         $res = array(   'added'=>false,
                         'message'=>"");
 	
-        $bibid = trim($dataArray['_id']);
+        $bibid = trim($dataArray['id']);
         // check if the entry is already present
         $inbib = $this->is_bibtex_key_present($bibid);
 	
@@ -192,21 +193,23 @@ class BibORB_DataBase {
         else{
             // upload files if they are present
             if(array_key_exists('url',$_FILES) && file_exists($_FILES['url']['tmp_name'])){
-                $urlfile=upload_file($this->biblio_name,'url',$dataArray['_id']);
-                $dataArray['_url'] = $urlfile;
+                $urlfile=upload_file($this->biblio_name,'url',$dataArray['id']);
+                $dataArray['url'] = $urlfile;
             }
             if(array_key_exists('urlzip',$_FILES) && file_exists($_FILES['urlzip']['tmp_name'])){
-                $urlzipfile=upload_file($this->biblio_name,'urlzip',$dataArray['_id']);
-                $dataArray['_urlzip'] = $urlzipfile;
+                $urlzipfile=upload_file($this->biblio_name,'urlzip',$dataArray['id']);
+                $dataArray['urlzip'] = $urlzipfile;
             }  
             if(array_key_exists('pdf',$_FILES) && file_exists($_FILES['pdf']['tmp_name'])){
-                $pdffile=upload_file($this->biblio_name,'pdf',$dataArray['_id']);
-                $dataArray['_pdf'] = $pdffile;
+                $pdffile=upload_file($this->biblio_name,'pdf',$dataArray['id']);
+                $dataArray['pdf'] = $pdffile;
             }
 	    
             // add the new entry
             $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-            $xml = bibtex_array_to_xml($dataArray);
+            $bt = new BibTeX_Tools();
+            $data = $bt->entries_array_to_xml(array(extract_bibtex_data($dataArray)));
+            $xml = $data[2];
             $xsl = load_file("./xsl/add_entries.xsl");
             $param = array('bibname' => $this->xml_file());
             $result = $xsltp->transform($xml,$xsl,$param);
@@ -220,7 +223,7 @@ class BibORB_DataBase {
 	    
             $res['added'] = true;
             $res['message'] = "";
-            $res['id'] = $dataArray['_id'];
+            $res['id'] = $dataArray['id'];
         }
         return $res;
     }
@@ -231,7 +234,8 @@ class BibORB_DataBase {
     function add_bibtex_entries($bibtex){
         // add the new entry
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-        $data = convert_bibtex_to_xml($bibtex);
+        $bt = new BibTeX_Tools();
+        $data = $bt->bibtex_string_to_xml($bibtex);
 
         $xsl = load_file("./xsl/add_entries.xsl");
         $param = array('bibname' => $this->xml_file());
@@ -296,7 +300,7 @@ class BibORB_DataBase {
 		// check if the id value is null
         $res = array('updated'=>false,
 		     'message'=>"");
-        if($dataArray['_id'] == null){
+        if($dataArray['id'] == null){
             $res['updated'] = false;
             $res['message'] = _("Null BibTeX ID for an entry not allowed.");
         }
@@ -306,34 +310,37 @@ class BibORB_DataBase {
             $pdffile = null;
             
             if(array_key_exists('url',$_FILES) && file_exists($_FILES['url']['tmp_name'])){
-                $urlfile = upload_file($this->biblio_name,'url',$dataArray['_id']);
-                $dataArray['_url'] = $urlfile;
+                $urlfile = upload_file($this->biblio_name,'url',$dataArray['id']);
+                $dataArray['url'] = $urlfile;
             }
             else if($dataArray['current_url'] != null){
                 $urlfile = $dataArray['current_url'];
-                $dataArray['_url'] = $urlfile;
+                $dataArray['url'] = $urlfile;
             }
             
             if(array_key_exists('urlzip',$_FILES) && file_exists($_FILES['urlzip']['tmp_name'])){
-                $urlzipfile = upload_file($this->biblio_name,'urlzip',$dataArray['_id']);
-                $dataArray['_urlzip'] = $urlzipfile;
+                $urlzipfile = upload_file($this->biblio_name,'urlzip',$dataArray['id']);
+                $dataArray['urlzip'] = $urlzipfile;
             }
             else if($_POST['current_urlzip'] != null){
                 $urlzipfile = $dataArray['current_urlzip'];
-                $dataArray['_urlzip'] = $urlzipfile;
+                $dataArray['urlzip'] = $urlzipfile;
             }  
             
             if(array_key_exists('pdf',$_FILES) && file_exists($_FILES['pdf']['tmp_name'])){
-                $pdffile = upload_file($this->biblio_name,'pdf',$dataArray['_id']);
-                $dataArray['_pdf'] = $pdffile;
+                $pdffile = upload_file($this->biblio_name,'pdf',$dataArray['id']);
+                $dataArray['pdf'] = $pdffile;
             }
             else if($_POST['current_pdf'] != null){
                 $pdffile= $dataArray['current_pdf'];
-                $dataArray['_pdf'] = $pdffile;
+                $dataArray['pdf'] = $pdffile;
             }
             
             $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-            $xml = bibtex_array_to_xml($dataArray);
+            $bt = new BibTeX_Tools();
+            $data = $bt->entries_array_to_xml(array(extract_bibtex_data($dataArray)));
+            $xml = $data[2];
+
             $xsl = load_file("./xsl/update_xml.xsl");
             $param = array('bibname' => $this->xml_file());
             $result = $xsltp->transform($xml,$xsl,$param);
@@ -347,7 +354,7 @@ class BibORB_DataBase {
             
             $res['updated'] = true;
             $res['message'] = "";
-            $res['id'] = $dataArray['_id'];
+            $res['id'] = $dataArray['id'];
             }
         return $res;
     }

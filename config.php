@@ -89,40 +89,40 @@ $session_id = "SID";
  * The '_' is mandatory. 
  */
 $bibtex_entries = array(
-    "_id",
-    "_address", 
-    "_annote", 
-    "_author", 
-    "_booktitle", 
-    "_chapter", 
-    "_crossref",
-    "_edition",
-    "_editor",
-    "_howpublished",
-    "_institution",
-    "_journal",
-    "_key",
-    "_month",
-    "_note", 
-    "_number", 
-    "_organisation", 
-    "_pages", 
-    "_publisher", 
-    "_school", 
-    "_series", 
-    "_title", 
-    "_type", 
-    "_volume", 
-    "_year",
-    "_abstract", 
-    "_keywords",
-    "_url",
-    "_urlzip",
-    "_pdf",
-    "_groups",
-    "_website",
-    "_longnotes",
-    "_link"
+    "id",
+    "address", 
+    "annote", 
+    "author", 
+    "booktitle", 
+    "chapter", 
+    "crossref",
+    "edition",
+    "editor",
+    "howpublished",
+    "institution",
+    "journal",
+    "key",
+    "month",
+    "note", 
+    "number", 
+    "organisation", 
+    "pages", 
+    "publisher", 
+    "school", 
+    "series", 
+    "title", 
+    "type", 
+    "volume", 
+    "year",
+    "abstract", 
+    "keywords",
+    "url",
+    "urlzip",
+    "pdf",
+    "groups",
+    "website",
+    "longnotes",
+    "link"
 );
 
 /**
@@ -158,8 +158,8 @@ $fields_to_export = array('author',
 /**
  * The CSS style file to use.
  */
-$CSS_FILE="css/style-rounded.css";
-//$CSS_FILE="css/style.css";
+//$CSS_FILE="css/style-rounded.css";
+$CSS_FILE="css/style.css";
 
 /**
  * Display sort in all/group/search view
