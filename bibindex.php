@@ -233,6 +233,7 @@ if(array_key_exists('user_pref',$_SESSION)){
     $display_shelf_actions = $_SESSION['user_pref']['display_shelf_actions'] == "yes";
 }
 
+// global XSL parameters
 $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'bibnameurl' => $_SESSION['bibdb']->xml_file(),
                     'display_images' => $display_images,
@@ -250,14 +251,23 @@ $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
  * Action are given by GET/POST method.
  * Analyse the URL to do the corresponding action.
  */
+
+// GET action
 if(isset($_GET['action'])){
     switch($_GET['action']){
+        
+        /*
+            Select the GUI language
+         */
         case 'select_lang':
             $_SESSION['language'] = $_GET['lang'];
             load_i18n_config($_SESSION['language']);
             break;
-            
-        case 'add_to_basket':		// Add an item to the basket
+        
+        /*
+            Add an item to the basket
+         */
+        case 'add_to_basket':
             if(!isset($_GET['id'])){
                 trigger_error("Trying to add a null value in basket!",ERROR);
             }
@@ -266,22 +276,28 @@ if(isset($_GET['action'])){
             }
         break;
 	
-        case 'delete_from_basket':  // delete an entry from the basket
-        if(!isset($_GET['id'])){
-            trigger_error("Trying to remove a null value from basket!",ERROR);
-        }
-        else{
-            $_SESSION['basket']->remove_item($_GET['id']);
-        }
-        break;
+        /*
+            Delete an entry from the basket
+         */
+        case 'delete_from_basket':
+            if(!isset($_GET['id'])){
+                trigger_error("Trying to remove a null value from basket!",ERROR);
+            }
+            else{
+                $_SESSION['basket']->remove_item($_GET['id']);
+            }
+            break;
 	
-        case 'resetbasket':			// reset the basket
+        /*
+            Reset the basket
+         */
+        case 'resetbasket':
             $_SESSION['basket']->reset();
             break;
         
-        /**
+        /*
             Delete an entry from the database
-        */
+         */
         case 'delete':
             // check that there is an id
             if(!isset($_GET['id'])){
@@ -668,6 +684,9 @@ if(isset($_POST['action'])){
                 case 'html':
                     $_GET['mode'] = 'exportbaskettohtml';
                     break;
+                case 'docbook':
+                    $_GET['mode'] = 'exportbaskettodocbook';
+                    break;
                 default:
                     $_GET['mode'] = 'welcome';
                     break;
@@ -802,6 +821,14 @@ switch($mode) {
         $tab = $bt->xml_to_bibtex_array($entries);
         header("Content-Type: text/plain");
         echo $bt->array_to_RIS($tab);
+        break;
+        
+    case 'exportbaskettodocbook':
+        $bt = new BibTeX_Tools();
+        $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
+        $tab = $bt->xml_to_bibtex_array($entries);
+        header("Content-Type: text/plain");
+        echo $bt->array_to_DocBook($tab);
         break;
         
     // bibtex of a given entry

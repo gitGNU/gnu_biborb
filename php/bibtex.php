@@ -320,5 +320,71 @@ class BibTeX_Tools
         }
         return $export;
     }
+    
+    /**
+        Export an array of references to DocBook
+     */
+    function array_to_DocBook($tab){
+        $pc = new PARSECREATORS();
+        $export = "<?xml version='1.0'?>\n";
+        $export .= "<bibliography>\n";
+        foreach($tab as $entry){
+            $export .= sprintf("\t<biblioentry xreflabel='%s' id='%s'>\n",$entry['id'],$entry['id']);
+            $export .= sprintf("\t\t<abbrev>%s</abvrev>\n",$entry['id']);
+            // authors
+            if(array_key_exists('author',$entry)){
+                list($authors,$etal) = $pc->parse($entry['author']);
+                $export .= "\t\t<authorgroup>\n";
+                foreach($authors as $author){
+                    $export .= "\t\t\t<author>\n";
+                    $export .= "\t\t\t\t<firstname>".$author[0]."</firstname>\n";
+                    $export .= "\t\t\t\t<latsname>".$author[2]."</lastname>\n";
+                    $export .= "\t\t\t</author>\n";
+                }
+                $export .= "\t\t</authorgroup>\n";
+            }
+            // title
+            if(array_key_exists('title',$entry)){
+                $type = $entry['___type'];
+                if($type != 'article' && $type != 'book' && $type != 'journal'){
+                    $type = 'article';
+                }
+                $export .= sprintf("\t\t<citetitle pubwork='%s'>%s</citetitle>\n",$type,$entry['title']);
+            }
+            // publisher
+            if(array_key_exists('publisher',$entry)){
+                $export .= sprintf("\t\t<publisher>\n\t\t\t<publishername>%s</publishername>\n\t\t</publisher>\n",$entry['publisher']);
+            }
+            // volume
+            if(array_key_exists('volume',$entry)){
+                $export .= sprintf("\t\t<volumenum>%s</volumenum>\n",$entry['volume']);
+            }
+            // year
+            if(array_key_exists('year',$entry)){
+                $export .= sprintf("\t\t<pubdate>%s</pubdate>\n",$entry['year']);
+            }
+            // pages
+            if(array_key_exists('pages',$entry)){
+                $export .= sprintf("\t\t<artpagenums>%s</artpagenums>\n",$entry['pages']);
+            }
+            // number
+            if(array_key_exists('number',$entry)){
+                $export .= sprintf("\t\t<issuenum>%s</issuenum>\n",$entry['number']);
+            }
+            // editor
+            if(array_key_exists('editor',$entry)){
+                $export .= sprintf("\t\t<editor>%s</editor>\n",$entry['editor']);
+            }
+            // abstract
+            if(array_key_exists('abstract',$entry)){
+                $export .= "\t\t<abstract>\n";
+                $export .= "\t\t\t<para>".$entry['abstract']."\n\t\t\t</para>\n";
+                $export .= "\t\t</abstract>\n";
+            }
+            $export .= "\t</biblioentry>\n";
+        }
+        $export .= "</bibliography>";
+        return $export;
+    }
 }
 ?>
