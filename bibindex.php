@@ -210,18 +210,17 @@ if(isset($_GET['action'])){
 			$_SESSION['bibdb']->reset_groups($_SESSION['basket']->items);
 			break;
 		
-
-	case 'logout':
-	    $_SESSION['usermode'] = "user";
-	    break;
+        case 'logout':
+            $_SESSION['usermode'] = "user";
+            break;
     
-    case 'cancel':
-        $_GET['mode'] = "welcome";
-        break;
+        case 'cancel':
+            $_GET['mode'] = "welcome";
+            break;
         
-		default:
-			break;
-	}
+        default:
+            break;
+    }
 }
 
 // analyse POST
@@ -268,16 +267,20 @@ if(isset($_POST['action'])){
 			}
             break;
 
-		case 'import':				// Import bibtex entries
-			if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
-				die("Error, no bibtex data provided!");
-			}
-			else{
+        /*
+            Import bibtex entries.
+         */
+        case 'import':
+            if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
+                die("Error, no bibtex data provided!");
+            }
+            else{
+			 
                 if(array_key_exists('bibval',$_POST)){
                     $bibtex_data = explode("\n",$_POST['bibval']);
                 }
                 else{
-                    $bibtex_data = file($_FILES['bibfile']['tmp_name']);
+                    $bibtex_data= file($_FILES['bibfile']['tmp_name']);
                 }
                 // add the new entry			 
                 $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
@@ -296,8 +299,8 @@ if(isset($_POST['action'])){
                 }
                 //$message .= "<br/><pre>".print_r($bibtex_data)."</pre>";
                 $message .= $formated;
-			}
-			break;
+            }
+			 break;
     
         /*
             Login
@@ -398,13 +401,7 @@ switch($mode)
     
 	// Update the XML file according to values present in the BibTeX file.
     case 'update_xml_from_bibtex':
-        update_xml($_SESSION['bibdb']->name());
-        echo bibindex_welcome();
-        break;
-    
-     // Update the BibTeX file according to valued present in the BibTeX file.
-    case 'update_bibtex_from_xml':
-
+        $_SESSION['bibdb']->reload_from_bibtex();
         echo bibindex_welcome();
         break;
         

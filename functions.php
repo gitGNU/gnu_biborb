@@ -39,105 +39,6 @@
 require_once("config.php");
 require_once("utilities.php");
 
-
-/**
- * Update the XML file
- * If more than one bibfile is present, content is merged in one XML file
- * To each bibentry of abibfile.bib is assigned the group abibfile
- */
-function update_xml($bibname){
-    $ar = opendir("./bibs/".$bibname."/");
-    $tab = array();    
-    while($file = readdir($ar)) {
-        if(!is_dir($file) && $file != 'papers'){      
-            $inf = pathinfo($file);
-            if($inf['extension'] == 'bib'){
-                array_push($tab,$file);      
-            }
-        }
-    }
-  
-    if(count($tab) > 1){
-        $fp = fopen("./bibs/".$bibname."/".$bibname.".xml","w");
-        fwrite($fp,"<?xml version='1.0' encoding='iso-8859-1'?>\n");
-        fwrite($fp,"<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' name='".$bibname."'>\n");
-        fclose($fp);      
-        foreach($tab as $bibfile){      
-            write_xml_file("./bibs/".$bibname."/".$bibname.".xml","./bibs/".$bibname."/".$bibfile,true);
-        }    
-        $fp = fopen("./bibs/".$bibname."/".$bibname.".xml","a");   
-        fwrite($fp,"</bibtex:file>");
-        fclose($fp);
-    }
-    else{
-        write_xml_file("./bibs/".$bibname."/".$bibname.".xml","./bibs/".$bibname."/".$tab[0]);
-    }
-}
-
-/**
- * Convert a bibtex file to an xml file.
- * 
- */
-function write_xml_file($xmlfile,$bibfile,$append = false){  
-  $inf = pathinfo($bibfile);  
-  $bibname = explode('.',$inf['basename']);
-  $bibname = $bibname[0];
-  
-  if($append){
-    $xml_content = bibtex2xml($bibfile,$bibname);    
-    $fp = fopen($xmlfile,"a");   
-    fwrite($fp,$xml_content);
-    fclose($fp);    
-  }
-  else{
-    $inf = pathinfo($xmlfile);
-    $res = bibtex2xml(file($bibfile));
-    $xml_content = $res[2];
-    $fp = fopen($xmlfile,"w");
-    fwrite($fp,$xml_content);
-    fclose($fp);
-  }    
-}
-
-
-/**
- * xml2bibtex($bibname)
- * update the .bib file according to data present in the xml file.
- */
-function xml2bibtex($bibname){
-    $xmlfile = xmlfilename($bibname);
-    $bibfile = bibfilename($bibname);
-    
-    // get the number of entries
-    // xsl_process seems to return null both if an error occur or the file is empty
-    // so we have to check with the number of entries
-    $record = get_number_of_entries($bibname);
-    $nb = $record[0];
-
-    $xml_content = load_file($xmlfile);
-//    $xml_content = ereg_replace("<br/>","\n",$xml_content);
-    $xsl_content = load_file("./xsl/xml2bibtex.xsl");
-
-    $xh = xslt_create();
-    xslt_set_encoding($xh,"iso-8859-1");
-    $arguments = array('/_xml' => $xml_content, '/_xsl' => $xsl_content);  
-    $bibtex = xslt_process($xh,'arg:/_xml','arg:/_xsl',NULL,$arguments);
-
-    if (!$bibtex) {
-        if($nb!=0){
-            die(sprintf("Impossible de traiter le document XSLT [%d]: %s", 
-		                xslt_errno($xh), xslt_error($xh)));
-        }
-    }
-
-    xslt_free($xh);
-  
-    // write the bibtex file
-    $fp = fopen($bibfile,"w");
-    fwrite($fp,$bibtex);
-    fclose($fp);
-}
-
 /**
  * bibtex2xml
  * Transform a BibTeX string into an XML string
@@ -257,7 +158,7 @@ function bibtex2xml($bibtext,$group=NULL){
             $data_content .= trim($line)."\n";	
         }
     }
-  
+
     if($first == 0){
         $xml_content .= end_bibentry($type);
     }
@@ -290,42 +191,6 @@ function end_bibentry($type){
  */
 function bibfield($type,$value){
   return "<bibtex:".strtolower($type).">".$value."</bibtex:".strtolower($type).">\n";
-}
-
-/**
- * Load an XML file
- */
-function load_xml_bibfile($bibname)
-{
-    return load_file(xmlfilename($bibname));
-}
- 
-/**
- * get_number_of_entries
- * Returns the number of articles and electronic papers in the bibliography
- */
-function get_number_of_entries($bibname){
-    $xml_content = load_xml_bibfile($bibname);
-    $xsl_content = load_file("./xsl/count.xsl");
-    $nb_record = xslt_transform($xml_content,$xsl_content);  
-    $record = explode(".",$nb_record);
-    
-    return $record;
-}
-
-
-/**
- * Get the url of the .bib file
- */
-function bibfilename($bibname){
-    return "./bibs/".$bibname."/".$bibname.".bib";
-}
-
-/**
- * Get the url of the .xml file
- */
-function xmlfilename($bibname){
-    return "./bibs/".$bibname."/".$bibname.".xml";
 }
 
 

@@ -81,6 +81,31 @@ class BibORB_DataBase {
 		return $this->biblio_dir."papers/";
 	}
 	
+    /**
+        Update the .bib file wrt the .xml file
+	 */
+    function update_bibtex_file(){
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $this->all_entries();
+        $xsl_content = load_file("./xsl/xml2bibtex.xsl");
+        $bibtex = $xsltp->transform($xml_content,$xsl_content);
+  
+        // write the bibtex file
+        $fp = fopen($this->bibtex_file(),"w");
+        fwrite($fp,$bibtex);
+        fclose($fp);
+    }
+    
+    /**
+        Reload the database according the bibtex file.
+     */
+    function reload_from_bibtex(){
+        $data = bibtex2xml(file($this->bibtex_file()));
+        $fp = fopen($this->xml_file(),"w");
+        fwrite($fp,$data[2]);
+        fclose($fp);
+    }
+
 	/**
 		Get all entries in the database
 	 */
@@ -96,7 +121,10 @@ class BibORB_DataBase {
 		$xml_content = $this->all_entries();    
 		$xsl_content = load_file("./xsl/entries_for_group.xsl");
 		$param = array('group'=>$groupname);
-		return $xsltp->transform($xml_content,$xsl_content,$param);
+		$res =  $xsltp->transform($xml_content,$xsl_content,$param);
+		$xsltp->free();
+		
+		return $res;
 	}
 	
 	/**
@@ -125,12 +153,10 @@ class BibORB_DataBase {
 		$xsl_content = load_file("./xsl/entries_with_ids.xsl");
 		
 		//transform the array into an xml string
-		$xml_content = <<< XML
-<?xml version='1.0' encoding='iso-8859-1'?>
-<listofids>
-	<id>$anID</id>
-</listofids>
-XML;
+		$xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
+		$xml_content .= "<listofids>";
+		$xml_content .= "<id>$anID</id>";
+        $xml_content .= "</listofids>";
 		
 		$param = array('bibnameurl' => $this->xml_file());
 		$res = $xsltp->transform($xml_content,$xsl_content,$param);
@@ -186,7 +212,7 @@ XML;
 			fwrite($fp,$result);
 			fclose($fp);
 			// update bibtex file
-			xml2bibtex($this->biblio_name);
+			$this->update_bibtex_file();
 			
 			$res['added'] = true;
 			$res['message'] = "";
@@ -213,7 +239,7 @@ XML;
 		fwrite($fp,$result);
 		fclose($fp);
 		// update bibtex file
-		xml2bibtex($this->biblio_name);
+		$this->update_bibtex_file();
 		return $data[1];
 	}
 	
@@ -247,7 +273,7 @@ XML;
 		fclose($fp);
 		
 		//update the bibtex file.
-		xml2bibtex($this->biblio_name);
+		$this->update_bibtex_file();
 
 	}
 	
@@ -305,7 +331,7 @@ XML;
 			fwrite($fp,$result);
 			fclose($fp);
 			// update bibtex file
-			xml2bibtex($this->biblio_name);
+			$this->update_bibtex_file();
 			
 			$res['updated'] = true;
 			$res['message'] = "";

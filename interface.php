@@ -457,8 +457,7 @@ function bibindex_menu($bibname)
 		}
 		if(array_key_exists('keywords',$_GET)){
 			$html .= "&search=".$_GET['keywords'];
-		}
-		
+		}	
 	}
 	$html .= "'>Reset basket</a></li>";
     $html .= "</ul>";
