@@ -238,14 +238,14 @@ class Auth
         $prefTxt .= "css_file:".(array_key_exists("css_file",$pref) ? $pref['css_file'] : "style.css")."\n";
         $prefTxt .= "default_language:".(array_key_exists("default_language",$pref) ? $pref['default_language'] : "en_US")."\n";
         $prefTxt .= "default_database:".(array_key_exists("default_database",$pref) ? $pref['default_database'] : "")."\n";
-        $prefTxt .= "display_images:".(array_key_exists("display_images",$pref) ? $pref['display_images'] : "true")."\n";
+        $prefTxt .= "display_images:".(array_key_exists("display_images",$pref) ? $pref['display_images'] : "yes")."\n";
         $prefTxt .= "display_txt:".(array_key_exists("display_txt",$pref) ? $pref['display_txt'] : "no")."\n";
-        $prefTxt .= "display_abstract:".(array_key_exists("display_abstract",$pref) ? $pref['display_abstract'] : "false")."\n";
-        $prefTxt .= "warn_before_deleting:".(array_key_exists("warn_before_deleting",$pref) ? $pref['warn_before_deleting'] : "true")."\n";
+        $prefTxt .= "display_abstract:".(array_key_exists("display_abstract",$pref) ? $pref['display_abstract'] : "no")."\n";
+        $prefTxt .= "warn_before_deleting:".(array_key_exists("warn_before_deleting",$pref) ? $pref['warn_before_deleting'] : "yes")."\n";
         $prefTxt .= "default_sort:".(array_key_exists("default_sort",$pref) ? $pref['default_sort'] : "ID")."\n";
         $prefTxt .= "default_sort_order:".(array_key_exists("default_sort_order",$pref) ? $pref['default_sort_order'] : "ascending")."\n";
         $prefTxt .= "max_ref_by_page:".(array_key_exists("max_ref_by_page",$pref) ? $pref['max_ref_by_page'] : "10")."\n";
-        $prefTxt .= "display_shelf_actions:".(array_key_exists("display_shelf_actions",$pref) ? $pref['display_shelf_actions'] : "false")."\n";
+        $prefTxt .= "display_shelf_actions:".(array_key_exists("display_shelf_actions",$pref) ? $pref['display_shelf_actions'] : "no")."\n";
         
         $fp = fopen("./data/users_pref/pref_".$user.".txt",'w');
         fwrite($fp,$prefTxt);

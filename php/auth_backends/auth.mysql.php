@@ -57,6 +57,7 @@ $pass = "biborbdev";
 $db = "biborb";
 $table = "biborb_users";
 $auth_table = "biborb_auth";
+$pref_table = "user_preferences";
 
 
 /**
@@ -71,6 +72,7 @@ class Auth
     var $dbname;        // name of the database containing BibORB tables
     var $users_table;   // name of the table containing users data.
     var $users_auth;    // name of the table containing authorizations data.
+    var $user_preferences_table;
     
     /**
         Constructor
@@ -82,6 +84,7 @@ class Auth
         $this->dbname = $GLOBALS['db'];
         $this->users_table = $GLOBALS['table'];
         $this->users_auth = $GLOBALS['auth_table'];
+        $this->user_preferences_table = $GLOBALS['pref_table'];
     }
     
     /**
@@ -134,7 +137,7 @@ class Auth
         Returns TRUE/FALSE
      */
     function can_delete_entry($user, $database_name){
-    //connection to the users database
+        //connection to the users database
         $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
@@ -253,6 +256,103 @@ class Auth
             else{
                 return FALSE;
             }
+        }
+    }
+    /**
+        *
+     */
+    function get_preferences($user){
+        //connection to the users database
+        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
+        $base = @mysql_select_db($this->dbname,$connect);
+        if(!$base){
+            die("Unable to connect to the users database!");
+        }
+        else{
+            $pref = array();
+            // get the user_id
+            $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
+            $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+            $row = mysql_fetch_assoc($result);
+            $id = $row['id'];
+            // get pref for this user
+            $query = "SELECT * FROM ".$this->user_preferences_table." WHERE user_id=$id";
+            $result = mysql_query($query,$connect) or die("Invalid request: ".mysql_error());
+            
+            if(mysql_num_rows($result) != 0){
+                // pref exist for this user
+                $row = mysql_fetch_assoc($result);
+                $pref['css_file'] = $row['css_file'];
+                $pref['default_language'] = $row['default_language'];
+                $pref['default_database'] = $row['default_database'];
+                $pref['display_images'] = $row['display_images'] == 'Y' ? "yes" : "no";
+                $pref['display_txt'] = $row['display_txt'] == 'Y' ? "yes" : "no";
+                $pref['display_abstract'] = $row['display_abstract'] == 'Y' ? "yes" : "no";
+                $pref['warn_before_deleting'] = $row['warn_before_deleting'] == 'Y' ? "yes" : "no";
+                $pref['default_sort'] = $row['default_sort'];
+                $pref['default_sort_order'] = $row['default_sort_order'];
+                $pref['max_ref_by_page'] =$row['max_ref_by_page'];
+                $pref['display_shelf_actions'] = $row['display_shelf_actions'] == 'Y' ? "yes" : "no";
+            }
+            else{
+                //default preferences
+                $pref['css_file'] = "style.css";
+                $pref['default_language'] = "en_US";
+                $pref['default_database'] = "none";
+                $pref['display_images'] = "yes";
+                $pref['display_txt'] = "no";
+                $pref['display_abstract'] = "no";
+                $pref['warn_before_deleting'] = "yes";
+                $pref['default_sort'] = "ID";
+                $pref['default_sort_order'] = "ascending";
+                $pref['max_ref_by_page'] = "10";
+                $pref['display_shelf_actions'] = "no";
+                $this->set_preferences($pref,$user);
+            }
+        
+            return $pref;
+        }
+    }
+    
+    /**
+        
+     */
+    function set_preferences($pref,$user){
+        //connection to the users database
+        $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
+        $base = @mysql_select_db($this->dbname,$connect);
+        if(!$base){
+            die("Unable to connect to the users database!");
+        }
+        else{
+            // get the user_id
+            $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
+            $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+            $row = mysql_fetch_assoc($result);
+            $id = $row['id'];
+            // get pref for this user
+            $query = "SELECT * FROM ".$this->user_preferences_table." WHERE user_id='$id'";
+            $result = mysql_query($query,$connect) or die("Invalid request0: ".mysql_error());
+            // create the record if doesn't already exist
+            if(mysql_num_rows($result) == 0){
+                $query = "INSERT INTO `".$this->user_preferences_table."` (user_id) VALUES ('$id');";
+                mysql_query($query,$connect) or die("Invalid request1: ".mysql_error());
+            }
+            $query = "UPDATE ".$this->user_preferences_table." SET ";
+            $query .= "css_file='".(array_key_exists("css_file",$pref) ? $pref['css_file'] : "style.css")."',";
+            $query .= "default_language='".(array_key_exists("default_language",$pref) ? $pref['default_language'] : "en_US")."',";
+            $query .= "default_database='".(array_key_exists("default_database",$pref) ? $pref['default_database'] : "")."',";
+            $query .= "display_images='".(array_key_exists("display_images",$pref) ? ($pref['display_images'] == "yes" ? "Y" : "N") : "Y")."',";
+            $query .= "display_txt='".(array_key_exists("display_txt",$pref) ? ($pref['display_txt'] == "yes" ? "Y" : "N") : "N")."',";
+            $query .= "display_abstract='".(array_key_exists("display_abstract",$pref) ? ($pref['display_abstract'] == "yes" ? "Y" : "N") : "N")."',";
+            $query .= "warn_before_deleting='".(array_key_exists("warn_before_deleting",$pref) ? ($pref['warn_before_deleting'] == "yes" ? "Y" : "N") : "Y")."',";
+            $query .= "default_sort='".(array_key_exists("default_sort",$pref) ? $pref['default_sort'] : "ID")."',";
+            $query .= "default_sort_order='".(array_key_exists("default_sort_order",$pref) ? $pref['default_sort_order'] : "ascending")."',";
+            $query .= "max_ref_by_page='".(array_key_exists("max_ref_by_page",$pref) ? $pref['max_ref_by_page'] : "10")."',";
+            $query .= "display_shelf_actions='".(array_key_exists("display_shelf_actions",$pref) ? ($pref['display_shelf_actions'] == "yes" ? "Y" : "N") : "N")."' ";
+        
+            $query .= "WHERE user_id='$id' LIMIT 1";
+            mysql_query($query,$connect) or die("Invalid request2: ".mysql_error());
         }
     }
 }

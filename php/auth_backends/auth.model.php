@@ -101,6 +101,18 @@ class Auth
      */
     function can_modify_entry($user, $database_name){
     }
+    
+    /**
+    
+     */
+    function get_preferences($user){
+    }
+    
+    /**
+    
+     */
+    function set_preferences($pref,$user){
+    }
 }
 
 ?>

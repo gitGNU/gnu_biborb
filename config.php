@@ -67,7 +67,7 @@ define("DISABLE_AUTHENTICATION",FALSE);
  * Authentication methods: mysql, files
  * Used if DISABLE_AUTHENTICATION = FALSE
  */
-define("AUTH_METHOD",'files');
+define("AUTH_METHOD",'mysql');
 
 /**
  *  Should a confirmation be displayed when deleting entries
