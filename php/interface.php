@@ -257,7 +257,7 @@ function index_menu(){
         $html .= "<form id='language_form' action='index.php' method='get'>";
         $html .= "<fieldset>";
         $html .= "<label for='lang'>".msg("Language:")."</label>";
-        $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language'],"javascript:change_lang_index(this.value)");
+        $html .= lang_html_select($_SESSION['language']);
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
         $html .= "<noscript><div><input class='submit' type='submit' value='".msg("Select")."'/></div></noscript>";
         $html .= "</fieldset>";
@@ -484,7 +484,7 @@ function bibindex_menu($bibname)
         $html .= "<form id='language_form' action='bibindex.php' method='get'>";
         $html .= "<fieldset>";
         $html .= "<label for='lang'>".msg("Language:")."</label>";
-        $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language'],"javascript:change_lang(this.value)");
+        $html .= lang_html_select($_SESSION['language']);
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
         $html .= "<noscript><div><input class='submit' type='submit' value='".msg("Select")."'/></div></noscript>";
         $html .= "</fieldset>";

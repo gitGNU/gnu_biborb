@@ -133,6 +133,28 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
 }
 
 /**
+    Generate a HTML Select tag containing locales name.
+    On click call javascript to change the language
+ */
+function lang_html_select($lang){
+    $names = array('fr_FR'=>'Français',
+                  'de_DE'=>'Deutsch',
+                  'en_US'=>'English');
+    $res = "<select name='lang' id='lang' onchange='javascript:change_lang_index(this.value)'>";
+    foreach(get_locales() as $locale){
+        if($lang == $locale){
+            $res .= "<option selected='selected' value='$locale' >".$names[$locale]."</option>";
+        }
+        else{
+            $res .= "<option value='$locale'>".$names[$locale]."</option>";
+        }
+    }
+    $res .= "</select>";
+    return $res;
+}
+
+
+/**
 	Set the localization configuration
  */
 function load_i18n_config($language)
