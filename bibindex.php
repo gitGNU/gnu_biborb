@@ -75,6 +75,7 @@ require_once("php/xslt_processor.php"); // xslt processing
 require_once("php/interface.php"); // generate interface
 require_once("php/auth.php");
 require_once("php/third_party/Tar.php");
+require_once("php/error.php");
 
 /**
  * Session
@@ -83,12 +84,15 @@ session_cache_limiter('nocache');
 session_name($session_id);
 session_start();
 
+// Set the error_handler
+set_error_handler("biborb_error_handler");
+
+
 if(get_magic_quotes_gpc()) {
     $_POST = array_map('stripslashes_deep', $_POST);
     $_GET = array_map('stripslashes_deep', $_GET);
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 }
-
 
 /**
  *  i18n
@@ -117,7 +121,7 @@ $message = null;
  * Display an error if there is no active bibtex database
  */
 if(!array_key_exists('bibdb',$_SESSION) && !array_key_exists('bibname',$_GET)){
-    die("Error: bibname is not set");
+    trigger_error("Bibliography's name is not set!",ERROR);
 }
 
 /**
@@ -263,7 +267,7 @@ if(isset($_GET['action'])){
             
         case 'add_to_basket':		// Add an item to the basket
             if(!isset($_GET['id'])){
-                die("Error in add_to_basket: id not set");
+                trigger_error("Trying to add a null value in basket!");
             }
             else{
                 $_SESSION['basket']->add_items(explode("*",$_GET['id']));
@@ -272,7 +276,7 @@ if(isset($_GET['action'])){
 	
         case 'delete_from_basket':  // delete an entry from the basket
         if(!isset($_GET['id'])){
-            die("Error in delete_from_basket: id not set");
+            trigger_error("Trying to remove a null value from basket!");
         }
         else{
             $_SESSION['basket']->remove_item($_GET['id']);
@@ -288,7 +292,7 @@ if(isset($_GET['action'])){
         */
         case 'delete':
             if(!isset($_GET['id'])){
-                die("Error while deleting: no Bibtex ID selected!");
+                trigger_error("BibTeX key not set. Can not remove a reference from the database.");
             }  
             else{
                 $confirm = FALSE;

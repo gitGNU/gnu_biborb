@@ -70,7 +70,8 @@ $db = "biborb";
 $dbuser = "biborb-admin";
 $pass = "biborbdev";
 $table = "biborb_users";
-$auth_table = "biborb_auth";</pre>
+$auth_table = "biborb_auth";
+$pref_table = "user_preferences"</pre>
     <ul>
         <li><code class='variable'>$host</code>: address of the machine hosting the database.</li>
         <li><code class='variable'>$db</code>: name of the database.</li>
@@ -78,6 +79,7 @@ $auth_table = "biborb_auth";</pre>
         <li><code class='variable'>$pass</code>: its password.</li>
         <li><code class='variable'>$table</code>: the table containing valid biborb users and passwords.</li>
         <li><code class='variable'>$auth_table</code>: the table that defined authorizations for biborb users.</li>
+        <li><code class='variable'>$pref_table</code>: the table that defined biborb users preferences.</li>
     </ul>
     
     <p><code class='file'>data/biborb.sql</code> contains the SQL structure used with the MySQL authentication. Have a look to <code class='file'>php/auth_backends/auth.mysql.php</code> for details about the structure of the database.</p>
@@ -101,16 +103,16 @@ define("DISABLE_AUTHENTICATION",TRUE);
  * Used if DISABLE_AUTHENTICATION = FALSE
  */
 define("AUTH_METHOD",'files');</pre>
-    <p>Files used to defines access are <code class='file'>php/auth_backends/bib_access.txt</code> and <code class='file'>php/auth_backends/bib_users.txt</code></p>
+    <p>Files used to defines access are <code class='file'>php/auth_backends/bib_access.txt</code> and <code class='file'>data/auth_files/bib_users.txt</code></p>
     <ul>
-        <li><code class='file'>php/auth_backends/bib_users.txt</code>: it contains a list of user/password: <code>user:crypted_password,isAdmin</code> where <code>isAdmin=1</code> if the user is an administrator (all privileges, add/delete bibliographies), 0 otherwise.
+        <li><code class='file'>data/auth_files/bib_users.txt</code>: it contains a list of user/password: <code>user:crypted_password,isAdmin</code> where <code>isAdmin=1</code> if the user is an administrator (all privileges, add/delete bibliographies), 0 otherwise.
 <pre>
 testuser:testpass,0
 admin:admin,1
 </pre>
         Use <code class='file'>php/auth_backends/crypt_password.php</code> to crypt your password, then copy it in <code class='file'>bib_users.txt</code> .
         </li>
-        <li><code class='file'>php/auth_backends/bib_access.txt</code>: it defines the users' privileges on each database (<code>a</code>: add reference, <code>d</code>: delete reference, <code>m</code>: update reference)
+        <li><code class='file'>data/auth_files/bib_access.txt</code>: it defines the users' privileges on each database (<code>a</code>: add reference, <code>d</code>: delete reference, <code>m</code>: update reference)
 <pre>
 abibliography:testuser*m,anotheruser*adm
 anotherbiblio:testuser*adm,anotheruser*am

@@ -22,6 +22,7 @@
         <li><a href="#help_pear">PHP Pear</a></li>
         <li><a href="#help_upgrade">Upgrade</a></li>
         <li><a href="#help_install">Installation</a></li>
+        <li><a href="#check">Check Installation</a></li>
     </ul>
 </div>
 
@@ -70,7 +71,7 @@ standards. Consequently, you should ensure that:
         <pre>mv biborb biborb.old</pre></li>
         <li>Untar the archive: <code>tar -xvzf biborb-x.tar.gz</code></li>
         <li>Copy or move the <code class='file'>biborb.old/bibs</code> directory to the new biborb directory.</li>
-        <li>If you were using files authentication, copy <code class='file'>bib_access.txt</code> and <code class='file'>bib_users.txt</code> (located in the directory <code class='file'>php/auth_backends</code> to <code class='file'>data/auth_files</code>.
+        <li>If you were using files authentication, copy <code class='file'>bib_access.txt</code> and <code class='file'>bib_users.txt</code> (located in the directory <code class='file'>php/auth_backends</code>) to <code class='file'>data/auth_files</code>.
     </ol>
     </div>
 </div>
@@ -99,6 +100,14 @@ chmod g+w bibs</pre>
     </ol>
     </div>
 </div>
+
+<div class="topic" id="check">
+    <h3>Check Installation</h3>
+    <div class="topic_content">
+        A script is provided to ensure that everything is ok for BibORB. To run it, open your web browser and go to the following url: <code>http://yourserver/path/to/biborb/check_biborb.php</code>.
+    </div>
+</div>
+
 </div>
 </div>
 </div>

@@ -44,6 +44,8 @@ require_once("php/functions.php");  // load needed functions
 require_once("php/biborbdb.php");   // load biborb database
 require_once("php/interface.php");  // load function to generate the interface
 require_once("php/auth.php");       // load authentication class
+require_once("php/error.php");
+
 
 /**
  * Load the session
@@ -52,6 +54,8 @@ session_cache_limiter('nocache');
 session_name($session_id);
 session_start();
 
+// Set the error_handler
+set_error_handler("biborb_error_handler");
 /**
 
  */
@@ -64,6 +68,7 @@ if(get_magic_quotes_gpc()) {
 /**
  *  i18n
  */
+// try to load user preferences if exist
 if(array_key_exists('user_pref',$_SESSION)){
     $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
 }
@@ -146,7 +151,6 @@ if(isset($_GET['action'])){
             Logout
          */
         case "logout":
-            unset($_SESSION['user']);
             $_SESSION['user_is_admin'] = FALSE;
             unset($_SESSION['user']);
             unset($_SESSION['user_pref']);

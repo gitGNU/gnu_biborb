@@ -70,8 +70,8 @@ class PARSEENTRIES
 		$this->count = 0;
 		$this->fieldExtract = TRUE;
 		$this->removeDelimit = TRUE;
-	        $this->expandMacro = FALSE;
-	        $this->parseFile = TRUE;
+        $this->expandMacro = FALSE;
+        $this->parseFile = TRUE;
 	}
 // Open bib file
 	function openBib($file)

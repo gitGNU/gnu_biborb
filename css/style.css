@@ -234,6 +234,11 @@ html > body #menu {position:fixed;}
 #preferences fieldset {border:0;margin:auto;}
 
 /**
+    Error report
+ */
+ .error_report { margin:auto; width:400px;padding:1em;margin-top:4em;border:solid 2px red;}
+ .error_content {margin:1em;border-top:solid 1px red;border-bottom:solid 1px red;color:#444;font-family:monospace}
+/**
  * Generic style
  */
 .result_header {margin:0;border:none;padding:0;vertical-align:center;}
