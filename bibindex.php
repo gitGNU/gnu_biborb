@@ -333,11 +333,14 @@ if(isset($_GET['action'])){
             $_GET['mode']='update';
             break;
             
-        case 'update_key':
+        case 'update_key': // update the BibTeX key of a reference
             if(!$_SESSION['bibdb']->is_bibtex_key_present($_GET['bibtex_key'])){
                 $_SESSION['bibdb']->change_id($_GET['id'],$_GET['bibtex_key']);
                 $_GET['mode']='update';
                 $_GET['id'] = $_GET['bibtex_key'];
+                // change the value in the basket
+                $_SESSION['basket']->remove_item($_GET['id']);
+                $_SESSION['basket']->add_item($_GET['bibtex_key']);
             }
             else{
                 $error = sprintf(msg("BibTeX key <code>%s</code> already exists."),$_GET['bibtex_key']);
