@@ -168,5 +168,6 @@ links */
 
 /* look when entry present in basket */
 .inbasket {
-	background-color: #f98;
+	//background-color: #f98;
+	background-color: f7f3b6;
 }
