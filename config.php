@@ -36,6 +36,7 @@
 /**
  * Version of Biborb
  */
+
 define("BIBORB_XML_VERSION",1);
 define("BIBORB_VERSION","CVS");
 define("BIBORB_RELEASE_DATE","5 February 2005");

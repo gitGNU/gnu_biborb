@@ -12,7 +12,12 @@ Ce menu donne accès aux différentes fonctions d'affichage.
        <th>Par Groupe</th>
        <td>Afficher les références appartenant à un groupe donné.</td>
     </tr>
+    
     <tr class='colored'>
+        <th>Naviguer</th>
+        <td>Naviguer et filtrer les références.</th>
+    </tr>
+    <tr>
       <th>Recherche</th>
       <td>Effectuer une recherche dans la bibliographie (simple, détaillée, XPath).</td>
     </tr>

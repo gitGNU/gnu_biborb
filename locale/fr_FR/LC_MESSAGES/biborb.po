@@ -1081,3 +1081,18 @@ msgstr "Préférences"
 
 msgid "INDEX_MENU_PREFERENCES_HELP"
 msgstr "Définir les préférences utilisateur."
+
+msgid "Existing years:"
+msgstr "Années présentes :"
+
+msgid "Existing authors:"
+msgstr "Auteurs présents :"
+
+msgid "Existing journals:"
+msgstr "Revues présentes :"
+
+msgid "Existing groups:"
+msgstr "Groupes présents :"
+
+msgid "Existing series:"
+msgstr "Séries présentes :"

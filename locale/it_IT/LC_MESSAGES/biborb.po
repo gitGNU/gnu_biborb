@@ -1123,3 +1123,18 @@ msgstr ""
 
 msgid "INDEX_MENU_PREFERENCES_HELP"
 msgstr ""
+
+msgid "Existing years:"
+msgstr ""
+
+msgid "Existing authors:"
+msgstr ""
+
+msgid "Existing journals:"
+msgstr ""
+
+msgid "Existing groups:"
+msgstr ""
+
+msgid "Existing series:"
+msgstr ""

@@ -1757,7 +1757,7 @@ function pref_content(){
     $content .= "</tr>";
     
     // Default database
-    $content .= "<tr>";
+  /*  $content .= "<tr>";
     $content .= "<td>".msg("Select the default database to open once logged in.")."</td>";
     $names = get_databases_names();
     $content .= "<td><select name='default_database'>";
@@ -1770,7 +1770,7 @@ function pref_content(){
         }
     }
     $content .= "</select></td>";
-    $content .= "<tr/>";
+    $content .= "<tr/>";*/
     
     // Display images
     $content .= "<tr>";

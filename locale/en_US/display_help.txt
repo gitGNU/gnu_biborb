@@ -13,6 +13,10 @@ This menu gives access to the bibliography's entries.
        <td>Display entries by groups.</td>
     </tr>
     <tr class='colored'>
+        <th>Browse</th>
+        <td>Browse and filter references.</th>
+    </tr>
+    <tr>
       <th>Search</th>
       <td>Search the bibliography for entries (simple, detailed, XPath).</td>
     </tr>
