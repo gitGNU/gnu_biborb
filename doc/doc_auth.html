@@ -12,7 +12,7 @@
 <div id="main_container">
 <div id="main">
 <h1>Authentication and BibORB</h1>      
-    <p>Configure the authentication support in <acronym class='biborb'>BibORB</acronym> 1.3.2.</p>
+    <p>Configure the authentication support in <acronym class='biborb'>BibORB</acronym> 1.3.3.</p>
 
 <div id="index">
     <h3>Index</h3>
@@ -48,17 +48,18 @@ require valid-user</pre>
     <h3>MySQL authentication</h3>
     <div class="topic_content">
     <p>Values to defined in <code class='file'>config.php</code>:</p>
-    <pre>/**
+    <pre>
+/**
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = FALSE;
+define("DISABLE_AUTHENTICATION",TRUE);
 
 /**
  * Authentication methods: mysql, files
- * Used if $disable_authentication = FALSE
+ * Used if DISABLE_AUTHENTICATION = FALSE
  */
-$authentication_method = 'mysql';</pre>
+define("AUTH_METHOD",'mysql');</pre>
     <p>The next step is to correctly set up <code class='file'>php/auth_backends/auth.mysql.php</code>. This is done by defining:</p>
 <pre>
 /**
@@ -88,17 +89,18 @@ $auth_table = "biborb_auth";</pre>
     <div class="topic_content">
     <p>If you don't want or don't have access to a database, you can configure authorizations using files.</p>
     <p>Values to defined in <code class='file'>config.php</code>:</p>
-        <pre>/**
+        <pre>
+/**
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = FALSE;
+define("DISABLE_AUTHENTICATION",TRUE);
 
 /**
  * Authentication methods: mysql, files
- * Used if $disable_authentication = FALSE
+ * Used if DISABLE_AUTHENTICATION = FALSE
  */
-$authentication_method = 'files';</pre>
+define("AUTH_METHOD",'files');</pre>
     <p>Files used to defines access are <code class='file'>php/auth_backends/bib_access.txt</code> and <code class='file'>php/auth_backends/bib_users.txt</code></p>
     <ul>
         <li><code class='file'>php/auth_backends/bib_users.txt</code>: it contains a list of user/password: <code>user:crypted_password,isAdmin</code> where <code>isAdmin=1</code> if the user is an administrator (all privileges, add/delete bibliographies), 0 otherwise.

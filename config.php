@@ -199,7 +199,7 @@ define("GEN_BIBTEX",TRUE);
  *  and its reading status(read, read next, not read)
  * value: TRUE/FALSE
  */
-define("SHELF_MODE",TRUE);
+define("SHELF_MODE",FALSE);
 
 
 /**

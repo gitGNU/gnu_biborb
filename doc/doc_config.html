@@ -12,7 +12,7 @@
 <div id="main_container">
 <div id="main">
     <h1>Configure BibORB</h1>
-    <p>This page presents configuration options that are available in BibORB 1.3.2  (<code class='file'>config.php</code>).</p>
+    <p>This page presents configuration options that are available in BibORB 1.3.3  (<code class='file'>config.php</code>).</p>
     
 <div id="index">
     <h3>Index</h3>
@@ -25,6 +25,8 @@
         <li><a href="#help_sort">Sorting entries</a></li>
         <li><a href="#help_export">Export entries to <acronym>BibTeX</acronym></a></li>
         <li><a href="#help_nb_display">Select the number of references to display in a page</a></li>
+        <li><a href="#help_gen_bibtex">Keep an up-to-date BibTeX copy of the database</a></li>
+        <li><a href="#shelf_mode">Shelf mode</a></li>
     </ul>
 </div>
 
@@ -36,17 +38,17 @@
         <pre>
 /**
  * Localization
- * Available: en_US, fr_FR
+ * Available: en_US, fr_FR, de_DE, it_IT
  */
-$language = "en_US";
+define("DEFAULT_LANG",'en_US');
 
 /**
  * Show available languages on BibORB pages
  * TRUE/FALSE
  */
-$display_language_selection = TRUE;</pre>
-        <p>Use the <code class='variable'>$language</code> variable to select the default language that should be used in <acronym class='biborb'>BibORB</acronym>.</p>
-        <p>Use the <code class='variable'>$display_language_selection</code> to enable people to select their language within the <acronym class='biborb'>BibORB</acronym> interface. If this variable is set to <code class='constant'>FALSE</code> then the interface is localized using the value of <code class='variable'>$language</code>.</p>
+define("DISPLAY_LANG_SELECTION",TRUE);</pre>
+        <p>Use the <code class='variable'>DEFAULT_LANG</code> variable to select the default language that should be used in <acronym class='biborb'>BibORB</acronym>.</p>
+        <p>Use the <code class='variable'>DISPLAY_LANG_SELECTION</code> to enable people to select their language within the <acronym class='biborb'>BibORB</acronym> interface. If this variable is set to <code class='constant'>FALSE</code> then the interface is localized using the value of <code class='variable'>DEFAULT_LANG</code>.</p>
     </div>
 </div>
 
@@ -58,14 +60,14 @@ $display_language_selection = TRUE;</pre>
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = TRUE;
+define("DISABLE_AUTHENTICATION",TRUE);
 
 /**
  * Authentication methods: mysql, files
- * Used if $disable_authentication = FALSE
+ * Used if DISABLE_AUTHENTICATION = FALSE
  */
-$authentication_method = files;</pre>
-        <p>If you want to share your bibliography within a local network, you may not want other people to edit or even delete your data. If <code class='variable'>$disable_authentication</code> is set to <code class='constant'>FALSE</code>, user must login to be able to add, delete or update references. See <a href='./doc_auth.html'>Authentication Help</a> to set up correctly BibORB to use the authentication method defined (<code class='variable'>$authentication_method</code>).</p>
+define("AUTH_METHOD",'files');</pre>
+        <p>If you want to share your bibliography within a local network, you may not want other people to edit or even delete your data. If <code class='variable'>DISABLE_AUTHENTICATION</code> is set to <code class='constant'>FALSE</code>, user must login to be able to add, delete or update references. See <a href='./doc_auth.html'>Authentication Help</a> to set up correctly BibORB to use the authentication method defined (<code class='variable'>AUTH_METHOD</code>).</p>
     </div>
 </div>
 
@@ -76,7 +78,7 @@ $authentication_method = files;</pre>
 /**
  *  Should a confirmation be displayed when deleting entries
  */
-$warn_before_deleting = TRUE;</pre>
+define("WARN_BEFORE_DELETING",TRUE);</pre>
         <p>When a user has the authorization to delete entries, a confirmation message may be display when deleting entries. Set this variable to <code class='constant'>TRUE</code> if you want this message to be displayed.</p>
     </div>
 </div>
@@ -88,13 +90,13 @@ $warn_before_deleting = TRUE;</pre>
 /**
  * Should action be represented by icons or not.
  */
-$display_images = TRUE;
+define("DISPLAY_IMAGES",TRUE);
 
 /**
  *  Sould action be represented by text or not.
  */
-$display_text = FALSE;</pre>
-        <p>Actions on a reference (edit, delete, get ps, ps.gz, pdf ...) are available in both text format or icons. Set <code class='variable'>$display_images</code> and <code class='variable'>$display_text</code> to display both or only one of them.</p> 
+define("DISPLAY_TEXT",FALSE);</pre>
+        <p>Actions on a reference (edit, delete, get ps, ps.gz, pdf ...) are available in both text format or icons. Set <code class='variable'>DISPLAY_IMAGES</code> and <code class='variable'>DISPLAY_TEXT</code> to display both or only one of them.</p> 
     </div>
 </div>
 
@@ -105,8 +107,8 @@ $display_text = FALSE;</pre>
 /**
  * Should the abstract be present for each entry.
  */
-$display_abstract = FALSE;</pre>
-        <p>Set the <code class='variable'>$display_abstract</code> variable to <code class='constant'>TRUE</code> if you want the abstract to be always displayed. If <code class='constant'>FALSE</code>, the abstract is displayed only if you click on the abstract action.</p>
+define("DISPLAY_ABSTRACT",FALSE);</pre>
+        <p>Set the <code class='variable'>DISPLAY_ABSTRACT</code> variable to <code class='constant'>TRUE</code> if you want the abstract to be always displayed. If <code class='constant'>FALSE</code>, the abstract is displayed only if you click on the abstract action.</p>
     </div>
 </div>
 
@@ -119,16 +121,16 @@ $display_abstract = FALSE;</pre>
  * If no, displayed only on search
  * TRUE/FALSE
  */
-$DISPLAY_SORT=TRUE;
+define("DISPLAY_SORT",TRUE);
 
 /**
  * Default sort method: ID,title,year
  * and order: ascending/descending
  */
-$DEFAULT_SORT="ID";
-$DEFAULT_SORT_ORDER="ascending";</pre>
+define("DEFAULT_SORT","ID");
+define("DEFAULT_SORT_ORDER","ascending");</pre>
         <p>It is possible to select which is the default sort method to display references. Presently, three sort method are provided: title, year and bibtex key.</p>
-        <p>Set <code class='variable'>$DISPLAY_SORT</code> to <code class='constant'>TRUE</code> if you want to choose the sort method to use in BibORB.</p>
+        <p>Set <code class='variable'>DISPLAY_SORT</code> to <code class='constant'>TRUE</code> if you want to choose the sort method to use in BibORB.</p>
     </div>
 </div>
 
@@ -173,10 +175,40 @@ $fields_to_export = array('author',
     <h3>Select the number of references to display in a page</h3>
     <div class="topic_content">
     <p>You can choose the number of references that are displayed in a BibORB page:</p>
-    <pre>/**
+    <pre>
+/**
  * Max number of references by page.
  */
-$MAX_REFERENCES_BY_PAGE=10;</pre>
+define("MAX_REFERENCES_BY_PAGE",10);</pre>
+    </div>
+</div>
+
+<div class="topic" id="help_gen_bibtex">
+    <h3>Keep an up-to-date BibTeX copy of the database</h3>
+    <div class="topic_content">
+    <p>References are stored in an XML format. BibTeX exporting is possible through the BibORB interface. You may also need to generate an up-to-date BibTeX file you will share over the network. If you activate the <code class='variable'>GEN_BIBTEX</code> option, a BibTeX file in the <code class="file">bibs</code> directory is keep up-to-date each time a modification is done.</p>
+    <pre>
+/**
+ * Keep an up-to-date BibTeX file.
+ * If true, each time a bibliography is modified, a BibTeX file is updated
+ * in its 'bibs' directory.
+ */
+define("GEN_BIBTEX",TRUE);</pre>
+    </div>
+</div>
+
+<div class="topic" id="shelf_mode">
+    <h3>Shelf mode</h3>
+    <div class="topic_content">
+    <p>The 'Shelf mode' allows to save two additional information: the read status (read, not read, to read) of a reference and its ownership (own, not own, to buy, borrowed). If you want this information to be displayed in BibORB (reference display) activate it. If not activated, these information can only be modified while creating or editing a reference.</p>
+    <pre>
+/**
+ *  Activate the shelf mode.
+ *  Additional action will be available to set the ownership of a reference
+ *  and its reading status(read, read next, not read)
+ * value: TRUE/FALSE
+ */
+define("SHELF_MODE",TRUE);</pre>
     </div>
 </div>
 
