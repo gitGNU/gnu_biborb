@@ -55,8 +55,8 @@ web front-end to BibTeX.  </p>
 restrict write access to bibliographies.  </p>
 
 <hr/>
-<span style="font-family:serif"><span class='biborb'>BibORB</span> CVS release,
-5 May 2004<br/> Released under the GPL licence.<br/> Update and
+<span style="font-family:serif"><span class='biborb'>BibORB</span> $biborb_version release,
+$date_release<br/> Released under the GPL licence.<br/> Update and
 information available at <a href="http://www.nongnu.org/biborb"><span class='biborb'>BibORB</span>
 website</a> </span>
 

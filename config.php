@@ -34,9 +34,11 @@
  */
 
 /**
- * Versio of Biborb
+ * Version of Biborb
  */
 $biborb_version = "CVS";
+$date_release = '5 May 2004';
+
 
 /**
  * If TRUE, this will disable authentification.

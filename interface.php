@@ -69,6 +69,8 @@ function index_welcome(){
     $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
     $title = "BibORB: BibTeX On-line References Browser";
     $content = load_file("./data/index_welcome.txt");
+    $content = str_replace('$biborb_version',$GLOBALS['biborb_version'],$content);
+    $content = str_replace('$date_release',$GLOBALS['date_release'],$content);
     $html .= index_menu();
     $html .= main($title,$content);
     $html .= html_close();
