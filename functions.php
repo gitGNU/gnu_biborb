@@ -395,7 +395,7 @@ function bibtex_array_to_xml($tab){
     foreach($newtab as $key => $value){
         if($key != 'groups' && $key!= 'type' && $key != 'id'){
             $xml .= "<bibtex:".$key.">";
-            $xml .= trim(myhtmlentities($value));
+            $xml .= stripslashes(trim(myhtmlentities($value)));
             $xml .= "</bibtex:".$key.">";
         }
         else if($key == 'groups') {
@@ -403,7 +403,7 @@ function bibtex_array_to_xml($tab){
             $groupvalues = split(',',$value);
             foreach($groupvalues as $gr){
                 $xml .= "<bibtex:group>";
-                $xml .= trim(myhtmlentities($gr));
+                $xml .= stripslashes(trim(myhtmlentities($gr)));
                 $xml .= "</bibtex:group>";
             }
             $xml .= "</bibtex:groups>";
