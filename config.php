@@ -101,7 +101,8 @@ $bibtex_entries = array(
     "_pdf",
     "_groups",
     "_website",
-    "_longnotes"
+    "_longnotes",
+    "_link"
 );
 
 /**

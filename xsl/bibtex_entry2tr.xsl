@@ -53,6 +53,7 @@
                 <xsl:apply-templates select=".//bibtex:urlzip"/>
                 <xsl:apply-templates select=".//bibtex:pdf"/>
                 <xsl:apply-templates select=".//bibtex:website"/>
+                <xsl:apply-templates select=".//bibtex:link"/>
                 <xsl:call-template name="link2bibtex">
                     <xsl:with-param name="id" select="$theid"/>
                 </xsl:call-template>
@@ -132,6 +133,12 @@
     <xsl:template match="bibtex:website">
         <span>
             <a href="http://{node()}"><xsl:value-of select="local-name()"/></a>
+        </span>
+    </xsl:template>
+    
+    <xsl:template match="bibtex:link">
+        <span>
+            <a href="{node()}">link</a>
         </span>
     </xsl:template>
     
