@@ -454,7 +454,7 @@ if(isset($_POST['action'])){
                     
                 }
                 else{
-                    $bibtex_data= addslashes_deep(file($_FILES['bibfile']['tmp_name']));
+                    $bibtex_data= file($_FILES['bibfile']['tmp_name']);
                 }
                 // add the new entry	
                 $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
