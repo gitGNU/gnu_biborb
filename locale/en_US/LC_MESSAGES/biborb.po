@@ -788,7 +788,7 @@ msgstr ""
 "document. As references are stored in an XML format, you can use XPath "
 "queries  to search into your bibliography. Examples:<ul> <li><code>bibtex:"
 "inproceedings</code> will look for all entries of type <code> inproceedings</"
-"code>.</li> <li><code>*/bibtex:year<=2004 and */bibtex:year>=2000</code> "
+"code>.</li> <li><code>bibtex:*/bibtex:year<=2004 and bibtex:*/bibtex:year>=2000</code> "
 "will look for references published between years 2000 and 2004.</li></ul>"
 
 #: php/interface.php:1561
