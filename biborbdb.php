@@ -446,7 +446,7 @@ XML;
     Create a new bibliography.
  */
 function create_database($name,$description){
-    
+    // array to store messages or errors
     $resArray = array('message' => null,
                       'error' => null);
     
@@ -496,9 +496,9 @@ function delete_database($name){
         mkdir("./bibs/.trash",0775);
     }
     // save the bibto .trash folder
-    rename("./bibs/$name","./bibs/.trash/$name");
+    rename("./bibs/$name","./bibs/.trash/$name-".date("Ymd"));
     $res = "Database $name moved to trash.<br/>";
-    $res .= "Remove <code>./bibs/.trash/$name</code> to definitively delete it.";
+    $res .= "Remove <code>./bibs/.trash/$name-".date("Ymd")."</code> to definitively delete it.";
     return $res;
 }
 

@@ -67,7 +67,7 @@
                             <xsl:for-each select='*'>
                                 <xsl:variable name="field" select="name()"/>
                                 <tr>
-                                    <th class="required-entry"><xsl:value-of select="$field"/>:</th>
+                                    <td class="required-entry"><xsl:value-of select="$field"/>:</td>
                                     <td class="required-value">
 										<xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
                                         <input name="_{name()}" value="{$val}" />
@@ -99,7 +99,7 @@
                         <xsl:otherwise>
                             <xsl:variable name="field" select="name()"/>
                             <tr>
-                                <th class='required-entry'><xsl:value-of select="name()"/>:</th>
+                                <td class='required-entry'><xsl:value-of select="name()"/>:</td>
                                 <td class='required-value'>
                                     <xsl:variable name="val">
                                         <xsl:choose>
@@ -142,7 +142,7 @@
                             <xsl:for-each select='*'>
                                 <xsl:variable name="field" select="name()"/>
                                 <tr>
-                                    <th class='optional-entry'><xsl:value-of select="$field"/>:</th>
+                                    <td class='optional-entry'><xsl:value-of select="$field"/>:</td>
                                     <td class='optional-value'>
                                         <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
                                         <input name="_{name()}" value='{$val}' />
@@ -159,7 +159,7 @@
                             <xsl:for-each select='*'>
                                 <xsl:variable name="field" select="name()"/>
                                 <tr>
-                                    <th class='optional-entry'><xsl:value-of select="$field"/>:</th>
+                                    <td class='optional-entry'><xsl:value-of select="$field"/>:</td>
                                     <td class='optional-value'>
                                         <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
                                         <input name="_{name()}" value='{$val}' />
@@ -174,7 +174,7 @@
                         <xsl:otherwise>
                             <xsl:variable name="field" select="name()"/>
                             <tr>
-                                <th class='optional-entry'><xsl:value-of select="$field"/>:</th>
+                                <td class='optional-entry'><xsl:value-of select="$field"/>:</td>
                                 <td class='optional-value'>
                                     <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
                                     <input name="_{name()}" value='{$val}' />
@@ -204,7 +204,12 @@
                 <xsl:for-each select="$model//entry[@type=$type]/additional/*">
                     <xsl:variable name="field" select="name()"/>
                     <tr>
-                        <th class='additional-entry'><xsl:value-of select="name()"/>:</th>
+                        <td class="additional-entry">
+                            <xsl:value-of select="name()"/>:
+                            <xsl:if test="name() = 'website'">
+                                <span style='font-size:xx-small;'>http://</span>
+                            </xsl:if>
+                        </td>
                         <xsl:choose>
                             <!-- abstract or longnotes -->
                             <xsl:when test="$field = 'abstract' or $field='longnotes'">
@@ -219,8 +224,18 @@
                             <xsl:when test="$field = 'url' or $field = 'urlzip' or $field = 'pdf'">
                                 <td>
                                     <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
-                                    current:<input class='current' name="current_{name()}" value='{$val}' /><br/>
-                                    new:<input class='newfile' name="{name()}" type='file'/>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>current:</td>
+                                                <td><input class='current' name="current_{name()}" value='{$val}' /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>new:</td>
+                                                <td><input class='newfile' name="{name()}" type='file'/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </td>
                             </xsl:when>
                             <!-- groups -->

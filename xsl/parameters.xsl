@@ -107,5 +107,14 @@
     <!-- Basket action images -->
     <xsl:variable name="add-basket-image">cvs-add-16.png</xsl:variable>
     <xsl:variable name="remove-basket-image">cvs-remove-16.png</xsl:variable>
+    <!-- Edit/Delete/url/pdf... images -->
+    <xsl:variable name="pdf-image">pdf-document.png</xsl:variable>
+    <xsl:variable name="ps-image">stock_book-16.png</xsl:variable>
+    <xsl:variable name="ps.gz-image">tar.png</xsl:variable>
+    <xsl:variable name="url-image">link-url-16.png</xsl:variable>
+    <xsl:variable name="bibtex-image">stock_convert-16.png</xsl:variable>
+    <xsl:variable name="abstract-image">stock_about-16.png</xsl:variable>
+    <xsl:variable name="edit-image">stock_edit-16.png</xsl:variable>
+    <xsl:variable name="delete-image">stock_delete-16.png</xsl:variable>
 	
 </xsl:stylesheet>

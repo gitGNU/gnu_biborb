@@ -297,6 +297,18 @@ a.bibname, a:visited.bibname {
 
 .biborb {
     font-weight:bold;
-//    font-family:serif;
     color:navy;
+}
+
+.misc_input {
+    border:1px solid black;
+}
+
+.misc_button {
+    border:1px solid black;
+}
+
+.emphit {
+    font-weight:bold;
+    font-style:italic;
 }

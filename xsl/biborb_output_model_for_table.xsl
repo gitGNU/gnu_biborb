@@ -99,7 +99,7 @@
 						<!-- display images if necessary: $display_images!=null -->
 						<xsl:if test="$display_images">
 							<a href="./bibindex.php?mode=update&amp;id={@id}">
-								<img src="./data/images/stock_edit-16.png" alt="edit" title="Edit"  />
+								<img src="./data/images/{$edit-image}" alt="edit" title="Edit"  />
 							</a>
 						</xsl:if>
 						<!-- display text if necessary: $display_text != null -->
@@ -112,7 +112,7 @@
 						<!-- Delete action -->
 						<xsl:if test="$display_images">
 							<a href="./bibindex.php?mode={$bibindex_mode}&amp;id={@id}&amp;action=delete&amp;{$extra_get_param}">
-								<img src="./data/images/stock_delete-16.png" alt="delete" title="Delete" />
+								<img src="./data/images/{$delete-image}" alt="delete" title="Delete" />
 							</a>
 						</xsl:if>
 						<xsl:if test="$display_text">                        
@@ -212,7 +212,7 @@
     <xsl:template match="bibtex:pdf">
         <xsl:if test="$display_images">
             <a href="./bibs/{$bibname}/papers/{node()}">
-                <img src="data/images/pdf-document.png" alt="pdf" title="View PDF file" />
+                <img src="data/images/{$pdf-image}" alt="pdf" title="View PDF file" />
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
@@ -229,7 +229,7 @@
     <xsl:template match="bibtex:url">
         <xsl:if test="$display_images">
             <a href="./bibs/{$bibname}/papers/{node()}">
-                <img src="data/images/stock_book-16.png" alt="ps" title="View PS file"  />
+                <img src="data/images/{$ps-image}" alt="ps" title="View PS file"  />
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
@@ -246,7 +246,7 @@
     <xsl:template match="bibtex:urlzip">
         <xsl:if test="$display_images">
             <a href="./bibs/{$bibname}/papers/{node()}">
-                <img src="data/images/tar.png" alt="ps" title="Download compressed file"  />
+                <img src="data/images/{$ps.gz-image}" alt="ps" title="Download compressed file"  />
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
@@ -263,7 +263,7 @@
     <xsl:template match="bibtex:website">
         <xsl:if test="$display_images">
             <a href="http://{node()}">
-                <img src="data/images/link-url-16.png" alt="website" title="Go to a related website" />
+                <img src="data/images/{$url-image}" alt="website" title="Go to a related website" />
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
@@ -313,7 +313,7 @@
             <noscript>
                 <div>
                     <a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}">
-                        <img src="data/images/stock_about-16.png" alt="abstract" title="Display abstract"/>
+                        <img src="data/images/${abstract-image}" alt="abstract" title="Display abstract"/>
                     </a>
                 </div>
             </noscript>
@@ -345,7 +345,7 @@
 		<!-- image version -->
         <xsl:if test="$display_images">
             <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}">
-                <img src="data/images/stock_convert-16.png" alt="BibTeX source" title="BibTeX source"/>
+                <img src="data/images/{$bibtex-image}" alt="BibTeX source" title="BibTeX source"/>
             </a>
         </xsl:if>
 		<!-- text version -->

@@ -143,14 +143,19 @@
             <tbody>
                 <xsl:for-each select="entry[@type=$typeentry]/additional/*">
                     <tr>
-                        <td class="additional-entry"><xsl:value-of select="name()"/>:</td>
+                        <td class="additional-entry">
+                            <xsl:value-of select="name()"/>:
+                            <xsl:if test="name() = 'website'">
+                                http://
+                            </xsl:if>
+                        </td>
                         <xsl:choose>
                             <xsl:when test="name() = 'abstract' or name()='longnotes'">
                                 <td class="additional-value"><textarea name="_{name(.)}" rows="5" cols="20"><xsl:text> </xsl:text></textarea></td>
                             </xsl:when>
                             <xsl:when test="name() = 'url' or name() = 'urlzip' or name() = 'pdf'">
                                 <td>
-                                    <input type="file" name="{name(.)}" size="45" />
+                                    <input type="file" name="{name(.)}" size="45"/>
                                 </td>
                             </xsl:when>
                             <xsl:otherwise>

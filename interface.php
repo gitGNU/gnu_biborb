@@ -47,13 +47,17 @@ function index_login(){
 <form action='index.php' method='post'>
     <table style='margin:auto;'>
         <tr>
+            <td class='emphit'>Username:</td>
+            <td><input class='misc_input' type='text' name='login' size='15' maxlength='20' value='login'/></td>
+        </tr>
+        <tr>
+            <td class='emphit'>Password:</td>
             <td>
-                <input type='text' name='login' size='15' maxlength='20' value='login'/><br/>
-                <input type='password' name='mdp' size='15' maxlength='20' value='mdp'/>
+                <input class='misc_input' type='password' name='mdp' size='15' maxlength='20' value='mdp'/>
             </td>
         </tr>
         <tr>
-            <td><div style='text-align:center;'><input type='submit' name='action' value='login'/></div>
+            <td colspan="2" style="text-align:center;"><input class='misc_button' type='submit' name='action' value='login'/
             </td>
         </tr>
 	</table>
@@ -100,15 +104,15 @@ function index_add_database(){
     <table style='margin:auto;'>
         <tbody>
             <tr>
-                <td>Database name: </td>
-                <td><input type='text' size='40' name='database_name'/></td>
+                <td class='emphit'>Database name: </td>
+                <td><input class='misc_input' type='text' size='40' name='database_name'/></td>
             </tr>
             <tr>
-                <td>Description: </td>
-                <td><input type='text' size='40' name='description'/></td>
+                <td class='emphit'>Description: </td>
+                <td><input class='misc_input' type='text' size='40' name='description'/></td>
             </tr>
             <tr>
-                <td style='text-align:center' colspan='2'><input type='submit' name='action' value='create'/></td>
+                <td style='text-align:center' colspan='2'><input class='misc_button' type='submit' name='action' value='create'/></td>
             </tr>
         </tbody>
     </table>
@@ -137,7 +141,7 @@ function index_delete_database(){
     <form method='get' action='index.php'>
         <input type='hidden' name='mode' value='result'/>
         <fieldset style='border:none;'>
-            <select name='database_name' size='1'>
+            <select class='misc_button' name='database_name' size='1'>
 HTML;
     foreach($databases as $name){
         if($name != ".trash"){
@@ -146,7 +150,7 @@ HTML;
     }
     $content .= <<<HTML
             </select>
-            <input type='submit' name='action' value='delete'/>
+            <input class='misc_button' type='submit' name='action' value='delete'/>
         </fieldset>
     </form>
 </div>
@@ -356,15 +360,16 @@ function bibindex_login(){
 <form action='bibindex.php' method='post'>
 	<table style='margin:auto;'>
         <tr>
-            <td>
-                <input type='hidden' name='mode' value='login'/>
-                <input type='text' name='login' size='15' maxlength='20' value='login'/><br/>
-                <input type='password' name='mdp' size='15' maxlength='20' value='mdp'/>
-            </td>
+            <td class='emphit'>Username:</td>
+            <td><input type='hidden' name='mode' value='login'/>
+                <input  class='misc_input' type='text' name='login' size='15' maxlength='20' value='login'/></td>
         </tr>
         <tr>
-            <td>
-                <div style='text-align:center;'><input type='submit' name='action' value='login'/></div>
+            <td class='emphit'>Password:</td>
+            <td><input class='misc_input' type='password' name='mdp' size='15' maxlength='20' value='mdp'/></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align:center"><input  class='misc_button' type='submit' name='action' value='login'/>
             </td>
         </tr>
 	</table>
@@ -593,7 +598,6 @@ function bibindex_display_by_group(){
     $main_content .= "<form method='get' action='bibindex.php'>";
     $main_content .="<fieldset style='border:none'>";
     $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibdb']->name()."'/>";
-    $main_content .= "<input type='hidden' name='".session_name()."' value='".session_id()."'/>";
     $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
     $main_content .= "<h3 style='display:inline;'>Available groups:</h3> ";
     $main_content .= "<select name='group' size='1'>";
@@ -606,7 +610,7 @@ function bibindex_display_by_group(){
         $main_content .= ">".$gr."</option>";
     }
     $main_content .= "</select>";
-    $main_content .= "<input type='submit' value='Display'/>";
+    $main_content .= "<input class='misc_button' type='submit' value='Display'/>";
 //    $main_content .= "<input type='submit' value=''/>";
     $main_content .= "</fieldset>";
     $main_content .="</form></div><br/>";
@@ -655,11 +659,11 @@ function bibindex_display_search(){
 	$main_content = "<form action='bibindex.php' method='get'>";
 	$main_content .= "<fieldset style='border:none'>";
 	$main_content .= "<input type='hidden' name='mode' value='displaysearch' />";
-	$main_content .= "<input name='search' size='40' value='".$searchvalue."' />";
-	$main_content .= "<input type='submit' value='Search' /><br/>";
+	$main_content .= "<input class='misc_input' name='search' size='40' value='".$searchvalue."' />";
+	$main_content .= "<input class='misc_button' type='submit' value='Search' /><br/>";
 	
-	$main_content .= "<table>";
-	$main_content .= "<caption>Search in fields:</caption>";
+	$main_content .= "<table style='margin:auto'>";
+	$main_content .= "<caption style='font-weight:bold'>Search in fields:</caption>";
 	$main_content .= "<tbody>";
 	$main_content .= "<tr>";
 	$main_content .= "<td><input type='checkbox' name='author' value='1'";
@@ -856,7 +860,7 @@ function bibindex_basket_modify_group(){
 		<form style='margin:0;padding:0;' action='bibindex.php' method='get'>
 			<fieldset style='border:none;margin:O;padding:0;'>
 				<input type="hidden" name="mode" value="groupmodif"/>
-				<input type='submit' name='action' value='Reset'/> Reset the groups field of each entry in the basket. 
+				<input  class='misc_button' type='submit' name='action' value='Reset'/> &nbsp;Reset the groups field of each entry in the basket. 
 			</fieldset>
 		</form>
 		<br/>
@@ -864,14 +868,14 @@ function bibindex_basket_modify_group(){
 		<form style='margin-left:70px;margin-bottom:O;' action='bibindex.php' method='get'>
 			<fieldset style='border:none;margin:0;margin-top:1em;padding:0'>
 				<input type="hidden" name="mode" value="groupmodif"/>
-				New group: <input name='groupvalue' size='20'/>
-				<input type='submit' name='action' value='Add'/>
+				<span style='font-style:italic'>New group: </span> <input class='misc_input' name='groupvalue' size='20'/>
+				<input  class='misc_button' type='submit' name='action' value='Add'/>
 			</fieldset>
 		</form>
 		<form style='margin-left:70px;' action='bibindex.php' method='get'>
 			<fieldset style='border:none;margin:0;padding:0;'>
 				<input type="hidden" name="mode" value="groupmodif"/>
-				Existing group: <select name='groupvalue' size='1'>
+				<span style='font-style:italic'>Existing group: </span> <select name='groupvalue' size='1'>
 HTML_TEXT;
 			
 	foreach($_SESSION['bibdb']->groups() as $gr){
@@ -880,7 +884,7 @@ HTML_TEXT;
 
 	$main_content .= <<<HTML_TEXT
 				</select>
-				<input type='submit' name='action' value='Add'/>
+				<input class="misc_button" type='submit' name='action' value='Add'/>
 			</fieldset>
 		</form>
 HTML_TEXT;
@@ -935,8 +939,8 @@ function bibindex_entry_to_add(){
 			</select>
 			<br/>
 			<br/>
-			<input type='submit' name='mode' value='cancel'/>
-			<input type='submit' name='mode' value='select'/>
+			<input class='misc_button' type='submit' name='mode' value='cancel'/>
+			<input class='misc_button' type='submit' name='mode' value='select'/>
 		</fieldset>
 	</form>
 </div>
@@ -974,8 +978,8 @@ function bibindex_add_entry($type){
 		<p/>
 		<div style='text-align:center;'>
 			<input type='hidden' name='mode' value='operationresult'/>
-			<input type='submit' name='action' value='cancel'/>
-			<input type='submit' name='action' value='add'/>
+			<input class='misc_button' type='submit' name='action' value='cancel'/>
+			<input class='misc_button' type='submit' name='action' value='add'/>
 
 		</div>
 	</fieldset>
@@ -1011,8 +1015,8 @@ function bibindex_update_entry(){
 			<fieldset style='border:none'>
 				$fields
 				<div style='text-align:center'>
-					<input type='submit' name='action' value='cancel'/>
-					<input type='submit' name='action' value='update' />
+					<input class='misc_button' type='submit' name='action' value='cancel'/>
+					<input class='misc_button' type='submit' name='action' value='update'  />
 					<input type='hidden' name='mode' value='operationresult'/>
 				</div>
 			</fieldset>
@@ -1044,18 +1048,19 @@ Select a BibTeX file or edit entries in the text area. Entries will be added to 
 		<input type='file' name='bibfile'/>
 		<input type='hidden' name='mode' value='operationresult'/>
 		<br/>
+        <br/>
 		<div style='text-align:center'>
-			<input type='submit' name='action' value='import'/>
+			<input class='misc_button' type='submit' name='action' value='import'/>
 		</div>
 	</fieldset>
 </form>
 <h3>BibTeX</h3>
 <form method='post' action='bibindex.php'>
 	<fieldset title='BibTeX'>
-		<textarea name='bibval' cols='55' rows='15'></textarea>
+		<textarea class='misc_input' name='bibval' cols='55' rows='15'></textarea>
 		<input type='hidden' name='mode' value='operationresult'/>
 		<div style='text-align:center'>
-			<input type='submit' name='action' value='import'/>
+			<input class='misc_button' type='submit' name='action' value='import'/>
 		</div>
 	</fieldset>
 </form>

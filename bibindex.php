@@ -126,7 +126,8 @@ $xslparam = array('bibname' => $_SESSION['bibdb']->name(),
 				  'abstract' => $abst,
 				  'display_add_all'=> 'true',
                   'sort' => $sort,
-                  'display_sort'=> $DISPLAY_SORT);
+                  'display_sort'=> $DISPLAY_SORT,
+                  'mode' => $_SESSION['usermode']);
 
 /**
  *  If the basket doesn't exists, create it.
@@ -213,7 +214,11 @@ if(isset($_GET['action'])){
 	case 'logout':
 	    $_SESSION['usermode'] = "user";
 	    break;
-	    
+    
+    case 'cancel':
+        $_GET['mode'] = "welcome";
+        break;
+        
 		default:
 			break;
 	}
@@ -261,34 +266,41 @@ if(isset($_POST['action'])){
 			else{
 				$error = $res['message'];
 			}
+            break;
 
 		case 'import':				// Import bibtex entries
-			if(!array_key_exists('bibval',$_POST)){
+			if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
 				die("Error, no bibtex data provided!");
 			}
 			else{
-				// add the new entry			 
-				$res = $_SESSION['bibdb']->add_bibtex_entries(explode("\n",$_POST['bibval']));
-				$entries = $_SESSION['bibdb']->entries_with_ids($res);
-				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-				$param = $GLOBALS['xslparam'];
-				$param['bibindex_mode'] = "displaybasket";
-				$param['mode'] = "admin";
-				$formated = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-				$xsltp->free();
-				if($res == 1){
-					$message = "The following entry was added to the database:";
-				}
-				else {
-					$message = "The following entries were added to the database:";
-				}
-				$message .= "<br/><pre>".$_POST['bibval']."</pre>";
-				$message .= $formated;
+                if(array_key_exists('bibval',$_POST)){
+                    $bibtex_data = explode("\n",$_POST['bibval']);
+                }
+                else{
+                    $bibtex_data = file($_FILES['bibfile']['tmp_name']);
+                }
+                // add the new entry			 
+                $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
+                $entries = $_SESSION['bibdb']->entries_with_ids($res);
+                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                $param = $GLOBALS['xslparam'];
+                $param['bibindex_mode'] = "displaybasket";
+                $param['mode'] = "admin";
+                $formated = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+                $xsltp->free();
+                if($res == 1){
+                    $message = "The following entry was added to the database:";
+                }
+                else {
+                    $message = "The following entries were added to the database:";
+                }
+                //$message .= "<br/><pre>".print_r($bibtex_data)."</pre>";
+                $message .= $formated;
 			}
 			break;
     
         /*
-        
+            Login
          */
         case 'login':
             $login = $_POST['login'];
@@ -307,8 +319,11 @@ if(isset($_POST['action'])){
                     $error = "Wrong login or password";
                 }
             }
-            break; 
-
+            break;
+            
+        case 'cancel':
+            $_GET['mode'] = "welcome";
+            break;
         default:
             break;
 	}
