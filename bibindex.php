@@ -761,7 +761,7 @@ function bibindex_add_entry(){
 function bibindex_update_entry(){
     $html = bibheader("onLoad=\"javascript:toggle_element('additional')\"");
     $html .= bibindex_menu();
-    $title = null;
+    $title = "Update an entry";
     $content = "<form method='post' action='action_proxy.php' enctype='multipart/form-data'>";
     $content .= "<fieldset style='border:none'>";
     $content .= get_bibentry_for_edition($_SESSION['bibname'],$_SESSION['id'],0);
@@ -820,7 +820,7 @@ function bibindex_export_basket_to_bibtex(){
 }
 
 /**
-* bibindex_export_basket_to_html
+ * bibindex_export_basket_to_html
  */
 function bibindex_export_basket_to_html(){
     if(count($_SESSION['basket']) != 0){
