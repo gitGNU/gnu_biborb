@@ -1047,7 +1047,13 @@ msgid "ID"
 msgstr ""
 
 msgid "dateAdded"
-msgstr "Date Added"
+msgstr "Date d'ajout"
 
 msgid "lastDateModified"
-msgstr "Last Date Modified"
+msgstr "Date de dernière modification"
+
+msgid "BIBINDEX_MENU_BROWSE"
+msgstr "Naviguer"
+
+msgid "BIBINDEX_MENU_BROWSE_HELP"
+msgstr "Naviguer dans la bibliographie."

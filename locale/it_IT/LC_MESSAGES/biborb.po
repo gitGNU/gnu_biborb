@@ -1090,3 +1090,9 @@ msgstr "Date Added"
 
 msgid "lastDateModified"
 msgstr "Last Date Modified"
+
+msgid "BIBINDEX_MENU_BROWSE"
+msgstr ""
+
+msgid "BIBINDEX_MENU_BROWSE_HELP"
+msgstr ""
