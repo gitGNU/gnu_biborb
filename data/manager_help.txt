@@ -6,15 +6,15 @@
 Available actions are:
 </p>
 
-<table style='margin:auto;width:450px'>
+<table style='margin:auto;width:450px;border-collapse:collapse;'>
        <tbody>
 		<tr style='background-color:#ddd'>
 			<td style='font-weight:bold;font-family:serif;width:120px;'>Login</td>
-			<td>Authenticate to get write access to the bibliography (if authentication activated)</td>
+			<td style='text-align:justify'>Authenticate to get write access to the bibliography (if authentication activated)</td>
 		</tr>
 		<tr>
 			<td style='font-weight:bold;font-family:serif;'>Logout</td>
-			<td>If authentication activated</td>
+			<td style='text-align:justify'>If authentication activated</td>
 		</tr>
 		<tr style='background-color:#ddd'>
 			<td style='font-weight:bold;font-family:serif;'>Add an entry</td>
@@ -22,11 +22,11 @@ Available actions are:
 		</tr>
 		<tr>
 			<td style='font-weight:bold;font-family:serif;'>Update from BibTeX</td>
-			<td>Updates the bibliography according to the BibTeX file in the bibs directory. Use it when editing your bibliography in an alternative editor.</td>
+			<td style='text-align:justify'>Updates the bibliography according to the BibTeX file in the bibs directory. Use it when editing your bibliography in an alternative editor.</td>
 		</tr>
 		<tr style='background-color:#ddd'>
 			<td style='font-weight:bold;font-family:serif;'>Import BibTeX</td>
-			<td>Allows to add to the database a given bibliography. The BibTeX entries may be added by copy/paste in a text field or by choosing a BibTeX source file.</td>
+			<td style='text-align:justify'>Allows to add to the database a given bibliography. The BibTeX entries may be added by copy/paste in a text field or by choosing a BibTeX source file.</td>
 		</tr>
 	</tbody>
 </table>

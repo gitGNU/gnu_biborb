@@ -6,7 +6,7 @@ This menu give access to the basket. The basket records entries you have selecte
 <p>
 Actions that can be done on the basket are:
 </p>
-<table style='margin:auto;border:collapse;'>
+<table style='margin:auto;border-collapse:collapse;'>
 	<tbody>
 		<tr style='background-color:#ddd'>
 			<td style='font-weight:bold;font-family:serif;'>Display All</td>

@@ -2,10 +2,10 @@
 This menu gives access to the bibliography.
 </p>
 
-<table style='margin:auto'>
+<table style='margin:auto;border-collapse:collapse;width:400px;'>
   <tbody>
     <tr style='background-color:#ddd'>
-      <td style='font-weight:bold;font-family:serif;'>All</td>
+      <td style='font-weight:bold;font-family:serif;width:60px;'>All</td>
       <td>All entries are displayed.</td>
     </tr>
     <tr>
@@ -26,54 +26,54 @@ Have a look to the <code>config.php</code> file to select the default sort metho
 Several actions may be available for each displayed entry:
 </p>
 
-<table style='margin:auto;width:400px;'>
+<table style='margin:auto;width:400px;border-collapse:collapse;'>
   <tbody>
     <tr style='background-color:#ddd'>
-       <td><img src="data/images/stock_book-16.png" alt="ps"/></td>
+       <td style='width:60px;text-align:center;'><img src="data/images/stock_book-16.png" alt="ps"/></td>
        <td>Download a postscript release of the paper.</td>
    </tr>
    <tr>
-       <td><img src="data/images/tar.png" alt="ps.gz"/></td>
+       <td style='text-align:center;'><img src="data/images/tar.png" alt="ps.gz"/></td>
        <td>Download a compressed postscript release of the paper.</td>
    </tr>
      <tr style='background-color:#ddd'>
-       <td><img src="data/images/pdf-document.png" alt="pdf"/></td>
+       <td style='text-align:center;'><img src="data/images/pdf-document.png" alt="pdf"/></td>
        <td>Download a PDF release of the paper.</td>
      </tr>
      <tr>
-    <td><img src="data/images/stock_about-16.png" alt="abstract"/></td>
+    <td style='text-align:center;'><img src="data/images/stock_about-16.png" alt="abstract"/></td>
     <td> Display the abstract.</td>
     </tr>
     <tr style='background-color:#ddd'>
-    <td><img src="data/images/stock_convert-16.png" alt="BibTeX"/></td>
+    <td style='text-align:center;'><img src="data/images/stock_convert-16.png" alt="BibTeX"/></td>
     <td>Get the BibTeX source code.</td>
     </tr>
     <tr>
-    <td><img src="data/images/link-url-16.png" alt="webpage"/></td>
+    <td style='text-align:center;'><img src="data/images/link-url-16.png" alt="webpage"/></td>
     <td>Go to a related webpage (Home pages for instance).</td>
     </tr>
     <tr style='background-color:#ddd'>
-    <td><img src="data/images/stock_jump-to-16.png" alt="Local link"/></td>
+    <td style='text-align:center;'><img src="data/images/stock_jump-to-16.png" alt="Local link"/></td>
     <td>Go to a local page on the web server.</td>
     </tr>
     <tr>
-    <td><img src="data/images/stock_edit-16.png" alt="edit"/></td>
+    <td style='text-align:center;'><img src="data/images/stock_edit-16.png" alt="edit"/></td>
     <td>Edit the entry to update information (need authentication mode disabled or authenticated user).</td>
     </tr>
     <tr style='background-color:#ddd'>
-    <td><img src="data/images/stock_delete-16.png" alt="delete"/></td>
+    <td style='text-align:center;'><img src="data/images/stock_delete-16.png" alt="delete"/></td>
     <td>Remove the entry (need authentication mode disabled or authenticated user) <span style="color:red">No Warning!!</span>.</td>
     </tr>
     <tr>
-    <td><img src="data/images/cvs-add-16.png" alt="add"/></td>
+    <td style='text-align:center;'><img src="data/images/cvs-add-16.png" alt="add"/></td>
     <td>Add the entry to the basket.</td>
     </tr>
     <tr style='background-color:#ddd'>
-    <td><img src="data/images/cvs-remove-16.png" alt="add"/></td>
+    <td style='text-align:center;'><img src="data/images/cvs-remove-16.png" alt="add"/></td>
     <td>Remove the entry from the basket.</td>
     </tr>
     <tr>
-    <td><img src="data/images/add.png" alt="add"/></td>
+    <td style='text-align:center;'><img src="data/images/add.png" alt="add"/></td>
     <td> Add all entries to the basket.</td>
     </tr>
     </tbody>

@@ -2,15 +2,17 @@
 The manager allows to create or delete bibliographies.
 </p>
 
-<h3>Create</h3>
-<p>
-    Necessary files will be created to store the bibliography. An existing BibTeX bibliography may be then imported using the import menu.
-</p>
-
-<h3>Delete</h3>
-<p>
-    The selected bibliography will be moved in the <code>bibs/.trash</code> directory. The bibliography will be removed from the list of available bibliographies.<br/>
-    
-    In order to definitively remove it, the <code>bibs/.trash</code> has to be cleaned manually.
-</p>
+<table style='margin:auto;width:450px;border-collapse:collapse;'>
+       <tbody>
+		<tr style='background-color:#ddd'>
+			<td style='font-family:serif;font-weight:bold;width:100px;'>Add a bibliography</td>
+			<td style='text-align:justify'>Necessary files will be created to store the bibliography. An existing BibTeX bibliography may be then imported using the import menu.</td>
+		</tr>
+		<tr>
+			<td style='font-family:serif;font-weight:bold;width:100px;'>Delete a bibliography</td>
+			<td style='text-align:justify'>The selected bibliography will be moved in the <code>bibs/.trash</code> directory. The bibliography will be removed from the list of available bibliographies. In order to definitively remove it, the <code>bibs/.trash</code> has to be cleaned manually.
+</td>
+		</tr>
+	</tbody>
+</table>
 
