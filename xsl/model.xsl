@@ -43,14 +43,14 @@
         
         <!-- Required BibTeX fields -->        
         <fieldset class="required">
-            <legend>BIBORB_OUTPUT_REQUIRED_FIELDS</legend>
+            <legend><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_REQUIRED_FIELDS");</xsl:processing-instruction></legend>
             <xsl:for-each select="entry[@type=$typeentry]/required/*">
                 <xsl:choose>
                     <!-- an alternative : or -->
                     <xsl:when test="name() = 'alternative'">
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select="*">
-                            <label><xsl:value-of select="name()"/>:</label>
+                            <label title='{name()}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:x-small;'>or/and</span><br/>
@@ -61,7 +61,7 @@
                     <xsl:when test="name() = 'exalternative'">
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select="*">
-                            <label><xsl:value-of select="name()"/>:</label>
+                            <label title='{name()}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:x-small;'>or</span><br/>
@@ -70,7 +70,7 @@
                     </xsl:when>
                     <!-- all other fields -->
                     <xsl:otherwise>
-                        <label><xsl:value-of select="name()"/>:</label>
+                        <label title='{name()}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:</label>
                         <input name="{name(.)}" /><br/>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -78,14 +78,14 @@
         </fieldset>
         
         <fieldset class="optional">
-            <legend>BIBORB_OUTPUT_OPTIONAL_FIELDS</legend>
+            <legend><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_OPTIONAL_FIELDS");</xsl:processing-instruction></legend>
             <xsl:for-each select="entry[@type=$typeentry]/optional/*">
                 <xsl:choose>
                     <!-- an alternative: or -->
                     <xsl:when test="name() = 'alternative'">
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select="*">
-                            <label><xsl:value-of select="name()"/>:</label>
+                            <label title='{name()}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:x-small;'>or/and</span><br/>
@@ -96,7 +96,7 @@
                     <xsl:when test="name() = 'exalternative'">
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select="*">
-                            <label><xsl:value-of select="name()"/>:</label>
+                            <label title='{name()}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:x-small;'>or</span><br/>
@@ -105,7 +105,7 @@
                     </xsl:when>
                     <!-- all other fields -->
                     <xsl:otherwise>
-                        <label><xsl:value-of select="name()"/>:</label>
+                        <label title='{name()}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:</label>
                         <input name="{name(.)}"/><br/>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -113,9 +113,9 @@
         </fieldset>
         
         <fieldset class="additional">
-            <legend>BIBORB_OUTPUT_ADDITIONAL_FIELDS</legend>
+            <legend><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_ADDITIONAL_FIELDS");</xsl:processing-instruction></legend>
             <xsl:for-each select="entry[@type=$typeentry]/additional/*">
-                <label><xsl:value-of select="name()"/>:
+                <label title='{name()}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:
                     <xsl:if test="name() = 'website'">http://</xsl:if>
                 </label>
                 <xsl:choose>
@@ -127,8 +127,8 @@
                     </xsl:when>
                     <xsl:when test="name() = 'groups'">
                         <input name="{name(.)}"/><br/>
-                        <label><xsl:text> </xsl:text></label>
-                        <span style='color:black;font-weight:normal;'>BIBORB_OUTPUT_ADD_A_GROUP</span>#XHTMLGROUPSLIST
+                        <label title='{name()}'><xsl:text> </xsl:text></label>
+                        <span style='color:black;font-weight:normal;'><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_ADD_A_GROUP");</xsl:processing-instruction></span>#XHTMLGROUPSLIST
                         <br/>
                     </xsl:when>
                     <xsl:otherwise>

@@ -57,7 +57,7 @@
 		
         <!-- Display required fields -->
         <fieldset id="required_ref" class="required">
-            <legend>BIBORB_OUTPUT_REQUIRED_FIELDS</legend>
+            <legend><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_REQUIRED_FIELDS");</xsl:processing-instruction></legend>
             <!-- Process all required entries -->
             <xsl:for-each select="$model//entry[@type=$type]/required/*">
                 <xsl:choose>
@@ -67,7 +67,7 @@
                         <xsl:for-each select='*'>
                             <xsl:variable name="field" select="name()"/>
                             <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
-                            <label for="{name()}"><xsl:value-of select="$field"/>:</label>
+                            <label title='{$field}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="$field"/>");</xsl:processing-instruction>:</label>
                             <input name="{name()}" value="{$val}" /><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:small;'>or/and</span><br/>
@@ -80,7 +80,7 @@
                         <xsl:for-each select='*'>
                             <xsl:variable name="field" select="name()"/>
                             <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>                                            
-                            <label for="{name()}"><xsl:value-of select="$field"/>:</label>
+                            <label title='{$field}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="$field"/>");</xsl:processing-instruction>:</label>
                             <input name="{name()}" value="{$val}" /><br/>
                             <xsl:if test="not(position() = $cpt)">
                                 <span style='color:black;font-weight:normal;font-size:small;'>or</span><br/>
@@ -90,7 +90,7 @@
                     <xsl:when test="name() != 'id'">
                     <!-- any other case -->
                         <xsl:variable name="field" select="name()"/>
-                        <label for="{name()}"><xsl:value-of select="name()"/>:</label>
+                        <label title='{$field}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:</label>
                         <xsl:variable name="val">
                             <xsl:value-of select="$entry//*[local-name() = $field]"/>
                         </xsl:variable>
@@ -103,7 +103,7 @@
 
         <!-- Optional fields -->
         <fieldset id="optional_ref" class="optional">
-            <legend>BIBORB_OUTPUT_OPTIONAL_FIELDS</legend>
+            <legend><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_OPTIONAL_FIELDS");</xsl:processing-instruction></legend>
             <xsl:for-each select="$model//entry[@type=$type]/optional/*">
                 <xsl:choose>
                     <!-- an alternative : or -->
@@ -111,7 +111,7 @@
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select='*'>
                             <xsl:variable name="field" select="name()"/>
-                            <label for="{name()}"><xsl:value-of select="$field"/>:</label>
+                            <label title='{$field}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="$field"/>");</xsl:processing-instruction>:</label>
                             <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
                             <input name="{name()}" value='{$val}' /><br/>
                             <xsl:if test="not(position() = $cpt)">
@@ -124,7 +124,7 @@
                         <xsl:variable name="cpt" select="count(*)"/>
                         <xsl:for-each select='*'>
                             <xsl:variable name="field" select="name()"/>
-                            <label for="{name()}"><xsl:value-of select="$field"/>:</label>
+                            <label title='{$field}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="$field"/>");</xsl:processing-instruction>:</label>
                             <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
                             <input name="{name()}" value='{$val}' /><br/>
                             <xsl:if test="not(position() = $cpt)">
@@ -135,28 +135,21 @@
                     <!-- any other field -->
                     <xsl:otherwise>
                         <xsl:variable name="field" select="name()"/>
-                        <label for="{name()}"><xsl:value-of select="$field"/>:</label>
+                        <label title='{$field}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="$field"/>");</xsl:processing-instruction>:</label>
                         <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
                         <input name="{name()}" value='{$val}' /><br/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each>
         </fieldset>
-        
-<!--
-        <script type="text/javascript">
-            <xsl:comment><![CDATA[
-                document.write("<a style=\'text-decoration:none;color:navy;\' href=\"javascript:toggle_element(\'additional\')\"> display/hide </a>");]]>
-            </xsl:comment>
-        </script>-->
     
         <!-- Additional fields -->
         <fieldset id="additional_ref" class="additional">
-            <legend>BIBORB_OUTPUT_ADDITIONAL_FIELDS</legend>
+            <legend><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_ADDITIONAL_FIELDS");</xsl:processing-instruction></legend>
             <xsl:for-each select="$model//entry[@type=$type]/additional/*">
                 <xsl:variable name="field" select="name()"/>
-                <label for="{name()}">
-                    <xsl:value-of select="name()"/>:
+                <label title='{$field}'>
+                    <xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:
                     <xsl:if test="name() = 'website'">
                         <span style='font-size:9px;'>(http://)</span>
                     </xsl:if>
@@ -175,7 +168,7 @@
                         <!--<label for="current_{name()}">BIBORB_OUTPUT_CURRENT_FILE</label>-->
                         <input name="current_{name()}" value='{$val}' /><br/>
                         <!--<label for="{name()}">BIBORB_OUTPUT_NEW_FILE</label>-->
-                        <label for="{name()}"><xsl:text> </xsl:text></label>
+                        <label><xsl:text> </xsl:text></label>
                         <input name="{name()}" type='file'/>
                     </xsl:when>
                     <!-- groups -->
@@ -188,7 +181,7 @@
                         </xsl:variable>
                         <input name="groups" value="{$val}" /><br/>
                         <label><xsl:text> </xsl:text></label>
-                        <span style='color:black;font-weight:normal;font-size:small;'>BIBORB_OUTPUT_ADD_A_GROUP</span>#XHTMLGROUPSLIST
+                        <span style='color:black;font-weight:normal;font-size:small;'><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_ADD_A_GROUP");</xsl:processing-instruction></span>#XHTMLGROUPSLIST
                         <br/>
                     </xsl:when>
                     <!-- any other fields -->

@@ -816,3 +816,107 @@ msgstr "décroissant"
 
 msgid "No orphan."
 msgstr "Toutes les références appartiennent à un groupe."
+
+
+# Translation of BibTeX field names
+msgid "id"
+msgstr "Clé BibTeX"
+
+msgid "address"
+msgstr "Adresse"
+
+msgid "annote" 
+msgstr "Annotation"
+
+msgid "author" 
+msgstr "Auteur"
+
+msgid "booktitle" 
+msgstr "Titre du livre"
+
+msgid "chapter" 
+msgstr "Chapitre"
+
+msgid "crossref"
+msgstr "Référence croisée"
+
+msgid "edition"
+msgstr "Edition"
+
+msgid "editor"
+msgstr "Rédacteur"
+
+msgid "howpublished"
+msgstr ""
+
+msgid "institution"
+msgstr "Instituion"
+
+msgid "journal"
+msgstr "Revue"
+
+msgid "key"
+msgstr "Clé"
+
+msgid "month"
+msgstr "Mois"
+
+msgid "note" 
+msgstr "Note"
+
+msgid "number"
+msgstr "Numéro"
+
+msgid "organization"
+msgstr "Organisation"
+
+msgid "pages"
+msgstr "Pages"
+
+msgid "publisher"
+msgstr "Editeur"
+
+msgid "school"
+msgstr "Ecole"
+
+msgid "series" 
+msgstr "Séries"
+
+msgid "title" 
+msgstr "Titre"
+
+msgid "type" 
+msgstr "Type"
+
+msgid "volume" 
+msgstr "Volume"
+
+msgid "year"
+msgstr "Année"
+
+msgid "abstract" 
+msgstr "Résumé"
+
+msgid "keywords"
+msgstr "Mots-clés"
+
+msgid "url"
+msgstr "Fichier ps"
+
+msgid "urlzip"
+msgstr "Fichier ps.gz"
+
+msgid "pdf"
+msgstr "Fichier PDF"
+
+msgid "groups"
+msgstr "Groupes"
+
+msgid "website"
+msgstr "Site Web"
+
+msgid "longnotes"
+msgstr "Remarques"
+
+msgid "link"
+msgstr "Lien"

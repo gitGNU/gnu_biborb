@@ -257,7 +257,7 @@ function index_menu(){
         $html .= "<form id='language_form' action='index.php' method='get'>";
         $html .= "<fieldset>";
         $html .= "<label for='lang'>".msg("Language:")."</label>";
-        $html .= lang_html_select($_SESSION['language']);
+        $html .= lang_html_select($_SESSION['language'],true);
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
         $html .= "<noscript><div><input class='submit' type='submit' value='".msg("Select")."'/></div></noscript>";
         $html .= "</fieldset>";
@@ -1255,7 +1255,6 @@ function bibindex_add_entry($type){
     $xsl_content = load_file("./xsl/model.xsl");
     $param = array("typeentry"=>$type);
     $fields = $xsltp->transform($xml_content,$xsl_content,$param);
-    $fields = replace_localized_strings($fields);
     $xsltp->free();
     $glist = $_SESSION['bibdb']->groups();
     array_push($glist,"");
@@ -1268,7 +1267,7 @@ function bibindex_add_entry($type){
 	$content .= "<fieldset class='clean'>";
 	$content .= "<input name='type' value='$type' type='hidden'/>";
     $content .= "</fieldset>";
-	$content .= $fields;
+	$content .= eval_php($fields);
 	$content .= "<fieldset class='clean'>";
 	$content .= "<input type='hidden' name='mode' value='operationresult'/>";
 	$content .= "<input class='submit' type='submit' name='cancel' value='".msg("Cancel")."'/>&nbsp;";
@@ -1302,7 +1301,6 @@ function bibindex_update_entry(){
 	$thetype = trim($xsltp->transform($entry,load_file("./xsl/get_bibtex_type.xsl")));
     $param['type'] = $thetype;
     $fields = $xsltp->transform($entry,load_file("./xsl/xml2htmledit.xsl"),$param);
-    $fields = replace_localized_strings($fields);
 	$xsltp->free();
     
     // get existent groups
@@ -1336,7 +1334,7 @@ function bibindex_update_entry(){
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields' id='f_bibtex_entry'>";
-    $content .= $fields;
+    $content .= eval_php($fields);
     $content .= "<fieldset class='clean'>";
     $content .= "<input class='submit' type='submit' name='cancel' value='".msg("Cancel")."'/>";
     $content .= "<input type='hidden' name='action' value='update_entry'/>";

@@ -136,11 +136,16 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
     Generate a HTML Select tag containing locales name.
     On click call javascript to change the language
  */
-function lang_html_select($lang){
+function lang_html_select($lang,$index = false){
     $names = array('fr_FR'=>'Français',
                   'de_DE'=>'Deutsch',
                   'en_US'=>'English');
-    $res = "<select name='lang' id='lang' onchange='javascript:change_lang_index(this.value)'>";
+    if($index){
+        $res = "<select name='lang' id='lang' onchange='javascript:change_lang_index(this.value)'>";
+    }
+    else{
+        $res = "<select name='lang' id='lang' onchange='javascript:change_lang(this.value)'>";
+    }
     foreach(get_locales() as $locale){
         if($lang == $locale){
             $res .= "<option selected='selected' value='$locale' >".$names[$locale]."</option>";
@@ -202,11 +207,13 @@ function load_i18n_config($language)
 
 /**
     Translate a localized string
+    If $string doesn't exists, $string is returned.
+    msg get the language configuration from $_SESSION
  */
 function msg($string)
 {
     // should return _($string) if gettext well supported
-    return $GLOBALS[$_SESSION['language']][$string];
+    return (array_key_exists($string, $GLOBALS[$_SESSION['language']]) ? $GLOBALS[$_SESSION['language']][$string] : $string);
 }
 
 /**
@@ -316,4 +323,29 @@ if (!function_exists('array_chunk')) {
     }
 }
 
+/**
+    Evaluate a string has PHP code.
+    PHP code should be defined between "<?php" and "?>".
+ 
+ Example:
+    eval_php("<div class='aC'>Today is: <?php echo date("d/m/Y")?>. </div>")
+ will return: "<div class='aC'>Today is: 01/01/2003. </div>"
+ */
+function eval_php($string){
+    preg_match_all("/(<\?php)(.*?)\?>/si",$string,$raw_php_matches);
+    $eval_string = $string;
+    $php_idx = 0;
+    while(isset($raw_php_matches[0][$php_idx])){
+        $raw_php_str = $raw_php_matches[0][$php_idx];
+        $raw_php_str = str_replace("<?php", "", $raw_php_str);
+        $raw_php_str = str_replace("?>", "", $raw_php_str);
+        ob_start();
+        eval("$raw_php_str");
+        $res = ob_get_contents();
+        ob_end_clean();
+        $eval_string = preg_replace("/(<\?php)(.*?)\?>/si",$res, $eval_string, 1);
+        $php_idx++;
+    }
+    return $eval_string;
+}
 ?>

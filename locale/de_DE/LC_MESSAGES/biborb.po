@@ -867,3 +867,106 @@ msgstr "%d Übereinstimmungen für %s."
 #: php/interface.php:1487
 msgid "BIBINDEX_XPATH_SEARCH_TITLE"
 msgstr ""
+
+# Translation of BibTeX field names
+msgid "id"
+msgstr ""
+
+msgid "address"
+msgstr ""
+
+msgid "annote" 
+msgstr ""
+
+msgid "author" 
+msgstr ""
+
+msgid "booktitle" 
+msgstr ""
+
+msgid "chapter" 
+msgstr ""
+
+msgid "crossref"
+msgstr ""
+
+msgid "edition"
+msgstr ""
+
+msgid "editor"
+msgstr ""
+
+msgid "howpublished"
+msgstr ""
+
+msgid "institution"
+msgstr ""
+
+msgid "journal"
+msgstr ""
+
+msgid "key"
+msgstr ""
+
+msgid "month"
+msgstr ""
+
+msgid "note" 
+msgstr ""
+
+msgid "number"
+msgstr ""
+
+msgid "organization"
+msgstr ""
+
+msgid "pages"
+msgstr ""
+
+msgid "publisher"
+msgstr ""
+
+msgid "school"
+msgstr ""
+
+msgid "series" 
+msgstr ""
+
+msgid "title" 
+msgstr ""
+
+msgid "type" 
+msgstr ""
+
+msgid "volume" 
+msgstr ""
+
+msgid "year"
+msgstr ""
+
+msgid "abstract" 
+msgstr ""
+
+msgid "keywords"
+msgstr ""
+
+msgid "url"
+msgstr ""
+
+msgid "urlzip"
+msgstr ""
+
+msgid "pdf"
+msgstr ""
+
+msgid "groups"
+msgstr ""
+
+msgid "website"
+msgstr ""
+
+msgid "longnotes"
+msgstr ""
+
+msgid "link"
+msgstr ""
