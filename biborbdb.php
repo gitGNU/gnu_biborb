@@ -22,9 +22,9 @@
  */
 
 /**
-* 
+ * 
  * File: biborbdb.php
- * Author: Guillaume Gardey (ggardey@club-internet.fr)-
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Licence: GPL
  * 
  * Description:
@@ -41,34 +41,38 @@ require_once("xslt_processor.php"); //xslt processor
 
 class BibORB_DataBase {
 	
+    // name of the bibliography
 	var $biblio_name;
-	var $error_message;
+    // the biblio directory
 	var $biblio_dir;
 	
 	/**
-		Constructeur
+		Constructor
 	 */
 	function BibORB_DataBase($bibname){
 		$this->biblio_name = $bibname;
 		$this->biblio_dir = "./bibs/$bibname/";
 	}
-
+    
+    /**
+        Generate the path of the xml file.
+     */
 	function xml_file(){
 		return $this->biblio_dir.$this->biblio_name.".xml";
 	}
 	
+    /**
+        Return the name of the bibliography.
+     */
 	function name(){
 		return $this->biblio_name;
 	}
 	
+    /**
+        The directory containing papers.
+     */
 	function papers_dir(){
 		return $this->biblio_dir."papers/";
-	}
-	/**
-		Return the current error_message
-	 */
-	function error_message(){
-		return $this->error_message;
 	}
 	
 	/**
@@ -185,6 +189,9 @@ XML;
 		return $res;
 	}
 	
+    /**
+        Add entries. $bibtex is a bibtex string.
+     */
 	function add_bibtex_entries($bibtex){
 		// add the new entry
 		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -432,11 +439,12 @@ XML;
 		
 		return $url+$urlzip+$pdf;
 	}
-	
 }
 
 
-
+/**
+    Create a new bibliography.
+ */
 function create_database($name,$description){
     
     $resArray = array('message' => null,
@@ -479,6 +487,9 @@ function create_database($name,$description){
     return $resArray;
 }
 
+/**
+    Delete a bibliography
+ */
 function delete_database($name){
     // create .trash folder if it does not exit
     if(!file_exists("./bibs/.trash")){
@@ -491,5 +502,18 @@ function delete_database($name){
     return $res;
 }
 
+/**
+    Get the name of recorded bibliographies.
+ */
+function get_databases_names(){
+    $dir = opendir("./bibs/");
+    $databases_names = array();
+    while($file = readdir($dir)){
+        if(is_dir("./bibs/".$file) && $file != '.' && $file != '..'){
+            array_push($databases_names,$file);
+        }
+    }
+    return $databases_names;
+}
 
 ?>

@@ -45,16 +45,17 @@ function index_login(){
     $title = "Login";
     $content = <<<HTML
 <form action='index.php' method='post'>
-	<table style='margin:auto;'>
-	<tr>
-	<td>
-	<input type='text' name='login' size='15' maxlength='20' value='login'/><br/>
-	<input type='password' name='mdp' size='15' maxlength='20' value='mdp'/>
-	</td>
-	</tr>
-	<tr>
-	<td><div style='text-align:center;'><input type='submit' name='action' value='login'/></div>
-	</td></tr>
+    <table style='margin:auto;'>
+        <tr>
+            <td>
+                <input type='text' name='login' size='15' maxlength='20' value='login'/><br/>
+                <input type='password' name='mdp' size='15' maxlength='20' value='mdp'/>
+            </td>
+        </tr>
+        <tr>
+            <td><div style='text-align:center;'><input type='submit' name='action' value='login'/></div>
+            </td>
+        </tr>
 	</table>
 </form>
 HTML;
@@ -66,17 +67,6 @@ HTML;
 }
 
 /**
- * index_logout()
- */
-function index_logout()
-{
-    // change admin mode to user mode
-    $_SESSION['usermode'] = "user";
-    // redirect to welcome page
-    echo header("Location: index.php?mode=welcome&".session_name()."=".session_id());
-}
-
-/**
  * index_welcome()
  * Display the welcome page
  * The text is loaded from ./data/index_welcome.txt
@@ -85,6 +75,7 @@ function index_welcome(){
     $html = html_header("Biborb",$GLOBALS['CSS_FILE']);
     $title = "BibORB: BibTeX On-line References Browser";
     $content = load_file("./data/index_welcome.txt");
+    // get the version and the date
     $content = str_replace('$biborb_version',$GLOBALS['biborb_version'],$content);
     $content = str_replace('$date_release',$GLOBALS['date_release'],$content);
     $html .= index_menu();
@@ -284,7 +275,7 @@ function index_menu(){
         $html .= "<li><a class='admin' href='index.php?mode=delete_database'>Delete a bibliography</a></li>";
     }
     if($_SESSION['usermode']=='admin' && !$GLOBALS['disable_authentication']){
-        $html .= "<li><a href='index.php?mode=logout'>Logout</a></li>";
+        $html .= "<li><a href='index.php?mode=welcome&action=logout'>Logout</a></li>";
     }
     $html .= "</ul>";
     $html .= "</li>";
@@ -364,16 +355,18 @@ function bibindex_login(){
     $content = <<<HTML
 <form action='bibindex.php' method='post'>
 	<table style='margin:auto;'>
-	<tr>
-	<td>
-	<input type='hidden' name='mode' value='login'/>
-	<input type='text' name='login' size='15' maxlength='20' value='login'/><br/>
-	<input type='password' name='mdp' size='15' maxlength='20' value='mdp'/>
-	</td>
-	</tr>
-	<tr>
-	<td><div style='text-align:center;'><input type='submit' name='action' value='login'/></div>
-	</td></tr>
+        <tr>
+            <td>
+                <input type='hidden' name='mode' value='login'/>
+                <input type='text' name='login' size='15' maxlength='20' value='login'/><br/>
+                <input type='password' name='mdp' size='15' maxlength='20' value='mdp'/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div style='text-align:center;'><input type='submit' name='action' value='login'/></div>
+            </td>
+        </tr>
 	</table>
 </form>
 HTML;
@@ -499,7 +492,6 @@ function bibheader($inbody = NULL)
 }
 
 
-
 /**
  * This is the default Welcome page.
  */
@@ -541,7 +533,7 @@ HTML;
 
 /**
  * bibindex_operation_result()
- * Only display $_SESSION['error'] and $_SESSION['message']
+ * Display error or message
  */
 function bibindex_operation_result(){
     $html = bibheader();  
@@ -652,7 +644,7 @@ function bibindex_display_by_group(){
  * display the search interface
  */
 function bibindex_display_search(){
-	// TODO remve all accents from the string.
+
 	$searchvalue = array_key_exists('search',$_GET) ? remove_accents(trim($_GET['search'])) :"";
 	
     $title = "Search";
@@ -1132,6 +1124,5 @@ function bibindex_export_basket_to_html(){
 		echo bibindex_display_basket();
 	}
 }
-
 
 ?>

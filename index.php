@@ -82,44 +82,71 @@ else{
   $_SESSION['usermode'] = "admin";
 }
 
+/*
+    Look in $_GET for an action to be performed
+ */
 if(isset($_GET['action'])){
     switch($_GET['action']){
+        
+        /*
+            Create a database
+         */
         case 'create':
             $error_or_message = create_database($_GET['database_name'],
                                                 $_GET['description']);
             break;
+            
+        /*
+            Delete a database
+         */
         case 'delete':
             $error_or_message['message'] = delete_database($_GET['database_name']);
             break;
+        
+        /*
+            Logout
+         */
+        case 'logout':
+            $_SESSION['usermode'] = "user";
+            break;
+            
         default:
             break;
     }
 }
 
+/*
+    Look in $_POST for an action to be performed
+ */
 if(isset($_POST['action'])){
     switch($_POST['action']){
-    case 'login':
-	$login = $_POST['login'];
-	$mdp = $_POST['mdp'];
-	if($login=="" || $mdp==""){
-	    $error_or_message['error'] = "You must fill both login and password!";
-	    $mode = "login";
-	}
-	else {
-	    $loggedin = check_login($login,$mdp);
-	    if($loggedin){
-		$_SESSION['user'] = $login;
-		$_SESSION['usermode'] = "admin";
-	    }
-	    else {
-		$error_or_message['error'] = "Wrong login or password";
-		$mode = "login";
-	    }
-	}
-	break; 
-    default:
-	break;
-    } 
+        
+        /*
+            Login
+         */
+        case 'login':
+            $login = $_POST['login'];
+            $mdp = $_POST['mdp'];
+            if($login=="" || $mdp==""){
+                $error_or_message['error'] = "You must fill both login and password!";
+                $mode = "login";
+            }
+            else {
+                $loggedin = check_login($login,$mdp);
+                if($loggedin){
+                    $_SESSION['user'] = $login;
+                    $_SESSION['usermode'] = "admin";
+                }
+                else {
+                    $error_or_message['error'] = "Wrong login or password";
+                    $mode = "login";
+                }
+            }
+            break;
+            
+        default:
+            break;
+    }
 }
 
 
@@ -147,9 +174,6 @@ switch($mode){
     
 	// Login form
     case 'login': echo index_login(); break;
-    
-	// Logout
-    case 'logout': echo index_logout(); break;
     
 	// Generic page to display result of operations (add, delete, ...)
     case 'result': echo index_result(); break;

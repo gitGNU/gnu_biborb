@@ -64,23 +64,6 @@
  */
 
 /**
-* Register variables in session.
- * It is not really needed for most of them but easier to reference them in the code.
- * Use of 'get_value' to avoid PHP warnings when keys are not present in $_GET or $_POST
- */
-//$_SESSION['mode'] = get_value('mode',$_GET);            // which page to display
-//$_SESSION['group'] = get_value('group',$_GET);          // which group to display
-//$_SESSION['search'] = get_value('search',$_GET);        // which value to search for
-//$_SESSION['author'] = get_value('author',$_GET);        // search in author?
-//$_SESSION['keywords'] = get_value('keywords',$_GET);    // search in keywords?
-//$_SESSION['title'] = get_value('title',$_GET);          // search in title?
-//$_SESSION['type'] = get_value('type',$_GET);            // which type of entry to add
-//$_SESSION['id'] = get_value('id',$_GET);                // whih entry to display?
-//$_SESSION['menu'] = get_value('menu',$_GET);            // display the menu?
-
-
-
-/**
  * loads some functions
  */
 
@@ -302,28 +285,32 @@ if(isset($_POST['action'])){
 				$message .= "<br/><pre>".$_POST['bibval']."</pre>";
 				$message .= $formated;
 			}
-			break;				
-	case 'login':
-	    $login = $_POST['login'];
-	    $mdp = $_POST['mdp'];
-	    if($login=="" || $mdp==""){
-		$error = "You must fill both login and password!";
-	    }
-	    else {
-		$loggedin = check_login($login,$mdp);
-		if($loggedin){
-		    $_SESSION['user'] = $login;
-		    $_SESSION['usermode'] = "admin";
-		    $login_success = "welcome";	    
-		}
-		else {
-		    $error = "Wrong login or password";
-		}
-	    }
-	    break; 
+			break;
+    
+        /*
+        
+         */
+        case 'login':
+            $login = $_POST['login'];
+            $mdp = $_POST['mdp'];
+            if($login=="" || $mdp==""){
+                $error = "You must fill both login and password!";
+            }
+            else {
+                $loggedin = check_login($login,$mdp);
+                if($loggedin){
+                    $_SESSION['user'] = $login;
+                    $_SESSION['usermode'] = "admin";
+                    $login_success = "welcome";	    
+                }
+                else {
+                    $error = "Wrong login or password";
+                }
+            }
+            break; 
 
-	default:
-	    break;
+        default:
+            break;
 	}
 }
 
@@ -353,7 +340,6 @@ switch($mode)
 	// Generice page to display operations results
     case 'operationresult': echo bibindex_operation_result(); break;
         
-
 	// Help on the display menu item
     case 'display': echo bibindex_display_help(); break;
 		

@@ -300,42 +300,6 @@ function load_xml_bibfile($bibname)
 {
     return load_file(xmlfilename($bibname));
 }
-
-
-/**
- * Return an HTML output of entries matching search paramters
- */
-function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mode,$bibindexmode,$abstract){
-    $xml_content = load_xml_bibfile($bibname);
-    $xsl_content = load_file("./xsl/search.xsl");  
-    $param = array();
-	
-    if($forauthor!=null){
-        $param['author']=$value;
-		$extraparam = "author=author&search=$value";
-    }
-    if($fortitle!=null){
-        $param['title']=$value;
-		$extraparam = "title=title&search=$value";
-     }
-    if($forkeywords!=null){
-        $param['keywords']=$value;
-		$extraparam = "keywords=keywords&search=$value";
-    }
-    $param['mode'] = $mode;
-    $param['bibname'] = $bibname;
-    if($abstract){
-        $param['abstract'] = "true";
-    }
-    $param['display_images'] = $GLOBALS['display_images'];
-    $param['display_text'] = $GLOBALS['display_text'];
-	$param['basketids'] = $_SESSION['basket']->items_to_string();
-	$param['bibindex_mode'] = $bibindexmode;
-	$param['extra_get_param'] = $extraparam;
-
-    return xslt_transform($xml_content,$xsl_content,$param);
-}
-
  
 /**
  * get_number_of_entries
@@ -445,27 +409,6 @@ function upload_file($bibname,$type,$id)
 }
 
 /**
- * Return the login form
- */
-function login_form($from){
-    $content = "<div style='text-align:center;'>";
-    $content .= "<form action='action_proxy.php?".session_name()."=".session_id()."' method='post'>";
-    $content .= "<table style='margin:auto;'>";
-    $content .= "<tr>";
-    $content .= "<td>";
-    $content .= "<input type='hidden' name='from' value='".$from."'/>";
-    $content .= "<input type='text' name='login' size='15' maxlength='20' value='login'/><br/>";
-    $content .= "<input type='password' name='mdp' size='15' maxlength='20' value='mdp'/>";
-    $content .= "</td></tr>";
-    $content .= "<tr><td><div style='text-align:center;'><input type='submit' name='action' value='login'/></div>";
-    $content .= "</td></tr>";
-    $content .= "</table>";
-    $content .= "</form>";
-    $content .= "</div>";
-    return $content;
-}
-
-/**
  * Create the main panel
  */
 function main($title,$content,$error = null,$message = null)
@@ -491,17 +434,10 @@ function main($title,$content,$error = null,$message = null)
   return $html;  
 }
 
-function get_databases_names(){
-    $dir = opendir("./bibs/");
-    $databases_names = array();
-    while($file = readdir($dir)){
-        if(is_dir("./bibs/".$file) && $file != '.' && $file != '..'){
-            array_push($databases_names,$file);
-        }
-    }
-    return $databases_names;
-}
 
+/**
+    Del a directory
+ */
 function deldir($dir) {
     $current_dir = opendir($dir);
     while($entryname = readdir($current_dir)){
@@ -516,6 +452,9 @@ function deldir($dir) {
     rmdir($dir);
 }
 
+/**
+    Remove accents of a string.
+ */
 function remove_accents($string){
     return strtr($string,
                 "¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖØÙÚÛÜİßàáâãäåæçèéêëìíîïğñòóôõöøùúûüıÿ",
