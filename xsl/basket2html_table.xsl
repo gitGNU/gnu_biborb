@@ -27,7 +27,7 @@
  *
  * Description:
  *
- *    Produce a HTML form output for bibtex entries.
+ *    Display entries given in the XML input file
  *
 -->
 <xsl:stylesheet
@@ -51,12 +51,30 @@
     <xsl:template match="/entrylist">
         <!-- load the xml file into a variable -->
         <xsl:variable name="bibfile" select="document($bibnameurl)" />
-        <!-- look for all id in the xml file and output the corresponding bibtex entry -->
+        <!-- get all ids of entries to display -->
+        <xsl:variable name="ids" select="//id"/>
+        <!-- get entries to display -->
+        <xsl:variable name="result" select="$bibfile//bibtex:entry[@id=$ids]"/>
+        
+        <!-- results -->
+        <xsl:variable name="cpt" select="count($result)"/>
+        <div class="result">
+            <xsl:choose>
+                <xsl:when test="$cpt = 0">
+                    Basket empty.
+                </xsl:when>
+                <xsl:when test="$cpt = 1">
+                    1 entry in the basket.
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$cpt"/> entries in the basket.
+                </xsl:otherwise>
+            </xsl:choose>
+        </div><br/>
+        <!-- display all entries in a table -->
         <table id="bibtex_table">
             <tbody>
-                <xsl:for-each select="//id">
-                    <xsl:apply-templates select="$bibfile//bibtex:entry[@id=current()]"/>
-                </xsl:for-each>
+                <xsl:apply-templates select="$result"/>
             </tbody>
         </table>
     </xsl:template>

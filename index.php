@@ -317,7 +317,7 @@ function index_select(){
 
     // get all bibliographies and create an array
     $databases = get_databases_names();
-    $content = "<div style='text-align:center;'>";
+    $content = "<div style='text-align:left;'>";
     $content .= "<table id='available_bibliographies'>";
     $content .= "<thead><tr><th>Name</th><th>Description</th><th>Sources(BibTeX)</th></tr></thead>";
     $content .= "<tbody>";

@@ -44,6 +44,7 @@
                 <span class="bibtex_key">
                     <xsl:value-of select="@id"/>
                 </span>
+
                 <xsl:if test=".//bibtex:abstract and $abstract != 'true'">
                     <xsl:call-template name="abstract">
                         <xsl:with-param name="id" select="$theid"/>
@@ -57,37 +58,21 @@
                 <xsl:call-template name="link2bibtex">
                     <xsl:with-param name="id" select="$theid"/>
                 </xsl:call-template>
+
                 <xsl:variable name="getval">
                     <xsl:if test="$session_name != ''"><xsl:value-of select="$session_name"/>=<xsl:value-of select="$session_id"/>&amp;id=<xsl:value-of select="@id"/>&amp;mode=edit</xsl:if>
                 </xsl:variable>
+
                 <xsl:if test="$mode='admin'">
-                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=edit">edit</a>
-                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=delete">delete</a>
+                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=edit"><img src="./data/images/stock_edit-16.png" alt="edit" border="0"/></a>
+                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=delete"><img src="./data/images/stock_delete-16.png" alt="delete" border="0"/></a>
                 </xsl:if>
                 <xsl:if test="$basket = '' and $basket != 'no'">
-                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=add_to_basket">+</a>
+                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=add_to_basket"><img src="./data/images/cvs-add-16.png" alt="add to basket" border="0"/></a>
                 </xsl:if>
                 <xsl:if test="$basket != '' and $basket != 'no'">
-                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=delete_from_basket">-</a>
+                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=delete_from_basket"><img src="./data/images/cvs-remove-16.png" alt="remove from basket" border="0"/></a>
                 </xsl:if>
-                <!--
-                <form method="get" action="action_proxy.php" class="bibtex_button">
-                    <xsl:if test="$session_name != ''">
-                        <input type="hidden" name="{$session_name}" value="{$session_id}" />
-                        <input type="hidden" name="id" value="{@id}" />
-                    </xsl:if>
-                    <input type="hidden" name="mode" value="edit" />
-                    <xsl:if test="$mode='admin'">
-                        <input type="submit" name="action" value="edit" />
-                        <input type="submit" name="action" value="delete" />
-                    </xsl:if>
-                    <xsl:if test="$basket = '' and $basket != 'no'">
-                        <input type="submit" name="action" value="add_to_basket" />
-                    </xsl:if>
-                    <xsl:if test="$basket != '' and $basket != 'no'">
-                        <input type="submit" name="action" value="delete_from_basket" />
-                    </xsl:if>
-                </form>-->
             </td>
         </tr>
         <!-- second row for this entry -->
@@ -106,21 +91,24 @@
         </tr>
         <!-- fourth row for this entry -->
         <!-- Abstract -->
-        <!--<xsl:if test="$abstract != ''"> -->
-            <tr>
-                <td class="bibtex_abstract">
-                    <xsl:call-template name="bibtex:abstract">
-                        <xsl:with-param name="id" select="$theid"/>
-                    </xsl:call-template>
-                </td>
-            </tr>
-        <!--</xsl:if>-->
+        <tr>
+            <td class="bibtex_abstract">
+                <xsl:call-template name="bibtex:abstract">
+                    <xsl:with-param name="id" select="$theid"/>
+                </xsl:call-template>
+            </td>
+        </tr>
+
         <!-- fifth row for this entry -->
         <!-- keywords -->
         <tr>
             <td class="bibtex_keywords">
                 <xsl:apply-templates select=".//bibtex:keywords"/>
             </td>
+        </tr>
+        
+        <tr>
+            <td class="last"><br/></td>
         </tr>
     </xsl:template>
     

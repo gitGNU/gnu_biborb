@@ -280,6 +280,13 @@ switch($_SESSION["mode"])
         echo bibindex_import();
         break;
         
+    case 'exportbaskettobibtex':
+        echo bibindex_export_basket_to_bibtex();
+        break;
+        
+    case 'exportbaskettohtml':
+        echo bibindex_export_basket_to_html();
+        break;
     /**
      * By default
      */
@@ -291,8 +298,8 @@ switch($_SESSION["mode"])
 /**
  * unset session variables for the next page
  */
-$_SESSION['error'] = null;
-$_SESSION['message'] = null;
+unset($_SESSION['error']);
+unset($_SESSION['message']);
 
 /************************************************************END OF THE HTML OUTPUT **/
 
@@ -389,8 +396,9 @@ function bibindex_menu()
     if($_SESSION['usermode']=='admin' || $GLOBALS['disable_authentication']){
         $html .= "<li><a class='admin' href='".bibindex_href('groupmodif').".'>Group Modification</a></li>";
     }
-    $html .= "<li><a href='action_proxy.php?action=exportbaskettobibtex'>Export to BibTeX</a></li>";
-    $html .= "<li><a href='action_proxy.php?action=exportbaskettohtml'>Export to HTML</a></li>";
+    //$html .= "<li><a href='action_proxy.php?action=exportbaskettobibtex'>Export to BibTeX</a></li>";
+    $html .= "<li><a href='".bibindex_href('exportbaskettobibtex')."'>Export to BibTeX</a></li>";
+    $html .= "<li><a href='".bibindex_href('exportbaskettohtml')."'>Export to HTML</a></li>";
     $html .= "<li><a href='action_proxy.php?action=resetbasket'>Reset basket</a></li>";
     $html .= "</ul>";
     $html .= "</li>";
@@ -638,13 +646,10 @@ function bibindex_display_search(){
     $html .= bibindex_menu();
     $main_content = search_menu();
     if($_SESSION['search'] != null){
-        $content = search_bibentries($_SESSION['bibname'],$_SESSION['search'],
+        $main_content .= search_bibentries($_SESSION['bibname'],$_SESSION['search'],
                                      $_SESSION['author'],$_SESSION['title'],
     	                             $_SESSION['keywords'],$_SESSION['usermode'],
 				                     $_SESSION['abstract']);
-        $nb_entries = substr_count($content, '<td class="bibtex_start">');
-        $main_content .= "<h3 style='display:inline;'>Results:</h3> ".$nb_entries." papers.<hr/>";
-        $main_content .= $content;
     }
     $html .= main($title,$main_content);
     $html .= html_close();
@@ -676,9 +681,7 @@ function bibindex_display_basket(){
     $html = bibheader();
     $html .= bibindex_menu();
     $content = null;
-    if(count($_SESSION['basket']) != 0){
-        $content = basket_to_html($_SESSION['usermode'],$_SESSION['abstract']);
-    }
+    $content = basket_to_html($_SESSION['usermode'],$_SESSION['abstract']);
     $html .= main($title,$content);
     $html .= html_close();
     return $html;
@@ -799,5 +802,33 @@ function bibindex_import(){
     $html .= main($title,$content);
     $html .= html_close();
     echo $html;
+}
+
+/**
+ * bibindex_export_basket_to_bibtex
+ */
+function bibindex_export_basket_to_bibtex(){
+    if(count($_SESSION['basket']) != 0){
+        echo header("Location: action_proxy.php?action=exportbaskettobibtex");
+    }
+    else{
+        $_SESSION['message'] = "<h2>Basket empty!</h2>";
+        echo header("Location: bibindex.php?mode=operationresult&bibname=".$_SESSION['bibname']."&".session_name()."=".session_id());
+        exit();
+    }
+}
+
+/**
+* bibindex_export_basket_to_html
+ */
+function bibindex_export_basket_to_html(){
+    if(count($_SESSION['basket']) != 0){
+        echo header("Location: action_proxy.php?action=exportbaskettohtml");
+    }
+    else{
+        $_SESSION['message'] = "<h2>Basket empty!</h2>";
+        echo header("Location: bibindex.php?mode=operationresult&bibname=".$_SESSION['bibname']."&".session_name()."=".session_id());
+        exit();
+    }
 }
 ?>

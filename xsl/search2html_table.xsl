@@ -84,6 +84,20 @@
                 </xsl:if>
             </xsl:for-each>
         </xsl:variable>
+
+        <!-- how many entries displayed -->
+        <xsl:variable name="cpt" select="count($result//bibtex:entry)"/>
+        <div class="result">
+            <xsl:choose>
+                <xsl:when test="$cpt = 1 or $cpt = 0">
+                    <xsl:value-of select="$cpt"/> entry matching the query.
+                </xsl:when>
+                <xsl:otherwise>
+                   <xsl:value-of select="$cpt"/> entries matching the query.
+                </xsl:otherwise>
+            </xsl:choose>
+        </div>
+        
         <!-- add a link to add all entries to basket -->
         <xsl:variable name="ids">
             <xsl:for-each select="$result//bibtex:entry">
@@ -91,17 +105,21 @@
                 <xsl:if test="position() != last()">*</xsl:if>
             </xsl:for-each>
         </xsl:variable>
-        <div class="addtobasket">
-            <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}">Add all entries to basket</a>
-        </div>
-        <!-- begining of the table -->
-        <table id="bibtex_table">
-            <tbody>
-                <xsl:for-each select="$result">
-                    <xsl:apply-templates/>
-                </xsl:for-each>
-            </tbody>
-        </table>
+        
+        <xsl:if test="$cpt != 0">
+            <div class="addtobasket">
+                Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" align="center" border="0"/></a>
+            </div>
+        
+            <!-- begining of the table -->
+            <table id="bibtex_table">
+                <tbody>
+                    <xsl:for-each select="$result">
+                        <xsl:apply-templates/>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </xsl:if>
     </xsl:template>
   
     <!-- include XSLT stylesheet -->

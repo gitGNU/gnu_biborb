@@ -27,8 +27,11 @@
  *
  * Description:
  *
+ *  Display entries of a given group
+ *
  *
 -->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:bibtex="http://bibtexml.sf.net/"
@@ -50,9 +53,24 @@
     <xsl:param name="bibname"/>
     
     <xsl:template match="/">
-        <!-- start the table -->
+        <!-- get entries of the given group -->
+        <xsl:variable name="result" select="//bibtex:entry[(.//bibtex:group)=$group]"/>
+        
+        <!-- how many entries displayed -->
+        <div class="result">
+            <xsl:variable name="cpt" select="count($result)"/>
+            <xsl:choose>
+                <xsl:when test="$cpt != 1">
+                    <xsl:value-of select="$cpt"/> entries for the group: <b><xsl:value-of select="$group"/></b>.
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$cpt"/> entry for the group: <b><xsl:value-of select="$group"/></b>.
+                </xsl:otherwise>
+            </xsl:choose>
+        </div>
+        
         <!-- a link to add all entries to the basket -->
-        <xsl:variable name="list" select="//bibtex:entry[(.//bibtex:group)=$group]/@id"/>
+        <xsl:variable name="list" select="$result//@id"/>
         <xsl:variable name="ids">
             <xsl:for-each select="$list">
                 <xsl:value-of select="."/>
@@ -60,12 +78,14 @@
             </xsl:for-each>
         </xsl:variable>
         <div class="addtobasket">
-            <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}">Add all entries to basket</a>
+            Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" align="center" border="0"/></a>
         </div>
+        
+        <!-- start the table -->
         <table id="bibtex_table">
             <tbody>
                 <!-- select only entries of the given group -->
-                <xsl:for-each select="//bibtex:entry[(.//bibtex:group)=$group]">
+                <xsl:for-each select="$result">
                     <!-- sort entries by increasing id -->
                     <xsl:sort select="@id" order="ascending" data-type="text"/>
                     <xsl:apply-templates select="."/>

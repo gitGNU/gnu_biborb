@@ -216,13 +216,17 @@ html > body #menu {position:fixed;}
 }
 
 #bibtex_table .bibtex_start {
-    border-top:solid 2px;
+//    border:solid 1px #333;
+    border-top:solid 2px navy;
     color:navy;
+//    background-color:#bbb;
 }
 
 #bibtex_table .bibtex_key {
     color:navy;
-    background-color:transparent;
+    border:solid 1px #333;
+    border-bottom:none;
+    background-color:#ccc;
     font-weight:bold;
     font-size:xx-small;
     padding:1px;
@@ -261,24 +265,41 @@ html > body #menu {position:fixed;}
     font-weight:bold;
     border-bottom:dotted 1px;
     font-size:normal;
+    border-top:solid 1px #333;
+    border-left:solid 1px #333;
+    border-right:solid 1px #333;
+    background-color:#eee;
 }
 
 #bibtex_table .bibtex_author {
     font-style:italic;
     font-size:normal;
     text-align:right;
+    border-left:solid 1px #333;
+    border-right:solid 1px #333;
+    background-color:#eee;
 }
 
 #bibtex_table .bibtex_abstract {
     font-size:xx-small;
+    background-color:#eee;
+    border-left:solid 1px #333;
+    border-right:solid 1px #333;
 }
 
 #bibtex_table .bibtex_keywords {
     font-family:monospace;
     font-size:x-small;
     text-align:right;
+    background-color:#eee;
+    border-left:solid 1px #333;
+    border-right:solid 1px #333;
+    border-bottom:solid 1px #333;
 }
 
+.last {
+    font-size:5px;
+}
 
 
 #bibtex_table a, #bibtex_table a:hover,#bibtex_table a:active,#bibtex_table a:visited,#bibtex_table a:focus {
