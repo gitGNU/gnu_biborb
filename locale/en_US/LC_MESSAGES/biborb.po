@@ -1107,3 +1107,18 @@ msgstr "Browse"
 msgid "BIBINDEX_MENU_BROWSE_HELP"
 msgstr "Navigate through the bibliography."
 
+msgid "Years"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Series"
+msgstr ""
+
+msgid "Journals"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+

@@ -781,8 +781,17 @@ switch($mode) {
     // Browse mode
     case 'browse': 
         if(isset($_GET['start'])){
-            unset($_SESSION['ids']);
-            $_SESSION['browse_ids'] = $_SESSION['bibdb']->all_bibtex_ids();
+            if($_GET['start'] == 0){
+                unset($_SESSION['ids']);
+                $_SESSION['browse_ids'] = $_SESSION['bibdb']->all_bibtex_ids();
+                // extract values from the database
+                // save them into session
+                $_SESSION['misc']['years'] = $_SESSION['bibdb']->get_values_for('year');
+                $_SESSION['misc']['groups'] = $_SESSION['bibdb']->get_values_for('group');
+                $_SESSION['misc']['series'] = $_SESSION['bibdb']->get_values_for('series');
+                $_SESSION['misc']['journals'] = $_SESSION['bibdb']->get_values_for('journal');
+                $_SESSION['misc']['authors'] = $_SESSION['bibdb']->get_values_for('author');
+            }
             if(isset($_SESSION['browse_history'])){
                 for($i=0;$i<$_GET['start'];$i++){
                     $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$_SESSION['browse_history'][$i]['type'],$_SESSION['browse_history'][$i]['value']);

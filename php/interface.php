@@ -1877,12 +1877,6 @@ function bibindex_browse(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = msg("BIBINDEX_BROWSE_TITLE");
-        
-    // extract values from the database
-    $years = $_SESSION['bibdb']->get_values_for('year');
-    $groups = $_SESSION['bibdb']->get_values_for('group');
-    $series = $_SESSION['bibdb']->get_values_for('series');
-    $journals = $_SESSION['bibdb']->get_values_for('journal');
     
     $content = "<div class='browse_history'>";
     $content .= "&gt;&gt;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=0'>Start</a>";
@@ -1895,9 +1889,10 @@ function bibindex_browse(){
     $content .= "</div>";
     $content .= "<div class='browse'>";
     $content .= "<ul>";
-    $content .= "<li><a href='#years'>".msg("Year")."</a></li>";
+    $content .= "<li><a href='#years'>".msg("Years")."</a></li>";
+    $content .= "<li><a href='#authors'>".msg("Authors")."</a></li>";
     $content .= "<li><a href='#series'>".msg("Series")."</a></li>";
-    $content .= "<li><a href='#journals'>".msg("Journal")."</a></li>";
+    $content .= "<li><a href='#journals'>".msg("Journals")."</a></li>";
     $content .= "<li><a href='#groups'>".msg("Groups")."</a></li>";
     $content .= "</ul>";
     $content .= "</div>";
@@ -1906,28 +1901,35 @@ function bibindex_browse(){
     
     // years
     $content .= "<ul id='years'>".msg("Existing years:");
-    foreach($years as $year){
+    foreach($_SESSION['misc']['years'] as $year){
         $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=year&value=$year'>$year</a></li>";
+    }
+    $content .= "</ul>";
+    
+    // authors
+    $content .= "<ul id='authors'>".msg("Existing authors:");
+    foreach($_SESSION['misc']['authors'] as $author){
+        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=author&value=$author'>$author</a></li>";
     }
     $content .= "</ul>";
     
     // series
     $content .= "<ul id='series'>".msg("Existing series:");
-    foreach($series as $serie){
+    foreach($_SESSION['misc']['series'] as $serie){
         $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=series&value=$serie'>$serie</a></li>";
     }
     $content .= "</ul>";
     
     // journal
     $content .= "<ul id='journals'>".msg("Existing journals:");
-    foreach($journals as $journal){
+    foreach($_SESSION['misc']['journals'] as $journal){
         $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=journal&value=$journal'>$journal</a></li>";
     }
     $content .= "</ul>";
     
     // groups
     $content .= "<ul id='groups'>".msg("Existing groups:");
-    foreach($groups as $group){
+    foreach($_SESSION['misc']['groups'] as $group){
         $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=group&value=$group'>$group</a></li>";
     }
     $content .= "</ul>";

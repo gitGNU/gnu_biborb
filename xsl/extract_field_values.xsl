@@ -71,6 +71,11 @@
                     <xsl:value-of select='node()[not(.=following::bibtex:group)]'/><xsl:if test='position()!=last()'>|</xsl:if>
                 </xsl:for-each>
             </xsl:when>
+            <xsl:otherwise>
+                <xsl:for-each select=".//*[local-name()=$field]">
+                    <xsl:value-of select='node()'/><xsl:if test='position()!=last()'>|</xsl:if>
+                </xsl:for-each>
+            </xsl:otherwise>
         </xsl:choose>
 	</xsl:template>
 

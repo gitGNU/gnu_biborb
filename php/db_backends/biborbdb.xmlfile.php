@@ -890,16 +890,40 @@ class BibORB_DataBase {
         Get all different values for a specific field in the database
     */
     function get_values_for($field){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
-        $xml_content = $this->all_entries();
-        $xsl_content = load_file("./xsl/extract_field_values.xsl");
-        $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry",$xsl_content);
-        $param = array('sort' => $this->sort,
-                       'sort_order' => $this->sort_order,
-                       'field' => $field);
-        $res = $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return remove_null_values(explode('|',$res));
+        if($field == 'author'){
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+            $xml_content = $this->all_entries();
+            $xsl_content = load_file("./xsl/extract_field_values.xsl");
+            $param = array('field' => 'author');
+            $res = $xsltp->transform($xml_content,$xsl_content,$param);
+            $authors = remove_null_values(explode('|',$res));
+            $xsltp->free();
+            $pc = new PARSECREATORS();
+            $author = array();
+            foreach($authors as $eAuthors){
+                list($creators,$etal) = $pc->parse($eAuthors);
+                foreach($creators as $creator){
+                    if(!in_array($creator[2],$author)){
+                        $author[] = $creator[2];
+                    }
+                }
+            }
+            sort($author);
+            return $author;
+        }
+        else{
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+            $xml_content = $this->all_entries();
+            $xsl_content = load_file("./xsl/extract_field_values.xsl");
+            $param = array('sort' => $this->sort,
+                           'sort_order' => $this->sort_order,
+                           'field' => $field);
+            $res = $xsltp->transform($xml_content,$xsl_content,$param);
+            $xsltp->free();
+            $tab = remove_null_values(explode('|',$res));
+            sort($tab);
+            return $tab;
+        }
     }
     
     /**
@@ -908,7 +932,12 @@ class BibORB_DataBase {
     function filter($ids, $field, $value){
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->entries_with_ids($ids);
-        $xpath_query = ".//bibtex:$field='$value'";
+        if($field == 'author'){
+            $xpath_query = "contains(.//bibtex:$field,'$value')";
+        }
+        else{
+            $xpath_query = ".//bibtex:$field='$value'";
+        }
         $xsl_content = load_file("./xsl/extract_ids.xsl");
         $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry[$xpath_query]",$xsl_content);
         $param = array('sort' => $this->sort,

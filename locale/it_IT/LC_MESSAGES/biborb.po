@@ -1096,3 +1096,18 @@ msgstr ""
 
 msgid "BIBINDEX_MENU_BROWSE_HELP"
 msgstr ""
+
+msgid "Years"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Series"
+msgstr ""
+
+msgid "Journals"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
