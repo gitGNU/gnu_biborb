@@ -39,10 +39,10 @@
 
 
 body {
-  font-family:sans-serif,serif;
-  font-size:small;
-  background-color:white;
-  color:black;
+    font-family:"Gill Sans",verdana,sans-serif;
+    font-size:small;
+    background-color:white;
+    color:black;
 }
 
 /**
@@ -64,6 +64,8 @@ body {
     text-align:center;
     display:block;
     font-size:x-large;
+    text-shadow: #666 2px 2px 2px;
+    letter-spacing:1px;
 }
 
 html > body #menu {position:fixed;}
@@ -73,6 +75,7 @@ html > body #menu {position:fixed;}
     position:relative;
     float:left;
     margin-left:10px;
+    text-shadow:#bbb 2px 2px 3px;
 }
 
 #menu ul {
@@ -156,6 +159,7 @@ html > body #menu {position:fixed;}
   text-align:center;
   border-bottom:dashed 2px gray;
   margin-bottom:2em;
+  text-shadow:#666 2px 2px 2px;
 }
 
 #error_title {
@@ -271,5 +275,4 @@ html > body #menu {position:fixed;}
 .current, .newfile { 
   border:1px solid black;
 }
-
 

@@ -20,14 +20,15 @@
  * 
 -->
 <!--
- * File: addgroup.xsl
+ * 
+ * File: add_entries.xsl
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Licence: GPL
- *
+ * 
  * Description:
- *
- *     Get given IDs entries from the database and add a group.
- *
+ * 
+ *      add en entry to the bibliography.
+ * 
 -->
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -37,51 +38,19 @@
     <xsl:output method="xml" encoding="iso-8859-1"/>
     
     <xsl:param name="bibname"/>
-    <xsl:param name="group"/>
     
     <xsl:template match="/">
-        <!-- load the xml file --> 
         <xsl:variable name="bibfile" select="document($bibname)"/>
         <xsl:variable name="list_id" select="//id"/>
         <!-- look for all id in the xml file and output the corresponding bibtex entry -->
         <xsl:element name="bibtex:file">
             <xsl:attribute name="name"><xsl:value-of select="$bibfile/bibtex:file/@name"/></xsl:attribute>
             <xsl:copy>
-                <xsl:apply-templates select="$bibfile//bibtex:entry[@id=$list_id]" />
+                <!-- copy the xml database -->
+                <xsl:apply-templates select="$bibfile//bibtex:entry" />
+                <!-- copy the new entry -->
+                <xsl:apply-templates select="//bibtex:entry"/>
             </xsl:copy>
-        </xsl:element>
-    </xsl:template>
-    
-    <xsl:template match="bibtex:groups">
-        <xsl:element name="bibtex:{local-name()}">
-            <xsl:for-each select=".//bibtex:group">
-                <xsl:if test="node() != $group">
-                    <xsl:element name="bibtex:group">
-                        <xsl:value-of select="node()"/>
-                    </xsl:element>
-                </xsl:if>
-            </xsl:for-each>
-            <xsl:element name ="bibtex:group">
-                <xsl:value-of select="$group"/>
-            </xsl:element>
-        </xsl:element>
-    </xsl:template>
-    
-    <xsl:template match="bibtex:article | bibtex:book | bibtex:booklet | bibtex:conference | bibtex:inbook | bibtex:incollection | bibtex:inproceedings | bibtex:manual | bibtex:masterthesis | bibtex:misc | bibtex:phdthesis | bibtex:proceedings | bibtex:techreport | bibtex:unpublished">
-        <xsl:element name="bibtex:{local-name()}">
-            <xsl:choose>
-                <xsl:when test="count(.//bibtex:groups)!=0">
-                    <xsl:apply-templates select="./*"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates select="./*"/>
-                    <xsl:element name="bibtex:groups">
-                        <xsl:element name="bibtex:group">
-                            <xsl:value-of select="$group"/>
-                        </xsl:element>
-                    </xsl:element>
-                </xsl:otherwise>
-            </xsl:choose>
         </xsl:element>
     </xsl:template>
     

@@ -2,7 +2,7 @@
 <!--
  * This file is part of BibORB
  * 
- * Copyright (C) 2003  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,36 +20,25 @@
  * 
 -->
 <!--
- * File: one_entry2html.xsl
+ * File: count_entries.xsl
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
- * Year: 2003
  * Licence: GPL
  *
  * Description:
  *
- *    Display one entry of the bibliography
+ *    Count entries in an xml file
  *
 -->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:bibtex="http://bibtexml.sf.net/"
     version="1.0">
   
-    <xsl:output method="xml" encoding="iso-8859-1"/>
-    
-    <!-- include generic parameters -->
-	<xsl:include href="xsl/parameters.xsl"/>
-
-    <xsl:template match="/bibtex:file">
-        <!-- start the table -->
-        <table id="bibtex_table">
-            <tbody>
-                <xsl:apply-templates select="//bibtex:entry[@id=$id]"/>
-            </tbody>
-        </table>
-    </xsl:template>
-    
-    <!-- include XSLT stylesheet -->
-    <xsl:include href="xsl/biborb_output_model_for_table.xsl"/>
-    
+	<xsl:output method="text"/>
+	
+	<xsl:template match="/">
+		<xsl:value-of select="count(//bibtex:entry)"/>
+	</xsl:template>
+	
 </xsl:stylesheet>

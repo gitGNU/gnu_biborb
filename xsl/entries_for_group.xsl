@@ -2,7 +2,7 @@
 <!--
  * This file is part of BibORB
  * 
- * Copyright (C) 2003  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,36 +20,44 @@
  * 
 -->
 <!--
- * File: one_entry2html.xsl
+ * File: entries_for_group.xsl
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
- * Year: 2003
  * Licence: GPL
  *
  * Description:
  *
- *    Display one entry of the bibliography
+ *  Get entries of a given group
+ *
  *
 -->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:bibtex="http://bibtexml.sf.net/"
     version="1.0">
   
-    <xsl:output method="xml" encoding="iso-8859-1"/>
-    
-    <!-- include generic parameters -->
+    <xsl:output method="xml" encoding="iso-8859-1" omit-xml-declaration="no"/>
+	
+	<!-- include generic parameters -->
 	<xsl:include href="xsl/parameters.xsl"/>
-
-    <xsl:template match="/bibtex:file">
-        <!-- start the table -->
-        <table id="bibtex_table">
-            <tbody>
-                <xsl:apply-templates select="//bibtex:entry[@id=$id]"/>
-            </tbody>
-        </table>
+	
+	<xsl:template match="/">
+		<xsl:element name="bibtex:file">
+			<xsl:copy>
+				<xsl:apply-templates select="//bibtex:entry[(.//bibtex:group)=$group]"/>
+			</xsl:copy>
+		</xsl:element>
+	</xsl:template>
+	
+	<!-- Hand copy to be sure to copy namespaces -->
+	<xsl:template match="@*">
+        <xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
     </xsl:template>
     
-    <!-- include XSLT stylesheet -->
-    <xsl:include href="xsl/biborb_output_model_for_table.xsl"/>
-    
+    <xsl:template match="*">
+        <xsl:element name="bibtex:{local-name()}">
+            <xsl:apply-templates select=" @* | node()"/>
+        </xsl:element>
+    </xsl:template>
+	
 </xsl:stylesheet>

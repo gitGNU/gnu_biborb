@@ -3,7 +3,7 @@
  * 
  * This file is part of BibORB
  * 
- * Copyright (C) 2003  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +25,6 @@
  * 
  * File: config.php
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
- * Year: 2003
  * Licence: GPL
  * 
  * Description:

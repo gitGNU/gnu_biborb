@@ -2,7 +2,7 @@
 <!--
  * This file is part of BibORB
  * 
- * Copyright (C) 2003  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +22,6 @@
 <!--
  * File: parameters.xsl
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
- * Year: 2004
  * Licence: GPL
  *
  * Description:
@@ -58,8 +57,14 @@
 	<!-- Display the basket actions					  -->
 	<xsl:param name="display_basket_actions"/>
 	
+	<!-- Display the "add all to basket" button  	  -->
+	<xsl:param name="display_add_all"/>
+	
 	<!-- A group value								  -->
 	<xsl:param name="group"/>
+	
+	<!-- A search value								  -->
+	<xsl:param name="search"/>
 	
 	<!-- An author value							  -->
 	<xsl:param name="author"/>
@@ -70,8 +75,20 @@
 	<!-- A Keywords value							  -->
     <xsl:param name="keywords"/>
 	
+	<!-- journal									  -->
+	<xsl:param name="journal"/>
+	
+	<!-- editor										  -->
+	<xsl:param name="editor"/>
+	
+	<!-- year										  -->
+	<xsl:param name="year"/>
+	
 	<!-- A bibtex id								  -->
 	<xsl:param name="id"/>
+	
+	<!-- Some bibtex ids (XML formated)				  -->
+	<xsl:param name="ids"/>
 	
 	<!-- Extra get parameters to add in a link		  -->
 	<xsl:param name="extra_get_param"/>

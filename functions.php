@@ -1,10 +1,9 @@
 <?php
-
 /**
  *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,12 +29,8 @@
  * Licence: GPL
  * 
  * Description:
- * 
- *   This file encapsulates some functions to transform a raw text
- * bibfile into 'nice' html pages linked against electronic version of
- * papers specified in the bibfile.
- * 
- * 
+ *      
+ *      Some generic functions
  */
 
 /**
@@ -148,18 +143,22 @@ function xml2bibtex($bibname){
  * bibtex2xml
  * Transform a BibTeX string into an XML string
  */
-function bibtex2xml($bibfile,$group=NULL){
+function bibtex2xml($bibtext,$group=NULL){
 	
 	
-    $content = file($bibfile);          // content to analyse
+    $content = $bibtext;          // content to analyse
     
 	$first = 1;							// is it the first entry analyzed?
     $xml_content = null;                // xml content
     $key = null;                        // bibtex field
     $data_content = null;               // bibtex field value
     $openfield = false;                 // true if a value is on several lines
-    $type = null;                       // type of the bibtex entry being analyzed                
+    $type = null;                       // type of the bibtex entry being analyzed
+	$entries_count = 0;
+	$ids = array();
 
+	$xml_content = "<?xml version='1.0' encoding='ISO-8859-1'?>";
+	$xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/'>";
 	
 	// remove uneeded spaces
 	for($i=0;$i<sizeof($content);$i++){
@@ -174,6 +173,8 @@ function bibtex2xml($bibfile,$group=NULL){
 
         //new entry @(alphanum){(anychar),
         if(preg_match("/@\s?(\w*)\s?{(.*),/",$line,$matches)){
+			$entries_count++;
+			array_push($ids,trim($matches[2]));
 			// If it isn't the first entry, close the previous one
             if($first==0){
                 $xml_content .= end_bibentry($type);
@@ -262,8 +263,9 @@ function bibtex2xml($bibfile,$group=NULL){
     if($first == 0){
         $xml_content .= end_bibentry($type);
     }
-
-    return $xml_content;
+	$xml_content .= "</bibtex:file>";
+	print_r($ids);
+    return array($entries_count,$ids,$xml_content);
 }
 
 /**
@@ -293,34 +295,6 @@ function bibfield($type,$value){
 }
 
 /**
- * get_group_list
- * Get groups present in the bibtex file
- */
-function get_group_list($bibname)
-{
-    // Get groups from the xml bibtex file
-    $xml_content = load_file("./bibs/".$bibname."/".$bibname.".xml");
-    $xsl_content = load_file("./xsl/group_list.xsl");  
-    $group_list = xslt_transform($xml_content,$xsl_content);
- 
-    // Remove doublons
-    $group_list = split("[,~]",$group_list);
-    $list = array();
-    $j=0;
-    for($i=0;$i<sizeof($group_list);$i++){
-        $group_list[$i] = trim($group_list[$i]);
-        if($group_list[$i] != ""){
-            if(!in_array($group_list[$i],$list)){
-                $list[$j] = $group_list[$i];
-                $j++;
-            }
-        }
-    }
- 
-    return $list;    
-}
-
-/**
  * Load an XML file
  */
 function load_xml_bibfile($bibname)
@@ -328,73 +302,28 @@ function load_xml_bibfile($bibname)
     return load_file(xmlfilename($bibname));
 }
 
-/**
- * Return an HTML table of all entries of a bibfile
- */
-function get_all_bibentries($bibname,$mode,$abstract,$bibindexmode)
-{   
-	$basketids = $_SESSION['basket']->items_to_string();
-
-    $xml_content = load_xml_bibfile($bibname);
-    $xsl_content = load_file("./xsl/all_sorted_by_id2html_table.xsl");
-    $param = array('mode' => $mode,
-                   'bibname' => $bibname,
-                   'display_images' => $GLOBALS['display_images'],
-                   'display_text' => $GLOBALS['display_text'],
-				   'basketids' => $basketids,
-				   'bibindex_mode' => $bibindexmode);
-    
-    if($abstract){
-        $param['abstract'] = "true";
-    }
-  
-    return xslt_transform($xml_content,$xsl_content,$param);
-}
-
-/**
- * Return an HTML output of entries of a given group
- */
-function get_bibentries_of_group($bibname,$groupname,$usermode,$bibindexmode,$abstract,$extraparam)
-{
-    $xml_content = load_xml_bibfile($bibname);    
-    $xsl_content = load_file("./xsl/by_group2html_table.xsl");
-	$basketids = $_SESSION['basket']->items_to_string();
-    $param = array('group'=>$groupname,
-                   'mode' => $usermode, 
-                   'bibname' => $bibname,
-				   'bibindex_mode' => $bibindexmode,
-				   'basketids' => $basketids,
-				   'extra_get_param' => $extraparam,
-                   'display_images' => $GLOBALS['display_images'],
-                   'display_text' => $GLOBALS['display_text']);
-    if($abstract){
-        $param['abstract'] = "true";
-    }
- 
-    return xslt_transform($xml_content,$xsl_content,$param);
-}
 
 /**
  * Return an HTML output of entries matching search paramters
  */
 function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mode,$bibindexmode,$abstract){
     $xml_content = load_xml_bibfile($bibname);
-    $xsl_content = load_file("./xsl/search2html_table.xsl");  
+    $xsl_content = load_file("./xsl/search.xsl");  
     $param = array();
 	
     if($forauthor!=null){
-        $param["author"]=$value;
+        $param['author']=$value;
 		$extraparam = "author=author&search=$value";
     }
     if($fortitle!=null){
-        $param["title"]=$value;
+        $param['title']=$value;
 		$extraparam = "title=title&search=$value";
      }
     if($forkeywords!=null){
-        $param["keywords"]=$value;
+        $param['keywords']=$value;
 		$extraparam = "keywords=keywords&search=$value";
     }
-    $param["mode"] = $mode;
+    $param['mode'] = $mode;
     $param['bibname'] = $bibname;
     if($abstract){
         $param['abstract'] = "true";
@@ -408,53 +337,6 @@ function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mo
     return xslt_transform($xml_content,$xsl_content,$param);
 }
 
-/**
- * Translate an entry into bibtex format
- */
-function get_bibtex($bibname,$bibid)
-{
-    $xml_content = load_xml_bibfile($bibname);
-    $xsl_content = load_file("./xsl/xml2bibtex.xsl");
-//    $xml_content = ereg_replace("<br/>","\n",$xml_content);
-    $param = array('id'=>$bibid);
-    $result = xslt_transform($xml_content,$xsl_content,$param); 
-    //remove not needed spaces
-    $result = preg_replace(array('/(\s*\\1)?/','/ +/'),array("\\1",' '),$result);
-    return $result;  
-}
-
-/**
- * Return an html output of a given entry
- */
-function get_bibentry($bibname,$bibid,$abstract,$basket = 'no', $mode = 'user')
-{
-    $xml_content = load_xml_bibfile($bibname);
-    $xsl_content = load_file("./xsl/one_entry2html.xsl");
-    $param = array( 'bibname' => $bibname,
-                    'id' => $bibid,
-					'mode' => $mode,
-                    'basket' => $basket,
-                    'display_images' => $GLOBALS['display_images'],
-                    'display_text' => $GLOBALS['display_text']);
-    if($abstract){
-        $param['abstract'] = "true";
-    }
-  
-    return xslt_transform($xml_content,$xsl_content,$param);
-}
-
-/**
- * Return a nice formulary to modify an entry
- */
-function get_bibentry_for_edition($bibname,$bibid,$add=1)
-{
-    $xml_content = load_file("./xsl/model.xml");
-    $xsl_content = load_file("./xsl/xml2htmledit.xsl");
-    $param = array('id' => $bibid,'bibname' => "file://".realpath("bibs/".$bibname."/".$bibname.".xml"));
-    $param['add'] = $add;
-  
-    return xslt_transform($xml_content,$xsl_content,$param);
-}
  
 /**
  * get_number_of_entries
@@ -467,118 +349,6 @@ function get_number_of_entries($bibname){
     $record = explode(".",$nb_record);
     
     return $record;
-}
-
-/**
- * get_stat
- * Print statistics in HTML
- */
-function get_stat($bibname)
-{ 
-    $record = get_number_of_entries($bibname);
-  
-    $html  = "<h3>Statistics</h3>";
-    $html .= "<table>";
-    $html .= "<tbody>";
-    $html .= "<tr>";
-    $html .= "<td>Number of recorded articles:</td>";
-    $html .= "<td><strong>".$record[0]."</strong></td>";
-    $html .= "</tr>";
-    $html .= "<tr>";
-    $html .= "<td>On-line available publications:</td>";
-    $html .= "<td><strong>".$record[1]."</strong></td>";
-    $html .= "</tr>";
-    $html .= "</tbody>";
-    $html .= "</table>";
-
-  return $html;  
-}
-
-/**
- * delete only a bibtex entry, do not erase files
- * 1) delete from the bibtex file
- * 2) update the bibtex file according to the xml file
- */
-function delete_only_bibtex_entry($bibname,$id)
-{
-    $record = get_number_of_entries($bibname);
-    $nb = $record[0];
-  
-    $xml_content = load_file(xmlfilename($bibname));
-    $xsl_content = load_file("./xsl/delete.xsl");
-    $param = array('id'=>$id);
-    $xh = xslt_create();
-    xslt_set_encoding($xh,"iso-8859-1");
-    $arguments = array('/_xml' => $xml_content, '/_xsl' => $xsl_content);  
-    $result = xslt_process($xh,'arg:/_xml','arg:/_xsl',NULL,$arguments,$param);
-
-    if(!$result) {
-        if($nb!=1){
-            die(sprintf("Impossible de traiter le document XSLT [%d]: %s",xslt_errno($xh),xslt_error($xh)));
-        }
-      }
-    xslt_free($xh);
-
-    // update the xml file.
-    $fp = fopen("./bibs/".$bibname."/".$bibname.".xml","w");
-    fwrite($fp,$result);
-    fclose($fp);
-  
-    //update the bibtex file.
-    xml2bibtex($bibname);
-    // update the list of groups
-    $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
-}
-
-/**
- * Delete a bibtex entry
- * 1) delete from the bibtex file
- * 2) update the bibtex file according to the xml file
- * 3) delete papers from the database
- */
-function delete_bibtex_entry($bibname,$id)
-{
-    $xml_content = load_xml_bibfile($bibname,$id);
-    $xsl_content = load_file("./xsl/delete.xsl");
-    $param = array('id'=>$id);  
-    $newxml = xslt_transform($xml_content,$xsl_content,$param);
-  
-    // detect all file corresponding to this id.
-    $papersdirectory = "./bibs/".$bibname."/papers/";
-    $ar = opendir($papersdirectory);
-    $tab = array(); 
-    while($file = readdir($ar)) {
-        $inf = pathinfo($file);
-        if(strcmp(substr($inf['basename'],0,strlen($id)+1),$id.".")==0){
-            array_push($tab,$file);
-        }
-    }
-  
-    foreach($tab as $file){
-        unlink($papersdirectory.$file);
-    }
- 
-    // update the xml file.
-    $fp = fopen(xmlfilename($bibname),"w");
-    fwrite($fp,$newxml);
-    fclose($fp);
-  
-    //update the bibtex file.
-    xml2bibtex($bibname);
-    // update the list of groups
-    $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
-}
-
-/**
- * Test if a bibtex entry with a given ID exists in the bibtex file.
- */
-function exists_entry_with_id($bibname,$id){
-    $content = load_file(xmlfilename($bibname));
-    $xsl = load_file("./xsl/search_entry.xsl");
-    $param = array('id' => $id);
-    $result = xslt_transform($content,$xsl,$param);
-    
-    return (strrpos($result,'true'));
 }
 
 
@@ -596,27 +366,6 @@ function xmlfilename($bibname){
     return "./bibs/".$bibname."/".$bibname.".xml";
 }
 
-/**
- * Add a bibtex entry to a bibtex file
- * type -> the type's entry
- * tab -> an array containing information about the entry
- * urlfile -> address of the url file
- * urlzipfile -> address of the urlzip file
- * pdffile -> address of the pdffile
- */
-function add_bibtex_entry($bibname,$type,$tab,$urlfile,$urlzipfile,$pdffile){
-    // open the bibfile
-    $filename = bibfilename($bibname);
-    $file = fopen($filename,"a+");
-    // append data
-    fwrite($file,"\n\n");
-    fwrite($file,to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile));
-    fclose($file);
-    // update XML file
-    update_xml($_SESSION['bibname']);
-    // update the list of groups
-    $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
-}
 
 /**
  * Extract bibtex field from an array
@@ -632,64 +381,21 @@ function extract_bibtex_data($tab){
 }
 
 /**
- * Add an entry to the XML file
- */
-function add_new_entry($bibname,$type,$tab,$urlfile,$urlzipfile,$pdffile){
-    $xml = to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile);
-    $xsl = load_file("./xsl/add_entry.xsl");
-    $param = array('bibname' => xmlfilename($bibname));
-    $result = xslt_transform($xml,$xsl,$param);
-    $fp = fopen(xmlfilename($bibname),"w");
-    fwrite($fp,$result);
-    fclose($fp);
-    // update bibtex file
-    xml2bibtex($bibname);
-    // update groups
-    $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
-}
-
-/**
- * Update an entry
- */
-function update_entry($bibname,$type,$tab,$urlfile,$urlzipfile,$pdffile){
-    $xml = to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile);
-    $xsl = load_file("./xsl/update_xml.xsl");
-    $param = array('bibname' => xmlfilename($bibname));
-    $result = xslt_transform($xml,$xsl,$param);
-    $fp = fopen(xmlfilename($bibname),"w");
-    fwrite($fp,$result);
-    fclose($fp);
-    // update bibtex file
-    xml2bibtex($bibname);
-    // update groups
-    $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
-}
-
-/**
  * Extract information from an array to produce an XML string
  */
-function to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile){
-    if ($urlfile != null){
-        $tab['_url'] = $urlfile;
-    }
-    if ($urlzipfile != null){
-        $tab['_urlzip'] = $urlzipfile;
-    }
-    if ($pdffile != null){
-        $tab['_pdf'] = $pdffile;
-    }
+function bibtex_array_to_xml($tab){
+    
     // get keys present in the tab
-    $tab['_type'] = $type;
     $newtab = extract_bibtex_data($tab);
     
     $xml  = "<?xml version='1.0' encoding='iso-8859-1'?>";
     $xml .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' name='temp'>";
-    $xml .= "<bibtex:entry id='".$tab['_id']."'>";
-    $xml .= "<bibtex:".$type.">";
+    $xml .= "<bibtex:entry id='".$newtab['id']."'>";
+    $xml .= "<bibtex:".$tab['type'].">";
     foreach($newtab as $key => $value){
         if($key != 'groups' && $key!= 'type' && $key != 'id'){
             $xml .= "<bibtex:".$key.">";
-            $xml .= myhtmlentities($value,null,"utf-8");
+            $xml .= trim(myhtmlentities($value));
             $xml .= "</bibtex:".$key.">";
         }
         else if($key == 'groups') {
@@ -703,98 +409,10 @@ function to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile){
             $xml .= "</bibtex:groups>";
         }
     }
-    $xml .= "</bibtex:".$type.">";
+    $xml .= "</bibtex:".$tab['type'].">";
     $xml .= "</bibtex:entry>";
     $xml .= "</bibtex:file>";
     return $xml;
-}
-
-/**
- * Translate information into a BibTeX entry
- * This function produces a BibTeX string representing data contained in the "tab" array.
- *
- * type -> the type's entry
- * tab -> an array containing information about the entry
- * urlfile -> address of the url file
- * urlzipfile -> address of the urlzip file
- * pdffile -> address of the pdffile
- */
-function to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile){
-    
-    if ($urlfile != null){
-        $tab['_url'] = $urlfile;
-    }
-    if ($urlzipfile != null){
-        $tab['_urlzip'] = $urlzipfile;
-    }
-    if ($pdffile != null){
-        $tab['_pdf'] = $pdffile;
-    }
-    $tab['_type'] = $type;
-    $newtab = extract_bibtex_data($tab);
-    
-    $txt = "@".$type."{".$tab['_id'].",\n";
-    $first = 1;
-    foreach($newtab as $key => $value){
-    // get keys present in the tab
-        if($key != "id" && $key != 'type' && trim($value) != ''){
-            if($first == 0){
-                $txt .= ",\n";
-            }
-            $first = 0;
-            $txt .= "\t".$key." = {".myhtmlentities($value)."}";
-        }
-    }
-    $txt .= "\n}\n";
-  
-    return $txt;
-}
-
-/**
- * Translate information into an HTML array
- * This function produces an HTML array string representing data contained in the "tab" array.
- *
- * type -> the type's entry
- * tab -> an array containing information about the entry
- * urlfile -> address of the url file
- * urlzipfile -> address of the urlzip file
- * pdffile -> address of the pdffile
- */
-function to_bibtex_tab($type,$tab,$urlfile,$urlzipfile,$pdffile){
-    if ($urlfile != null){
-        $tab['_url'] = $urlfile;
-    }
-    if ($urlzipfile != null){
-        $tab['_urlzip'] = $urlzipfile;
-    }
-    if ($pdffile != null){
-        $tab['_pdf'] = $pdffile;
-    }
-    
-    // get keys present in the tab
-    $array_key = array_keys($tab);
-    
-    // start the table
-    $txt = "<table class='bibtex'>";
-    $txt .= "<tbody>";
-    $txt .= "<tr>";
-    $txt .= "<td>"."@".$type."{".$tab['_id'].",</td>";
-    $txt .= "</tr>";
-
-    // for each present key in the array tab, create the corresponding BibTeX field
-    foreach($array_key as $key){
-        if($key != "_id" && in_array($key,$GLOBALS['bibtex_entries'])){
-            if($tab[$key] != ""){
-                $txt .= "<tr>";
-                $txt .= "<td>".substr($key,1)."</td><td> = {".myhtmlentities(stripslashes($tab[$key]))."},</td>";
-                $txt .= "</tr>";
-            }
-        }
-    }
-    // end the table
-    $txt .= "</tbody></table>}<br/>";
-  
-    return $txt;
 }
 
 /**
@@ -851,35 +469,23 @@ function login_form($from){
 /**
  * Create the main panel
  */
-function main($title,$content)
+function main($title,$content,$error = null,$message = null)
 {
   $html = "<div id='main'>";
   if($title != null){
     $html .= "<div class='main_title'>";
-    $html .= "<h2>".$title."</h2>";
+    $html .= "<h2>$title</h2>";
     $html .= "</div>";
   }
-  if(array_key_exists('error',$_SESSION)){
-    if($_SESSION['error'] != null){
-      $html .= "<div id='error'>";
-//      $html .= "<span id='error_title'>Error!</span>";
-      $html .= $_SESSION['error'];
-      $html .= "</div>";
-    }
+  if($error){
+	$html .= "<div id='error'>$error</div>";
   }
-  if(array_key_exists('message',$_SESSION)){
-    if($_SESSION['message'] != null){
-//      $html .= "<span id='message_title'>Message:</span>";
-      $html .= "<div id='message'>";
-      $html .= $_SESSION['message'];
-      $html .= "</div>";
-    }
+  if($message){
+      $html .= "<div id='message'>$message</div>";
   }
   
   if($content != null) {
-    $html .= "<div id='content'>";
-    $html .= $content;
-    $html .= "</div>";
+    $html .= "<div id='content'>$content</div>";
   }
   
   $html .= "</div>";
@@ -909,5 +515,12 @@ function deldir($dir) {
     }
     closedir($current_dir);
     rmdir($dir);
-} 
+}
+
+function remove_accents($string){
+    return strtr($string,
+                "¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ",
+                "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy");
+}
+
 ?>

@@ -3,7 +3,7 @@
  *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +25,6 @@
  * 
  * File: bibindex.php
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
- * Year: 2003
  * Licence: GPL
  * 
  * Description:
@@ -65,12 +64,32 @@
  */
 
 /**
+* Register variables in session.
+ * It is not really needed for most of them but easier to reference them in the code.
+ * Use of 'get_value' to avoid PHP warnings when keys are not present in $_GET or $_POST
+ */
+//$_SESSION['mode'] = get_value('mode',$_GET);            // which page to display
+//$_SESSION['group'] = get_value('group',$_GET);          // which group to display
+//$_SESSION['search'] = get_value('search',$_GET);        // which value to search for
+//$_SESSION['author'] = get_value('author',$_GET);        // search in author?
+//$_SESSION['keywords'] = get_value('keywords',$_GET);    // search in keywords?
+//$_SESSION['title'] = get_value('title',$_GET);          // search in title?
+//$_SESSION['type'] = get_value('type',$_GET);            // which type of entry to add
+//$_SESSION['id'] = get_value('id',$_GET);                // whih entry to display?
+//$_SESSION['menu'] = get_value('menu',$_GET);            // display the menu?
+
+
+
+/**
  * loads some functions
  */
 
 require_once("config.php"); // globals definitions
 require_once("functions.php"); // functions
 require_once("basket.php"); // basket functions
+require_once("biborbdb.php"); // database
+require_once("xslt_processor.php"); // xslt processing
+require_once("interface.php"); // generate interface
 
 /**
  * Session
@@ -79,45 +98,45 @@ session_name($session_id);
 session_start();
 
 /**
- * Display an error if the variable 'bibname' is not set
+ * Global variables to store an error message or a standad message.
  */
-if(!array_key_exists('bibname',$_SESSION) && !array_key_exists('bibname',$_GET)){
+$error = null;
+$message = null;
+
+/**
+ * Display an error if there is no active bibtex database
+ */
+if(!array_key_exists('bibdb',$_SESSION) && !array_key_exists('bibname',$_GET)){
     die("Error: bibname is not set");
 }
 
 /**
- * If the session variable 'bibname' is not set, get it from GET variables
- * Compute the list of groups present in the bibliography and record it into session
+ * If the session variable 'bibdb' is not set, get the bibliography name from 
+ * GET variables and create a new Biborb_Database.
  */
 if(array_key_exists('bibname',$_GET)){
-    $_SESSION['bibname'] = $_GET['bibname'];
-    if(array_key_exists('bibname',$_SESSION)){
-        $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
-    } 
+	if(!array_key_exists('bibdb',$_SESSION)){
+		$_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
+	}
+	else if($_SESSION['bibdb']->name()!=$_GET['bibname']){
+		$_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
+	}
 }
 
 /**
- * Register variables in session.
- * It is not really needed for most of them but easier to reference them in the code.
- * Use of 'get_value' to avoid PHP warnings when keys are not present in $_GET or $_POST
+ * Default paramaters for XSLT transformation
  */
-$_SESSION['mode'] = get_value('mode',$_GET);            // which page to display
-$_SESSION['group'] = get_value('group',$_GET);          // which group to display
-$_SESSION['search'] = get_value('search',$_GET);        // which value to search for
-$_SESSION['author'] = get_value('author',$_GET);        // search in author?
-$_SESSION['keywords'] = get_value('keywords',$_GET);    // search in keywords?
-$_SESSION['title'] = get_value('title',$_GET);          // search in title?
-$_SESSION['type'] = get_value('type',$_GET);            // which type of entry to add
-$_SESSION['id'] = get_value('id',$_GET);                // whih entry to display?
-$_SESSION['menu'] = get_value('menu',$_GET);            // display the menu?
+$abst = get_value('abstract',$_GET);
+if($abst==null){
+    $abst = $GLOBALS['display_abstract'];
+} 
 
-/**
- * Display entries with abstract?
- */
-$_SESSION['abstract'] = get_value('abstract',$_GET);
-if($_SESSION['abstract']==null){
-    $_SESSION['abstract'] = $display_abstract;
-}
+$xslparam = array('bibname' => $_SESSION['bibdb']->name(),
+				  'bibnameurl' => $_SESSION['bibdb']->xml_file(),
+				  'display_images' => $GLOBALS['display_images'],
+				  'display_text' => $GLOBALS['display_text'],
+				  'abstract' => $abst,
+				  'display_add_all'=> 'true');
 
 /**
  *  If the basket doesn't exists, create it.
@@ -129,22 +148,26 @@ if(!isset($_SESSION['basket'])){
 /**
  * Select the user's mode:
  *  admin => may modify, create or delete
- *  user => only for consultation purpose
+ *  user => only for read purpose
  */
 if(!$disable_authentication){
     if(!array_key_exists('usermode',$_SESSION)){
         $_SESSION['usermode'] = "user";
+		$xslparam['mode'] = "user";
     }
 }
 else{
     $_SESSION['usermode'] = "admin";
+	$xslparam['mode'] = "admin";
 }
 
-
-/** Do an a given action */
+/**
+ * Action are given by GET/POST method.
+ * Analyse the URL to do the corresponding action.
+ */
 if(isset($_GET['action'])){
 	switch($_GET['action']){
-		case 'add_to_basket':
+		case 'add_to_basket':		// Add an item to the basket
 			if(!isset($_GET['id'])){
 				die("Error in add_to_basket: id not set");
 			}
@@ -153,7 +176,7 @@ if(isset($_GET['action'])){
 			}
 			break;
 			
-		case 'delete_from_basket':
+		case 'delete_from_basket':  // delete an entry from the basket
 			if(!isset($_GET['id'])){
 				die("Error in delete_from_basket: id not set");
 			}
@@ -162,812 +185,232 @@ if(isset($_GET['action'])){
 			}
 			break;
 			
-		case 'resetbasket':
+		case 'resetbasket':			// reset the basket
 			$_SESSION['basket']->reset();
 			break;
 			
-		case 'delete':
+		case 'delete':				// delete an entry from the database
 			if(!isset($_GET['id'])){
 				die("Error while deleting: no Bibtex ID selected!");
 			}
 			else{
-				// save the bibtex entry to show which entry has been deleted
-				$bibtex = get_bibtex($_SESSION['bibname'],$_GET['id']);
+				// save the bibtex entry to show which entry was deleted
+				$bibtex = $_SESSION['bibdb']->entry_with_id($_GET['id']);
 				// delete it
-				delete_bibtex_entry($_SESSION['bibname'],$_GET['id']);
+				$_SESSION['bibdb']->delete_entry($_GET['id']);
 				// update message
-				$_SESSION['message'] = "The follwoing entry was deleted: <pre>".$bibtex."</pre>";
+				$message = "The following entry was deleted: <pre>".$bibtex."</pre>";
 				// if present, remvove entries from the basket
 				$_SESSION['basket']->remove_item($_GET['id']);
+				$_GET['mode'] = "operationresult";
 			}
 			break;
-		case 'Add':
+			
+		case 'Add':					// Add entries in the basket to a given group
 			if(!isset($_GET['groupvalue'])){
 				die("No group specified!");
 			}
 			else if(trim($_GET['groupvalue']) != ""){
-				basket_add_group(trim($_GET['groupvalue']));
+				$_SESSION['bibdb']->add_to_group($_SESSION['basket']->items,trim($_GET['groupvalue']));
 			}
 			break;
-		case 'Reset':
-			basket_reset_group();
+			
+		case 'Reset':				// Reset the groups fields of entries in the basket
+			$_SESSION['bibdb']->reset_groups($_SESSION['basket']->items);
 			break;
 		
+		case 'import':				// Import bibtex entries
+			if(!array_key_exists('bibval',$_GET)){
+				die("Error, no bibtex data provided!");
+			}
+			else{
+				// add the new entry
+				$res = $_SESSION['bibdb']->add_bibtex_entries($_GET['bibval']);
+				print_r($res);
+				$entries = $_SESSION['bibdb']->entries_with_ids($res);
+				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+				$param = $GLOBALS['xslparam'];
+				$param['bibindex_mode'] = "displaybasket";
+				$param['mode'] = "user";
+				$formated = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+				$xsltp->free();
+				if($res == 1){
+					$message = "The following entry was added to the database:";
+				}
+				else {
+					$message = "The following entries were added to the database:";
+				}
+				$message .= "<br/><pre>".$_GET['bibval']."</pre>";
+				$message .= $formated;
+			}
+			break;
+			
+		default:
+			break;
+	}
+}
+
+// analyse POST
+if(isset($_POST['action'])){
+	switch($_POST['action']){
+		// Add an entry to the database
+		case 'add': 
+			$res = $_SESSION['bibdb']->add_new_entry($_POST);
+			if($res['added']){
+				$message = "The following entry was added:<br/>";
+				$entry = $_SESSION['bibdb']->entry_with_id($res['id']);
+				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+				$param = $GLOBALS['xslparam'];
+				$param['bibindex_mode'] = "displaybasket";
+				$param['display_add_all'] = "no";
+				$param['mode'] = "user";
+				$message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+				$xsltp->free();
+			}
+			else{
+				$error = $res['message'];
+			}
+			break;
+		
+		// update an entry
+		case 'update':
+			$res = $_SESSION['bibdb']->update_entry($_POST);
+			if($res['updated']){
+				$message = "The following entry was updated:<br/>";
+				$entry = $_SESSION['bibdb']->entry_with_id($res['id']);
+				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+				$param = $GLOBALS['xslparam'];
+				$param['bibindex_mode'] = "displaybasket";
+				$param['display_add_all'] = "no";
+				$param['mode'] = "user";
+				$message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+				$xsltp->free();
+			}
+			else{
+				$error = $res['message'];
+			}
+				
 		default:
 			break;
 	}
 }
 
 
-/****************************************************** BEGINING OF THE HTML OUTPUT **/
-
 /**
  * Select what to do according to the mode given in parameter.
  */
-switch($_SESSION["mode"])
-{
-    /**
-     * Welcome page
-     */
-    case 'welcome':
-        echo bibindex_welcome();   
-        break;
-    
-    /**
-     * Generice page to display operations results
-     */
-    case 'operationresult':
-        echo bibindex_operation_result();
-        break;
-        
-    /**
-     * Help on the display menu item
-     */
-    case 'display':
-        echo bibindex_display_help();
-        break;
-    /**
-     * Display all entries
-     */
-    case 'displayall': 
-        echo bibindex_display_all($_SESSION['bibname']);
-        break;
-    
-    /**
-     * Display by group
-     */
-    case 'displaybygroup': 
-        echo bibindex_display_by_group();
-        break;
-    
-    /**
-     * Display search page
-     */
-    case 'displaysearch': 
-        echo bibindex_display_search();
-        break;
-        
-    /**
-     * Help on the basket menu item
-     */
-    case 'basket': 
-        echo bibindex_basket_help();
-        break;
-    
-    /**
-     * Display the basket
-     */
-    case 'displaybasket': 
-        echo bibindex_display_basket();
-        break;
-    
-    /**
-     * Display the page to modify groups of entries in the basket
-     */
-    case 'groupmodif': 
-        echo bibindex_basket_modify_group();
-        break;
-        
-    /**
-     * Help on the Manager Menu
-     */
-    case 'manager': 
-        echo bibindex_manager_help();
-        break;
-    
-    /**
-     * Add a new entry 
-     */
-    case 'addentry': 
-        echo bibindex_entry_to_add();
-        break;
-    
-    /** 
-     * Select the type of the new entry to add
-     */
-    case 'select': 
-        echo bibindex_add_entry();
-        break;
-    
-    /**
-     * Update an entry
-     */
-    case 'update':
-        echo bibindex_update_entry();
-        break;
+if(array_key_exists('mode',$_GET)){
+	$mode = $_GET['mode'];
+}
+else if(array_key_exists('mode',$_POST)){
+	$mode = $_POST['mode'];
+}
+else{
+	$mode = "welcome";
+}
 
-    /**
-     * Login page
-     */
-    case 'login':
-        echo bibindex_login();
-        break;
-        
-    /**
-     * Logout 
-     */
-    case 'logout':
-        echo bibindex_logout();
-        break;
+switch($mode)
+{
+	// Welcome page
+    case 'welcome': echo bibindex_welcome(); break;
     
-    /**
-     * Update the XML file according to values present in the BibTeX file.
-     */
+	// Generice page to display operations results
+    case 'operationresult': echo bibindex_operation_result(); break;
+        
+
+	// Help on the display menu item
+    case 'display': echo bibindex_display_help(); break;
+		
+	// Display all entries
+    case 'displayall': echo bibindex_display_all(); break;
+    
+	// Display by group
+    case 'displaybygroup': echo bibindex_display_by_group(); break;
+    
+	// Display search page
+    case 'displaysearch': echo bibindex_display_search(); break;
+        
+    // Help on the basket menu item
+    case 'basket': echo bibindex_basket_help(); break;
+    
+
+	// Display the basket
+    case 'displaybasket': echo bibindex_display_basket(); break;
+    
+    // Display the page to modify groups of entries in the basket
+    case 'groupmodif': echo bibindex_basket_modify_group(); break;
+        
+
+	// Help on the Manager Menu
+    case 'manager': echo bibindex_manager_help(); break;
+    
+	// Add a new entry 
+    case 'addentry':echo bibindex_entry_to_add(); break;
+    
+	// Select the type of the new entry to add
+    case 'select': echo bibindex_add_entry($_GET['type']); break;
+    
+	// Update an entry
+    case 'update': echo bibindex_update_entry(); break;
+
+	// Login page
+    case 'login': echo bibindex_login(); break;
+        
+	// Logout 
+    case 'logout': echo bibindex_logout(); break;
+    
+	// Update the XML file according to values present in the BibTeX file.
     case 'update_xml_from_bibtex':
         update_xml($_SESSION['bibname']);
         echo bibindex_welcome();
         break;
     
-    /**
-     * Update the BibTeX file according to valued present in the BibTeX file.
-     */
+     // Update the BibTeX file according to valued present in the BibTeX file.
     case 'update_bibtex_from_xml':
         xml2bibtex($_SESSION['bibname']);
         echo bibindex_welcome();
         break;
         
-    /**
-     * Mode to access directly to an article
-     */
-    case 'details':
-        echo bibindex_details();
-        break;
+	// Mode to access directly to an article
+    case 'details': echo bibindex_details(); break;
     
-    /**
-     * Import references
-     */
-    case 'import':
-        echo bibindex_import();
-        break;
-        
+	// Import references
+    case 'import': echo bibindex_import(); break;
+	
+	// Export the basket to bibtex
     case 'exportbaskettobibtex':
-        echo bibindex_export_basket_to_bibtex();
-        break;
-        
-    case 'exportbaskettohtml':
-        echo bibindex_export_basket_to_html();
-        break;
-    /**
-     * By default
-     */
-    default:
-        echo bibindex_welcome();
-        break;
-}
-
-/**
- * unset session variables for the next page
- */
-unset($_SESSION['error']);
-unset($_SESSION['message']);
-
-/************************************************************END OF THE HTML OUTPUT **/
-
-
-/***************************************************** index.php specific functions **/
-
-/**
- * bibindex_details()
- * Called when a given entry has to be displayed
- */
-function bibindex_details()
-{
-    $html = bibheader();
-    if(get_value('bibids',$_GET)){
-		$bibids = explode(',',$_GET['bibids']);
-		// create an xml string containing id present 
-		$xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
-		$xml_content .= '<entrylist>';
-		for($i=0;$i<count($bibids);$i++){
-			$xml_content .= '<id>'.$bibids[$i].'</id>';
-		}
-		$xml_content .= '</entrylist>';
-
-		$xsl_content = load_file("./xsl/basket2html_table.xsl");
-		// set paramters
-
-		$param = array( 'bibnameurl' => xmlfilename($_SESSION['bibname']),
-						'bibname' => $_SESSION['bibname'],
-						'basket' => '',
-						'mode' => $usermode,
-						'abstract' => $_SESSION['abstract'],
-						'display_images' => $GLOBALS['display_images'],
-						'display_text' => $GLOBALS['display_text']);
+		$entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
+		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+		$bibtex = $xsltp->transform($entries,load_file("./xsl/xml2bibtex.xsl"));
+		$bibtex = preg_replace(array('/(\s*\\1)?/','/ +/'),array("\\1",' '),$bibtex);
+		$xsltp->free();
 		
-		//return the HTML table
-		$content = xslt_transform($xml_content,$xsl_content,$param);
-		$content = ereg_replace("<div class=\"result\">(.)*</div><br/>","",$content);
-	}
-	else{
-		// get the selected entry
-		$content = get_bibentry($_SESSION['bibname'],$_SESSION['id'],$_SESSION['abstract']);
-	}
-	// display the menu or not
-    if($_SESSION['menu'] != null){
-        if($_SESSION['menu']){
-            $html .= bibindex_menu($_SESSION['bibname']);
-            $html .= main(null,$content);
-        }
-        else{
-            $html .= $content;
-        }
-    }
-    else{
-        $html .= $content;
-    }
-    $html .= html_close();
-  
-    return $html;  
-}
-
-/**
- * bibindex_login()
- * Display the login page
- */
-function bibindex_login(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "<H2>BibORB Manager</H2>";
-    $html .= main($title,login_form("bibindex.php"));
-    $html .= html_close();
-    return $html;
-}
-
-/**
- * bibindex_logout()
- * Change admin mode to user and redirect to welcome page
- */
-function bibindex_logout()
-{
-    $_SESSION['usermode'] = "user";
-    echo header("Location: bibindex.php?mode=welcome&amp;".session_name()."=".session_id());
-}
-
-/**
- * bibindex_menu($bibname)
- * Create the menu for the bibliography $bibname.
- */
-function bibindex_menu($bibname)
-{
-    $html = "<div id='menu'>";
-    // title
-    $html .= "<span id='title'>BibORB</span>";
-    // name of the current bibliography
-    $html .= "<span id='bibname'>".$bibname."</span>";
-    $html .= "<ul>";
-    // first menu item => Select a bibliography
-    $html .= "<li><a href='index.php?mode=select'>Select a bibliography</a><ul><li></li></ul></li>";
-    // second item
-    // -> Display
-    //      | -> All
-    //      | -> by group
-    //      | -> search
-    $html .= "<li><a href='bibindex.php?mode=display'>Display</a>";
-    $html .= "<ul>";
-    $html .= "<li><a href='bibindex.php?mode=displayall'>All</a></li>";
-    $html .= "<li><a href='bibindex.php?mode=displaybygroup'>Groups</a></li>";
-    $html .= "<li><a href='bibindex.php?mode=displaysearch'>Search</a></li>";
-    $html .= "</ul>";
-    $html .= "</li>";
-    // third menu item
-    // -> Basket
-    //      | -> Display basket
-    //      | -> Modify groups (if admin)
-    //      | -> Export to bibtex
-    //      | -> Export to XML
-    //      | -> Reset basket
-    $html .= "<li><a href='bibindex.php?mode=basket'>Basket</a>";
-    $html .= "<ul>";
-    $html .= "<li><a href='bibindex.php?mode=displaybasket'>Display Basket</a></li>";
-    if($_SESSION['usermode']=='admin' || $GLOBALS['disable_authentication']){
-        $html .= "<li><a class='admin' href='bibindex.php?mode=groupmodif'>Group Modification</a></li>";
-    }
-    $html .= "<li><a href='bibindex.php?mode=exportbaskettobibtex'>Export to BibTeX</a></li>";
-    $html .= "<li><a href='bibindex.php?mode=exportbaskettohtml'>Export to HTML</a></li>";
-    $html .= "<li><a href='bibindex.php?mode=".$_SESSION['mode']."&action=resetbasket";
-	if($_SESSION['mode'] == "displaybygroup" && $_SESSION['group']){
-		$html  .= "&group=".$_SESSION['group'];
-	}
-	if($_SESSION['mode'] == "displaysearch"){
-		if($_SESSION['search']){
-			$html .= "&search=".$_SESSION['search'];
-		}
-		if($_SESSION['author']){
-			$html .= "&author=".$_SESSION['author'];
-		}
-		if($_SESSION['title']){
-			$html .= "&title=".$_SESSION['title'];
-		}
-		if($_SESSION['keywords']){
-			$html .= "&search=".$_SESSION['keywords'];
-		}
+		header("Content-Type: text/plain");
+		echo $bibtex; break;
+	
+	// bibtex of a given entry
+    case 'bibtex':
+		$entries = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+		$bibtex = $xsltp->transform($entries,load_file("./xsl/xml2bibtex.xsl"));
+		$bibtex = preg_replace(array('/(\s*\\1)?/','/ +/'),array("\\1",' '),$bibtex);
+		$xsltp->free();
 		
-	}
-	$html .= "'>Reset basket</a></li>";
-    $html .= "</ul>";
-    $html .= "</li>";
-    
-    // fourth menu item
-    // -> Manager
-    //      | -> Login (if not admin and authentication enabled
-    //      | -> Add an entry (if admin)
-    //      | -> Update from BibTeX (if admin)
-    //      | -> Update from XML (if admin)
-    //      | -> Import a bibtex file (if admin)
-    //      | -> Logout (if admin and authentication disabled
-    $html .= "<li><a href='bibindex.php?mode=manager'>Manager</a>";
-    $html .= "<ul>";
-    if($_SESSION['usermode']=='user' && !$GLOBALS['disable_authentication']){
-        $html .= "<li><a href='bibindex.php?mode=login'>Login</a></li>";
-    }
-    if($_SESSION['usermode']=='admin'){
-        $html .= "<li><a class='admin' href='bibindex.php?mode=addentry'>Add an entry</a></li>";
-        $html .= "<li><a class='admin' href='bibindex.php?mode=update_xml_from_bibtex'>Update from BibTeX</a></li>";
-        //$html .= "<li><a class='admin' href='".bibindex_href('update_bibtex_from_xml')."'>Update from XML</a></li>";
-        $html .= "<li><a class='admin' href='bibindex.php?mode=import'>Import BibTeX</a></li>";
-    }
-    if($_SESSION['usermode']=='admin' && !$GLOBALS['disable_authentication']){
-        $html .= "<li><a href='bibindex.php?mode=welcome&action=logout'>Logout</a></li>";
-    }
-    $html .= "</ul>";
-    $html .= "</li>";
-    $html .= "</ul>";
-    $html .= "</div>";
-   
-  return $html;  
+		header("Content-Type: text/plain");
+		echo $bibtex; break;
+		
+	// Export the basket to html
+    case 'exportbaskettohtml': 
+		$entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
+		$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+		$result = $xsltp->transform($entries,load_file("./xsl/simple_html_output.xsl"),$xslparam);
+		$xsltp->free();
+		
+		echo $result;
+		break;
+
+	// By default
+    default: echo bibindex_welcome(); break;
 }
 
-/**
- * bibheader()
- * Create the HTML header
- */
-function bibheader($inbody = NULL)
-{
-  $html = html_header("BibORB - ".$_SESSION['bibname'],$GLOBALS['CSS_FILE'],NULL,$inbody);
-  return $html;  
-}
-
-/**
- * search_menu
- * Create Search menu
- */
-function search_menu()
-{
-    $html = "<form action='bibindex.php' method='get'>";
-    $html .= "<fieldset style='border:none'>";
-    $html .= "<input type='hidden' name='".session_name()."' value='".session_id()."' />";
-    $html .= "<input type='hidden' name='mode' value='displaysearch' />";  
-    $html .= "<input name='search' size='40' value='".$_SESSION['search']."' />";
-    $html .= "<input type='submit' value='Search' /><br/>";
-    $html .= "<input type='checkbox' name='author' value='author' ";
-    if($_SESSION['author'] != null){
-        $html .= "checked='checked'";
-    }
-    $html .= " />Author";
-    $html .= "<input type='checkbox' name='title' value='title' ";
-    if($_SESSION['title'] != null){
-        $html .= "checked='checked'";
-    }
-    $html .= "/>Title";
-    $html .= "<input type='checkbox' name='keywords' value='keywords' ";
-    if($_SESSION['keywords'] != null){
-        $html .= "checked='checked'";
-    }
-    $html .= " />Keywords";
-    $html .= "</fieldset>";
-    $html .= "</form>";
-  
-  return $html;  
-}
-
-/**
- * select_entry_type()
- * Create the form to select which type of entry to add.
- */
-function select_entry_type(){
-    $html = "<div style='text-align:center'><form method='get' action='bibindex.php'>
-        <fieldset style='border:none'>
-    <input name='".session_name()."' value='".session_id()."' type='hidden'/>
-	<input name='bibname' value='".$_SESSION['bibname']."' type='hidden' />
-Select an entry type:
-    <select name='type' size='1'>
-        <option value='article'>article</option>
-        <option value='book'>book</option>
-        <option value='booklet'>booklet</option>
-        <option value='conference'>conference</option>
-        <option value='inbook'>inbook</option>
-        <option value='incollection'>incollection</option>
-        <option value='inproceedings'>inproceedings</option>
-        <option value='manual'>manual</option>
-        <option value='mastersthesis'>mastersthesis</option>
-        <option value='misc'>misc</option>
-        <option value='phdthesis'>phdthesis</option>
-        <option value='proceedings'>proceedings</option>
-        <option value='techreport'>techreport</option>
-        <option value='unpublished'>unpublished</option>
-    </select>
-    <br/>
-    <br/>
-        <input type='submit' name='mode' value='cancel'/>
-        <input type='submit' name='mode' value='select'/>
-    
-    </fieldset>
-</form></div>";
-    return $html;
-}
-
-/**
- * get_entry_fields
- * Return the input fields corresponding to a given type for edition
- */
-function get_entry_fields($type)
-{
-  $xml_content = load_file("./xsl/model.xml");
-  $xsl_content = load_file("./xsl/model.xsl");
-  $param = array("typeentry"=>$type);
-  return xslt_transform($xml_content,$xsl_content,$param);
-}
-
-
-/**
- * bibindex_href
- * return an url to bibindex.php with a given mode and passing needed values by GET method
- */
-function bibindex_href($mode,$bibname){
-    return "./bibindex.php?mode=".$mode."&amp;bibname=".$bibname."&amp;".session_name()."=".session_id();
-}
-
-
-/**
- * This is the default Welcome page.
- */
-function bibindex_welcome()
-{
-    $html = bibheader();  
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "BibORB: BibTeX On-line References Browser";
-    $content = "This is the bibliography: <b>".$_SESSION['bibname']."</b>.<br/>";
-    if($_SESSION['usermode'] == 'admin' && !$GLOBALS['disable_authentication']) {
-        if(array_key_exists('user',$_SESSION)){      
-            $content .= "You are logged as <em>".$_SESSION['user']."</em>.";
-        }
-    }
-    $content .= get_stat($_SESSION['bibname']);
-    $html .= main($title,$content);
-    $html .= html_close();    
-    return $html;
-}
-
-
-/**
- * bibindex_operation_result()
- * Only display $_SESSION['error'] and $_SESSION['message']
- */
-function bibindex_operation_result(){
-    $html = bibheader();  
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "BibORB message";
-    $html .= main($title,null);
-    $html .= html_close();    
-    return $html;
-}
-
-/**
- * bibindex_display_help()
- * Display a small help on items present in the 'display' menu
- */
-
-function bibindex_display_help(){
-    $html = bibheader();  
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "Display menu";
-    $content = load_file("./data/display_help.txt");
-    $html .= main($title,$content);
-    $html .= html_close();    
-    return $html;
-}
-
-/**
- * bibindex_display_all($bibname)
- * Display all entries in the bibliography $bibname.
- */
-function bibindex_display_all($bibname){
-    $title = "List of all entries";
-    $html = bibheader();
-    $html .= bibindex_menu($bibname);
-    $html .= main($title,get_all_bibentries($bibname,$_SESSION['usermode'],$_SESSION['abstract'],"mode=".$_SESSION['mode']));
-    $html .= html_close();
-    return $html;  
-}
-
-/**
- * bibindex_display_by_group()
- * Display entries by group
- */
-function bibindex_display_by_group(){
-    $title = "Display entries by group";
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibname']);
-    // create a form with all groups present in the bibliography
-    $main_content = "<div style='text-align:center;'>";
-    $main_content .= "<form method='get' action='bibindex.php'>";
-    $main_content .="<fieldset style='border:none'>";
-    $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibname']."'/>";
-    $main_content .= "<input type='hidden' name='".session_name()."' value='".session_id()."'/>";
-    $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
-    $main_content .= "<h3 style='display:inline;'>Available groups:</h3> ";
-    $main_content .= "<select name='group' size='1'>";
-    // set Select values to groups available
-    foreach($_SESSION['group_list'] as $gr){
-        $main_content .= "<option value='".$gr."' ";
-        if($gr == $_SESSION['group']){
-            $main_content .= "selected='selected'";
-        }
-        $main_content .= ">".$gr."</option>";
-    }
-    $main_content .= "</select>";
-    $main_content .= "<input type='submit' value='Display'/>";
-//    $main_content .= "<input type='submit' value=''/>";
-    $main_content .= "</fieldset>";
-    $main_content .="</form></div><br/>";
-    
-    // if the group is defined, display the entries matching it
-    if($_SESSION['group']){
-        $main_content .= get_bibentries_of_group($_SESSION['bibname'],$_SESSION['group'],$_SESSION['usermode'],"mode=".$_SESSION['mode'],$_SESSION['abstract'],"group=".$_SESSION['group']);
-    }
-    $html .= main($title,$main_content);
-    $html .= html_close();
-    
-    return $html;
-}
-
-/**
- * bibindex_display_search
- * display the search interface
- */
-function bibindex_display_search(){
-
-    $title = "Search";
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $main_content = search_menu();
-    if($_SESSION['search'] != null){
-        $main_content .= search_bibentries($_SESSION['bibname'],$_SESSION['search'],
-                                     $_SESSION['author'],$_SESSION['title'],
-    	                             $_SESSION['keywords'],$_SESSION['usermode'],"mode=".$_SESSION['mode'],
-				                     $_SESSION['abstract']);
-    }
-    $html .= main($title,$main_content);
-    $html .= html_close();
-
-    return $html;
-}
-
-/**
- * bibindex_basket_help()
- * Display a small help on items present in the 'basket' menu
- */
-
-function bibindex_basket_help(){
-    $html = bibheader();  
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "Basket menu";
-    $content = load_file("./data/basket_help.txt");
-    $html .= main($title,$content);
-    $html .= html_close();    
-    return $html;
-}
-
-/**
- * bibindex_display_basket()
- * display entries present in the basket
- */
-function bibindex_display_basket(){
-    $title = "Entries in the basket";
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $content = null;
-    $content = basket_to_html($_SESSION['usermode'],"mode=".$_SESSION['mode'],$_SESSION['abstract']);
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
-}
-
-/**
- * bibindex_basket_modify_group
- * Display the page to modify groups of entries in the basket
- */
-function bibindex_basket_modify_group(){
-    $title = "Groups management";
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibname']);
-    
-    //$main_content = load_file("./data/basket_group_modify.txt");
-
-	$main_content = <<<HTML_TEXT
-		<form style='margin:0;padding:0;' action='bibindex.php' method='get'>
-			<fieldset style='border:none;margin:O;padding:0;'>
-				<input type="hidden" name="mode" value="groupmodif"/>
-				<input type='submit' name='action' value='Reset'/> Reset the groups field of each entry in the basket. 
-			</fieldset>
-		</form>
-		<br/>
-		Add all entries in the basket to a group:
-		<form style='margin-left:70px;margin-bottom:O;' action='bibindex.php' method='get'>
-			<fieldset style='border:none;margin:0;margin-top:1em;padding:0'>
-				<input type="hidden" name="mode" value="groupmodif"/>
-				New group: <input name='groupvalue' size='20'/>
-				<input type='submit' name='action' value='Add'/>
-			</fieldset>
-		</form>
-		<form style='margin-left:70px;' action='bibindex.php' method='get'>
-			<fieldset style='border:none;margin:0;padding:0;'>
-				<input type="hidden" name="mode" value="groupmodif"/>
-				Existing group: <select name='groupvalue' size='1'>
-HTML_TEXT;
-			
-	foreach($_SESSION['group_list'] as $gr){
-		$main_content .= "<option value='".$gr."'>".$gr."</option>";
-	}
-
-	$main_content .= <<<HTML_TEXT
-				</select>
-				<input type='submit' name='action' value='Add'/>
-			</fieldset>
-		</form>
-HTML_TEXT;
-
-    $html .= main($title,$main_content);
-    $html .= html_close();
-    return $html;
-}
-
-/**
- * bibindex_manager_help()
- * Display a small help on items present in the 'manager' menu
- */
-function bibindex_manager_help(){
-    $html = bibheader();  
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "Manager menu";
-    $content = load_file("./data/manager_help.txt");
-    $html .= main($title,$content);
-    $html .= html_close();    
-    return $html;
-}
-
-
-/**
- * bibindex_entry_to_add
- * display the page to select which type of entry to add
- */
-function bibindex_entry_to_add(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "New entry";
-    $content = select_entry_type();
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
-}
-
-/**
- * bibindex_add_entry
- * Display a form to edit the value of each BibTeX fields
- */
-function bibindex_add_entry(){
-    $html = bibheader("onload='javascript:toggle_element(\"additional\")'");
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "New entry";
-    $content = "<form method='post' action='action_proxy.php' enctype='multipart/form-data'>";
-    $content .= "<fieldset style='border:none'>";
-    $content .= "<input name='".session_name()."' value='".session_id()."' type='hidden'/>";
-    $content .= "<input name='type' value='".$_SESSION['type']."' type='hidden'/>";
-    $content .= get_entry_fields($_SESSION['type']);
-    $content .= "<p/><div style='text-align:center;'><input type='submit' name='action' value='cancel'/>";
-    $content .= "<input type='submit' name='action' value='add'/>";
-    $content .= "</div></fieldset></form>";
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
-}
-
-/**
- * bibindex_update_entry
- * Display a form to modify fields of an entry
- */
-function bibindex_update_entry(){
-    $html = bibheader("onload='javascript:toggle_element(\"additional\")'");
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "Update an entry";
-    $content = "<form method='post' action='action_proxy.php' enctype='multipart/form-data'>";
-    $content .= "<fieldset style='border:none'>";
-    $content .= get_bibentry_for_edition($_SESSION['bibname'],$_SESSION['id'],0);
-    $content .= "<div style='text-align:center'>";
-    $content .= "<input type='submit' name='action' value='cancel'/>";
-    $content .= "<input type='submit' name='action' value='update' />";
-    $content .= "</div>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
-}
-
-/**
- * bibindex_import
- * Interface to import references (bibtex file or textfields)
- */
-function bibindex_import(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibname']);
-    $title = "Import References";
-    $content = "Select a BibTeX file or edit entries in the text area. Entries will be added to the current bibliography.";
-    $content .= "<h3>File</h3>";
-    $content .= "<form method='post' action='action_proxy.php' enctype='multipart/form-data'><fieldset title='file'>";
-    $content .= "<input type='file' name='bibfile'/>";
-    $content .= "<br/>";
-    $content .= "<div style='text-align:center'>";
-    $content .= "<input type='submit' name='action' value='import'/>";
-    $content .= "</div>";
-    $content .= "</fieldset></form>";
-    $content .="<h3>BibTeX</h3>";
-    $content .= "<form method='get' action='action_proxy.php'><fieldset title='BibTeX'>";
-    $content .= "<textarea name='bibval' cols='60' rows='15'></textarea>";
-    $content .= "<div style='text-align:center'>";
-    $content .= "<input type='submit' name='action' value='import'/>";
-    $content .= "</div>";
-    $content .= "</fieldset></form>";
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
-}
-
-/**
- * bibindex_export_basket_to_bibtex
- */
-function bibindex_export_basket_to_bibtex(){
-    if(count($_SESSION['basket']) != 0){
-        echo header("Location: action_proxy.php?action=exportbaskettobibtex");
-    }
-    else{
-        $_SESSION['message'] = "<h2>Basket empty!</h2>";
-        echo header("Location: bibindex.php?mode=operationresult&bibname=".$_SESSION['bibname']."&".session_name()."=".session_id());
-        exit();
-    }
-}
-
-/**
- * bibindex_export_basket_to_html
- */
-function bibindex_export_basket_to_html(){
-    if(count($_SESSION['basket']) != 0){
-        echo header("Location: action_proxy.php?action=exportbaskettohtml");
-    }
-    else{
-        $_SESSION['message'] = "<h2>Basket empty!</h2>";
-        echo header("Location: bibindex.php?mode=operationresult&bibname=".$_SESSION['bibname']."&".session_name()."=".session_id());
-        exit();
-    }
-}
 ?>

@@ -82,6 +82,6 @@
     </xsl:template>
     
     <!-- include XSLT stylesheet -->
-    <xsl:include href="xsl/bibtex_entry2tr.xsl"/>
+    <xsl:include href="xsl/biborb_output_model_for_table.xsl"/>
     
 </xsl:stylesheet>

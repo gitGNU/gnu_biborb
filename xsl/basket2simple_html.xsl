@@ -49,6 +49,6 @@
         
     </xsl:template>
     
-    <xsl:include href="xsl/bibtex_entry2simple_html.xsl"/>
+    <xsl:include href="xsl/simple_html_output.xsl"/>
     
 </xsl:stylesheet>

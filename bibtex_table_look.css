@@ -171,3 +171,8 @@ links */
 	//background-color: #f98;
 	background-color: f7f3b6;
 }
+
+#bibtex_table .highlight {
+	color:red;
+	background-color:black;
+}

@@ -2,7 +2,7 @@
 <!--
  * This file is part of BibORB
  * 
- * Copyright (C) 2003  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +22,6 @@
 <!--
  * File: search_entry.xsl
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
- * Year: 2003
  * Licence: GPL
  *
  * Description:
@@ -35,13 +34,16 @@
     xmlns:bibtex="http://bibtexml.sf.net/"
     version="1.0">
   
-    <xsl:output method="xml"/>
+    <xsl:output method="txt"/>
     
     <!-- include generic parameters -->
 	<xsl:include href="xsl/parameters.xsl"/>
 
     <xsl:template match="bibtex:file">
-        <xsl:if test="//bibtex:entry[@id=$id]">true</xsl:if>
+		<xsl:choose>
+			<xsl:when test="//bibtex:entry[@id=$id]">true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
     </xsl:template>
     
 </xsl:stylesheet>

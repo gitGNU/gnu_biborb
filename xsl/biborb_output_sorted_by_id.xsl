@@ -2,7 +2,7 @@
 <!--
  * This file is part of BibORB
  * 
- * Copyright (C) 2003  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,63 +20,46 @@
  * 
 -->
 <!--
- * File: by_group2html_table.xsl
+ * File: biborb_output_sorted_by_id.xsl
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
- * Year: 2003
  * Licence: GPL
  *
  * Description:
  *
- *  Display entries of a given group
- *
+ *    Sort all entries by id and transform it into an HTML table.
  *
 -->
-
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:bibtex="http://bibtexml.sf.net/"
     exclude-result-prefixes="bibtex"
     version="1.0">
   
-    <xsl:output method="xml" encoding="iso-8859-1"/>
+    <xsl:output method="xml" encoding="iso-8859-1" />
     
 	<!-- include generic parameters -->
 	<xsl:include href="xsl/parameters.xsl"/>
-    
+
     <xsl:template match="/">
-        <!-- get entries of the given group -->
-        <xsl:variable name="result" select="//bibtex:entry[(.//bibtex:group)=$group]"/>
-        
-        <!-- how many entries displayed -->
-        <div class="result">
-            <xsl:variable name="cpt" select="count($result)"/>
-            <xsl:choose>
-                <xsl:when test="$cpt != 1">
-                    <xsl:value-of select="$cpt"/> entries for the group <b><xsl:value-of select="$group"/></b>.
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="$cpt"/> entry for the group <b><xsl:value-of select="$group"/></b>.
-                </xsl:otherwise>
-            </xsl:choose>
-        </div>
-        
-        <!-- a link to add all entries to the basket -->
-        <xsl:variable name="list" select="$result//@id"/>
+		<xsl:variable name="cpt" select="count(//bibtex:entry)"/>
+		<!-- add a link to add all entries -->
         <xsl:variable name="ids">
-            <xsl:for-each select="$list">
-                <xsl:value-of select="."/>
+            <xsl:for-each select="//bibtex:entry">
+                <xsl:value-of select="@id"/>
                 <xsl:if test="position() != last()">*</xsl:if>
             </xsl:for-each>
         </xsl:variable>
-        <div class="addtobasket">
-            Add all entries to basket <a href="bibindex.php?mode=group&amp;group={$group}&amp;action=add_to_basket&amp;id={$ids}&amp;{$bibindex_mode}&amp;{$extra_get_param}"><img src="./data/images/add.png" alt="add" /></a>
-        </div>
-        
+		
+		<xsl:if test="$cpt != 0 and $display_basket_actions != 'no' and $display_add_all != 'no'">
+            <div class="addtobasket">
+                Add all entries to basket <a href="bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={$ids}&amp;{$extra_get_param}"><img src="./data/images/add.png" alt="add" /></a>
+            </div>
+		</xsl:if>
+		
         <!-- start the table -->
         <table id="bibtex_table">
             <tbody>
-                <!-- select only entries of the given group -->
-                <xsl:for-each select="$result">
+                <xsl:for-each select="//bibtex:entry">
                     <!-- sort entries by increasing id -->
                     <xsl:sort select="@id" order="ascending" data-type="text"/>
                     <xsl:apply-templates select="."/>
