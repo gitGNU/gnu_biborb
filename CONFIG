@@ -3,15 +3,11 @@ This file details configuration options that may be activated.
 * ICONS/TEXT
     Actions for an entry (edit, delete, get ps, ps.gz, pdf ...) are available
 in both text format or icons. By default, icons are displayed. This can be
-modified editing the CSS file style.css:
+modified by editing the config.php file and changing these two variables:
 
-        .images {
-            display:inline;  <-- change this value to none to hide icons
-        }
+$display_images = TRUE;
+$display_text = FALSE;
 
-        .text {
-            display:none;       <-- change this value to inline to display text
-        }
 
 * ABSTRACT
 By default, abstract are not displayed. If you browser supports javascript,

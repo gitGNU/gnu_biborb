@@ -56,7 +56,7 @@ $display_images = TRUE;
 /**
  *  Sould action be represented by text or not.
  */
-$display_text = TRUE;
+$display_text = FALSE;
 
 /**
  * Name of the PHP SESSION
