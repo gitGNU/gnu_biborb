@@ -773,7 +773,7 @@ function bibindex_display_search(){
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
     
-    $main_content .= "Go to <a href='bibindex.php?mode=displayadvancedsearch'>Advanced Search</a>.<br/><br/>";
+    $main_content .= "Go to <a href='bibindex.php?mode=displayadvancedsearch'>Advanced Search</a>, <a href='bibindex.php?mode=displayxpathsearch'>XPath Search</a>.<br/><br/>";
     
     if($searchvalue){
         $fields =array();
@@ -947,7 +947,7 @@ function bibindex_display_advanced_search(){
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "</div><br/>";
-    $content .= "Go to <a href='bibindex.php?mode=displaysearch'>Simple Search</a>.<br/><br/>";
+    $content .= "Go to <a href='bibindex.php?mode=displaysearch'>Simple Search</a>, <a href='bibindex.php?mode=displayxpathsearch'>XPath Search</a>.<br/><br/>";
     
     $searchArray = array();
     foreach($bibtex_fields as $val){
@@ -1386,21 +1386,7 @@ function bibindex_display_tools(){
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("BIBINDEX_TOOLS_TITLE");
     
-    $content = "<h4 class='tool_name'>"._("TOOL_XPATH_TITLE")."</h4>";
-    $content .= "<div class='tool_help'>";
-    $content .= _("TOOL_XPATH_HELP");
-    $content .= "</div>";
-    $content .= "<form class='tool_form' method='get' action='bibindex.php' id='xpath_form' onsubmit='return validate_xpath_form(\"".$_SESSION['language']."\")'>";
-    $content .= "<fieldset>";
-    $content .= "<textarea cols='50' rows='5' name='xpath_query'>";
-    $content .= "contains(author, \"someone\") and year >= 2004";
-    $content .= "</textarea><br/>";
-    $content .= "<input type='hidden' name='action' value='xpath_query'/>";
-    $content .= "<input type='submit' class='submit' value='"._("Search")."'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
-    
-    $content .= "<h4 class='tool_name'>"._("TOOL_AUX2BIBTEX_TITLE")."</h4>";
+    $content = "<h4 class='tool_name'>"._("TOOL_AUX2BIBTEX_TITLE")."</h4>";
     $content .= "<div class='tool_help'>";
     $content .= _("TOOL_AUX2BIBTEX_HELP");
     $content .= "</div>";
@@ -1412,6 +1398,68 @@ function bibindex_display_tools(){
     $content .= "</fieldset>";
     $content .= "</form>";
     
+    $html .= main($title,$content);
+    $html .= html_close();
+    echo $html;
+}
+
+/**
+
+*/
+function bibindex_display_xpath_search()
+{
+    $html = bibheader();
+    $html .= bibindex_menu($_SESSION['bibdb']->name());
+    $title = _("BIBINDEX_XPATH_SEARCH_TITLE");
+    
+    $content = "<h4 class='tool_name'>"._("TOOL_XPATH_TITLE")."</h4>";
+    $content .= "<div class='tool_help'>";
+    $content .= _("TOOL_XPATH_HELP");
+    $content .= "</div>";
+    $content .= "<form class='tool_form' method='get' action='bibindex.php' id='xpath_form' onsubmit='return validate_xpath_form(\"".$_SESSION['language']."\")'>";
+    $content .= "<fieldset>";
+    $content .= "<textarea cols='50' rows='5' name='xpath_query'>";
+    if(array_key_exists('xpath_query',$_GET)){
+        $content .= $_GET['xpath_query'];
+    }
+    else{
+        $content .= "contains(*/bibtex:author, 'someone') and */bibtex:year=2004";
+    }
+    $content .= "</textarea><br/>";
+    $content .= "<input type='hidden' name='mode' value='displayxpathsearch'/>";
+    $content .= "<input type='submit' class='submit' value='"._("Search")."'/>";
+    $content .= "</fieldset>";
+    $content .= "</form>";
+    $content .= "Go to <a href='bibindex.php?mode=displaysearch'>Simple Search</a>, <a href='bibindex.php?mode=displayxpathsearch'>XPath Search</a>.<br/><br/>";
+    
+    // execute an Xpath query
+    if(array_key_exists("xpath_query",$_GET)){
+        $entries = $_SESSION['bibdb']->xpath_search(myhtmlentities($_GET['xpath_query']));
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
+        $param = $GLOBALS['xslparam'];
+        $param['bibindex_mode'] = $_GET['mode'];
+        $param['basketids'] = $_SESSION['basket']->items_to_string();
+        $param['extra_get_param'] = "xpath_query=".$_GET['xpath_query'];
+    
+        // add all
+        $start = "<div class='result_header'>";
+        $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode']);
+        $start .= "</div>";
+        
+        if($nb==1){
+            $content .= _("One match.").$start;
+            $content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+        }
+        else if($nb>1) {
+            $content .= sprintf(_("%d matches."),$nb).$start;
+            $content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+        }
+        else{
+            $content .= _("No match.");
+        }
+         $xsltp->free();
+    }
     $html .= main($title,$content);
     $html .= html_close();
     echo $html;

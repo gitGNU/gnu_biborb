@@ -502,6 +502,20 @@ class BibORB_DataBase {
     }
 
     /**
+        XPath search
+     */
+    function xpath_search($xpath_query){
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $this->all_entries();
+        $xsl_content = load_file("./xsl/xpath_query.xsl");
+        $xsl_content = str_replace("XPATH_QUERY",$xpath_query,$xsl_content);
+        $param = array( 'bibname' => $this->xml_file());
+        $result = $xsltp->transform($xml_content,$xsl_content,$param); 
+        $xsltp->free();
+        return $result;
+    }
+    
+    /**
      Count entries
     */
     function count_entries(){ 

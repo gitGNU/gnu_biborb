@@ -120,4 +120,7 @@
     <!-- A list of fields -->
     <xsl:param name="fields_to_export"/>
 
+    <!-- An XPath query -->
+    <xsl:param name="xpath_query"/>
+    
 </xsl:stylesheet>

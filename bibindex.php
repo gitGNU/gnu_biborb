@@ -589,9 +589,9 @@ switch($mode) {
     
     // Display search page
     case 'displaysearch': echo bibindex_display_search(); break;
-    
     case 'displayadvancedsearch': echo bibindex_display_advanced_search(); break;
-    
+    case 'displayxpathsearch': echo bibindex_display_xpath_search();break;
+        
     // Help on the basket menu item
     case 'basket': echo bibindex_basket_help(); break;
     
