@@ -75,6 +75,7 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL
     $html .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >';
     $html .= "<head>";
     $html .= "<meta http-equiv='content-type' content='text/html; charset=ISO-8859-1' />";
+    $html .= "<meta name='robots' content='noindex,nofollow'/>";
     if($style){
         $html .= "<link href='$style' rel='stylesheet' type='text/css'/>";
     }  
