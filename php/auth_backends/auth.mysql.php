@@ -43,6 +43,9 @@
             access: a 3 characters field (add|modify|delete)
                        111 == add modify and delete, 
                        100 == add no modify no delete ...
+
+    use the "_anonymous_" user to set default privileges for unauthentified users.
+
 */
 
 /**
@@ -138,6 +141,7 @@ class Auth
             die("Unable to connect to the users database!");
         }
         else{
+            $user = ($user == "" ? "_anonymous_" : $user);
             // get records where $id = $user
             $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
             $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
@@ -179,6 +183,8 @@ class Auth
             die("Unable to connect to the users database!");
         }
         else{
+            $user = ($user == "" ? "_anonymous_" : $user);
+            
             $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
             $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
             
@@ -219,6 +225,8 @@ class Auth
             die("Unable to connect to the users database!");
         }
         else{
+            $user = ($user == "" ? "_anonymous_" : $user);
+            
             $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
             $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
             

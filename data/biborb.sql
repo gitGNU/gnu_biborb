@@ -40,3 +40,4 @@ CREATE TABLE `biborb_users` (
 ) TYPE=MyISAM;
 
 INSERT INTO `biborb_users` (`id`, `login`, `password`, `name`, `firstname`, `admin`) VALUES (1, 'admin', md5('admin'), '', '','Y');
+INSERT INTO `biborb_users` (`login`, `admin`) VALUES ('_anonymous_', 'N');
