@@ -114,6 +114,16 @@
     <xsl:variable name="edit-image">stock_edit-16.png</xsl:variable>
     <xsl:variable name="delete-image">stock_delete-16.png</xsl:variable>
     <xsl:variable name="info-image">dialog_info.png</xsl:variable>
+    
+    <!-- Shelf mode -->
+    <xsl:param name="shelf-mode"/>
+    <xsl:variable name="own-image">stock_own.png</xsl:variable>
+    <xsl:variable name="notown-image">stock_notown.png</xsl:variable>
+    <xsl:variable name="buy-image">stock_buy.png</xsl:variable>
+    <xsl:variable name="borrow-image">stock_borrow.png</xsl:variable>
+    <xsl:variable name="read-image">stock_read.png</xsl:variable>
+    <xsl:variable name="readnext-image">stock_readnext.png</xsl:variable>
+    <xsl:variable name="notread-image">stock_notread.png</xsl:variable>
 	
     <!-- A list of fields -->
     <xsl:param name="fields_to_export"/>

@@ -102,7 +102,93 @@
 				<div class="command">
 					
 					<xsl:if test="$can_modify">
-					
+                    
+                        <!-- Shelf mode on -->
+                        <xsl:if test="$shelf-mode">
+                            <!-- Own = yes -->
+                            <xsl:if test=".//bibtex:own='yes'">
+                                <xsl:if test="$display_images">
+                                    <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                        <img src="data/images/{$own-image}" alt='BIBORB_OUTPUT_OWN_ALT' title='BIBORB_OUTPUT_OWN_TITLE' />
+                                    </a>
+                                </xsl:if>
+                                <xsl:if test="$display_text">
+                                    <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_OWN_TITLE'>BIBORB_OUTPUT_OWN_ALT</a>
+                                </xsl:if>
+                            </xsl:if>
+						
+                            <!-- Own = borrow -->
+                            <xsl:if test=".//bibtex:own='borrow'">
+                                <xsl:if test="$display_images">
+                                    <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=buy&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                        <img src="data/images/{$borrow-image}" alt='BIBORB_OUTPUT_BORROW_ALT' title='BIBORB_OUTPUT_BORROW_TITLE'/>
+                                    </a>
+                                </xsl:if>
+                                <xsl:if test="$display_text">
+                                    <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=buy&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_BORROW_TITLE'>BIBORB_OUTPUT_BORROW_ALT</a>
+                                </xsl:if>
+                            </xsl:if>
+                            
+                            <!-- Own = buy -->
+                            <xsl:if test=".//bibtex:own='buy'">
+                                <xsl:if test="$display_images">
+                                    <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=yes&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                        <img src="data/images/{$buy-image}" alt='BIBORB_OUTPUT_BUY_ALT' title='BIBORB_OUTPUT_BUY_TITLE'/></a>
+                                </xsl:if>
+                                <xsl:if test="$display_text">
+                                    <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=yes&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_BUY_TITLE'>BIBORB_OUTPUT_BUY_ALT</a>
+                                </xsl:if>
+                            </xsl:if>
+                            
+                            <!-- Not own -->
+                            <xsl:if test="not(normalize-space(.//bibtex:own)) or .//bibtex:own=''">
+                                <xsl:if test="$display_images">
+                                    <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=borrow&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                        <img src="data/images/{$notown-image}" alt='BIBORB_OUTPUT_NOTOWN_ALT' title='BIBORB_OUTPUT_NOTOWN_TITLE'/></a>
+                                </xsl:if>
+                                <xsl:if test="$display_text">
+                                    <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=borrow&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_NOTOWN_TITLE'>BIBORB_OUTPUT_NOTOWN_ALT</a>
+                                </xsl:if>
+                            </xsl:if>
+                            
+                            
+                            <!-- Read = yes -->
+                            <xsl:if test=".//bibtex:read='yes'">
+                                <xsl:if test="$display_images">
+                                    <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=no&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                        <img src="data/images/{$read-image}" alt='BIBORB_OUTPUT_READ_ALT' title='BIBORB_OUTPUT_READ_TITLE'/>
+                                    </a>
+                                </xsl:if>
+                                <xsl:if test="$display_text">
+                                    <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=no&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READ_TITLE'>BIBORB_OUTPUT_READ_ALT</a>
+                                </xsl:if>
+                            </xsl:if>
+                            
+                            <!-- Read = next -->
+                            <xsl:if test=".//bibtex:read='next'">
+                                <xsl:if test="$display_images">
+                                    <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=yes&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                        <img src="data/images/{$readnext-image}" alt='BIBORB_OUTPUT_READNEXT_ALT' title='BIBORB_OUTPUT_READNEXT_TITLE'/>
+                                    </a>
+                                </xsl:if>
+                                <xsl:if test="$display_text">
+                                    <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=yes&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READNEXT_TITLE'>BIBORB_OUTPUT_READNEXT_ALT</a>
+                                </xsl:if>
+                            </xsl:if>
+                            
+                            <!-- Read = no -->
+                            <xsl:if test="not(normalize-space(.//bibtex:read)) or .//bibtex:read='no'">
+                                <xsl:if test="$display_images">
+                                    <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=next&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                        <img src="data/images/{$notread-image}" alt='BIBORB_OUTPUT_NOTREAD_ALT' title='BIBORB_OUTPUT_NOTREAD_TITLE'/>
+                                    </a>
+                                </xsl:if>
+                                <xsl:if test="$display_text">
+                                    <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=next&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READ_TITLE'>BIBORB_OUTPUT_NOTREAD_ALT</a>
+                                </xsl:if>
+                            </xsl:if>
+                        </xsl:if>
+
 						<!-- Edit action -->
 						<!-- display images if necessary: $display_images!=null -->
 						<xsl:if test="$display_images">

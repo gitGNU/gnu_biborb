@@ -732,6 +732,64 @@ class BibORB_DataBase {
         // update bibtex file
         if($this->generate_bibtex){$this->update_bibtex_file();}
     }
+    
+    
+    /**
+        Change the ownership of a given entry
+        Shelf mode
+     */
+    function change_ownership($id,$newownership){	
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                                          // get the entry
+        $xml_content = $this->entry_with_id($id);
+        //$oldownership = trim($xsltp->transform($xml_content,load_file("./xsl/get_bibtex_ownership.xsl")));
+        // replace it
+        if (strpos($xml_content, "<bibtex:own>") === false){
+            $xml_content = str_replace("</bibtex:title>","</bibtex:title><bibtex:own>$newownership</bibtex:own>",$xml_content);
+        }else{
+            $xml_content = preg_replace("/\<bibtex\:own>.*\<\/bibtex\:own\>/", "<bibtex:own>$newownership</bibtex:own>", $xml_content);
+        }
+        // update the xml
+        $xsl = load_file("./xsl/update_xml.xsl");
+        $param = array('bibname' => $this->xml_file());
+        $result = $xsltp->transform($xml_content,$xsl,$param);
+        $xsltp->free();
+        // save it
+        $fp = fopen($this->xml_file(),"w");
+        fwrite($fp,$result);
+        fclose($fp);
+        // update bibtex file
+        if($this->generate_bibtex){$this->update_bibtex_file();}
+    }
+    
+    /**
+        Change the read status of a given entry
+        Shelf mode
+     */
+    function change_readstatus($id,$newreadstatus){	
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                                          // get the entry
+        $xml_content = $this->entry_with_id($id);
+        //$oldownership = trim($xsltp->transform($xml_content,load_file("./xsl/get_bibtex_ownership.xsl")));
+        // replace it
+        if (strpos($xml_content, "<bibtex:read>") === false){
+            $xml_content = str_replace("</bibtex:title>","</bibtex:title><bibtex:read>$newreadstatus</bibtex:read>",$xml_content);
+        }else{
+            $xml_content = preg_replace("/\<bibtex\:read>.*\<\/bibtex\:read\>/", "<bibtex:read>$newreadstatus</bibtex:read>", $xml_content);
+        }
+        // update the xml
+        $xsl = load_file("./xsl/update_xml.xsl");
+        $param = array('bibname' => $this->xml_file());
+        $result = $xsltp->transform($xml_content,$xsl,$param);
+        $xsltp->free();
+        // save it
+        $fp = fopen($this->xml_file(),"w");
+        fwrite($fp,$result);
+        fclose($fp);
+        // update bibtex file
+        if($this->generate_bibtex){$this->update_bibtex_file();}
+    }
+    
 }
 
 

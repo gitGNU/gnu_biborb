@@ -21,6 +21,11 @@
  * 
  */
 
+/*
+ alrid
+ */
+
+
 /**
  * 
  * File: bibindex.php
@@ -218,7 +223,8 @@ $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'sort' => $sort,
                     'sort_order' => $sort_order,
                     'can_modify' => $_SESSION['user_can_modify'] || $_SESSION['user_is_admin'],
-                    'can_delete' => $_SESSION['user_can_delete'] || $_SESSION['user_is_admin']);
+                    'can_delete' => $_SESSION['user_can_delete'] || $_SESSION['user_is_admin'],
+                    'shelf-mode' => SHELF_MODE);
 
 /**
  * Action are given by GET/POST method.
@@ -383,7 +389,21 @@ if(isset($_GET['action'])){
             }
             $xsltp->free();
             break;
-	
+        
+        /*
+            Shelf mode: update the owner ship
+         */
+        case 'update_ownership':
+            $_SESSION['bibdb']->change_ownership($_GET['id'], $_GET['ownership']);
+            break;
+            
+        /*
+            Shelf mode: update the read status of a reference
+         */
+        case 'update_readstatus':
+            $_SESSION['bibdb']->change_readstatus($_GET['id'], $_GET['readstatus']);
+            break;
+            
         default:
             break;
     }

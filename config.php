@@ -61,13 +61,13 @@ $display_language_selection = TRUE;
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = TRUE;
+$disable_authentication = FALSE;
 
 /**
  * Authentication methods: mysql, files
  * Used if $disable_authentication = FALSE
  */
-$authentication_method = 'files';
+$authentication_method = 'mysql';
 
 /**
  *  Should a confirmation be displayed when deleting entries
@@ -127,7 +127,9 @@ $bibtex_entries = array(
     "groups",
     "website",
     "longnotes",
-    "link"
+    "link",
+    "own",
+    "read"
 );
 
 /**
@@ -190,5 +192,13 @@ $MAX_REFERENCES_BY_PAGE=10;
  * If true, each time a bibliography is modified, a BibTeX file is updated
  * in its 'bibs' directory.
  */
-$GEN_BIBTEX=TRUE
+$GEN_BIBTEX=TRUE;
+
+/**
+ *  Activate the shelf mode.
+ *  Additional action will be available to set the ownership of a reference
+ *  and its reading status(read, read next, not read)
+ * value: TRUE/FALSE
+ */
+define("SHELF_MODE",TRUE);
 ?>

@@ -279,6 +279,21 @@ class BibORB_DataBase {
     */
     function change_id($id,$newid){
     }
+    
+    /**
+        Change the ownership status of a given entry
+        Shelf mode
+     */
+    function change_ownership($id,$newownership){	
+    }
+    
+    /**
+        Change the read status of a given entry
+        Shelf mode
+     */
+    function change_readstatus($id,$newreadstatus){	
+    }
+    
 }
 
 

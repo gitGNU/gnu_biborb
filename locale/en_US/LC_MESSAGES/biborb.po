@@ -972,3 +972,45 @@ msgstr ""
 
 msgid "link"
 msgstr ""
+
+msgid "BIBORB_OUTPUT_OWN_ALT"
+msgstr "Own"
+
+msgid "BIBORB_OUTPUT_OWN_TITLE"
+msgstr "Current Status: Own. Click to set to Not Own."
+
+msgid "BIBORB_OUTPUT_BORROW_ALT"
+msgstr "Borrow"
+
+msgid "BIBORB_OUTPUT_BORROW_TITLE"
+msgstr "Current Status: Borrow. Click to set to Buy."
+
+msgid "BIBORB_OUTPUT_BUY_ALT"
+msgstr "Buy"
+
+msgid "BIBORB_OUTPUT_BUY_TITLE"
+msgstr "Current Status: Buy. Click to set to Own."
+
+msgid "BIBORB_OUTPUT_NOTOWN_ALT"
+msgstr "Not Own"
+
+msgid "BIBORB_OUTPUT_NOTOWN_TITLE"
+msgstr "Current Status: Not Own. Click to set to Borrow."
+
+msgid "BIBORB_OUTPUT_READ_ALT"
+msgstr "Read"
+
+msgid "BIBORB_OUTPUT_READ_TITLE"
+msgstr "Current Status: Read. Click to set to Not Read."
+
+msgid "BIBORB_OUTPUT_READNEXT_ALT"
+msgstr "Read Next"
+
+msgid "BIBORB_OUTPUT_READNEXT_TITLE"
+msgstr "Current Status: Read Next. Click to set to Read."
+
+msgid "BIBORB_OUTPUT_NOTREAD_ALT"
+msgstr "Not Read"
+
+msgid "BIBORB_OUTPUT_NOTREAD_TITLE"
+msgstr "Current Status: Not Read. Click to set to Read Next."

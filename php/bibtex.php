@@ -137,5 +137,55 @@ class BibTeX_Tools
         $entries = $this->get_array_from_file($filename);
         return $this->entries_array_to_xml($entries);
     }
+    
+    /**
+        Convert a XML string to an array
+     */
+    function xml_to_bibtex_array($xmlstring){
+        echo "<pre>";
+        // result
+        $res = array();
+        $xml = str_replace("\n","",$xmlstring);
+        // match all entries
+        preg_match_all("/<bibtex:entry id=['|\"](.*)['|\"]>(.*)<\/bibtex:entry>/U",$xml,$entries,PREG_PATTERN_ORDER);
+        for($i=0;$i<count($entries[1]);$i++){
+            $entry = $entries[2][$i];
+
+            $ref_tab = array('id'=> $entries[1][$i]);
+            // get the bibtex type
+            preg_match("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/",$entry,$matches);
+            $ref_tab['type'] = $matches[1];
+
+            // get groups value
+            preg_match("/<bibtex:groups>(.*)<\/bibtex:groups>/U",$matches[2],$groups);
+            preg_match_all("/<bibtex:group>(.*)<\/bibtex:group>/U",$groups[1],$group);
+            $ref_tab['groups'] = implode(',',$group[1]);
+            $bibtex_fields = str_replace($groups[0],"",$matches[2]);
+
+            preg_match_all("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/U",$bibtex_fields,$fields);
+            // analyse each fields
+            for($j=0;$j<count($fields[1]);$j++){
+                $ref_tab[$fields[1][$j]]=trim($fields[2][$j]);
+            }
+            $res[] = $ref_tab;
+        }
+        
+        return $res;
+    }
+    
+    function array_to_bibtex_string($tab,$fields_to_export){
+        $export = "";
+        foreach($tab as $entry){
+            $entry_exported = "";
+            $export .= "@".$entry['type']."{".$entry['id'].",\n";
+            foreach($fields_to_export as $field){
+
+                if(array_key_exists($field,$tab)){
+                    $export .= "    ".$field." = {".$entry[$field]." }";
+                }
+            }
+        }
+    }
+    
 }
 ?>

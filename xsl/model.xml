@@ -38,7 +38,7 @@
       <volume/><number/><pages/><month/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional>
   </entry>
   
@@ -57,7 +57,7 @@
       <series/><address/><edition/><month/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional>
   </entry>
   
@@ -69,7 +69,7 @@
       <author/><howpublished/><address/><month/><year/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional>
   </entry>
 
@@ -88,7 +88,7 @@
       <series/><type/><address/><edition/><month/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional>
   </entry>
 
@@ -104,7 +104,7 @@
       <series/><type/><chapter/><pages/><address/><edition/><month/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional>
   </entry>
 
@@ -120,7 +120,7 @@
       <series/><pages/><address/><month/><organization/><publisher/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional>
   </entry>
 
@@ -136,7 +136,7 @@
       <series/><pages/><address/><month/><organization/><publisher/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional>  
   </entry>
 
@@ -148,7 +148,7 @@
       <author/><organization/><address/><edition/><month/><year/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional> 
   </entry>
 
@@ -160,7 +160,7 @@
       <type/><address/><month/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional> 
   </entry>
 
@@ -172,7 +172,7 @@
       <type/><address/><month/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional> 
   </entry>
 
@@ -184,7 +184,7 @@
       <author/><title/><howpublished/><month/><year/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional> 
   </entry>
 
@@ -200,7 +200,7 @@
       <series/><address/><month/><organization/><publisher/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional> 
   </entry>
 
@@ -212,7 +212,7 @@
       <type/><number/><address/><month/><note/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional> 
   </entry>
 
@@ -224,7 +224,7 @@
       <month/><year/>
     </optional>
     <additional>
-      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
+      <own/><read/><groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><link/><longnotes/>
     </additional> 
   </entry>
   

@@ -55,7 +55,7 @@
         <!-- start the table -->
         <table id="bibtex_table">
             <tbody>
-	        <xsl:apply-templates select='//bibtex:entry'/>
+                <xsl:apply-templates select='//bibtex:entry'/>
             </tbody>
         </table>
     </xsl:template>
