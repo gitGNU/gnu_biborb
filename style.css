@@ -330,7 +330,7 @@ html > body #menu {position:fixed;}
     font-family:monospace;
 }
 
-.bibtex_simple a, .bibtex_simple a:hover, .bibtex_simple a:visited, .bibtex_simple a:selected, .bibtex_simple focus {
+.bibtex_simple a, .bibtex_simple a:hover, .bibtex_simple a:visited, .bibtex_simple a:selected, .bibtex_simple a:focus {
     text-decoration:none;
 }
 

@@ -36,7 +36,7 @@
   exclude-result-prefixes="bibtex"
   version="1.0">
   
-    <xsl:output method="xml" encoding="iso-8859-1"/>
+    <xsl:output method="html" encoding="iso-8859-1"/>
 
     <xsl:param name="bibname"/>
     <xsl:param name="id"/>
@@ -183,9 +183,18 @@
         </table>
         
         <br/>
-        <!-- Additional fields -->
+        
+    
         <b>BibORB Additional Fields</b>
-        <table class='additional'>
+        <script type="text/javascript">&lt;!--
+        document.write(&quot;&lt;a style=\&quot;text-decoration:none;color:navy;\&quot; href=\&quot;javascript:toggle_element(\'additional\')\&quot;&gt;display/hide &lt;/a&gt;&quot;);
+        //--&gt;</script>
+            <noscript></noscript>
+    
+        <!-- Additional fields -->
+        
+        <div id="additional">
+        <table  class='additional'>
             <tbody>
                 <xsl:for-each select="entry[@type=$type]/additional/*">
                     <xsl:variable name="field" select="name()"/>
@@ -233,6 +242,9 @@
                 </xsl:for-each>
             </tbody>
         </table>
+        </div>
+        <br/>
+        <br/>
     </xsl:template>
     
 </xsl:stylesheet>

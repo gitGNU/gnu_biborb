@@ -437,9 +437,9 @@ function bibindex_menu()
  * bibheader()
  * Create the HTML header
  */
-function bibheader()
+function bibheader($inbody = NULL)
 {
-  $html = html_header("BibORB - ".$_SESSION['bibname'],$GLOBALS['CSS_FILE']);
+  $html = html_header("BibORB - ".$_SESSION['bibname'],$GLOBALS['CSS_FILE'],NULL,$inbody);
   return $html;  
 }
 
@@ -758,7 +758,7 @@ function bibindex_add_entry(){
  * Display a form to modify fields of an entry
  */
 function bibindex_update_entry(){
-    $html = bibheader();
+    $html = bibheader("onLoad=\"javascript:toggle_element('additional')\"");
     $html .= bibindex_menu();
     $title = null;
     $content = "<form method='post' action='action_proxy.php' enctype='multipart/form-data'>";
