@@ -311,9 +311,9 @@
             </script>
 			<!-- if javascript not supported -->
             <noscript>
-                <div>
+                <div style="display:inline;">
                     <a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}">
-                        <img src="data/images/${abstract-image}" alt="abstract" title="Display abstract"/>
+                        <img src="data/images/{$abstract-image}" alt="abstract" title="Display abstract"/>
                     </a>
                 </div>
             </noscript>

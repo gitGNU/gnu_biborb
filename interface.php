@@ -297,43 +297,50 @@ function index_menu(){
 /**
  * bibindex_details()
  * Called when a given entry has to be displayed
+ 'bibindex.php?mode=details&abstract=1&menu=0&bibname=example&id=idA
  */
 function bibindex_details()
 {
     $html = bibheader();
-    if(get_value('bibids',$_GET)){
-		$bibids = explode(',',$_GET['bibids']);
-		// create an xml string containing id present 
-		$xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
-		$xml_content .= '<entrylist>';
-		for($i=0;$i<count($bibids);$i++){
-			$xml_content .= '<id>'.$bibids[$i].'</id>';
-		}
-		$xml_content .= '</entrylist>';
 
-		$xsl_content = load_file("./xsl/basket2html_table.xsl");
-		// set paramters
-
-		$param = array( 'bibnameurl' => $_SESSION['bibdb']->xml_file(),
-						'bibname' => $_SESSION['bibdb']->name(),
-						'basket' => '',
-						'mode' => $usermode,
-						'abstract' => $_SESSION['abstract'],
-						'display_images' => $GLOBALS['display_images'],
-						'display_text' => $GLOBALS['display_text']);
-		
-		//return the HTML table
-		$content = xslt_transform($xml_content,$xsl_content,$param);
-		$content = ereg_replace("<div class=\"result\">(.)*</div><br/>","",$content);
+    // get the bibname
+    if(!array_key_exists('bibname',$_GET)){
+        die("No bibliography name provided");
+    }
+    $bibdb = new BibORB_DataBase($_GET['bibname']);
+    
+    // get the parameters
+    $param = $GLOBALS['xslparam'];
+    $param['bibname'] = $bibdb->name();
+    $param['bibnameurl'] = $bibdb->xml_file();
+    $param['display_basket_actions'] = "no";
+    
+    if(array_key_exists('abstract',$_GET)){
+        $param['abstract'] = $_GET['abstract'] ? "true" : "false";
+    }
+    if(array_key_exists('basket',$_GET)){
+        $param['display_basket_actions'] = $_GET['basket'] ? "true" : "no";
+    }
+    
+    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+    $xsl_content = load_file("./xsl/biborb_output_sorted_by_id.xsl");
+    
+    if(array_key_exists('bibids',$_GET)){
+        // get the entries
+        $bibids = explode(',',$_GET['bibids']);
+		$xml_content = $bibdb->entries_with_ids($bibids);
+		$content = $xsltp->transform($xml_content,$xsl_content,$param);
+//      $content = ereg_replace("<div class=\"result\">(.)*</div><br/>","",$content);
 	}
-	else{
+	else if(array_key_exists('id',$_GET)){
 		// get the selected entry
-		$content = get_bibentry($_SESSION['bibname'],$_SESSION['id'],$_SESSION['abstract']);
+        $xml_content = $bibdb->entry_with_id($_GET['id']);
+        $content = $xsltp->transform($xml_content,$xsl_content,$param);
 	}
 	// display the menu or not
-    if($_SESSION['menu'] != null){
-        if($_SESSION['menu']){
-            $html .= bibindex_menu($_SESSION['bibname']);
+    if(array_key_exists('menu',$_GET)){
+        if($_GET['menu'] == 1){
+            $html .= bibindex_menu($_GET['bibname']);
             $html .= main(null,$content);
         }
         else{

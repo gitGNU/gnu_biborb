@@ -188,7 +188,6 @@
         
         <br/>
         
-    
         <b>BibORB Additional Fields</b>
         <script type="text/javascript">
             <xsl:comment><![CDATA[
