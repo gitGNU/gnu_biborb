@@ -513,8 +513,9 @@ function bibindex_welcome()
 {
     $html = bibheader();  
     $html .= bibindex_menu($_SESSION['bibdb']->name());
-    $title = "BibORB: BibTeX On-line References Browser";
-    $content = msg("This is the bibliography").": <strong>".$_SESSION['bibdb']->name()."</strong>.<br/>";
+    $title = "BibORB: ". $_SESSION['bibdb']->name();
+    $content = "";
+    //$content = msg("This is the bibliography").": <strong>".$_SESSION['bibdb']->name()."</strong>.<br/>";
     if(array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){      
         $content .= msg("You are logged as").": <em>".$_SESSION['user']."</em>.";
 /*
@@ -989,7 +990,7 @@ function bibindex_display_advanced_search(){
 	$content .= "<strong>".msg("BibTeX Fields")."</strong><br/>";
     
     foreach($bibtex_fields as $field){
-        $content .= "<label>$field</label>";
+        $content .= "<label>".msg($field)."</label>";
         if(array_key_exists($field,$_GET)){
             $thefield = remove_accents(trim($_GET[$field]));
             $content .= "<input name='$field' value='".$thefield."'/>";
@@ -1002,7 +1003,7 @@ function bibindex_display_advanced_search(){
     }
     $content .= "<strong>".msg("BibORB Fields")."</strong><br/>";
     foreach($biborb_fields as $field){
-        $content .= "<label>$field</label>";
+        $content .= "<label>".msg($field)."</label>";
         if(array_key_exists($field,$_GET)){
             $thefield = remove_accents(trim($_GET[$field]));
             $content .= "<input name='$field' value='".$thefield."'/>";
@@ -1415,11 +1416,11 @@ function bibindex_export_basket_to_bibtex(){
 	    if($cpt == 0){
             $content .= "<tr>";
 	    }
-	    $content .= "<td><input type='checkbox' name='$field'";
+	    $content .= "<td title='$field'><input type='checkbox' name='$field'";
 	    if(!(array_search($field,$GLOBALS['fields_to_export']) === false)){
             $content .= " checked='checked' ";
 	    }
-	    $content .= " title='$field'/>".msg($field)."</td>";
+	    $content .= " />".msg($field)."</td>";
 	    $cpt++;
 	    if($cpt == 4){
 		$content .= "</tr>";

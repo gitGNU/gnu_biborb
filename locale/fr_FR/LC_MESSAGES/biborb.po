@@ -139,7 +139,7 @@ msgstr "Ajouter toutes les références au panier."
 
 #: functions.php:374 interface.php:707
 msgid "Sort by:"
-msgstr "Trier par:"
+msgstr "Trier par: "
 
 #: functions.php:387 functions.php:390 interface.php:682 interface.php:728
 msgid "Title"
@@ -279,7 +279,7 @@ msgstr "Authentification"
 
 #: interface.php:402
 msgid "BIBINDEX_MENU_SELECT_BIB"
-msgstr "Choisir une bibliographie"
+msgstr "Bibliographies"
 
 #: interface.php:408
 msgid "BIBINDEX_MENU_DISPLAY_HELP"
@@ -307,7 +307,7 @@ msgstr "Par Groupe"
 
 #: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_SEARCH_HELP"
-msgstr "Rechercher des références dans la bibliographie courante"
+msgstr "Rechercher des références"
 
 #: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_SEARCH"
@@ -475,12 +475,12 @@ msgstr "Afficher"
 #: interface.php:627
 #, php-format
 msgid "No entry for the group %s."
-msgstr "Pas de référence pour le groupe %s."
+msgstr "Pas de référence pour le groupe <strong>%s</strong>."
 
 #: interface.php:630
 #, php-format
 msgid "An entry for the group %s."
-msgstr "Une référence pour le groupe %s."
+msgstr "Une référence pour le groupe <strong>%s</strong>."
 
 #: interface.php:633
 #, php-format
@@ -532,7 +532,7 @@ msgstr "Références du Panier"
 
 #: interface.php:1015
 msgid "No entry in the basket."
-msgstr "Pas de référence dans le panier."
+msgstr "Panier vide."
 
 #: interface.php:1020
 msgid "An entry in the basket."
@@ -561,11 +561,11 @@ msgstr "Ajouter toutes les références du panier au groupe: "
 
 #: interface.php:1065
 msgid "New group:"
-msgstr "Nouveau groupe :"
+msgstr "Nouveau groupe :&nbsp;"
 
 #: interface.php:1072
 msgid "Existing group:"
-msgstr "Groupes disponibles :"
+msgstr "Groupes disponibles :&nbsp;"
 
 #: interface.php:1090
 msgid "BIBINDEX_ADMIN_HELP_TITLE"
@@ -577,7 +577,7 @@ msgstr "Ajouter une référence (sélection du type)"
 
 #: interface.php:1110
 msgid "Select an entry type: "
-msgstr "Sélectionner un type de référence : "
+msgstr "Sélectionnez un type de référence : "
 
 #: interface.php:1145
 msgid "BIBINDEX_ADD_ENTRY_TITLE"
@@ -601,7 +601,7 @@ msgstr "Importer des références BibTeX"
 
 #: interface.php:1240
 msgid "BIBINDEX_IMPORT_HELP"
-msgstr "Sélectionner un fichier BibTeX ou copier les références dans la zone de texte. "
+msgstr "Sélectionnez un fichier BibTeX ou copiez les références dans la zone de texte. "
 "Les références seront ajoutées à la bibliographie."
 
 #: interface.php:1241
@@ -614,7 +614,7 @@ msgstr "Exporter le panier vers BibTeX"
 
 #: interface.php:1280
 msgid "Select fields to include in the exported BibTeX:"
-msgstr "Sélectionner les champs à inclure dans l'exportation BibTeX"
+msgstr "Sélectionnez les champs à inclure dans l'exportation BibTeX"
 
 msgid "BIBINDEX_ADVANCED_SEARCH_TITLE"
 msgstr "Recherche Avancée"
@@ -740,7 +740,7 @@ msgid "%d matches."
 msgstr "%d références trouvées."
 
 msgid "No match."
-msgstr "Aucune référence ne vérifie la recherche."
+msgstr "Aucune référence ne vérifie la propriété."
 
 msgid "BibTeX ID already present, select a different one."
 msgstr "Clé BibTeX déjà présente, saisissez une clé différente."
@@ -760,6 +760,9 @@ msgstr "Références n'appartenant à aucun groupe :"
 msgid "Orphans"
 msgstr "Orphelins"
 
+msgid "%d orphans."
+msgstr "%d références n'appartiennent à aucun groupe."
+
 msgid "TOOL_XPATH_TITLE"
 msgstr "Requète XPath"
 
@@ -770,7 +773,7 @@ msgstr "XPath (XML Path Language) est une syntaxe pour désigner une portion d'un
 " Par exemple:<ul>"
 " <li><code>bibtex:inproceedings</code> affichera toutes les références de type <code>"
 " inproceedings</code>.</li>"
-" <li><code>bibtex:*/bibtex:year<=2004 and bibtex:*/bibtex:year>=2000</code> affichera toutes les "
+" <li><code>*/bibtex:year<=2004 and */bibtex:year>=2000</code> affichera toutes les "
 " références publiées entre les années 2000 et 2004</li></ul>"
 
 msgid "TOOL_AUX2BIBTEX_TITLE"

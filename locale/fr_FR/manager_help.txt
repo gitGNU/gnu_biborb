@@ -8,7 +8,7 @@
 	<tbody>
 		<tr class='colored'>
 			<th>S'Identifier</th>
-			<td>S'Identifier pour avoir aux fonctions d'ajout et d'importation.</td>
+			<td>S'Identifier pour avoir accès aux fonctions d'ajout et d'importation.</td>
 		</tr>
 		<tr>
 			<th>Déconnexion</th>
@@ -21,8 +21,7 @@
 		<tr>
 			<th>Mettre à jour (BibTeX)</th>
 			<td>La bibliographie est mise à jour en fonction du fichier .bib 
-			présent dans le répertoire de la bibliographie. Utiliser le si vous éditez
-			votre bibliographie avec un éditeur pour mettre à jour les informations.</td>
+			présent dans le répertoire de la bibliographie. Utilisez-le si vous éditez votre bibliographie (avec un éditeur de texte ou un autre outil) pour mettre à jour les informations.</td>
 		</tr>
 		<tr class='colored'>
 			<th>Importer BibTeX</th>
@@ -32,9 +31,9 @@
 		</tr>
 	</tbody>
 </table>
-
+<br/>
 <span style="color:red"><strong>Attention!</strong></span>
 <ul>
     <li>Lors de l'importation, <acronym>BibORB</acronym> ne détecte pas les erreurs
-    <acronym>BibTeX</acronym> ni la présence de clés déjà existante.</li>
+    <acronym>BibTeX</acronym> ni la présence de doublons.</li>
 </ul>

@@ -79,7 +79,7 @@ Pour chaque référence affichée et selon votre configuration de <acronym class='b
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/dialog_info.png" alt="Remarques"></th>
-        <td>Afficher les données du champs BibTeX <code>longnotes</code>.</td>
+        <td>Afficher les données du champ BibTeX <code>longnotes</code>.</td>
     </tr>
     </tbody>
 </table>

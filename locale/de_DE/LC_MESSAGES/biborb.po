@@ -787,7 +787,7 @@ msgstr ""
 "XPath Anfragen zur suche in Bibliographien genutzt werden." 
 "Beispiele:<ul> <li><code>bibtex:"
 "inproceedings</code> sucht nach allen Einträgen vom Typ <code> inproceedings</"
-"code>.</li> <li><code>bibtex:*/bibtex:year<=2004 and bibtex:*/bibtex:year>=2000</code> "
+"code>.</li> <li><code>*/bibtex:year<=2004 and */bibtex:year>=2000</code> "
 "sucht nach allen Referenzen veröffentlicht zwischen den Jahren 2000 und 2004.</li></ul>"
 
 #: php/interface.php:1561

@@ -132,9 +132,8 @@ function remove_accents($string){
 function add_all_to_basket_div($ids,$mode,$extraparam=null){
     // ensure localization is set up
     load_i18n_config($_SESSION['language']);
-
-    $html = "<div class='addtobasket'>";
-    $html .= msg("Add all entries to the basket.");
+    $title = msg("Add all entries to the basket.");
+    $html = "<div class='addtobasket' title='$title'>";
     $addalllink = "bibindex.php?mode=$mode&amp;action=add_to_basket&amp;id=";
     foreach($ids as $id){
         $addalllink .= "$id*";
