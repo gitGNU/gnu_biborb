@@ -704,6 +704,12 @@ msgstr "lien"
 msgid "BIBORB_OUTPUT_LINK_TITLE"
 msgstr "Lien vers une page locale"
 
+msgid "BIBORB_OUTPUT_LONGNOTES_ALT"
+msgstr "Remarques"
+
+msgid "BIBORB_OUTPUT_LONGNOTES_TITLE"
+msgstr "Afficher les remarques pour cette référence"
+
 msgid "Import"
 msgstr "Importer"
 

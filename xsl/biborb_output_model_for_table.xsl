@@ -27,8 +27,8 @@
  * Description:
  *
  *  This file describe the transformation of a bibtex entry into HTML.
- *  Several parameters are taken into account to create an output:
- *		- 
+ *  Several parameters are taken into account to create an output.
+ *	
  *
 -->
 <xsl:stylesheet
@@ -89,6 +89,12 @@
 					<xsl:call-template name="link2bibtex">
 						<xsl:with-param name="id" select="@id"/>
 					</xsl:call-template>
+                    <!-- longnotes. Same behavior as abstract. -->
+                    <xsl:if test=".//bibtex:longnotes">
+						<xsl:call-template name="longnotes">
+							<xsl:with-param name="id" select="@id"/>
+						</xsl:call-template>
+					</xsl:if>
 				</div>
 				<!-- end of the div 'bibtex_misc' -->
 				
@@ -101,7 +107,7 @@
 						<!-- display images if necessary: $display_images!=null -->
 						<xsl:if test="$display_images">
 							<a href="./bibindex.php?mode=update&amp;id={@id}">
-								<img src="./data/images/{$edit-image}" alt='BIBORB_OUTPUT_EDIT_ALT' title='BIBORB_OUTPUT_EDIT_TITLE'/>
+								<img src="data/images/{$edit-image}" alt='BIBORB_OUTPUT_EDIT_ALT' title='BIBORB_OUTPUT_EDIT_TITLE'/>
 							</a>
 						</xsl:if>
 						<!-- display text if necessary: $display_text != null -->
@@ -116,7 +122,7 @@
 						<!-- Delete action -->
 						<xsl:if test="$display_images">
 							<a href="./bibindex.php?mode={$bibindex_mode}&amp;id={@id}&amp;action=delete&amp;{$extra_get_param}">
-								<img src="./data/images/{$delete-image}" alt='BIBORB_OUTPUT_DELETE_ALT' title='BIBORB_OUTPUT_DELETE_TITLE' />
+								<img src="data/images/{$delete-image}" alt='BIBORB_OUTPUT_DELETE_ALT' title='BIBORB_OUTPUT_DELETE_TITLE' />
 							</a>
 						</xsl:if>
 						<xsl:if test="$display_text">                        
@@ -134,7 +140,7 @@
 						<xsl:if test="$display_basket_actions = '' and contains($inbasket,'notinbasket')">
 							<xsl:if test="$display_images">
 								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}#{@id}">
-									<img src="./data/images/{$add-basket-image}" alt='BIBORB_OUTPUT_ADD_BASKET_ALT' title='BIBORB_OUTPUT_ADD_BASKET_TITLE' />
+									<img src="data/images/{$add-basket-image}" alt='BIBORB_OUTPUT_ADD_BASKET_ALT' title='BIBORB_OUTPUT_ADD_BASKET_TITLE' />
 								</a>
 							</xsl:if>
 							<xsl:if test="$display_text">
@@ -148,7 +154,7 @@
 						<xsl:if test="$display_basket_actions != '' or not( contains($inbasket,'notinbasket'))">
 							<xsl:if test="$display_images">
 								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}#{@id}">
-									<img src="./data/images/{$remove-basket-image}" alt='BIBORB_OUTPUT_REMOVE_BASKET_ALT' title='BIBORB_OUTPUT_REMOVE_BASKET_TITLE' />
+									<img src="data/images/{$remove-basket-image}" alt='BIBORB_OUTPUT_REMOVE_BASKET_ALT' title='BIBORB_OUTPUT_REMOVE_BASKET_TITLE' />
 								</a>
 							</xsl:if>
 							<xsl:if test="$display_text">
@@ -200,6 +206,17 @@
         <tr>
             <td class="bibtex_keywords">
                 <xsl:apply-templates select=".//bibtex:keywords"/>
+            </td>
+        </tr>
+        
+        <!--
+            7th row: longnotes
+        -->
+        <tr>
+            <td class="bibtex_longnotes">
+                <xsl:call-template name="bibtex:longnotes">
+                    <xsl:with-param name="id" select="@id"/>
+                </xsl:call-template>
             </td>
         </tr>
         
@@ -309,7 +326,7 @@
 			<!-- if javascript is supported -->
             <script type="text/javascript">
                 <xsl:comment><![CDATA[
-                    document.write("<a href=\"javascript:toggle_abstract(\'abs_]]><xsl:value-of select="$id"/><![CDATA[\')\"><img src=\"data/images/stock_about-16.png\" alt=\'BIBORB_OUTPUT_ABSTRACT_ALT\' title=\'BIBORB_OUTPUT_ABSTRACT_TITLE\' /></a>");]]>
+                    document.write("<a href=\"javascript:toggle_element(\'abs_]]><xsl:value-of select="$id"/><![CDATA[\')\"><img src=\"data/images/]]><xsl:value-of select='$abstract-image'/><![CDATA[\" alt=\'BIBORB_OUTPUT_ABSTRACT_ALT\' title=\'BIBORB_OUTPUT_ABSTRACT_TITLE\' /></a>");]]>
                 </xsl:comment>
 				<!-- easy to insert javasacript in XSL, isn'it? :-D -->
             </script>
@@ -327,7 +344,7 @@
 		<xsl:if test="$display_text">
             <script type="text/javascript">
                 <xsl:comment><![CDATA[
-                    document.write("<a href=\"javascript:toggle_abstract(\']]><xsl:value-of select="$id"/><![CDATA[\')\" title=\'BIBORB_OUTPUT_ABSTRACT_TITLE\'>BIBORB_OUTPUT_ABSTRACT_ALT</a>");]]>
+                    document.write("<a href=\"javascript:toggle_element(\'abs_]]><xsl:value-of select="$id"/><![CDATA[\')\" title=\'BIBORB_OUTPUT_ABSTRACT_TITLE\'>BIBORB_OUTPUT_ABSTRACT_ALT</a>");]]>
                 </xsl:comment>
             </script>
             <noscript>
@@ -340,6 +357,54 @@
         </xsl:if>
     </xsl:template>
     
+    
+    <!--
+        Some javascript here to display the longnotes. 
+		If javascript is not supported, another page is generated to display 
+		the longnotes of the given entry.
+		If supported, clicking on the longnotes link will (un)hide the longnotes.
+    -->
+    <xsl:template name="longnotes">
+		<!-- pass the id to know to which entry apply the javascript -->
+        <xsl:param name="id"/>
+		
+		<!-- the icone version -->
+        <xsl:if test="$display_images">
+			<!-- if javascript is supported -->
+            <script type="text/javascript">
+                <xsl:comment><![CDATA[
+                    document.write("<a href=\"javascript:toggle_element(\'longnotes_]]><xsl:value-of select="$id"/><![CDATA[\')\"><img src=\"data/images/]]><xsl:value-of select='$info-image'/><![CDATA[\" alt=\'BIBORB_OUTPUT_LONGNOTES_ALT\' title=\'BIBORB_OUTPUT_LONGNOTES_TITLE\' /></a>");]]>
+                </xsl:comment>
+				<!-- easy to insert javasacript in XSL, isn'it? :-D -->
+            </script>
+			<!-- if javascript not supported -->
+            <noscript>
+                <div style="display:inline;">
+                    <a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}">
+                        <img src="data/images/{$info-image}" alt='BIBORB_OUTPUT_LONGNOTES_ALT' title='BIBORB_OUTPUT_LONGNOTES_TITLE'/>
+                    </a>
+                </div>
+            </noscript>
+        </xsl:if>
+        
+		<!-- the text version -->
+		<xsl:if test="$display_text">
+            <script type="text/javascript">
+                <xsl:comment><![CDATA[
+                    document.write("<a href=\"javascript:toggle_element(\'longnotes_]]><xsl:value-of select="$id"/><![CDATA[\')\" title=\'BIBORB_OUTPUT_LONGNOTES_TITLE\'>BIBORB_OUTPUT_LONGNOTES_ALT</a>");]]>
+                </xsl:comment>
+            </script>
+            <noscript>
+                <div>
+                    <a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}" title='BIBORB_OUTPUT_LONGNOTES_TITLE'>
+                        BIBORB_OUTPUT_LONGNOTES_ALT
+                    </a>
+                </div>
+            </noscript>
+        </xsl:if>
+    </xsl:template>
+    
+    
 	<!--
 		Template to generate a link to the bibtex version of the entry.
 	-->
@@ -348,7 +413,7 @@
         <xsl:param name="id"/>
 		<!-- image version -->
         <xsl:if test="$display_images">
-            <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}" onclick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=400,resizable=yes'); return false;">
+            <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}" onclick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;">
                 <img src="data/images/{$bibtex-image}" alt='BIBORB_OUTPUT_BIBTEX_ALT' title='BIBORB_OUTPUT_BIBTEX_TITLE' />
             </a>
         </xsl:if>
@@ -391,6 +456,24 @@
                 </span>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+    
+    <!--
+		Template for the longnotes field.
+		Display the longnotes, preserving empty lines.
+	-->
+    <xsl:template name="bibtex:longnotes">
+		<!-- the bibtex id -->
+        <xsl:param name="id"/>
+        <!-- create the longnotes but hide it  -->
+        <span id="longnotes_{$id}" style="display:none;">
+            <!-- replacing text empty lines with HTML empty lines -->
+            <xsl:call-template name="string-replace">
+                <xsl:with-param name="string" select="translate(string(.//bibtex:longnotes),'&#xD;','@#xA;')"/>
+                <xsl:with-param name="from" select="'&#xA;'" />
+                <xsl:with-param name="to" select="'&lt;BR/>'" />
+            </xsl:call-template>
+        </span>
     </xsl:template>
 
 	

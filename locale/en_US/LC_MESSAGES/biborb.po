@@ -704,6 +704,13 @@ msgstr "link"
 msgid "BIBORB_OUTPUT_LINK_TITLE"
 msgstr "Go to an internal link"
 
+msgid "BIBORB_OUTPUT_LONGNOTES_ALT"
+msgstr "Remarks"
+
+msgid "BIBORB_OUTPUT_LONGNOTES_TITLE"
+msgstr "Display remarks for this reference"
+
+
 msgid "Import"
 msgstr ""
 
