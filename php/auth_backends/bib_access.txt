@@ -1,1 +1,16 @@
-new-test:testuser*m
+# biborb access configuration file
+#
+# example:
+#   to let userA can add (a), delete (d) or modify (m) references in the bib1
+#   bibliography database, and userB only modify them, use the following:
+#
+#       bib1:userA*adm,userB*a
+# 
+#   to let any anonym users add references to a bibliography, use:
+#
+#       bib1:*a
+#
+#   to let userA get all priviliges on all bibliographies, use:
+#      
+#       :userA*adm
+#

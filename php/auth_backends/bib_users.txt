@@ -1,2 +1,15 @@
-testuser:zZr5f6icuqhXI,0
-admin:admin,1
+# biborb user configuration file
+#
+# example:
+#   to define userA with passwordA as an administrator, and userB with
+#   passwordB as a normal user, use
+#
+#       userA:passwordA,1
+#       userB:passwordB,0
+#
+#   the passwords can also be crypt()'ed (for instance with mkpasswd from the
+#   whois package, or by visiting
+#       http://localhost/biborb/php/auth_backends/crypt_password.php
+#
+#       userC:8W1Dx5Jba/BoA,0
+#

@@ -37,10 +37,16 @@
 
             bib_access.txt contains authorizations
                 ex:
+                    :userC*adm,userD*m
                     bib1:userA*adm,userB*a
+                    bib2:*m
+                    
 
             userA can add (a), delete (d) or modify (m) references
             userB can only add new references.
+            userC gets all privileges on all bibliographies
+            userD gets only modification privilege on all bibliographies
+            all anonym users can modify references of bibliography bib2
 
     Lines starting with # are considered as comments
 */
@@ -136,7 +142,7 @@ class Auth
         $users = array();
         foreach($content as $line){
             $line = trim($line);
-            if($line != '' && $line[0] != '#'){
+            if($line != "" && $line[0] != '#'){
                 //match for all bibliographies
                 if(preg_match("/:(.*)/",$line,$match)){
                     $data = explode(',',$match[1]);
@@ -146,7 +152,7 @@ class Auth
                     }
                 }
                 // match for a given bibliography
-                else if(preg_match("/(.*)\s*:(.*)/",$line,$match)){
+                else if(preg_match("/(.*)\s*:\s*(.*)/",$line,$match)){
                     if($match[1] == $bibname){
                         $data = explode(',',$match[2]);
                         foreach($data as $user){
@@ -157,6 +163,7 @@ class Auth
                 }
             }
         }
+
         return $users;
     }
 }
