@@ -230,40 +230,10 @@ class BibORB_DataBase {
     
     /**
         Search in given fields, a given value.
-        $fields is an array containing the name of fields to look at.
-     Returns an XML representation.
-    */
-    function search_entries($value,$fields){
-    }
-    
-    /**
-        Search in given fields, a given value.
      $fields is an array containing the name of fields to look at.
      Returns an array of BibTeX ids.
     */
     function ids_for_search($value,$fields){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-        $xml_content = $this->search_entries($value,$fields);    
-        $xsl_content = load_file("./xsl/extract_ids.xsl");
-        $xsl_content = str_replace("XPATH_QUERY",'//bibtex:entry',$xsl_content);
-        $param = array('sort' => $this->sort,
-                       'sort_order' => $this->sort_order);
-        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        $res = explode('|',$res);
-        if($res[0] == ""){
-            return array();
-        }
-        else{
-            return $res;
-        }
-    }
-    
-    /**
-        Advanced search function
-     Returns a XML representation
-    */
-    function advanced_search_entries($searchArray){
     }
     
     /**
@@ -273,13 +243,6 @@ class BibORB_DataBase {
     function ids_for_advanced_search($searchArray){
     }
 
-    /**
-        XPath search
-     Returns a XML representation
-     */
-    function xpath_search($xpath_query){
-    }
-    
     /**
         XPath search
      Returns an array of BibTeX ids.
