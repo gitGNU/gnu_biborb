@@ -1298,7 +1298,9 @@ function bibindex_update_entry(){
 	$param['id'] = $_GET['id'];
 	$param['modelfile'] = "file://".realpath("./xsl/model.xml");
 	$param['update'] = "true";
+
 	$thetype = trim($xsltp->transform($entry,load_file("./xsl/get_bibtex_type.xsl")));
+
     $param['type'] = $thetype;
     $fields = $xsltp->transform($entry,load_file("./xsl/xml2htmledit.xsl"),$param);
 	$xsltp->free();
@@ -1307,9 +1309,9 @@ function bibindex_update_entry(){
 	$glist = $_SESSION['bibdb']->groups();
     // put the groups HTML select in the form
 	array_push($glist,"");
-	$groups=xhtml_select("groupslist",1,$glist,"","addGroup()");
+	$groups = xhtml_select("groupslist",1,$glist,"","addGroup()");
 	$fields = str_replace("#XHTMLGROUPSLIST",$groups,$fields);
-	
+
 	$listtypes = xhtml_select('bibtex_type',1,$types,$thetype);
 	
 	$theid = $_GET['id'];

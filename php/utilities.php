@@ -121,7 +121,7 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
     }
     $result .= ">";
     foreach($tab as $val){
-        if(!strcmp($val,$selected)){
+        if($val == $selected){
             $result .= "<option selected='selected'>$val</option>";
         }
         else{

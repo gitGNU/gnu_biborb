@@ -41,22 +41,19 @@
 	<!-- include generic parameters -->
 	<xsl:include href="xsl/parameters.xsl"/>
 
-	<xsl:template match="/">
+	<xsl:template match="/listofids">
 		<!-- load the xml file into a variable -->
         <xsl:variable name="bibfile" select="document($bibnameurl)" />
         <!-- get all ids of entries to display -->
         <xsl:variable name="ids" select="//id"/>
-		
-		<xsl:element name="bibtex:file">
-            <xsl:for-each select="$ids">
-                <xsl:copy>
-                    <xsl:apply-templates select="$bibfile//bibtex:entry[@id=current()]"/>
-                </xsl:copy>
+        <xsl:element name="bibtex:file">
+            <xsl:for-each select="$bibfile//bibtex:entry[@id=$ids]">
+                <xsl:element name='bibtex:entry'>
+                    <xsl:attribute name='id'><xsl:value-of select='@id'/></xsl:attribute>
+                    <xsl:apply-templates select='./*'/>
+                </xsl:element>
             </xsl:for-each>
-			<!--<xsl:copy>
-				<xsl:apply-templates select="$bibfile//bibtex:entry[@id=$ids]"/>
-			</xsl:copy>-->
-		</xsl:element>
+        </xsl:element>
 	</xsl:template>
 	
 	<!-- Hand copy to be sure to copy namespaces -->
