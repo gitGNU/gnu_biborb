@@ -380,7 +380,7 @@ function bibindex_menu()
     $html .= "<ul>";
     $html .= "<li><a href='".bibindex_href('displaybasket')."'>Display Basket</a></li>";
     if($_SESSION['usermode']=='admin' || $GLOBALS['disable_authentication']){
-        $html .= "<li><a href='".bibindex_href('groupmodif').".'>Group Modification</a></li>";
+        $html .= "<li><a class='admin' href='".bibindex_href('groupmodif').".'>Group Modification</a></li>";
     }
     $html .= "<li><a href='action_proxy.php?action=exportbaskettobibtex'>Export to BibTeX</a></li>";
     $html .= "<li><a href='action_proxy.php?action=exportbaskettohtml'>Export to HTML</a></li>";
@@ -401,9 +401,9 @@ function bibindex_menu()
         $html .= "<li><a href='".bibindex_href('login')."'>Login</a></li>";
     }
     if($_SESSION['usermode']=='admin'){
-        $html .= "<li><a href='".bibindex_href('addentry')."'>Add an entry</a></li>";
-        $html .= "<li><a href='".bibindex_href('update_xml_from_bibtex')."'>Update from BibTeX</a></li>";
-        $html .= "<li><a href='".bibindex_href('update_bibtex_from_xml')."'>Update from XML</a></li>";
+        $html .= "<li><a class='admin' href='".bibindex_href('addentry')."'>Add an entry</a></li>";
+        $html .= "<li><a class='admin' href='".bibindex_href('update_xml_from_bibtex')."'>Update from BibTeX</a></li>";
+        $html .= "<li><a class='admin' href='".bibindex_href('update_bibtex_from_xml')."'>Update from XML</a></li>";
     }
     if($_SESSION['usermode']=='admin' && !$GLOBALS['disable_authentication']){
         $html .= "<li><a href='".bibindex_href('logout')."'>Logout</a></li>";

@@ -367,8 +367,8 @@ function index_menu(){
         $html .= "<li><a href='index.php?mode=login'>Login</a></li>";
     }
     if($_SESSION['usermode']=='admin'){
-        $html .= "<li><a href='index.php?mode=add_database'>Add a bibliography</a></li>";
-        $html .= "<li><a href='index.php?mode=delete_database'>Delete a bibliography</a></li>";
+        $html .= "<li><a class='admin' href='index.php?mode=add_database'>Add a bibliography</a></li>";
+        $html .= "<li><a class='admin' href='index.php?mode=delete_database'>Delete a bibliography</a></li>";
     }
     if($_SESSION['usermode']=='admin' && !$GLOBALS['disable_authentication']){
         $html .= "<li><a href='index.php?mode=logout'>Logout</a></li>";
