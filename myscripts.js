@@ -1,26 +1,9 @@
-function toggle_abstract(id)
-{
-        if(document.getElementById){
-            var x = document.getElementById(id);
-            if(x.style.display == 'none'){
-                x.style.display = 'block';
-            }
-            else{
-                x.style.display = 'none';
-            }
-        }
-}
-
-function toggle_element(id)
-{
+/**
+    Display hide an HTML element.
+*/
+function toggle_element(id){
     if(document.getElementById){
-        var x = document.getElementById(id);
-        if(x.style.display == 'none'){
-            x.style.display = 'block';
-        }
-        else{
-            x.style.display = 'none';
-        }
+        document.getElementById(id).style.display = (x.style.display == 'none') ? 'block' : 'none';
     }
 }
 
@@ -28,8 +11,8 @@ function toggle_element(id)
 // Added if not already present.
 function addGroup()
 {
-    var groups = document.fields._groups;
-    var groupslist = document.fields.groupslist;
+    var groups = document.forms['f_bibtex_entry'].elements['groups'];
+    var groupslist = document.forms['f_bibtex_entry'].elements['groupslist'];
     var groupArray = groups.value.split(",");
     var addGroup = groupslist.options[groupslist.selectedIndex].value;
     
