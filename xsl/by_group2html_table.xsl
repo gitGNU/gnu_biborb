@@ -35,7 +35,7 @@
     exclude-result-prefixes="bibtex"
     version="1.0">
   
-    <xsl:output method="xml" encoding="iso-8859-1"/>
+    <xsl:output method="html" encoding="iso-8859-1"/>
     
     <!-- session name and id -->
     <xsl:param name="session_name"/>

@@ -36,7 +36,7 @@
     exclude-result-prefixes="bibtex"
     version="1.0"> 
    
-    <xsl:output method="xml" encoding="iso-8859-1"/>
+    <xsl:output method="html" encoding="iso-8859-1"/>
     
     <!-- Possible input parameters -->
     <xsl:param name="bibname"/>
