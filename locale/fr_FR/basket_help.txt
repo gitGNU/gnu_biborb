@@ -13,14 +13,10 @@ Ce menu donne accès aux fonctions du panier. Vous pouvez sélectionner des référe
 			<td>Classer les références en utilisant des "groupes".</td>
 		</tr>
 		<tr class='colored'>
-			<th>Exporter vers BibTeX</th>
-			<td>Exporter la sélection au format <acronym>BibTeX</acronym>.</td>
+			<th>Exporter...</th>
+			<td>Exporter la sélection au format <acronym>BibTeX</acronym>,<acronym>RIS</acronym> ou <acronym>DocBook</acronym>.</td>
 		</tr>
-		<tr>
-			<th>Exporter vers HTML</th>
-			<td>Exporter la sélection au format <acronym>HTML</acronym>.</td>
-		</tr>
-        <tr class='colored'>
+        <tr>
 			<th>Vider</th>
 			<td>Vider le panier.</td>
 		</tr>

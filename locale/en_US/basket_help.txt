@@ -13,14 +13,10 @@ This menu gives access to the basket functions. You can select some entries and 
 			<td>Classify entries in groups.</td>
 		</tr>
 		<tr class='colored'>
-			<th>Export to BibTeX</th>
-			<td>Export the selection to BibTeX.</td>
+			<th>Export... </th>
+			<td>Export the selection to BibTeX, RIS or DocBook.</td>
 		</tr>
-		<tr>
-			<th>Export to HTML</th>
-			<td>Export the selection to HTML.</td>
-		</tr>
-        <tr class='colored'>
+        <tr>
 			<th>Reset Basket</th>
 			<td>Delete the basket.</td>
 		</tr>
