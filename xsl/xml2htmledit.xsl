@@ -219,7 +219,7 @@
                                 </td>
                             </xsl:when>
                             <!-- groups -->
-                            <xsl:when test="fields = 'groups'">
+			    <xsl:when test="$field = 'groups'">
                                 <td class='additional-value'>
                                     <xsl:variable name="val">
                                         <xsl:for-each select="$bibfile//*[local-name() = 'group']">

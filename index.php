@@ -159,7 +159,7 @@ function index_login(){
     // create the menu
     $html .= index_menu();
     // set the title
-    $title = "Login";
+    $title = "<h2>Login</h2>";
     // create the main data 
     $html .= main($title,login_form("index.php"));
     // close the html
