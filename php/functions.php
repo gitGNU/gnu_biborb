@@ -37,8 +37,8 @@
  * load variables and functions
  */
 require_once("config.php");
-require_once("utilities.php");
-require_once("bibtex.php");
+require_once("php/utilities.php");
+require_once("php/bibtex.php");
 
 
 /**
