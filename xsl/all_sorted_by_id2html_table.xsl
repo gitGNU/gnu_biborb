@@ -52,6 +52,22 @@
     <xsl:param name="display_text"/>
 
     <xsl:template match="/">
+		<!-- count how many entries are present -->
+		<xsl:variable name="cpt" select="count(//bibtex:entry)"/>
+		
+		<!-- add a link to add all entries -->
+        <xsl:variable name="ids">
+            <xsl:for-each select="//bibtex:entry">
+                <xsl:value-of select="@id"/>
+                <xsl:if test="position() != last()">*</xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+		<xsl:if test="$cpt != 0">
+            <div class="addtobasket">
+                Add all entries to basket <a href="action_proxy.php?action=add_to_basket&amp;id={$ids}"><img src="./data/images/add.png" alt="add" /></a>
+            </div>
+		</xsl:if>
+		
         <!-- start the table -->
         <table id="bibtex_table">
             <tbody>

@@ -41,10 +41,11 @@
         <xsl:variable name="theid" select="@id"/>
         <tr>
             <td class="bibtex_start">
-                <span class="bibtex_key">
+                <div class="bibtex_key">
                     <xsl:value-of select="@id"/>
-                </span>
-
+                </div>
+				
+				<div class="bibtex_misc">
                 <xsl:if test=".//bibtex:abstract and $abstract != 'true'">
                     <xsl:call-template name="abstract">
                         <xsl:with-param name="id" select="$theid"/>
@@ -58,11 +59,13 @@
                 <xsl:call-template name="link2bibtex">
                     <xsl:with-param name="id" select="$theid"/>
                 </xsl:call-template>
-
+				</div>
+				
                 <xsl:variable name="getval">
                     <xsl:if test="$session_name != ''"><xsl:value-of select="$session_name"/>=<xsl:value-of select="$session_id"/>&amp;id=<xsl:value-of select="@id"/>&amp;mode=edit</xsl:if>
                 </xsl:variable>
-
+				
+				<div class="command">
                 <!-- display when admin mode -->
                 <xsl:if test="$mode='admin'">
                     <xsl:if test="$display_images">
@@ -86,6 +89,7 @@
                         </a>
                     </xsl:if>
                 </xsl:if>
+
                 
                 <!-- display if basket -->
                 <xsl:if test="$basket = '' and $basket != 'no'">
@@ -100,6 +104,7 @@
                         </a>
                     </xsl:if>
                 </xsl:if>
+
                 
                 <xsl:if test="$basket != '' and $basket != 'no'">
                     <xsl:if test="$display_images">
@@ -113,6 +118,7 @@
                         </a>
                     </xsl:if>
                 </xsl:if>
+				</div>
             </td>
         </tr>
         <!-- second row for this entry -->
