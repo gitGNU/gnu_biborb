@@ -142,7 +142,6 @@ class BibTeX_Tools
         Convert a XML string to an array
      */
     function xml_to_bibtex_array($xmlstring){
-        echo "<pre>";
         // result
         $res = array();
         $xml = str_replace("\n","",$xmlstring);
@@ -157,11 +156,14 @@ class BibTeX_Tools
             $ref_tab['type'] = $matches[1];
 
             // get groups value
-            preg_match("/<bibtex:groups>(.*)<\/bibtex:groups>/U",$matches[2],$groups);
-            preg_match_all("/<bibtex:group>(.*)<\/bibtex:group>/U",$groups[1],$group);
-            $ref_tab['groups'] = implode(',',$group[1]);
-            $bibtex_fields = str_replace($groups[0],"",$matches[2]);
-
+            $bibtex_fields = $matches[2];
+            preg_match("/<bibtex:groups>(.*)<\/bibtex:groups>/U",$bibtex_fields,$groups);
+            if(isset($groups[1])){
+                preg_match_all("/<bibtex:group>(.*)<\/bibtex:group>/U",$groups[1],$group);
+                $ref_tab['groups'] = implode(',',$group[1]);
+                $bibtex_fields = str_replace($groups[0],"",$bibtex_fields);
+                
+            }
             preg_match_all("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/U",$bibtex_fields,$fields);
             // analyse each fields
             for($j=0;$j<count($fields[1]);$j++){

@@ -130,7 +130,7 @@
                         </xsl:if>
                     
                         <!-- Own = borrow -->
-                        <xsl:if test=".//bibtex:own='borrow'">
+                        <xsl:if test=".//bibtex:own='borrowed'">
                             <xsl:if test="$display_images">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
@@ -185,7 +185,7 @@
                             <xsl:if test="$display_images">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=borrow&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=borrowed&amp;id={@id}&amp;{$extra_get_param}#{@id}">
                                     <img src="data/images/{$notown-image}" alt='BIBORB_OUTPUT_NOTOWN_ALT' title='BIBORB_OUTPUT_NOTOWN_TITLE'/></a>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -196,7 +196,7 @@
                             <xsl:if test="$display_text">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=borrow&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_NOTOWN_TITLE'>BIBORB_OUTPUT_NOTOWN_ALT</a>
+                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=borrowed&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_NOTOWN_TITLE'>BIBORB_OUTPUT_NOTOWN_ALT</a>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <span class="shelf_mode" title='BIBORB_OUTPUT_NOTOWN_TITLE'>BIBORB_OUTPUT_NOTOWN_ALT</span>
@@ -207,11 +207,11 @@
                         
                         
                         <!-- Read = yes -->
-                        <xsl:if test=".//bibtex:read='yes'">
+                        <xsl:if test=".//bibtex:read='read'">
                             <xsl:if test="$display_images">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=no&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=notread&amp;id={@id}&amp;{$extra_get_param}#{@id}">
                                     <img src="data/images/{$read-image}" alt='BIBORB_OUTPUT_READ_ALT' title='BIBORB_OUTPUT_READ_TITLE'/>
                                 </a>
                                 </xsl:when>
@@ -223,7 +223,7 @@
                             <xsl:if test="$display_text">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=no&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READ_TITLE'>BIBORB_OUTPUT_READ_ALT</a>
+                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=notread&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READ_TITLE'>BIBORB_OUTPUT_READ_ALT</a>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <span class="shelf_mode" title='BIBORB_OUTPUT_READ_TITLE'>BIBORB_OUTPUT_READ_ALT</span>
@@ -233,11 +233,11 @@
                         </xsl:if>
                         
                         <!-- Read = next -->
-                        <xsl:if test=".//bibtex:read='next'">
+                        <xsl:if test=".//bibtex:read='readnext'">
                             <xsl:if test="$display_images">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=yes&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=read&amp;id={@id}&amp;{$extra_get_param}#{@id}">
                                     <img src="data/images/{$readnext-image}" alt='BIBORB_OUTPUT_READNEXT_ALT' title='BIBORB_OUTPUT_READNEXT_TITLE'/>
                                 </a>
                                 </xsl:when>
@@ -248,7 +248,7 @@
                             <xsl:if test="$display_text">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=yes&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READNEXT_TITLE'>BIBORB_OUTPUT_READNEXT_ALT</a>
+                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=read&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READNEXT_TITLE'>BIBORB_OUTPUT_READNEXT_ALT</a>
                                 </xsl:when>
                                 <xsl:otherwise>
                                 <span class="shelf_mode" title='BIBORB_OUTPUT_READNEXT_TITLE'>BIBORB_OUTPUT_READNEXT_ALT</span>
@@ -262,7 +262,7 @@
                             <xsl:if test="$display_images">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=next&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=readnext&amp;id={@id}&amp;{$extra_get_param}#{@id}">
                                     <img src="data/images/{$notread-image}" alt='BIBORB_OUTPUT_NOTREAD_ALT' title='BIBORB_OUTPUT_NOTREAD_TITLE'/>
                                 </a>
                                 </xsl:when>
@@ -274,7 +274,7 @@
                             <xsl:if test="$display_text">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=next&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READ_TITLE'>BIBORB_OUTPUT_NOTREAD_ALT</a>
+                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=readnext&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READ_TITLE'>BIBORB_OUTPUT_NOTREAD_ALT</a>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <span class="shelf_mode" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_readstatus&amp;readstatus=next&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_READ_TITLE'>BIBORB_OUTPUT_NOTREAD_ALT</span>

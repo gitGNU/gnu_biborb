@@ -1305,10 +1305,19 @@ function bibindex_add_entry($type){
     $param = array("typeentry"=>$type);
     $fields = $xsltp->transform($xml_content,$xsl_content,$param);
     $xsltp->free();
+    
+    // get the list of available groups
     $glist = $_SESSION['bibdb']->groups();
     array_push($glist,"");
     $groups=xhtml_select("groupslist",1,$glist,"","addGroup()");
 	$fields = str_replace("#XHTMLGROUPSLIST",$groups,$fields);
+    
+    // read status and ownership
+    $readstatus = read_status_html_select("read","notread");
+    $ownership = ownership_html_select("own","notown");
+    $fields = str_replace("#XHTMLREADSTATUS",$readstatus,$fields);
+    $fields = str_replace("#XHTMLOWNERSHIP",$ownership,$fields);
+    
     $html = bibheader("");
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = msg("BIBINDEX_ADD_ENTRY_TITLE");
@@ -1352,6 +1361,7 @@ function bibindex_update_entry(){
 
     $param['type'] = $thetype;
     $fields = $xsltp->transform($entry,load_file("./xsl/xml2htmledit.xsl"),$param);
+    $currentRef = $_SESSION['bibdb']->entry_with_id($_GET['id']);
 	$xsltp->free();
     
     // get existent groups
@@ -1361,6 +1371,15 @@ function bibindex_update_entry(){
 	$groups = xhtml_select("groupslist",1,$glist,"","addGroup()");
 	$fields = str_replace("#XHTMLGROUPSLIST",$groups,$fields);
 
+    // read status and ownership
+    $bt = new BibTeX_Tools();
+    $val = $bt->xml_to_bibtex_array($currentRef);
+    $val = $val[0];
+    $readstatus = read_status_html_select("read",(isset($val['read']) ? $val['read'] : 'notread'));
+    $ownership = ownership_html_select("own",(isset($val['own']) ? $val['own'] : 'notown'));
+    $fields = str_replace("#XHTMLREADSTATUS",$readstatus,$fields);
+    $fields = str_replace("#XHTMLOWNERSHIP",$ownership,$fields);
+    
 	$listtypes = xhtml_select('bibtex_type',1,$types,$thetype);
 	
 	$theid = $_GET['id'];

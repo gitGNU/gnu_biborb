@@ -114,7 +114,7 @@
         
         <fieldset class="additional">
             <legend><xsl:processing-instruction name="php">echo msg("BIBORB_OUTPUT_ADDITIONAL_FIELDS");</xsl:processing-instruction></legend>
-            <xsl:for-each select="entry[@type=$typeentry]/additional/*">
+            <xsl:for-each select="entry[@type=$typeentry]/additional/*[local-name(.) != 'read' and local-name(.) != 'own']">
                 <label title='{name()}'><xsl:processing-instruction name="php">echo msg("<xsl:value-of select="name()"/>");</xsl:processing-instruction>:
                     <xsl:if test="name() = 'website'">http://</xsl:if>
                 </label>
@@ -136,6 +136,15 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each>
+            <!-- ReadStatus and ownership -->
+            <label title='read'>
+                <xsl:processing-instruction name="php">echo msg("Read Status");</xsl:processing-instruction>:
+            </label>
+            #XHTMLREADSTATUS <br/>
+            <label title='own'>
+                <xsl:processing-instruction name="php">echo msg("Ownership");</xsl:processing-instruction>:
+            </label>
+            #XHTMLOWNERSHIP <br/>
         </fieldset>
   </xsl:template>
   
