@@ -656,27 +656,26 @@ function bibindex_display_search(){
     $html .= bibindex_menu($_SESSION['bibdb']->name());
 	
 	
-	$main_content = "<form action='bibindex.php' method='get'>";
+	$main_content = "<form action='bibindex.php' method='get' style='text-align:center'>";
 	$main_content .= "<fieldset style='border:none'>";
 	$main_content .= "<input type='hidden' name='mode' value='displaysearch' />";
 	$main_content .= "<input class='misc_input' name='search' size='40' value='".$searchvalue."' />";
 	$main_content .= "<input class='misc_button' type='submit' value='Search' /><br/>";
-	
-	$main_content .= "<table style='margin:auto'>";
-	$main_content .= "<caption style='font-weight:bold'>Search in fields:</caption>";
+	//	$main_content .= "<span style='font-weight:bold'>Search in fields:</span>";
+	$main_content .= "<table style='margin:auto;text-align:left;'>";
 	$main_content .= "<tbody>";
 	$main_content .= "<tr>";
-	$main_content .= "<td><input type='checkbox' name='author' value='1'";
+	$main_content .= "<td style='width:80px;'><input type='checkbox' name='author' value='1'";
 	if(array_key_exists('author',$_GET)){
 		$main_content .= "checked='checked'";
 	}
 	$main_content .= " />Author</td>";
-	$main_content .= "<td><input type='checkbox' name='title' value='1' ";
+	$main_content .= "<td style='width:80px;'><input type='checkbox' name='title' value='1' ";
 	if(array_key_exists('title',$_GET)){
 		$main_content .= "checked='checked'";
 	}
 	$main_content .= "/>Title</td>";
-	$main_content .= "<td><input type='checkbox' name='keywords' value='1' ";
+	$main_content .= "<td style='width:80px;'><input type='checkbox' name='keywords' value='1' ";
 	if(array_key_exists('keywords',$_GET)){
 		$main_content .= "checked='checked'";
 	}
@@ -699,8 +698,8 @@ function bibindex_display_search(){
 	$main_content .= " />Year</td>";
 	
 	$main_content .= "</tr>";
-    $main_content .=  "<tr><td>Sort by</td>";
-    $main_content .= "<td><select name='sort' size='1'>";
+    $main_content .=  "<tr style='text-align:center'><td colspan='3'>Sort by:";
+    $main_content .= "<select name='sort' size='1'>";
     
     $main_content .= "<option value='ID' ";
     $sort = null;
@@ -731,7 +730,7 @@ function bibindex_display_search(){
         $main_content .="selected='selected'";
     }
     $main_content .= ">Year</option>";
-    $main_content .= "</select></td><td/>";
+    $main_content .= "</select></td>";
     
     $main_content .= "</tr>";
 	$main_content .= "</tbody>";
