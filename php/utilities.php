@@ -74,15 +74,20 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL
     $html .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">';  
     $html .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >';
     $html .= "<head>";
+    // Charset, content type
     $html .= "<meta http-equiv='content-type' content='text/html; charset=ISO-8859-1' />";
+    // how to handle robots
     $html .= "<meta name='robots' content='noindex,nofollow'/>";
+    // define the CSS stylesheet
     if($style){
         $html .= "<link href='$style' rel='stylesheet' type='text/css'/>";
     }  
     if($title){
         $html .= "<title>$title</title>";
     }
+    // define the javascript ressource
     $html .= "<script type='text/javascript' src='./myscripts.js'></script>";
+    
     $html .= "</head>";
     $html .= "<body";
     if($bodyclass){    

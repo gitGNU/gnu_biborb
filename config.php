@@ -52,7 +52,7 @@ $session_id = "SID";
 $language = "en_US";
 
 /**
- * Display a selection of language on BibORB pages
+ * Show available languages on BibORB pages
  * TRUE/FALSE
  */
 $display_language_selection = TRUE;
@@ -62,7 +62,7 @@ $display_language_selection = TRUE;
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = TRUE;
+$disable_authentication = FALSE;
 
 /**
  *  Should a confirmation may be displayed when deleting entries
@@ -169,11 +169,20 @@ $DISPLAY_SORT=TRUE;
 
 /**
  * Default sort method: ID,title,year
+ * and order: ascending/descending
  */
 $DEFAULT_SORT="ID";
 $DEFAULT_SORT_ORDER="ascending";
+
 /**
  * Max number of references by page.
  */
 $MAX_REFERENCES_BY_PAGE=10;
+
+/**
+ * Keep an up-to-date BibTeX file.
+ * If true, each time a bibliography is modified, a BibTeX file is updated
+ * in its 'bibs' directory.
+ */
+$GEN_BIBTEX=TRUE
 ?>

@@ -90,11 +90,12 @@ $auth_table = "biborb_auth";
 */
 class Auth
 {
-    var $host;
-    var $dbuser;
-    var $pass;
-    var $dbname;
-    var $users_table;
+    var $host;          // database host
+    var $dbuser;        // a valid user for the database
+    var $pass;          // its password
+    var $dbname;        // name of the database containing BibORB tables
+    var $users_table;   // name of the table containing users data.
+    var $users_auth;    // name of the table containing authorizations data.
     
     /**
         Constructor

@@ -28,7 +28,7 @@ function toggle_element(id)
 // Added if not already present.
 function addGroup()
 {
-	var groups = document.fields._groups;
+    var groups = document.fields._groups;
     var groupslist = document.fields.groupslist;
     var groupArray = groups.value.split(",");
     var addGroup = groupslist.options[groupslist.selectedIndex].value;
@@ -102,8 +102,6 @@ function validate_add_group(lang){
         return true;
     }
 }
-
-
 
 // check if id is not empty
 function validate_new_entry_form(lang){
@@ -187,7 +185,28 @@ function validate_xpath_form(lang){
     }
 }
 
-//
+function validate_login_form(lang){
+    var msg;
+    var username = document.forms['login_form'].elements['login'].value;
+    var pass = document.forms['login_form'].elements['mdp'].value;
+    
+    if(lang == 'fr_FR'){
+		msg = "Utilisateur ou mot de passe vide!";
+	}
+	else if(lang == 'en_US'){
+		msg = "Empty username or password!";
+	}
+    
+	if(trim(username) == "" || trim(pass)==""){
+		alert(msg);
+		return false;
+	}
+    else{
+        return true;
+    }
+}
+
+// remove spaces at the beginnig and the end of a string
 function trim(str)
 {
     return str.replace(/^\s*|\s*$/g,"");

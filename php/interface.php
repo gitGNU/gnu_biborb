@@ -43,13 +43,14 @@ function index_login(){
     $html .= index_menu();
     $title = _("INDEX_MENU_LOGIN_TITLE");
 
-    $content = "<form id='login_form' action='index.php' method='post'>";
+    $content = "<form id='login_form' action='index.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")'>";
     $content .= "<fieldset>";
     $content .= "<label for='login'>"._("LOGIN_USERNAME").":</label>";
     $content .= "<input type='text' name='login' id='login' value='login'/><br/>";
     $content .= "<label for='password'>"._("LOGIN_PASSWORD").":</label>";
     $content .= "<input type='password' id='password' name='mdp' value='mdp'/><br/>";
-    $content .= "<input type='submit' name='action' value=\""._("Login")."\" class='submit'/>";
+    $content .= "<input type='hidden' name='action' value='login'/>";
+    $content .= "<input type='submit' value=\""._("Login")."\" class='submit'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     
@@ -283,7 +284,7 @@ function bibindex_details()
 
     // get the bibname
     if(!array_key_exists('bibname',$_GET)){die("No bibliography name provided");}
-    $bibdb = new BibORB_DataBase($_GET['bibname']);
+    $bibdb = new BibORB_DataBase($_GET['bibname'],$GLOBALS['GEN_BIBTEX']);
     
     // get the parameters
     $param = $GLOBALS['xslparam'];
@@ -338,13 +339,14 @@ function bibindex_login(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = _("INDEX_LOGIN_TITLE");
-    $content = "<form id='login_form' action='bibindex.php' method='post'>";
+    $content = "<form id='login_form' action='bibindex.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")' >";
     $content .= "<fieldset>";
     $content .= "<label for='login'>"._("LOGIN_USERNAME").":</label>";
     $content .= "<input type='text' name='login' id='login' value='login'/><br/>";
     $content .= "<label for='password'>"._("LOGIN_PASSWORD").":</label>";
     $content .= "<input type='password' id='password' name='mdp' value='mdp'/><br/>";
-    $content .= "<input type='submit' name='action' value=\""._("Login")."\" class='submit'/>";
+    $content .= "<input type='hidden' name='action' value='login'/>";
+    $content .= "<input type='submit' value=\""._("Login")."\" class='submit'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     
@@ -1167,7 +1169,8 @@ function bibindex_basket_modify_group(){
     $main_content = "<form id='reset_groups' action='bibindex.php' method='get'>";
     $main_content .= "<fieldset>";
 	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-	$main_content .= "<input class='submit' type='submit' name='action' value='"._("Reset")."'/> &nbsp;"._("Reset the groups field of each entry in the basket. ");
+    $main_content .= "<input type='hidden' name='action' value='reset'/>";
+	$main_content .= "<input class='submit' type='submit' value='"._("Reset")."'/> &nbsp;"._("Reset the groups field of each entry in the basket. ");
 	$main_content .= "</fieldset>";
 	$main_content .= "</form>";
 	$main_content .= "<br/>";
@@ -1178,7 +1181,8 @@ function bibindex_basket_modify_group(){
 	$main_content .= "<fieldset>";
 	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
 	$main_content .= "<label for='newgroupvalue'>"._("New group:")."</label> <input name='newgroupvalue' id='newgroupvalue' class='longtextfield'/>";
-	$main_content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Add")."'/>";
+    $main_content .= "<input type='hidden' name='action' value='add'/>";
+	$main_content .= "&nbsp;<input class='submit' type='submit' value='"._("Add")."'/>";
 	$main_content .= "</fieldset>";
 	$main_content .= "</form><br/>";
     $groups = $_SESSION['bibdb']->groups();
@@ -1190,7 +1194,8 @@ function bibindex_basket_modify_group(){
         $main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
         $main_content .= "<label for='groupvalue'>"._("Existing group:")."</label>";
         $main_content .= xhtml_select('groupvalue',1,$groups,"",null,null,"longtextfield");
-        $main_content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Add")."'/>";
+        $main_content .= "<input type='hidden' name='action' value='add'/>";
+        $main_content .= "&nbsp;<input class='submit' type='submit' value='"._("Add")."'/>";
         $main_content .= "</fieldset>";
         $main_content .= "</form>";
     }
@@ -1264,8 +1269,9 @@ function bibindex_add_entry($type){
 	$content .= $fields;
 	$content .= "<fieldset class='clean'>";
 	$content .= "<input type='hidden' name='mode' value='operationresult'/>";
-	$content .= "<input class='submit' type='submit' name='action' value='"._("Cancel")."'/>&nbsp;";
-	$content .= "<input class='submit' type='submit' name='action' value='"._("Add")."'/>";
+	$content .= "<input class='submit' type='submit' name='cancel' value='"._("Cancel")."'/>&nbsp;";
+	$content .= "<input class='submit' type='submit' name='ok' value='"._("Add")."'/>";
+    $content .= "<input type='hidden' name='action' value='add_entry'/>";
 	$content .= "</fieldset>";
 	$content .= "</form>";
 
@@ -1312,9 +1318,9 @@ function bibindex_update_entry(){
     $content .= "<fieldset>";
     $content .= "<label>"._("BibTeX type:")."</label>&nbsp;";
     $content .= $listtypes;
-    $content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Update")."'/>";
+    $content .= "<input type='hidden' name='action' value='update_type'/>";
+    $content .= "&nbsp;<input class='submit' type='submit' value='"._("Update")."'/>";
     $content .= "<input type='hidden' name='id' value='$theid'/>";
-    $content .= "<input type='hidden' name='object' value='type'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     
@@ -1322,16 +1328,17 @@ function bibindex_update_entry(){
     $content .= "<fieldset>";
     $content .= "<label>"._("BibTeX Key:")."</label>";
     $content .= "&nbsp;<input name='bibtex_key' value='$theid'/>";
-    $content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Update")."'/>";
+    $content .= "<input type='hidden' name='action' value='update_key'/>";
+    $content .= "&nbsp;<input class='submit' type='submit' value='"._("Update")."'/>";
     $content .= "<input type='hidden' name='id' value='$theid'/>";
-    $content .= "<input type='hidden' name='object' value='key'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields' id='f_bibtex_entry'>";
     $content .= $fields;
     $content .= "<fieldset class='clean'>";
-    $content .= "<input class='submit' type='submit' name='action' value='"._("Cancel")."'/>";
-    $content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Update")."'/>";
+    $content .= "<input class='submit' type='submit' name='cancel' value='"._("Cancel")."'/>";
+    $content .= "<input type='hidden' name='action' value='update_entry'/>";
+    $content .= "&nbsp;<input class='submit' type='submit' name='ok' value='"._("Update")."'/>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
@@ -1362,7 +1369,8 @@ function bibindex_import(){
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
     $content .= "<br/>";
     $content .= "<br/>";
-    $content .= "<input class='submit' type='submit' name='action' value='"._("Import")."'/>";
+    $content .= "<input type='hidden' name='action' value='import'/>";
+    $content .= "<input class='submit' type='submit' value='"._("Import")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     $content .= "<br/>";
@@ -1372,7 +1380,8 @@ function bibindex_import(){
     $content .= "<textarea name='bibval' cols='55' rows='15'></textarea>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
     $content .= "<div style='text-align:center'>";
-    $content .= "<input class='submit' type='submit' name='action' value='"._("Import")."'/>";
+    $content .= "<input type='hidden' name='action' value='import'/>";
+    $content .= "<input class='submit' type='submit' value='"._("Import")."'/>";
     $content .= "</div>";
     $content .= "</fieldset>";
     $content .= "</form>";
@@ -1426,7 +1435,8 @@ function bibindex_export_basket_to_bibtex(){
     $content .= "</tbody>";
     $content .= "</table>";
     $content .= "<div style='text-align:center'>";
-    $content .= "<input type='submit' name='action' value='"._("Export")."'/>";
+    $content .= "<input type='hidden' name='action' value='export'/>";
+    $content .= "<input type='submit' value='"._("Export")."'/>";
     $content .= "</div>";
     $content .= "</fieldset>";
     $content .= "</form>";

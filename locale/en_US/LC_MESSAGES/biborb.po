@@ -1,622 +1,620 @@
-# Language translation of BibORB.
-# Copyright (C) 2004 Guillaume Gardey
+# English localization file for BibORB
+# Copyright (C) 2004, BibORB, released under the GPL licence.
 # This file is distributed under the same license as the BibORB package.
-# Guillaume Gardey <ggardey@club-internet.fr>, 2003.
+# Guillaume Gardey <ggardey@club-internet.fr>, 2004.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-14 17:43+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: BibORB 1.3.2\n"
+"Report-Msgid-Bugs-To: ggardey@club-internet.fr\n"
+"POT-Creation-Date: 2004-09-19 21:00+0200\n"
+"PO-Revision-Date: 2004-09-19 21:00+0200\n"
+"Last-Translator: Guillaume Gardey <ggardey@club-internet.fr>\n"
+"Language-Team:  \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: bibindex.php:204 bibindex.php:231 bibindex.php:283 bibindex.php:308
+#: bibindex.php:269 bibindex.php:297 bibindex.php:354 bibindex.php:379
 msgid "Yes"
 msgstr ""
 
-#: bibindex.php:215
+#: bibindex.php:280
 #, php-format
 msgid "The following entry was deleted: <pre>%s</pre>"
 msgstr ""
 
-#: bibindex.php:220 bibindex.php:230 bibindex.php:297 bibindex.php:307
+#: bibindex.php:285 bibindex.php:295 bibindex.php:368 bibindex.php:378
 msgid "No"
 msgstr ""
 
-#: bibindex.php:225
+#: bibindex.php:290
 #, php-format
 msgid "Delete this entry? <pre>%s</pre>"
 msgstr ""
 
-#: bibindex.php:241 bibindex.php:327 interface.php:1066 interface.php:1074
-#: interface.php:1154
+#: php/interface.php:1185 php/interface.php:1198 php/interface.php:1273
 msgid "Add"
 msgstr ""
 
-#: bibindex.php:243
+#: bibindex.php:315
 msgid "No group specified!"
 msgstr ""
 
-#: bibindex.php:250 interface.php:1057
+#: php/interface.php:1173
 msgid "Reset"
 msgstr ""
 
-#: bibindex.php:258 bibindex.php:419 interface.php:1113 interface.php:1153
-#: interface.php:1216
+#: php/interface.php:1272 php/interface.php:1339
 msgid "Cancel"
 msgstr ""
 
-#: bibindex.php:275
+#: bibindex.php:346
 #, php-format
 msgid "BibTeX key <code>%s</code> already exists."
 msgstr ""
 
-#: bibindex.php:293
+#: bibindex.php:364
 #, php-format
 msgid "The following entries were deleted: <pre>%s</pre>"
 msgstr ""
 
-#: bibindex.php:302
+#: bibindex.php:373
 msgid "Delete the following entries?"
 msgstr ""
 
-#: bibindex.php:330
+#: bibindex.php:402
 msgid "ENTRY_ADDED_SUCCESS"
 msgstr "The following entry was added:"
 
-#: bibindex.php:345 interface.php:1217
+#: php/interface.php:1322 php/interface.php:1332 php/interface.php:1341
 msgid "Update"
 msgstr ""
 
-#: bibindex.php:348
+#: bibindex.php:425
 msgid "The following entry was updated:"
 msgstr ""
 
-#: bibindex.php:387
+#: bibindex.php:470
 msgid "The following entry was added to the database:"
 msgstr ""
 
-#: bibindex.php:390
+#: bibindex.php:473
 msgid "The following entries were added to the database:"
 msgstr ""
 
-#: bibindex.php:400 index.php:132 interface.php:57 interface.php:366
+#: php/interface.php:53 php/interface.php:349
 msgid "Login"
 msgstr ""
 
-#: bibindex.php:404 index.php:136
+#: bibindex.php:486 index.php:165
 msgid "LOGIN_MISSING_VALUES"
 msgstr "Username or password emty!"
 
-#: bibindex.php:414 index.php:146
+#: bibindex.php:499 index.php:175
 msgid "LOGIN_WRONG_USERNAME_PASSWORD"
 msgstr "Wrong username or password!"
 
-#: bibindex.php:426 interface.php:1315
+#: php/interface.php:1439
 msgid "Export"
 msgstr ""
 
-#: bibindex.php:521 interface.php:1114
+#: bibindex.php:626 php/interface.php:262 php/interface.php:489
+#: php/interface.php:1234
 msgid "Select"
 msgstr ""
 
-#: biborbdb.php:607
+#: php/biborbdb.php:777
 msgid "BIB_CREATION_SUCCESS"
 msgstr "The bibliography was successfully created."
 
-#: biborbdb.php:610
+#: php/biborbdb.php:780
 msgid "BIB_CREATION_ERROR"
 msgstr "Errors while creating the bibliography!"
 
-#: biborbdb.php:629
+#: php/biborbdb.php:799
 msgid "BIB_EXISTS"
 msgstr "This bibliography already exists!"
 
-#: biborbdb.php:633
+#: php/biborbdb.php:803
 msgid "BIB_EMPTY_NAME"
 msgstr "No name provided for the bibliography!"
 
-#: biborbdb.php:648
+#: php/biborbdb.php:816
 #, php-format
 msgid "Database %s moved to trash."
 msgstr ""
 
-#: biborbdb.php:649
+#: php/biborbdb.php:817
 #, php-format
 msgid "Remove %s to definitively delete it."
 msgstr ""
 
-#: functions.php:354
+#: php/functions.php:137
 msgid "Add all entries to the basket."
 msgstr ""
 
-#: functions.php:374 interface.php:707
+#: php/functions.php:160 php/interface.php:796 php/interface.php:958
 msgid "Sort by:"
 msgstr ""
 
-#: functions.php:387 functions.php:390 interface.php:682 interface.php:728
+#: php/functions.php:173 php/functions.php:176 php/interface.php:771
+#: php/interface.php:816 php/interface.php:985
 msgid "Title"
 msgstr ""
 
-#: functions.php:394 functions.php:397 interface.php:704 interface.php:738
+#: php/functions.php:180 php/functions.php:183 php/interface.php:792
+#: php/interface.php:826 php/interface.php:973
 msgid "Year"
 msgstr ""
 
-#: functions.php:404
+#: php/functions.php:206
 msgid "Sort"
 msgstr ""
 
-#: index.php:99 interface.php:110
+#: index.php:127 php/interface.php:98
 msgid "Create"
 msgstr ""
 
-#: index.php:107 interface.php:147
+#: index.php:135 php/interface.php:131
 msgid "Delete"
 msgstr ""
 
-#: interface.php:45
+#: php/interface.php:44
 msgid "INDEX_MENU_LOGIN_TITLE"
 msgstr "Authentication"
 
-#: interface.php:49 interface.php:357
+#: php/interface.php:48 php/interface.php:344
 msgid "LOGIN_USERNAME"
 msgstr "Username"
 
-#: interface.php:53 interface.php:362
+#: php/interface.php:50 php/interface.php:346
 msgid "LOGIN_PASSWORD"
 msgstr "Password"
 
-#: interface.php:93
+#: php/interface.php:88
 msgid "INDEX_CREATE_BIB_TITLE"
 msgstr "Create a new bibliography"
 
-#: interface.php:101
+#: php/interface.php:93
 msgid "INDEX_CREATE_BIBNAME"
 msgstr "Name"
 
-#: interface.php:105
+#: php/interface.php:95
 msgid "INDEX_CREATE_DESCRIPTION"
 msgstr "Description"
 
-#: interface.php:130
+#: php/interface.php:115
 msgid "INDEX_DELETE_BIB_TITLE"
 msgstr "Delete a bibliography"
 
-#: interface.php:165
+#: php/interface.php:148
 msgid "INDEX_MANAGER_HELP_TITLE"
 msgstr "Manager Help"
 
-#: interface.php:182
+#: php/interface.php:165
 msgid "INDEX_RESULTS_TITLE"
 msgstr "BibORB Message"
 
-#: interface.php:197
+#: php/interface.php:180
 msgid "INDEX_AVAILABLE_BIBS_TITLE"
 msgstr "Available bibliographies"
 
-#: interface.php:206
+#: php/interface.php:188
 msgid "INDEX_AVAILABLE_BIBS_COL_BIBNAME"
 msgstr "Name"
 
-#: interface.php:207
+#: php/interface.php:189
 msgid "INDEX_AVAILABLE_BIBS_COL_BIBDESCRIPTION"
 msgstr "Description"
 
-#: interface.php:208
+#: php/interface.php:190
 msgid "INDEX_AVAILABLE_BIBS_COL_SOURCES"
 msgstr "Sources (BibTeX)"
 
-#: interface.php:220
+#: php/interface.php:202 php/interface.php:1569 php/interface.php:1580
 msgid "Download"
 msgstr ""
 
-#: interface.php:249
+#: php/interface.php:230
 msgid "INDEX_MENU_WELCOME_HELP"
 msgstr "Welcome page (Help)"
 
-#: interface.php:249
+#: php/interface.php:230
 msgid "INDEX_MENU_WELCOME"
 msgstr "Welcome"
 
-#: interface.php:251
+#: php/interface.php:232
 msgid "INDEX_MENU_BIBS_LIST_HELP"
 msgstr "List of available bibliographies"
 
-#: interface.php:251
+#: php/interface.php:232
 msgid "INDEX_MENU_BIBS_LIST"
 msgstr "Available bibliographies"
 
-#: interface.php:260
+#: php/interface.php:241
 msgid "INDEX_MENU_MANAGER_HELP"
 msgstr "Manager (Help)"
 
-#: interface.php:260
+#: php/interface.php:241
 msgid "INDEX_MENU_MANAGER"
 msgstr "Manager"
 
-#: interface.php:263
+#: php/interface.php:244
 msgid "INDEX_MENU_LOGIN_HELP"
 msgstr "Login..."
 
-#: interface.php:263
+#: php/interface.php:244
 msgid "INDEX_MENU_LOGIN"
 msgstr "Login"
 
-#: interface.php:266
+#: php/interface.php:247
 msgid "INDEX_MENU_ADD_BIB_HELP"
 msgstr "Create a new bibliography"
 
-#: interface.php:266
+#: php/interface.php:247
 msgid "INDEX_MENU_ADD_BIB"
 msgstr "Add a new bibliography"
 
-#: interface.php:267
+#: php/interface.php:248
 msgid "INDEX_MENU_DELETE_BIB_HELP"
 msgstr "Delete a bibliography"
 
-#: interface.php:267
+#: php/interface.php:248
 msgid "INDEX_MENU_DELETE_BIB"
 msgstr "Delete a bibliography"
 
-#: interface.php:270
+#: php/interface.php:251
 msgid "INDEX_MENU_LOGOUT_HELP"
 msgstr "Logout..."
 
-#: interface.php:270
+#: php/interface.php:251
 msgid "INDEX_MENU_LOGOUT"
 msgstr "Logout"
 
-#: interface.php:353
+#: php/interface.php:341
 msgid "INDEX_LOGIN_TITLE"
 msgstr "Authentication"
 
-#: interface.php:402
+#: php/interface.php:380
 msgid "BIBINDEX_MENU_SELECT_BIB"
 msgstr "Select a bibliography"
 
-#: interface.php:408
+#: php/interface.php:408
 msgid "BIBINDEX_MENU_DISPLAY_HELP"
 msgstr "Display entries (Help)"
 
-#: interface.php:408
+#: php/interface.php:408
 msgid "BIBINDEX_MENU_DISPLAY"
 msgstr "Display"
 
-#: interface.php:410
+#: php/interface.php:410
 msgid "BIBINDEX_MENU_DISPLAY_ALL_HELP"
 msgstr "Display all entries"
 
-#: interface.php:410
+#: php/interface.php:410
 msgid "BIBINDEX_MENU_DISPLAY_ALL"
 msgstr "Display All"
 
-#: interface.php:411
+#: php/interface.php:411
 msgid "BIBINDEX_MENU_DISPLAY_BY_GROUP_HELP"
 msgstr "Display all entries by group"
 
-#: interface.php:411
+#: php/interface.php:411
 msgid "BIBINDEX_MENU_DISPLAY_BY_GROUP"
 msgstr "By Group"
 
-#: interface.php:412
 msgid "BIBINDEX_MENU_DISPLAY_SIMPLE_SEARCH_HELP"
 msgstr "A simple search engine"
 
-#: interface.php:412
 msgid "BIBINDEX_MENU_DISPLAY_SIMPLE_SEARCH"
 msgstr "Simple Search"
 
-#: interface.php:413
+#: php/interface.php:412
 msgid "BIBINDEX_MENU_DISPLAY_SEARCH_HELP"
 msgstr "Simple / Advanced search engine"
 
-#: interface.php:413
+#: php/interface.php:412
 msgid "BIBINDEX_MENU_DISPLAY_SEARCH"
 msgstr "Search"
 
-
-#: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH_HELP"
 msgstr "An advanced search engine"
 
-#: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH"
 msgstr "Advanced search"
 
+#: php/interface.php:416
 msgid "BIBINDEX_MENU_TOOLS"
 msgstr "Tools"
 
-#: interface.php:423
+#: php/interface.php:424
 msgid "BIBINDEX_MENU_BASKET_HELP"
 msgstr "Basket (Help)"
 
-#: interface.php:423
+#: php/interface.php:424
 msgid "BIBINDEX_MENU_BASKET"
 msgstr "Basket"
 
-#: interface.php:425
+#: php/interface.php:426
 msgid "BIBINDEX_MENU_BASKET_DISPLAY_HELP"
 msgstr "Display all entries in the basket"
 
-#: interface.php:425
+#: php/interface.php:426
 msgid "BIBINDEX_MENU_BASKET_DISPLAY"
 msgstr "Display Basket"
 
-#: interface.php:427
+#: php/interface.php:428
 msgid "BIBINDEX_MENU_BASKET_GROUP_HELP"
 msgstr "Create/Delete groups"
 
-#: interface.php:427
+#: php/interface.php:428
 msgid "BIBINDEX_MENU_BASKET_GROUP"
 msgstr "Groups Management"
 
-#: interface.php:429
+#: php/interface.php:430
 msgid "BIBINDEX_MENU_BASKET_BIBTEX_HELP"
 msgstr "Export the basket to BibTeX"
 
-#: interface.php:429
+#: php/interface.php:430
 msgid "BIBINDEX_MENU_BASKET_BIBTEX"
 msgstr "Export to BibTeX"
 
-#: interface.php:430
+#: php/interface.php:431
 msgid "BIBINDEX_MENU_BASKET_HTML_HELP"
 msgstr "Export the basket to a simple HTML page"
 
-#: interface.php:430
+#: php/interface.php:431
 msgid "BIBINDEX_MENU_BASKET_HTML"
 msgstr "Export to HTML"
 
-#: interface.php:431
+#: php/interface.php:432
 msgid "BIBINDEX_MENU_BASKET_RESET_HELP"
 msgstr "Reset the basket"
 
-#: interface.php:449
+#: php/interface.php:450
 msgid "BIBINDEX_MENU_BASKET_RESET"
 msgstr "Reset Basket"
 
-#: interface.php:461
+#: php/interface.php:462
 msgid "BIBINDEX_MENU_ADMIN_HELP"
 msgstr "Manager (Help)"
 
-#: interface.php:461
+#: php/interface.php:462
 msgid "BIBINDEX_MENU_ADMIN"
 msgstr "Manager"
 
-#: interface.php:464
+#: php/interface.php:465
 msgid "BIBINDEX_MENU_ADMIN_LOGIN_HELP"
 msgstr "Login..."
 
-#: interface.php:464
+#: php/interface.php:465
 msgid "BIBINDEX_MENU_ADMIN_LOGIN"
 msgstr "Login"
 
-#: interface.php:467
+#: php/interface.php:468
 msgid "BIBINDEX_MENU_ADMIN_ADD_HELP"
 msgstr "Add a new entry"
 
-#: interface.php:467
+#: php/interface.php:468
 msgid "BIBINDEX_MENU_ADMIN_ADD"
 msgstr "Add an entry"
 
-#: interface.php:468
+#: php/interface.php:471
 msgid "BIBINDEX_MENU_ADMIN_UPDATE_HELP"
-msgstr "Update the current bibliography according to the underlying BibTeX file"
+msgstr ""
+"Update the current bibliography according to the underlying BibTeX file"
 
-#: interface.php:468
+#: php/interface.php:471
 msgid "BIBINDEX_MENU_ADMIN_UPDATE"
 msgstr "Update from BibTeX"
 
-#: interface.php:469
+#: php/interface.php:474
 msgid "BIBINDEX_MENU_ADMIN_IMPORT_HELP"
 msgstr "Import entries formated into BibTeX"
 
-#: interface.php:469
+#: php/interface.php:474
 msgid "BIBINDEX_MENU_ADMIN_IMPORT"
 msgstr "Import BibTeX"
 
-#: interface.php:472
+#: php/interface.php:477
 msgid "BIBINDEX_MENU_ADMIN_LOGOUT_HELP"
 msgstr "Logout..."
 
-#: interface.php:472
+#: php/interface.php:477
 msgid "BIBINDEX_MENU_ADMIN_LOGOUT"
 msgstr "Logout"
 
-#: interface.php:501
+#: php/interface.php:517
 msgid "This is the bibliography"
 msgstr ""
 
-#: interface.php:504
+#: php/interface.php:519
 msgid "You are logged as"
 msgstr ""
 
-#: interface.php:510
+#: php/interface.php:532
 msgid "Statistics"
 msgstr ""
 
-#: interface.php:514
+#: php/interface.php:536
 msgid "Number of recorded articles"
 msgstr ""
 
-#: interface.php:518
+#: php/interface.php:540
 msgid "On-line available publications"
 msgstr ""
 
-#: interface.php:537
+#: php/interface.php:559
 msgid "BibORB message"
 msgstr ""
 
-#: interface.php:551
+#: php/interface.php:573
 msgid "BIBINDEX_DISPLAY_HELP_TITLE"
 msgstr "Display Help"
 
-#: interface.php:563
+#: php/interface.php:585
 msgid "BIBINDEX_DISPLAY_ALL_TITLE"
 msgstr "Display All Entries"
 
-#: interface.php:599
+#: php/interface.php:637
 msgid "BIBINDEX_DISPLAY_BY_GROUPS_TITLE"
 msgstr "Display Entries by Group"
 
-#: interface.php:609
+#: php/interface.php:646
 msgid "Available groups"
 msgstr ""
 
-#: interface.php:611
+#: php/interface.php:648
 msgid "Display"
 msgstr ""
 
-#: interface.php:627
+#: php/interface.php:732
 #, php-format
 msgid "No entry for the group %s."
 msgstr ""
 
-#: interface.php:630
+#: php/interface.php:687
 #, php-format
 msgid "An entry for the group %s."
 msgstr ""
 
-#: interface.php:633
+#: php/interface.php:695
 #, php-format
 msgid "%d entries for the group %s."
 msgstr ""
 
-#: interface.php:660
+#: php/interface.php:752
 msgid "BIBINDEX_SIMPLE_SEARCH_TITLE"
 msgstr "Simple Search"
 
-#: interface.php:668
+#: php/interface.php:760 php/interface.php:1017 php/interface.php:1504
 msgid "Search"
 msgstr ""
 
-#: interface.php:677
+#: php/interface.php:766
 msgid "Author"
 msgstr ""
 
-#: interface.php:687
+#: php/interface.php:776
 msgid "Keywords"
 msgstr ""
 
-#: interface.php:694
+#: php/interface.php:782
 msgid "Journal"
 msgstr ""
 
-#: interface.php:793
+#: php/interface.php:895
 #, php-format
 msgid "One match for %s"
 msgstr ""
 
-#: interface.php:797
 #, php-format
 msgid "%d match for %s."
 msgstr ""
 
-#: interface.php:801
+#: php/interface.php:904
 #, php-format
 msgid "No match for %s."
 msgstr ""
 
-#: interface.php:990
+#: php/interface.php:1100
 msgid "BIBINDEX_BASKET_HELP_TITLE"
 msgstr "Basket Help"
 
-#: interface.php:1002
+#: php/interface.php:1112
 msgid "BIBINDEX_BASKET_DISPLAY_TITLE"
 msgstr "Entries in the Basket"
 
-#: interface.php:1015
+#: php/interface.php:1152
 msgid "No entry in the basket."
 msgstr ""
 
-#: interface.php:1020
+#: php/interface.php:1136
 msgid "An entry in the basket."
 msgstr ""
 
-#: interface.php:1023
+#: php/interface.php:1139
 #, php-format
 msgid "%d entries in the basket."
 msgstr ""
 
-#: interface.php:1028
+#: php/interface.php:1144
 msgid "Delete all from database"
 msgstr ""
 
-#: interface.php:1047
+#: php/interface.php:1165
 msgid "BIBINDEX_BASKET_GROUPS_MANAGE_TITLE"
 msgstr "Groups Management"
 
-#: interface.php:1057
+#: php/interface.php:1173
 msgid "Reset the groups field of each entry in the basket. "
 msgstr ""
 
-#: interface.php:1061
+#: php/interface.php:1177
 msgid "Add all entries in the basket to a group:"
 msgstr ""
 
-#: interface.php:1065
+#: php/interface.php:1183
 msgid "New group:"
 msgstr ""
 
-#: interface.php:1072
+#: php/interface.php:1195
 msgid "Existing group:"
 msgstr ""
 
-#: interface.php:1090
+#: php/interface.php:1215
 msgid "BIBINDEX_ADMIN_HELP_TITLE"
 msgstr "Manager Help"
 
-#: interface.php:1104
+#: php/interface.php:1229
 msgid "BIBINDEX_SELECT_NEW_ENTRY_TITLE"
 msgstr "Create a new entry (type selection)"
 
-#: interface.php:1110
+#: php/interface.php:1233
 msgid "Select an entry type: "
 msgstr ""
 
-#: interface.php:1145
+#: php/interface.php:1264
 msgid "BIBINDEX_ADD_ENTRY_TITLE"
 msgstr "Create a new entry"
 
-#: interface.php:1198
+#: php/interface.php:1319
 msgid "BibTeX type:"
 msgstr ""
 
-#: interface.php:1203
+#: php/interface.php:1329
 msgid "BibTeX Key:"
 msgstr ""
 
-#: interface.php:1226
+#: php/interface.php:1349
 msgid "BIBINDEX_UPDATE_ENTRY_TITLE"
 msgstr "Update an entry"
 
-#: interface.php:1239
+#: php/interface.php:1362
 msgid "BIBINDEX_IMPORT_TITLE"
 msgstr "Import BibTeX References"
 
-#: interface.php:1240
+#: php/interface.php:1363
 msgid ""
 "Select a BibTeX file or edit entries in the text area. Entries will be added "
 "to the current bibliography."
 msgstr ""
 
-#: interface.php:1241
+#: php/interface.php:1365 php/interface.php:1367
 msgid "File"
 msgstr ""
 
-#: interface.php:1278
+#: php/interface.php:1401
 msgid "BIBINDEX_EXPORT_TO_BIBTEX_TITLE"
 msgstr "Export the Basket to BibTeX"
 
-#: interface.php:1280
+#: php/interface.php:1403
 msgid "Select fields to include in the exported BibTeX:"
 msgstr ""
 
+#: php/interface.php:1077
 msgid "BIBINDEX_ADVANCED_SEARCH_TITLE"
 msgstr "Advanced Search"
 
@@ -710,95 +708,164 @@ msgstr "Remarks"
 msgid "BIBORB_OUTPUT_LONGNOTES_TITLE"
 msgstr "Display remarks for this reference"
 
+#: php/interface.php:1373 php/interface.php:1384
 msgid "Import"
 msgstr ""
 
+#: php/interface.php:787
 msgid "Editor"
 msgstr ""
 
+#: php/interface.php:938
 msgid "Connector:"
 msgstr ""
 
+#: php/interface.php:944 php/interface.php:948 php/interface.php:954
 msgid "and"
 msgstr ""
 
+#: php/interface.php:945 php/interface.php:949 php/interface.php:955
 msgid "or"
 msgstr ""
 
+#: php/interface.php:987
 msgid "BibTeX Fields"
 msgstr ""
 
+#: php/interface.php:1001
 msgid "BibORB Fields"
 msgstr ""
 
+#: php/interface.php:931
 msgid "Display/ Hide search form"
 msgstr ""
 
+#: php/interface.php:1064 php/interface.php:1534
 msgid "One match."
 msgstr ""
 
+#: php/interface.php:1068 php/interface.php:1538
+#, php-format
 msgid "%d matches."
 msgstr ""
 
+#: php/interface.php:1073 php/interface.php:1544
 msgid "No match."
 msgstr ""
 
+#: php/biborbdb.php:279
 msgid "BibTeX ID already present, select a different one."
 msgstr ""
 
+#: php/biborbdb.php:283 php/biborbdb.php:399
 msgid "Null BibTeX ID for an entry not allowed."
 msgstr ""
 
+#: php/biborbdb.php:280 php/biborbdb.php:284
 msgid "Back"
 msgstr ""
 
+#: php/interface.php:259 php/interface.php:486
 msgid "Language:"
 msgstr ""
 
+#: php/interface.php:656
 msgid "Entries associated with no group:"
 msgstr ""
 
+#: php/interface.php:657
 msgid "Orphans"
 msgstr ""
 
+#: php/interface.php:1489
 msgid "TOOL_XPATH_TITLE"
 msgstr "XPath Query"
 
+#: php/interface.php:1491
 msgid "TOOL_XPATH_HELP"
-msgstr "XPath (XML Path Language) is a language for addressing parts of an XML"
-" document. As references are stored in an XML format, you can use XPath queries "
-" to search into your bibliography."
-" Examples:<ul>"
-" <li><code>bibtex:inproceedings</code> will look for all entries of type <code>"
-" inproceedings</code>.</li>"
-" <li><code>*/bibtex:year<=2004 and */bibtex:year>=2000</code> will look for references"
-" published between years 2000 and 2004.</li></ul>"
+msgstr ""
+"XPath (XML Path Language) is a language for addressing parts of an XML "
+"document. As references are stored in an XML format, you can use XPath "
+"queries  to search into your bibliography. Examples:<ul> <li><code>bibtex:"
+"inproceedings</code> will look for all entries of type <code> inproceedings</"
+"code>.</li> <li><code>*/bibtex:year<=2004 and */bibtex:year>=2000</code> "
+"will look for references published between years 2000 and 2004.</li></ul>"
 
+#: php/interface.php:1561
 msgid "TOOL_AUX2BIBTEX_TITLE"
 msgstr ".aux to BibTeX"
 
+#: php/interface.php:1563
 msgid "TOOL_AUX2BIBTEX_HELP"
-msgstr "When compiling a LaTeX file (<code>article.tex</code>), cited references are "
-"recorded in the <code>article.aux</code> file. Submit your <code>.aux </code> file"
-" in the following formulary to download the BibTeX file containing references "
-" used by your article."
+msgstr ""
+"When compiling a LaTeX file (<code>article.tex</code>), cited references are "
+"recorded in the <code>article.aux</code> file. Submit your <code>.aux </"
+"code> file in the following formulary to download the BibTeX file containing "
+"references  used by your article."
 
+#: php/interface.php:1559
 msgid "BIBINDEX_TOOLS_TITLE"
 msgstr "Tools"
 
+#: php/interface.php:1573
 msgid "TOOL_GET_ARCHIVE_TITLE"
 msgstr "Download the bibliography"
 
+#: php/interface.php:1575
 msgid "TOOL_GET_ARCHIVE_HELP"
-msgstr "Download a compressed archive (<code>tar.gz</code>) of the current "
-" bibliography. The archive will contains the BibTeX data as well as "
-" uploaded data."
+msgstr ""
+"Download a compressed archive (<code>tar.gz</code>) of the current  "
+"bibliography. The archive will contains the BibTeX data as well as  uploaded "
+"data."
 
+#: php/interface.php:1021 php/interface.php:1507
 msgid "Simple Search"
 msgstr ""
 
+#: php/interface.php:832 php/interface.php:1507
 msgid "Advanced Search"
 msgstr ""
 
+#: php/interface.php:832 php/interface.php:1021
 msgid "XPath Search"
+msgstr ""
+
+#: php/functions.php:194 php/functions.php:197
+msgid "ascending"
+msgstr ""
+
+#: php/functions.php:200 php/functions.php:203
+msgid "descending"
+msgstr ""
+
+#: php/interface.php:416
+msgid "BIBINDEX_MENU_TOOLS_HELP"
+msgstr ""
+
+#: php/interface.php:621
+msgid "No entries."
+msgstr ""
+
+#: php/interface.php:690
+#, php-format
+msgid "1 orphan."
+msgstr ""
+
+#: php/interface.php:698
+#, php-format
+msgid "%d orphans."
+msgstr ""
+
+#: php/interface.php:735
+#, php-format
+msgid "No orphan."
+msgstr ""
+
+#: php/interface.php:899
+#, php-format
+msgid "%d matches for %s."
+msgstr ""
+
+#: php/interface.php:1487
+msgid "BIBINDEX_XPATH_SEARCH_TITLE"
 msgstr ""

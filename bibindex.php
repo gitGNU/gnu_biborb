@@ -79,6 +79,7 @@ require_once("php/third_party/Tar.php");
 /**
  * Session
  */
+session_cache_limiter('nocache');
 session_name($session_id);
 session_start();
 
@@ -134,11 +135,11 @@ if(!array_key_exists('update_authorizations',$_SESSION)){
 
 if(array_key_exists('bibname',$_GET)){
     if(!array_key_exists('bibdb',$_SESSION)){
-        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
+        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],$GLOBALS['GEN_BIBTEX']);
         $_SESSION['basket']->reset();
     }
     else if($_SESSION['bibdb']->name()!=$_GET['bibname']){
-        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
+        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],$GLOBALS['GEN_BIBTEX']);
         $_SESSION['basket']->reset();
     }
     $update_auth = TRUE;
@@ -219,7 +220,6 @@ $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'display_add_all'=> 'true',
                     'sort' => $sort,
                     'sort_order' => $sort_order,
-                    'display_sort'=> $DISPLAY_SORT,
                     'can_modify' => $_SESSION['user_can_modify'] || $_SESSION['user_is_admin'],
                     'can_delete' => $_SESSION['user_can_delete'] || $_SESSION['user_is_admin']);
 
@@ -304,7 +304,7 @@ if(isset($_GET['action'])){
         }
         break;
 	
-        case _("Add"):					// Add entries in the basket to a given group
+        case 'add':					// Add entries in the basket to a given group
             if(isset($_GET['groupvalue'])){
                 $gval = trim($_GET['groupvalue']);
             }
@@ -319,7 +319,7 @@ if(isset($_GET['action'])){
             }
             break;
 	
-        case _("Reset"):				// Reset the groups fields of entries in the basket
+        case 'reset':				// Reset the groups fields of entries in the basket
             $_SESSION['bibdb']->reset_groups($_SESSION['basket']->items);
             break;
 	
@@ -330,27 +330,21 @@ if(isset($_GET['action'])){
             $_SESSION['user_can_modify'] = FALSE;
             $_SESSION['user_is_admin'] = FALSE;
             break;
-	    
-        case _("Cancel"):
-            $_GET['mode'] = "welcome";
-            break;
 	
-        case _("Update"):
-            if($_GET['object'] == 'type'){
-            // get the entry
-                $_SESSION['bibdb']->change_type($_GET['id'],$_GET['bibtex_type']);
+        case 'update_type':
+            $_SESSION['bibdb']->change_type($_GET['id'],$_GET['bibtex_type']);
+            $_GET['mode']='update';
+            break;
+            
+        case 'update_key':
+            if(!$_SESSION['bibdb']->is_bibtex_key_present($_GET['bibtex_key'])){
+                $_SESSION['bibdb']->change_id($_GET['id'],$_GET['bibtex_key']);
                 $_GET['mode']='update';
+                $_GET['id'] = $_GET['bibtex_key'];
             }
-            else if($_GET['object'] == 'key'){
-                if(!$_SESSION['bibdb']->is_bibtex_key_present($_GET['bibtex_key'])){
-                    $_SESSION['bibdb']->change_id($_GET['id'],$_GET['bibtex_key']);
-                    $_GET['mode']='update';
-                    $_GET['id'] = $_GET['bibtex_key'];
-                }
-                else{
-                    $error = sprintf(_("BibTeX key <code>%s</code> already exists."),$_GET['bibtex_key']);
-                    $_GET['mode'] = 'operationresult';
-                }
+            else{
+                $error = sprintf(_("BibTeX key <code>%s</code> already exists."),$_GET['bibtex_key']);
+                $_GET['mode'] = 'operationresult';
             }
             break;
 
@@ -401,45 +395,55 @@ if(isset($_POST['action'])){
         /**
             Add an entry to the database
         */
-        case _("Add"): 
-            $res = $_SESSION['bibdb']->add_new_entry($_POST);
-            if($res['added']){
-                $message = _("ENTRY_ADDED_SUCCESS")."<br/>";
-                $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
-                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-                $param = $GLOBALS['xslparam'];
-                $param['bibindex_mode'] = "displaybasket";
-                $param['mode'] = "user";
-                $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
-                $xsltp->free();
+        case 'add_entry': 
+            if(isset($_POST['ok'])){
+                $res = $_SESSION['bibdb']->add_new_entry($_POST);
+                if($res['added']){
+                    $message = _("ENTRY_ADDED_SUCCESS")."<br/>";
+                    $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
+                    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                    $param = $GLOBALS['xslparam'];
+                    $param['bibindex_mode'] = "displaybasket";
+                    $param['mode'] = "user";
+                    $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+                    $xsltp->free();
+                }
+                else{
+                    $error = $res['message'];
+                }
             }
             else{
-                $error = $res['message'];
+                $_GET['mode'] = 'welcome';
             }
             break;
     
         // update an entry
-        case _("Update"):
-            $res = $_SESSION['bibdb']->update_entry($_POST);
-            if($res['updated']){
-                $message = _("The following entry was updated:")."<br/>";
-                $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
-                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-                $param = $GLOBALS['xslparam'];
-                $param['bibindex_mode'] = "displaybasket";
-                $param['mode'] = "user";
-                $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
-                $xsltp->free();
+        case 'update_entry':
+            if(isset($_POST['ok'])){
+                $res = $_SESSION['bibdb']->update_entry($_POST);
+                if($res['updated']){
+                    $message = _("The following entry was updated:")."<br/>";
+                    $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
+                    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                    $param = $GLOBALS['xslparam'];
+                    $param['bibindex_mode'] = "displaybasket";
+                    $param['mode'] = "user";
+                    $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+                    $xsltp->free();
+                }
+                else{
+                    $error = $res['message'];
+                }
             }
             else{
-                $error = $res['message'];
+                $_GET['mode'] = 'welcome';
             }
             break;
 	
         /*
             Import bibtex entries.
         */
-        case _("Import"):
+        case 'import':
             if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
                 die("Error, no bibtex data provided!");
             }
@@ -475,7 +479,7 @@ if(isset($_POST['action'])){
         /*
             Login
         */
-        case _("Login"):
+        case 'login':
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
             if($login=="" || $mdp==""){
@@ -497,14 +501,10 @@ if(isset($_POST['action'])){
             }
             break;
 	
-        case _("Cancel"):
-            $_GET['mode'] = "welcome";
-            break;
-	
         /**
          * Export the basket to bibtex
          */
-        case _("Export"):
+        case 'export':
             if($_SESSION['basket']->count_items() != 0){
                 // basket not empty -> processing
                 // get entries

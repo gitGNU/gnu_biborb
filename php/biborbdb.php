@@ -34,37 +34,51 @@
  *      When a request is done, the result is given as an xml string (bibtex).
  *      The interface uses this xml to generate an HTML output.
  *
+ *
  */
 
 require_once("xslt_processor.php"); //xslt processor
 
 // Bibtex Database manager
-
 class BibORB_DataBase {
 	
+    // Should a BibTeX file be generated.
+    var $generate_bibtex;
+    
     // name of the bibliography
     var $biblio_name;
     // the biblio directory
     var $biblio_dir;
     
-    // 
+    // Sort method used to sort entries
     var $sort;
+    // Sort order method (ascending/descending)
     var $sort_order;
     
+    
+    /**
+        Constructor.
+        $bibname -> name of the bibliography
+        $genBibtex -> keep an up-to-date BibTeX file.
+     */
+    function BibORB_DataBase($bibname,$genBibtex = true){
+        $this->biblio_name = $bibname;
+        $this->biblio_dir = "./bibs/$bibname/";
+        $this->generate_bibtex = $genBibtex;
+    }
+    
+    /**
+        Set the sort method.
+     */
     function set_sort($sort){
         $this->sort = $sort;
     }
     
+    /**
+        Set the sort order. (ascending/descending)
+     */
     function set_sort_order($sort_order){
         $this->sort_order = $sort_order;
-    }
-    
-    /**
-        Constructor
-     */
-    function BibORB_DataBase($bibname){
-        $this->biblio_name = $bibname;
-        $this->biblio_dir = "./bibs/$bibname/";
     }
     
     /**
@@ -82,28 +96,29 @@ class BibORB_DataBase {
     }
     
     /**
-     Return the name of the bibliography.
+        Return the name of the bibliography.
     */
     function name(){
         return $this->biblio_name;
     }
 	
     /**
-     The directory containing papers.
+        Return the directory containing uploaded papers/data.
     */
     function papers_dir(){
         return $this->biblio_dir."papers/";
     }
     
     /**
-     Update the .bib file wrt the .xml file
+        Update the .bib file wrt the .xml file.
+        Only used in this class. 
     */
     function update_bibtex_file(){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $xml_content = $this->all_entries();
         $xsl_content = load_file("./xsl/xml2bibtex.xsl");
         $bibtex = $xsltp->transform($xml_content,$xsl_content);
-  
+        $xsltp->free();
         // write the bibtex file
         $fp = fopen($this->bibtex_file(),"w");
         fwrite($fp,$bibtex);
@@ -121,49 +136,34 @@ class BibORB_DataBase {
         fclose($fp);
     }
 
-    /**
-        Get all entries in the database
-    */
-    function all_entries(){
-        return load_file($this->xml_file());
-    }
+    // Functions returning an array of ids.
     
     /**
-        Get all bibtex ids.
-    */
-    
+        Return a sorted array of all BibTeX ids.
+     */
     function all_bibtex_ids(){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $xml_content = $this->all_entries();    
         $xsl_content = load_file("./xsl/extract_ids.xsl");
         $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry",$xsl_content);
-        $param = array('sort' => $this->sort,
-                       'sort_order' => $this->sort_order);
-        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        $res = explode('|',$res);
-        if($res[0] == ""){
-            return array();
-        }
-        else{
-            return $res;
-        }
+            $param = array('sort' => $this->sort,
+                           'sort_order' => $this->sort_order);
+            $res = $xsltp->transform($xml_content,$xsl_content,$param);
+            $xsltp->free();
+            $res = explode('|',$res);
+            if($res[0] == ""){
+                return array();
+            }
+            else{
+                return $res;
+            }
     }
     
     /**
-     Get all enties for a group
+        Return a sorted array of BibTex ids of entries belonging to the group $groupname.
+        If $groupname is null, it returns a sorted array of entries that aren't
+        associated with a group.
     */
-    function entries_for_group($groupname){
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-        $xml_content = $this->all_entries();    
-        $xsl_content = load_file("./xsl/entries_for_group.xsl");
-        $param = array('group'=>$groupname);
-        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-	
-        return $res;
-    }
-    
     function ids_for_group($groupname){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $xml_content = $this->all_entries();    
@@ -189,6 +189,28 @@ class BibORB_DataBase {
         }
     }
     
+    
+    /**
+        Get all entries in the database
+    */
+    function all_entries(){
+        return load_file($this->xml_file());
+    }
+    
+    /**
+        Get all enties for a group
+    */
+    function entries_for_group($groupname){
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $this->all_entries();    
+        $xsl_content = load_file("./xsl/entries_for_group.xsl");
+        $param = array('group'=>$groupname);
+        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+	
+        return $res;
+    }
+    
     /**
         Get all entries that are not associated with a group.
      */
@@ -201,9 +223,8 @@ class BibORB_DataBase {
         return $res;
     }
     
-    
     /**
-     Get a set of entries
+        Get a set of entries.
     */
     function entries_with_ids($anArray){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -216,11 +237,13 @@ class BibORB_DataBase {
         }
         $xml_content .= "</listofids>";
         $param = array('bibnameurl' => $this->xml_file());
-        return $xsltp->transform($xml_content,$xsl_content,$param);
+        $res = $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+        return $res;
     }
     
     /**
-     Get an entry
+        Get an entry
     */
     function entry_with_id($anID){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -239,8 +262,8 @@ class BibORB_DataBase {
     }
     
     /**
-     Add a new entry to the database
-     $dataArray contains bibtex values
+        Add a new entry to the database
+        $dataArray contains bibtex values
     */
     function add_new_entry($dataArray){
         $res = array(   'added'=>false,
@@ -290,7 +313,7 @@ class BibORB_DataBase {
             fwrite($fp,$result);
             fclose($fp);
             // update bibtex file
-            $this->update_bibtex_file();
+            if($this->generate_bibtex){$this->update_bibtex_file();}
 	    
             $res['added'] = true;
             $res['message'] = "";
@@ -300,15 +323,13 @@ class BibORB_DataBase {
     }
 	
     /**
-     Add entries. $bibtex is a bibtex string.
+        Add entries. $bibtex is a bibtex string.
     */
     function add_bibtex_entries($bibtex){
         // add the new entry
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $bt = new BibTeX_Tools();
-
         $data = $bt->bibtex_string_to_xml($bibtex);
-
         $xsl = load_file("./xsl/add_entries.xsl");
         $param = array('bibname' => $this->xml_file());
         $result = $xsltp->transform($data[2],$xsl,$param);
@@ -318,13 +339,14 @@ class BibORB_DataBase {
         $fp = fopen($this->xml_file(),"w");
         fwrite($fp,$result);
         fclose($fp);
+        
         // update bibtex file
-        $this->update_bibtex_file();
+        if($this->generate_bibtex){$this->update_bibtex_file();}
         return $data[1];
     }
     
     /**
-     Delete an entry from the database
+        Delete an entry from the database
     */
     function delete_entry($bibtex_id){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -353,7 +375,7 @@ class BibORB_DataBase {
         fclose($fp);
         
         //update the bibtex file.
-        $this->update_bibtex_file();
+        if($this->generate_bibtex){$this->update_bibtex_file();}
     }
     
     /**
@@ -366,7 +388,7 @@ class BibORB_DataBase {
     }
     
     /**
-     Update an entry.
+        Update an entry.
     */
     function update_entry($dataArray){
 		// check if the id value is null
@@ -422,12 +444,12 @@ class BibORB_DataBase {
             fwrite($fp,$result);
             fclose($fp);
             // update bibtex file
-            $this->update_bibtex_file();
+            if($this->generate_bibtex){$this->update_bibtex_file();}
             
             $res['updated'] = true;
             $res['message'] = "";
             $res['id'] = $dataArray['id'];
-            }
+        }
         return $res;
     }
     
@@ -444,35 +466,34 @@ class BibORB_DataBase {
     }
     
     /**
-     Return an array containing groups present in the DB
+        Return an array containing groups present in the bibliography.
     */
     function groups(){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         // Get groups from the xml bibtex file
-        $xml_content = load_file("./bibs/".$this->biblio_name."/".$this->biblio_name.".xml");
+        $xml_content = load_file($this->xml_file());
         $xsl_content = load_file("./xsl/group_list.xsl");  
         $group_list = $xsltp->transform($xml_content,$xsl_content);
         $xsltp->free();
         
         // Remove doublons
         $group_list = split("[,~]",$group_list);
-        $list = array();
-        $j=0;
-        for($i=0;$i<sizeof($group_list);$i++){
-            $group_list[$i] = trim($group_list[$i]);
-            if($group_list[$i] != ""){
-                if(!in_array($group_list[$i],$list)){
-                    $list[$j] = $group_list[$i];
-                    $j++;
-                }
+        foreach($group_list as $key=>$value){
+            if(trim($value) == ""){
+                unset($group_list[$key]);
+            }
+            else{
+                $group_list[$key] = trim($value);
             }
         }
+        $list = array_unique($group_list);
+        sort($list);
         
-        return $list;    
+        return $list; 
     }
 	
     /**
-     Add a set of entries to a group
+        Add a set of entries to a group
     */
     function add_to_group($idArray,$group){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -493,6 +514,7 @@ class BibORB_DataBase {
         // update the xml file
         $xsl_content = load_file("./xsl/update_xml.xsl");
         $result = $xsltp->transform($result,$xsl_content,$param);
+        $xsltp->free();
         
         $fp = fopen($this->xml_file(),"w");
         fwrite($fp,$result);
@@ -500,7 +522,7 @@ class BibORB_DataBase {
     }
     
     /**
-     Reset groups of a set of entries
+        Reset groups of a set of entries
     */
     function reset_groups($idArray){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -561,7 +583,7 @@ class BibORB_DataBase {
     }
     
     /**
-     Advanced search function
+        Advanced search function
     */
     function advanced_search_entries($searchArray){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -628,7 +650,7 @@ class BibORB_DataBase {
     }
     
     /**
-     Count entries
+        Total number of entries
     */
     function count_entries(){ 
         $allentries = $this->all_entries();
@@ -636,7 +658,7 @@ class BibORB_DataBase {
     }
     
     /**
-     Count on-line available papers
+        Count on-line available papers.
     */
     function count_epapers(){
         $allentries = $this->all_entries();
@@ -681,7 +703,7 @@ class BibORB_DataBase {
         fwrite($fp,$result);
         fclose($fp);
         // update bibtex file
-        $this->update_bibtex_file();
+        if($this->generate_bibtex){$this->update_bibtex_file();}
     }
 
     /**
@@ -733,7 +755,7 @@ class BibORB_DataBase {
         fclose($fp);
         
         // update bibtex file
-        $this->update_bibtex_file();
+        if($this->generate_bibtex){$this->update_bibtex_file();}
     }
 }
 

@@ -48,15 +48,18 @@ require_once("php/auth.php");       // load authentication class
 /**
  * Load the session
  */
+session_cache_limiter('nocache');
 session_name($session_id);
 session_start();
 
+/**
+
+ */
 if(get_magic_quotes_gpc()) {
     $_POST = array_map('stripslashes_deep', $_POST);
     $_GET = array_map('stripslashes_deep', $_GET);
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 }
-
 
 /**
  *  i18n
@@ -158,7 +161,7 @@ if(isset($_POST['action'])){
         /*
             Login
          */
-        case _("Login"):
+        case 'login':
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
             if($login=="" || $mdp==""){
