@@ -35,43 +35,84 @@ BibTeX format.
 
 
 **/
+
 include("config.php");
 include("functions.php");
+
 session_name($session_id);
 session_start();
 
-// get the bibname & mode 
-if($_SESSION['bibname'] == null)
+/**
+display an error if the variable 'bibname' is not set
+*/
+if(!array_key_exists('bibname',$_SESSION) && !array_key_exists('bibname',$_GET))
 {
+  die("Error: bibname is not set");
+}
+
+/**
+if the session variable 'bibname' is not set, get it from GET variables
+*/
+if(array_key_exists('bibname',$_GET))
+{
+  if(array_key_exists('bibname',$_SESSION))
+  {
+    $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
+  }
+     
   $_SESSION['bibname'] = $_GET['bibname'];
 }
 
-if($_GET['bibname']!=null && strcmp($_GET['bibname'],$_SESSION['bibname']) != 0)
+/**
+Register variables in session.
+It is not really needed for most of them but easier to reference them in the code.
+*/
+// which page to display
+$_SESSION['mode'] = get_value('mode',$_GET);
+// which group to display
+$_SESSION['group'] = get_value('group',$_GET);
+// 
+$_SESSION['search'] = get_value('search',$_GET);
+// author search value
+$_SESSION['author'] = get_value('author',$_GET);
+// keywords search value
+$_SESSION['keywords'] = get_value('keywords',$_GET);
+// title search value
+$_SESSION['title'] = get_value('title',$_GET);
+// the type of entry to add
+$_SESSION['add_type'] = get_value('add_type',$_GET);
+// the bibtex id of an entry
+$_SESSION['id'] = get_value('id',$_GET);
+// an action 
+$_SESSION['action'] = get_value('action',$_GET);
+// display entry with abstract
+$_SESSION['abstract'] = get_value('abstract',$_GET);
+if($_SESSION['abstract'] == null)
 {
-  $_SESSION['bibname'] = $_GET['bibname'];
+  $_SESSION['abstract'] = $display_abstract;
 }
 
-
-$_SESSION['mode'] = $_GET['mode'];
-$_SESSION['group'] = $_GET['group'];
-$_SESSION['search'] = $_GET['search'];
-$_SESSION['author'] = $_GET['author'];
-$_SESSION['keywords'] = $_GET['keywords'];
-$_SESSION['title'] = $_GET['title'];
-$_SESSION['add_type'] = $_GET['add_type'];
-$_SESSION['id'] = $_GET['id'];
-$_SESSION['action'] = $_GET['action'];
-
-if($_SESSION['user'] != null) 
+/**
+If authentication is active, check if the user has logged in.
+If authentication is not active or the user is logged, modification of the bibliography
+is allowed.
+*/
+if(!$disable_authentication)
 {
-  $_SESSION['mod'] = "admin";
+  if(array_key_exists('user',$_SESSION)){
+      $_SESSION['mod'] = "admin";
+  }
+  else{
+    $_SESSION['mod'] = "user";
+  }
 }
 else
 {
-  $_SESSION['mod'] = "user";
+  $_SESSION['mod'] = "admin";
 }
 
-/*
+
+/**
  Select the page to display according to the mode.
 */
 switch($_SESSION["mode"])
@@ -88,8 +129,8 @@ switch($_SESSION["mode"])
  case 'search':
    echo bibindex_search();
    break;
- case 'abstract':
-   echo bibindex_abstract();
+ case 'details':
+   echo bibindex_details();
    break;
  case 'bibtex':
    echo bibindex_bibtex();
@@ -114,22 +155,25 @@ switch($_SESSION["mode"])
    break;   
 }
 
-//unset session variables
+/**
+unset session variables for the next page
+*/
 $_SESSION['error'] = null;
 $_SESSION['message'] = null;
 
-/*
+/**
 This is the default Welcome page.
 */
-
 function bibindex_welcome()
 {
   $html = bibheader();  
   $html .= menu();
   $title = "<H2>BibORB: BibTeX On-line References Browser</H2>";
-  $content .= "This is the bibliography: <b>".$_SESSION['bibname']."</b>.<br/>";
-  if($_SESSION['user'] != null) {
-    $content .= "You are logged as <em>".$_SESSION['user']."</em>.";
+  $content = "This is the bibliography: <b>".$_SESSION['bibname']."</b>.<br/>";
+  if($_SESSION['mod'] != 'admin') {
+    if(array_key_exists('user',$_SESSION)){      
+      $content .= "You are logged as <em>".$_SESSION['user']."</em>.";
+    }
   }
   $content .= get_stat($_SESSION['bibname']);
   $html .= main($title,$content);
@@ -137,7 +181,7 @@ function bibindex_welcome()
   return $html;
 }
 
-/*
+/**
 This is the page when the user choose to navigate using groups.
 */
 function bibindex_group()
@@ -146,7 +190,7 @@ function bibindex_group()
   $html .= menu();
   $html .= group_menu();
   $title = null;
-  $content = get_bibentries_of_group($_SESSION['bibname'],$_SESSION['group'],$_SESSION['mod']);
+  $content = get_bibentries_of_group($_SESSION['bibname'],$_SESSION['group'],$_SESSION['mod'],$_SESSION['abstract']);
   
   if($_SESSION['group']){
     $html .= main($title,$content);
@@ -156,7 +200,7 @@ function bibindex_group()
 }
 
 
-/*
+/**
 Display all entries.
 If the user is logged in, features are added to each entries: modify/delete
 */
@@ -165,12 +209,12 @@ function bibindex_all()
   $title = null;
   $html = bibheader();
   $html .= menu();
-  $html .= main($title,get_all_bibentries($_SESSION['bibname'],$_SESSION['mod']));
+  $html .= main($title,get_all_bibentries($_SESSION['bibname'],$_SESSION['mod'],$_SESSION['abstract']));
   $html .= html_close();
   return $html;  
 }
 
-/*
+/**
 Search page
 */
 function bibindex_search()
@@ -182,38 +226,38 @@ function bibindex_search()
   if($_SESSION['search'] != null){
     $content = search_bibentries($_SESSION['bibname'],$_SESSION['search'],
 				    $_SESSION['author'],$_SESSION['title'],
-				 $_SESSION['keywords'],$_SESSION['mod']);
-/*    if(sizeof($content)==1){
+				 $_SESSION['keywords'],$_SESSION['mod'],$_SESSION['abstract']);
+    if(strpos($content,"key") == null){
       $content = "No results";
-    }*/
-    
+    }
+
     $html .= main($title,$content);
   }
   $html .= html_close();
   return $html;  
 }
 
-/*
+/**
  Full details on a selected bibentry
 */
-function bibindex_abstract()
+function bibindex_details()
 {
   $html = bibheader();
-  $html .= get_bibentry($_SESSION['bibname'],$_SESSION['id']);  
+  $html .= get_bibentry($_SESSION['bibname'],$_SESSION['id'],$_SESSION['abstract']);  
   $html .= html_close();
   return $html;  
 }
 
-/*
+/**
  Get the bibtex entry
 */
 function bibindex_bibtex()
 {
-  return get_bibtex($_SESSION['bibname'],$_SESSION['id']);  
+  return "<pre>".get_bibtex($_SESSION['bibname'],$_SESSION['id'])."</pre>";  
 }
 
 
-/*
+/**
 Update the bibliography
 */
 function bibindex_update()
@@ -221,7 +265,7 @@ function bibindex_update()
   $html = bibheader();
   $html .= menu();
 
-  if($_SESSION['user'] != null){
+  if($_SESSION['mod'] == "admin"){
     update_xml($_SESSION['bibname']);   
     $_SESSION['message'] = "XML file succesfully updated.";
   }
@@ -231,7 +275,7 @@ function bibindex_update()
   return $html;
 }
 
-/*
+/**
 Display the login page
 */
 function bibindex_login(){
@@ -329,7 +373,7 @@ function bibindex_edit()
 }
 
 
-/*
+/**
  Create the menu
 */
 function menu()
@@ -344,7 +388,7 @@ function menu()
   $html .= "<a class='menuitem' href='bibindex.php?mode=all&amp;".session_name()."=".session_id()."'>Display All</a>";
   $html .= "<a class='menuitem' href='bibindex.php?mode=group&amp;".session_name()."=".session_id()."'>Groups</a>";
   $html .= "<a class='menuitem' href='bibindex.php?mode=search&amp;".session_name()."=".session_id()."'>Search</a>";
-  if($_SESSION['user'] != null){
+  if($_SESSION['mod'] == "admin"){
     $html .= "<a class='menuitem' href='bibindex.php?mode=update&amp;".session_name()."=".session_id()."'>Update</a>";
     $html .= "<a class='menuitem' href='bibindex.php?mode=edit&amp;".session_name()."=".session_id()."&amp;action=selectentry'>Add an entry</a>";
     $html .= "<a class='menuitem' href='bibindex.php?mode=logout&amp;".session_name()."=".session_id()."'>Logout</a>";
@@ -352,14 +396,13 @@ function menu()
   else {
     $html .= "<a class='menuitem' href='bibindex.php?mode=login&amp;".session_name()."=".session_id()."'>Login</a>";
   }
-  
   $html .= "</div>";
   $html .= "</div>";
   $html .= "</div>";
   return $html;  
 }
 
-/*
+/**
 Create the group menu
 */
 function group_menu()
@@ -382,9 +425,8 @@ function group_menu()
   return $html;  
 }
 
-/*
+/**
 Create the main panel
-Display errors and unregistered them
 */
 function main($title,$content)
 {
@@ -394,18 +436,23 @@ function main($title,$content)
     $html .= "<h2>".$title."</h2>";
     $html .= "</div>";
   }
-  if($_SESSION['error'] != null){
-    $html .= "<h3>Error:</h3>";
-    $html .= "<div class='error'>";
-    $html .= $_SESSION['error'];
-    $html .= "</div>";
+  if(array_key_exists('error',$_SESSION)){
+    if($_SESSION['error'] != null){
+      $html .= "<h3>Error:</h3>";
+      $html .= "<div class='error'>";
+      $html .= $_SESSION['error'];
+      $html .= "</div>";
+    }
   }
-  if($_SESSION['message'] != null){
-    $html .= "<h3>Message:</h3>";
-    $html .= "<div class='message'>";
-    $html .= $_SESSION['message'];
-    $html .= "</div>";
+  if(array_key_exists('message',$_SESSION)){
+    if($_SESSION['message'] != null){
+      $html .= "<h3>Message:</h3>";
+      $html .= "<div class='message'>";
+      $html .= $_SESSION['message'];
+      $html .= "</div>";
+    }
   }
+  
   if($content != null) {
     $html .= "<div class='content'>";
     $html .= $content;
@@ -415,14 +462,18 @@ function main($title,$content)
   return $html;  
 }
 
-// Create html header
+/**
+ Create html header
+*/
 function bibheader()
 {
   $html = html_header("BibORB - ".$_SESSION['bibname'],"style.css");
   return $html;  
 }
 
-// Create Search menu
+/**
+ Create Search menu
+*/
 function search_menu()
 {
   $html = "<div class='left2'>";  
@@ -457,7 +508,7 @@ function search_menu()
   return $html;  
 }
 
-/*
+/**
 Create the form to select which type of entry to add.
 */
 function select_entry(){
@@ -490,7 +541,7 @@ function select_entry(){
   return $html;
 }
 
-/*
+/**
 Return the input fields corresponding to a given type
 */
 function get_entry_fields($type)
@@ -501,5 +552,18 @@ function get_entry_fields($type)
   return xslt_transform($xml_content,$xsl_content,$param);
 }
 
+/**
+get values in an array, null if key does not exists
+ */
+function get_value($key,$tab)
+{
+  if(array_key_exists($key,$tab)){
+    return $tab[$key];
+  }
+  else{
+    return null;
+  }
+  
+}
 
 ?>

@@ -32,7 +32,7 @@ Description:
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:bibtex="http://bibtexml.sf.net/"> 
   
-  <xsl:output method='html' />
+  <xsl:output method='text' />
   
   <xsl:param name="id"/>
 

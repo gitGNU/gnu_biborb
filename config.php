@@ -35,8 +35,26 @@ Description:
 
 **/
 
+
+/**
+If TRUE, this will disable authentification to modify or add entries.
+ */
+$disable_authentication = TRUE;
+
+
+/**
+Should the abstract be present for each entry.
+*/
+$display_abstract = FALSE;
+
+/**
+Name of the PHP SESSION
+*/
 $session_id = "SID";
 
+/**
+Database configuration.
+*/
 $host = "localhost";
 $dbuser = "biborb-admin";
 $pass = "biborbdev";

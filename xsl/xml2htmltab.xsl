@@ -36,14 +36,23 @@ Description:
    
   <xsl:output method="html"/> 
   <!-- Possible input parameters -->
+  <!-- group value: to display entris by group -->
   <xsl:param name="groupval"/>
+  <!-- search parameter : author value -->
   <xsl:param name="author"/>
+  <!-- search parameter : title value -->
   <xsl:param name="title"/>
+  <!-- search parameter : keywords value -->
   <xsl:param name="keywords"/>
+  <!-- mode = admin => display button for modification, else nothing -->
   <xsl:param name="mode"/>
+  <!-- id of the bibtex entry to display -->
   <xsl:param name="id"/>
+  <!-- type = 'details' => add the abstract to the output -->
   <xsl:param name="type"/>
+  <!-- session_id -->
   <xsl:param name="session_id"/>
+  <!-- session_name -->
   <xsl:param name="session_name"/>
   
   <!-- every parameter values to lower case -->
@@ -152,7 +161,7 @@ Description:
             <a href="./bibs/{$bibname}/papers/{$pdf}" class='button'>pdf</a>
           </xsl:if>
           <xsl:if test=".//bibtex:abstract">
-            <a class='button' href="./bibindex.php?mode=abstract&amp;id={@id}&amp;bibname={$bibname}">abstract</a>
+            <a class='button' href="./bibindex.php?mode=details&amp;id={@id}&amp;bibname={$bibname}&amp;abstract=1">abstract</a>
           </xsl:if>
           <xsl:if test=".//bibtex:website">
             <a class='button' href="http://{.//bibtex:website}" target="blank">website</a>
@@ -179,7 +188,7 @@ Description:
           <xsl:value-of select=".//bibtex:author"/>
         </td>
       </tr>
-      <xsl:if test="$type='abstract'">
+      <xsl:if test="$type='details'">
         <tr>
           <td><xsl:value-of select=".//bibtex:abstract"/></td>
         </tr>

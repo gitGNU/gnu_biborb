@@ -48,9 +48,11 @@ function update_xml($bibname)
   $ar = opendir("./bibs/".$bibname."/");
   $tab = array();    
   while($file = readdir($ar)) {
-    $inf = pathinfo($file);
-    if($inf['extension']=='bib'){
-      array_push($tab,$file);      
+    if(!is_dir($file) && $file != 'papers'){      
+      $inf = pathinfo($file);
+      if($inf['extension'] == 'bib'){
+	array_push($tab,$file);      
+      }
     }
   }
   
@@ -295,12 +297,15 @@ function load_xml_bibfile($bibname)
 /*
 Return an html output of all entries of a bibfile
 */
-function get_all_bibentries($bibname,$mode)
+function get_all_bibentries($bibname,$mode,$abstract)
 {
   $xml_content = load_xml_bibfile($bibname);
   $xsl_content = load_file("./xsl/xml2htmltab.xsl");
   $param = array();
   $param["mode"] = $mode;
+  if($abstract){
+    $param['type'] = "details";
+  }
   
   return xslt_transform($xml_content,$xsl_content,$param);
 }
@@ -308,13 +313,16 @@ function get_all_bibentries($bibname,$mode)
 /*
 Return an html output of entries of a given group
 */
-function get_bibentries_of_group($bibname,$groupname,$mode)
+function get_bibentries_of_group($bibname,$groupname,$mode,$abstract)
 {
   $xml_content = load_xml_bibfile($bibname);    
   $xsl_content = load_file("./xsl/xml2htmltab.xsl");  
   $param = array();
   $param["groupval"]=$groupname;
   $param["mode"] = $mode;
+  if($abstract){
+    $param['type'] = "details";
+  }
  
   return xslt_transform($xml_content,$xsl_content,$param);
 }
@@ -322,7 +330,7 @@ function get_bibentries_of_group($bibname,$groupname,$mode)
 /*
 Return an html output of entries matching search paramters
 */
-function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mode){
+function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mode,$abstract){
   $xml_content = load_xml_bibfile($bibname);
   $xsl_content = load_file("./xsl/xml2htmltab.xsl");  
   $param = array();
@@ -336,7 +344,10 @@ function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mo
     $param["keywords"]=$value;
   }
   $param["mode"] = $mode;
-  
+  if($abstract){
+    $param['type'] = "details";
+  }
+
   return xslt_transform($xml_content,$xsl_content,$param);
 }
 
@@ -354,11 +365,17 @@ function get_bibtex($bibname,$bibid)
 /*
 Return an html output of a given entry
 */
-function get_bibentry($bibname,$bibid)
+function get_bibentry($bibname,$bibid,$abstract)
 {
   $xml_content = load_xml_bibfile($bibname);
   $xsl_content = load_file("./xsl/xml2htmltab.xsl");
-  $param = array('id'=>$bibid,'type'=>"abstract");
+  if($abstract){
+    $param = array('id'=>$bibid,'type'=>"details");
+  }
+  else{
+    $param = array('id'=>$bibid);
+  }
+  
   return xslt_transform($xml_content,$xsl_content,$param);
 }
 
@@ -479,6 +496,7 @@ function exists_entry_with_id($id){
 function add_bibtex_entry($type,$tab,$urlfile,$urlzipfile,$pdffile){
   $filename = "./bibs/".$_SESSION['bibname']."/".$_SESSION['bibname'].".bib";
   $file = fopen($filename,"a+");
+  fwrite($file,"\n\n");
   fwrite($file,to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile));
   fclose($file);
   update_xml($_SESSION['bibname']);
