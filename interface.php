@@ -274,9 +274,8 @@ function index_menu(){
     $html .= "</ul>";
     if($GLOBALS['display_language_selection']){
         $html .= "<form name='language_selection' action='index.php' method='get'>";
-        $html .= "<div style='text-align:center;'>"._("Language:");
+        $html .= "<div style='text-align:center'>"._("Language:")."<br/>";
         $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language']);
-        $html .= "<br/>";
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
         $html .= "<input class='misc_button' type='submit' value='"._("Select")."'/>";
         $html .= "</div>";
@@ -412,7 +411,10 @@ function bibindex_menu($bibname)
     $html .= "<ul>";
     // jump to a given bibliography
     $avbibs = get_databases_names();
-    $html .= "<li><select name='me' size='1' onchange='javascript:test()'>";
+    $html .= "<li>";
+    $html .= "<form style='padding:0;margin:0' select='bibindex.php'>";
+    $html .= "<div style='text-align:center'>";
+    $html .= "<select class='misc_button' name='bibname' size='1' onchange='javascript:test()'>";
     foreach($avbibs as $bib){
         if($bib == $bibname){
             $html .= "<option name='$bib' selected='selected'>$bib</option>";
@@ -421,10 +423,12 @@ function bibindex_menu($bibname)
             $html .= "<option name='$bib'>$bib</option>";
         }
     }
-    $html .= "</select></li>";
+    $html .= "</select><br/>";
+    $html .= "<input class='misc_button' type='submit' value='Go'>";
+    $html .= "</div>";
+    $html .= "</form>";
+    $html .= "</li>";
     $html .= "</ul></li>";
-    
-    
     
     // second item
     // -> Display
@@ -507,9 +511,8 @@ function bibindex_menu($bibname)
     
     if($GLOBALS['display_language_selection']){
         $html .= "<form name='language_selection' action='bibindex.php' method='get'>";
-        $html .= "<div style='text-align:center;'>"._("Language:");
+        $html .= "<div style='text-align:center;'>"._("Language:")."<br/>";
         $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language']);
-        $html .= "<br/>";
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
         $html .= "<input class='misc_button' type='submit' value='"._("Select")."'/>";
         $html .= "</div>";
