@@ -14,4 +14,3 @@
 #      
 #       :userA*adm
 #
-:ggardey*adm

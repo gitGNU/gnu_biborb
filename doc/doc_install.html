@@ -37,7 +37,7 @@ standards. Consequently, you should ensure that:
             <li>PHP XSLT functions are available.</li>
             <li>PHP Pear functions are available.</li>
         </ul>
-        Authentication is done using databases or text files.
+        Authentication is done using databases (MySQL) or text files.
     </div>
 </div>
 
@@ -63,13 +63,14 @@ standards. Consequently, you should ensure that:
 
 
 <div class="topic" id="help_upgrade">
-    <h3>Upgrade</h3>
+    <h3>Upgrade from BibORB 1.3.2</h3>
     <div class="topic_content">
     <ol>
         <li>Rename your old BibORB directory
         <pre>mv biborb biborb.old</pre></li>
         <li>Untar the archive: <code>tar -xvzf biborb-x.tar.gz</code></li>
         <li>Copy or move the <code class='file'>biborb.old/bibs</code> directory to the new biborb directory.</li>
+        <li>If you were using files authentication, copy <code class='file'>bib_access.txt</code> and <code class='file'>bib_users.txt</code> (located in the directory <code class='file'>php/auth_backends</code> to <code class='file'>data/auth_files</code>.
     </ol>
     </div>
 </div>
