@@ -628,7 +628,6 @@ function bibindex_display_all(){
     $content = $start.replace_localized_strings($content);
 	$html .= main($title,$content);
 	
-	
     $html .= html_close();
     return $html;  
 }

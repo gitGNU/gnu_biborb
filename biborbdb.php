@@ -102,7 +102,7 @@ class BibORB_DataBase {
         Reload the database according the bibtex file.
      */
     function reload_from_bibtex(){
-        $data = bibtex2xml(file($this->bibtex_file()));
+        $data = convert_bibtex_to_xml(file($this->bibtex_file()));
         $fp = fopen($this->xml_file(),"w");
         fwrite($fp,$data[2]);
         fclose($fp);
@@ -231,13 +231,13 @@ class BibORB_DataBase {
     function add_bibtex_entries($bibtex){
         // add the new entry
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-        $data = bibtex2xml($bibtex);
+        $data = convert_bibtex_to_xml($bibtex);
 
         $xsl = load_file("./xsl/add_entries.xsl");
         $param = array('bibname' => $this->xml_file());
         $result = $xsltp->transform($data[2],$xsl,$param);
         $xsltp->free();
-	
+
         // save the database
         $fp = fopen($this->xml_file(),"w");
         fwrite($fp,$result);
@@ -263,7 +263,7 @@ class BibORB_DataBase {
         while($file = readdir($ar)) {
             $inf = pathinfo($file);
             if(strcmp(substr($inf['basename'],0,strlen($bibtex_id)+1),$bibtex_id.".")==0){
-            array_push($tab,$file);
+                array_push($tab,$file);
             }
         }
         
@@ -670,7 +670,7 @@ function get_databases_names(){
 */
 function extract_ids_from_xml($xmlstring)
 {
-    preg_match_all("/id=['|\"](.*)['|\"]/",$xmlstring,$matches);
+    preg_match_all("/id=['|\"](.*)['|\"]/U",$xmlstring,$matches);
     return array_unique($matches[1]);
 }
 ?>

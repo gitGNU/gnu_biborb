@@ -428,8 +428,10 @@ if(isset($_POST['action'])){
                 else{
                     $bibtex_data= file($_FILES['bibfile']['tmp_name']);
                 }
-                // add the new entry			 
+                // add the new entry	
+
                 $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
+
                 $entries = $_SESSION['bibdb']->entries_with_ids($res);
                 $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
                 $param = $GLOBALS['xslparam'];

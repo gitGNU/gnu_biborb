@@ -38,7 +38,7 @@
  */
 require_once("config.php");
 require_once("utilities.php");
-require_once("bibtexParse/PARSEENTRIES.php");
+require_once("PARSEENTRIES.php");
 
 /**
  * format bibtex data to xml
@@ -413,8 +413,8 @@ function sort_div($selected_sort,$mode,$group){
 
 function convert_array_to_xml_entry($tab){
     
-    $xml = "<bibtex:entry id='".$tab['bibtexCitation']."'>";
-    $xml .= "<bibtex:".$tab['bibtexEntryType'].">";
+    $xml = "<bibtex:entry id='".$tab['id']."'>";
+    $xml .= "<bibtex:".$tab['type'].">";
     foreach($tab as $key => $value){
         if($key != 'groups' && $key!= 'type' && $key != 'id'){
             $xml .= "<bibtex:".$key.">";
@@ -432,7 +432,7 @@ function convert_array_to_xml_entry($tab){
             $xml .= "</bibtex:groups>";
         }
     }
-    $xml .= "</bibtex:".$tab['bibtexEntryType'].">";
+    $xml .= "</bibtex:".$tab['type'].">";
     $xml .= "</bibtex:entry>";
     return $xml;
 }
@@ -442,20 +442,16 @@ function convert_bibtex_to_xml($string){
 	$bibtex_parser->loadString($string);
 	$bibtex_parser->extractEntries();
     $res = $bibtex_parser->returnArrays();
-    echo "<pre>";
-    print_r($res[1]);
-    echo "</pre>";
-    $tab = $res[2];
-    echo "<pre>";
-    print_r($tab);
-    echo "</pre>";
-    $xml  = "<?xml version='1.0' encoding='iso-8859-1'?>";
-    $xml .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' name='temp'>";
-    foreach($tab as $entry){
-        $xml .= convert_array_to_xml_entry($entry);
+
+    $ids = array();
+    $xml_content = "<?xml version='1.0' encoding='ISO-8859-1'?>";
+    $xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/'>";
+    foreach($res[2] as $entry){
+        $xml_content .= convert_array_to_xml_entry($entry);
+        array_push($ids,$entry['id']);
     }
-    $xml .= "</bibtex:file>";
-    die($xml);
-    return $xml;
+    $xml_content .= "</bibtex:file>";
+    return array(count($res[2]),$ids,$xml_content);;
 }
+
 ?>

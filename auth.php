@@ -162,7 +162,7 @@ class Auth
                 $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
                 $row = mysql_fetch_assoc($result);
                 $access = $row['access'];
-                return $access[3] == '1';
+                return $access[2] == '1';
             }
             else{
                 return FALSE;
@@ -191,7 +191,7 @@ class Auth
                 $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
                 $row = mysql_fetch_assoc($result);
                 $access = $row['access'];
-                return $access[1] == '1';
+                return $access[0] == '1';
             }
             else{
                 return FALSE;
@@ -220,7 +220,7 @@ class Auth
                 $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
                 $row = mysql_fetch_assoc($result);
                 $access = $row['access'];
-                return $access[2] == '1';
+                return $access[1] == '1';
             }
             else{
                 return FALSE;
