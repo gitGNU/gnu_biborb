@@ -3,7 +3,7 @@
 *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2004  Guillaume Gardey
+ * Copyright (C) 2003-2004  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,6 +46,18 @@ class BibORB_DataBase {
     var $biblio_name;
     // the biblio directory
     var $biblio_dir;
+    
+    // 
+    var $sort;
+    var $sort_order;
+    
+    function set_sort($sort){
+        $this->sort = $sort;
+    }
+    
+    function set_sort_order($sort_order){
+        $this->sort_order = $sort_order;
+    }
     
     /**
         Constructor
@@ -110,10 +122,32 @@ class BibORB_DataBase {
     }
 
     /**
-     Get all entries in the database
+        Get all entries in the database
     */
     function all_entries(){
         return load_file($this->xml_file());
+    }
+    
+    /**
+        Get all bibtex ids.
+    */
+    
+    function all_bibtex_ids(){
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $this->all_entries();    
+        $xsl_content = load_file("./xsl/extract_ids.xsl");
+        $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry",$xsl_content);
+        $param = array('sort' => $this->sort,
+                       'sort_order' => $this->sort_order);
+        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+        $res = explode('|',$res);
+        if($res[0] == ""){
+            return array();
+        }
+        else{
+            return $res;
+        }
     }
     
     /**
@@ -128,6 +162,31 @@ class BibORB_DataBase {
         $xsltp->free();
 	
         return $res;
+    }
+    
+    function ids_for_group($groupname){
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $this->all_entries();    
+        $xsl_content = load_file("./xsl/extract_ids.xsl");
+        if($groupname){
+            $xpath = '//bibtex:entry[(.//bibtex:group)=$group]';
+        }
+        else{
+            $xpath = '//bibtex:entry[not(.//bibtex:group)]';
+        }
+        $xsl_content = str_replace("XPATH_QUERY",$xpath,$xsl_content);
+        $param = array('group'=>$groupname,
+                       'sort' => $this->sort,
+                       'sort_order' => $this->sort_order);
+        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+        $res = explode('|',$res);
+        if($res[0] == ""){
+            return array();
+        }
+        else{
+            return $res;
+        }
     }
     
     /**
@@ -156,7 +215,6 @@ class BibORB_DataBase {
             $xml_content .= "<id>$item</id>";
         }
         $xml_content .= "</listofids>";
-	
         $param = array('bibnameurl' => $this->xml_file());
         return $xsltp->transform($xml_content,$xsl_content,$param);
     }
@@ -484,6 +542,24 @@ class BibORB_DataBase {
         return $result;
     }
     
+    function ids_for_search($value,$fields){
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $this->search_entries($value,$fields);    
+        $xsl_content = load_file("./xsl/extract_ids.xsl");
+        $xsl_content = str_replace("XPATH_QUERY",'//bibtex:entry',$xsl_content);
+        $param = array('sort' => $this->sort,
+                       'sort_order' => $this->sort_order);
+        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+        $res = explode('|',$res);
+        if($res[0] == ""){
+            return array();
+        }
+        else{
+            return $res;
+        }
+    }
+    
     /**
      Advanced search function
     */
@@ -500,6 +576,24 @@ class BibORB_DataBase {
         $xsltp->free();
         return $result;
     }
+    
+    function ids_for_advanced_search($searchArray){
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $this->advanced_search_entries($searchArray);    
+        $xsl_content = load_file("./xsl/extract_ids.xsl");
+        $xsl_content = str_replace("XPATH_QUERY",'//bibtex:entry',$xsl_content);
+        $param = array('sort' => $this->sort,
+                       'sort_order' => $this->sort_order);
+        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+        $res = explode('|',$res);
+        if($res[0] == ""){
+            return array();
+        }
+        else{
+            return $res;
+        }
+    }
 
     /**
         XPath search
@@ -513,6 +607,24 @@ class BibORB_DataBase {
         $result = $xsltp->transform($xml_content,$xsl_content,$param); 
         $xsltp->free();
         return $result;
+    }
+    
+    function ids_for_xpath_search($xpath_query){
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $xml_content = $this->all_entries();    
+        $xsl_content = load_file("./xsl/extract_ids.xsl");
+        $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry[$xpath_query]",$xsl_content);
+        $param = array('sort' => $this->sort,
+                       'sort_order' => $this->sort_order);
+        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
+        $xsltp->free();
+        $res = explode('|',$res);
+        if($res[0] == ""){
+            return array();
+        }
+        else{
+            return $res;
+        }
     }
     
     /**

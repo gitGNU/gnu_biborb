@@ -203,4 +203,44 @@ function addslashes_deep($value){
     $value = is_array($value) ? array_map('addslashes_deep', $value) : addslashes($value);
     return $value;
 }
+
+
+function flatten_array($array){
+    $flat = array();
+    for($i=0;$i<count($array);$i++){
+        $flat = array_merge($flat,$array[$i]);
+    }
+    return $flat;
+}
+
+if (!function_exists('array_chunk')) {
+    function array_chunk( $input, $size, $preserve_keys = false) {
+        @reset( $input );
+        $i = $j = 0;
+        while( @list( $key, $value ) = @each( $input ) ) {
+            if( !( isset( $chunks[$i] ) ) ) {
+                $chunks[$i] = array();
+            }
+            if( count( $chunks[$i] ) < $size ) {
+                if( $preserve_keys ) {
+                    $chunks[$i][$key] = $value;
+                    $j++;
+                } else {
+                    $chunks[$i][] = $value;
+                }
+            } else {
+                $i++;
+                if( $preserve_keys ) {
+                    $chunks[$i][$key] = $value;
+                    $j++;
+                } else {
+                    $j = 0;
+                    $chunks[$i][$j] = $value;
+                }
+            }
+        }
+        return $chunks;
+    }
+}
+
 ?>

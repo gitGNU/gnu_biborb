@@ -152,7 +152,7 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
 /**
     Generate the sort div section
 */
-function sort_div($selected_sort,$mode,$group){
+function sort_div($selected_sort,$selected_order,$mode,$misc){
     // ensure the localization is set up
     load_i18n_config($_SESSION['language']);
 
@@ -184,9 +184,25 @@ function sort_div($selected_sort,$mode,$group){
     }
     $html .= "</select>";
     $html .= "<input type='hidden' name='mode' value='$mode'/>";
-    if($group){
-        $html .= "<input type='hidden' name='group' value='$group'/>";
+    if($misc){
+        foreach($misc as $key=>$val){
+            $html .= "<input type='hidden' name='$key' value='$val'/>";
+        }
     }
+    $html .= "<select name='sort_order'>";
+    if($selected_order=='ascending'){
+        $html .= "<option value='ascending' selected='selected'>"._("ascending")."</option>";
+    }
+    else{
+        $html .= "<option value='ascending'>"._("ascending")."</option>";
+    }
+    if($selected_order=='descending'){
+        $html .= "<option value='descending' selected='selected'>"._("descending")."</option>";
+    }
+    else{
+        $html .= "<option value='descending'>"._("descending")."</option>";
+    }
+    $html .= "</select>";
     $html .= "<input type='submit' value='"._("Sort")."'/>";
     $html .= "</fieldset>";
     $html .= "</form>";
@@ -202,6 +218,37 @@ function bibtex_keys_from_aux($auxfile){
     $lines = load_file($auxfile);
     preg_match_all("/citation{(.*)}/i",$lines,$res);
     return $res[1];
+}
+
+/**
+    Create the nav bar
+*/
+function create_nav_bar($current_page,$max_page,$mode,$extraparam=null){
+    $html = "";
+    if($max_page>1){
+        $html .= "<div id='nav_bar'>";
+        if($extraparam != null){
+            $extraparam = "&amp;".$extraparam;
+        }
+        if($current_page != 0){
+            $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=0'><img src='data/images/stock_first-16.png' alt='First' title='First'/></a>";
+            $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=".($current_page-1)."'><img src='data/images/stock_left-16.png' alt='Previous' title='Previous'/></a>";
+        }
+        for($i=0;$i<$max_page;$i++){
+            if($current_page==$i){
+                $html .= "<a id='current_page' href='bibindex.php?mode=$mode$extraparam&amp;page=$i'>".($i+1)."</a>";
+            }
+            else{
+                $html .= "<a class='num_page' href='bibindex.php?mode=$mode$extraparam&amp;page=$i'>".($i+1)."</a>";
+            }
+        }
+        if($current_page != $max_page-1){
+            $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=".($current_page+1)."'><img src='data/images/stock_right-16.png' alt='Next' title='Next'/></a>";
+            $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=".($max_page-1)."'><img src='data/images/stock_last-16.png' alt='Last' title='Last'/></a>";
+        }
+        $html .= "</div>";
+    }
+    return $html;
 }
 
 ?>

@@ -693,13 +693,13 @@ msgid "BIBORB_OUTPUT_NEW_FILE"
 msgstr "Nouveau fichier"
 
 msgid "BIBORB_OUTPUT_WEBSITE_ALT"
-msgstr "site web"
+msgstr "Site web"
 
 msgid "BIBORB_OUTPUT_WEBSITE_TITLE"
 msgstr "Lien vers une page web associée"
 
 msgid "BIBORB_OUTPUT_LINK_ALT"
-msgstr "lien"
+msgstr "Lien"
 
 msgid "BIBORB_OUTPUT_LINK_TITLE"
 msgstr "Lien vers une page locale"

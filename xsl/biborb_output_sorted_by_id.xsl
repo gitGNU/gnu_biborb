@@ -42,6 +42,7 @@
 
     <xsl:template match="/">
 		<xsl:variable name="cpt" select="count(//bibtex:entry)"/>
+        
 		<!-- add a link to add all entries -->
         <xsl:variable name="ids">
             <xsl:for-each select="//bibtex:entry">
@@ -50,79 +51,11 @@
             </xsl:for-each>
         </xsl:variable>
         <br/>
-        
-<!--        <div style="margin:0;border:none;padding:0;vertical-align:center;">-->
-        <!--    <xsl:if test="$display_sort = 'true'">
-            <div class="sort">
-            _("Sort by"):
-                <form method="get" action="bibindex.php">
-                    <fieldset>
-                        <select name='sort' size='1'>
-                            <xsl:element name="option">
-                                <xsl:attribute name='value'>ID</xsl:attribute>
-                                <xsl:if test="$sort = 'ID'">
-                                    <xsl:attribute name='selected'>selected</xsl:attribute>
-                                </xsl:if>
-                                ID
-                            </xsl:element>
-                            <xsl:element name="option">
-                                <xsl:attribute name='value'>_("title")</xsl:attribute>
-                                <xsl:if test="$sort = 'title'">
-                                    <xsl:attribute name='selected'>selected</xsl:attribute>
-                                </xsl:if>
-                                _("Title")
-                            </xsl:element>
-                            <xsl:element name="option">
-                                <xsl:attribute name='value'>_("year")</xsl:attribute>
-                                <xsl:if test="$sort = 'year'">
-                                    <xsl:attribute name='selected'>selected</xsl:attribute>
-                                </xsl:if>
-                                _("Year")
-                            </xsl:element>
-                        </select>
-                        <input type='hidden' name='mode' value='{$bibindex_mode}'/>
-                        <xsl:if test="$group">
-                            <input type='hidden' name='group' value='{$group}'/>
-                        </xsl:if>
-                        <input type='submit' value='sort'/>
-                    </fieldset>
-                </form>
-                </div>
-            </xsl:if>--><!--
-       <xsl:if test="$cpt != 0 and $display_basket_actions != 'no' and $display_add_all != 'no'">
-            <div class="addtobasket">
-                BIBORB_OUTPUT_ADD_ALL_TO_BASKET<a href="bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={$ids}&amp;{$extra_get_param}"><img src="./data/images/add.png" alt="add" /></a>
-            </div>
-		</xsl:if>-->
-<!--        </div>-->
-		<br/>
 		
         <!-- start the table -->
         <table id="bibtex_table">
             <tbody>
-                <xsl:choose>
-                    <xsl:when test="$sort = 'year'">
-                        <!-- sort entries by increasing year -->
-                        <xsl:apply-templates select="//bibtex:entry">
-                            <xsl:sort select=".//bibtex:year" order="descending" data-type="text"/>
-                        </xsl:apply-templates>
-                    </xsl:when>
-                    <xsl:when test="$sort = 'title'">
-                        <!-- sort entries by increasing title -->
-                        <xsl:apply-templates select="//bibtex:entry">
-                            <xsl:sort select=".//bibtex:title" order="ascending" data-type="text"/>
-                        </xsl:apply-templates>
-                    </xsl:when>
-                    <xsl:when test="$sort = 'ID'">
-                        <!-- sort entries by increasing id -->
-                        <xsl:apply-templates select="//bibtex:entry">
-                            <xsl:sort select="@id" order="ascending" data-type="text"/>
-                        </xsl:apply-templates>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:apply-templates select='//bibtex:entry'/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:apply-templates select='//bibtex:entry'/>
             </tbody>
         </table>
     </xsl:template>

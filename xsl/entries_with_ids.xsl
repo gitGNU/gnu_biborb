@@ -48,9 +48,14 @@
         <xsl:variable name="ids" select="//id"/>
 		
 		<xsl:element name="bibtex:file">
-			<xsl:copy>
+            <xsl:for-each select="$ids">
+                <xsl:copy>
+                    <xsl:apply-templates select="$bibfile//bibtex:entry[@id=current()]"/>
+                </xsl:copy>
+            </xsl:for-each>
+			<!--<xsl:copy>
 				<xsl:apply-templates select="$bibfile//bibtex:entry[@id=$ids]"/>
-			</xsl:copy>
+			</xsl:copy>-->
 		</xsl:element>
 	</xsl:template>
 	

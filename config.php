@@ -171,5 +171,9 @@ $DISPLAY_SORT=TRUE;
  * Default sort method: ID,title,year
  */
 $DEFAULT_SORT="ID";
-
+$DEFAULT_SORT_ORDER="ascending";
+/**
+ * Max number of references by page.
+ */
+$MAX_REFERENCES_BY_PAGE=10;
 ?>

@@ -201,12 +201,14 @@ if($abst==null){
 } 
 
 $sort = $DEFAULT_SORT;
-if(array_key_exists('sort',$_GET)){
-    $sort = $_GET['sort'];
-}
-else if(array_key_exists('sort',$_POST)){
-    $sort = $_POST['sort'];
-}
+$sort_order = $DEFAULT_SORT_ORDER;
+if(array_key_exists('sort',$_GET)){$sort = $_GET['sort'];}
+else if(array_key_exists('sort',$_POST)){$sort = $_POST['sort'];}
+if(array_key_exists('sort_order',$_GET)){$sort_order = $_GET['sort_order'];}
+else if(array_key_exists('sort_order',$_POST)){$sort_order = $_POST['sort_order'];}
+$_SESSION['bibdb']->set_sort($sort);
+$_SESSION['bibdb']->set_sort_order($sort_order);
+
 
 $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'bibnameurl' => $_SESSION['bibdb']->xml_file(),
@@ -215,6 +217,7 @@ $xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
                     'abstract' => $abst,
                     'display_add_all'=> 'true',
                     'sort' => $sort,
+                    'sort_order' => $sort_order,
                     'display_sort'=> $DISPLAY_SORT,
                     'can_modify' => $_SESSION['user_can_modify'] || $_SESSION['user_is_admin'],
                     'can_delete' => $_SESSION['user_can_delete'] || $_SESSION['user_is_admin']);

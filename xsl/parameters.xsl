@@ -102,6 +102,8 @@
     
     <!-- Sort -->
     <xsl:param name="sort"/>
+    <xsl:param name="sort_order"/>
+    
 <!--    <xsl:param name="display_sort"/>-->
     
     <!-- Basket action images -->

@@ -583,38 +583,55 @@ function bibindex_display_all(){
     $title = _("BIBINDEX_DISPLAY_ALL_TITLE");
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
-
-    $entries = $_SESSION['bibdb']->all_entries();
-	$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-	$param = $GLOBALS['xslparam'];
-	$param['bibindex_mode'] = $_GET['mode'];
-	$param['basketids'] = $_SESSION['basket']->items_to_string();
-    $content = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-    $xsltp->free();
     
-    // create the header
-    $start = "<div class='result_header'>";
-    if($GLOBALS['DISPLAY_SORT']){
-        $start = sort_div($GLOBALS['sort'],$_GET['mode'],null).$start;
+    // store the ids in session if we come from an other page.
+    if(!isset($_GET['page'])){
+        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->all_bibtex_ids(),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+        $_GET['page'] = 0;
     }
-    $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode'],"sort=".$GLOBALS['sort']);
-    $start .= "</div>";
+    
+    // get HTML representation of entries
+    $flatids = flatten_array($_SESSION['ids']);
+    if(count($flatids)>0){
+        $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $param = $GLOBALS['xslparam'];
+        $param['bibindex_mode'] = $_GET['mode'];
+        $param['basketids'] = $_SESSION['basket']->items_to_string();
+        $param['extra_get_param'] = "page=".$_GET['page'];
+        $content = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+        $xsltp->free();
+    
+        // create the header
+        $start = "<div class='result_header'>";
+        if($GLOBALS['DISPLAY_SORT']){
+            $start = sort_div($GLOBALS['sort'],$GLOBALS['sort_order'],$_GET['mode'],null).$start;
+        }
+        $start .= add_all_to_basket_div($flatids,$_GET['mode'],"sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."&amp;page=".$_GET['page']);
+        $start .= "</div>";
+    
+        // create a nav bar to display entries
+        $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),"displayall","sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."page=".$_GET['page']);
 
-    $content = $start.replace_localized_strings($content);
-	$html .= main($title,$content);
-	
+        $content = $start.replace_localized_strings($content);
+    }
+    else{
+        $content = _("No entries.");
+    }
+    $html .= main($title,$content);
     $html .= html_close();
     return $html;  
 }
-
-
 
 /**
  * bibindex_display_by_group()
  * Display entries by group
  */
 function bibindex_display_by_group(){
+    
 	$group = get_value('group',$_GET);
+    if(isset($_GET['orphan'])){$group=null;}
+    
     $title = _("BIBINDEX_DISPLAY_BY_GROUPS_TITLE");
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
@@ -639,45 +656,82 @@ function bibindex_display_by_group(){
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
     
+    
+    // store the ids in session if we come from an other page.
+    if(!isset($_GET['page'])){
+        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_group($group),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+        $_GET['page'] = 0;
+    }
+    $flatids = flatten_array($_SESSION['ids']);
+    $nb=count($flatids);
     // if the group is defined, display the entries matching it
-    if($group || isset($_GET['orphan'])){
+    if(($group || isset($_GET['orphan'])) && $nb>0){
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $param = $GLOBALS['xslparam'];
         $param['group'] = $group;
         $param['basketids'] = $_SESSION['basket']->items_to_string();
         $param['bibindex_mode'] = "displaybygroup";
         if(isset($_GET['orphan'])){
-            $param['extra_get_param'] = "orphan=1";
-            $entries = $_SESSION['bibdb']->entries_group_orphan();
+            $param['extra_get_param'] = "orphan=1&page=".$_GET['page'];
+            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
         }
         else{
-            $param['extra_get_param'] = "group=$group";
-            $entries = $_SESSION['bibdb']->entries_for_group($group);
+            $param['extra_get_param'] = "group=$group&page=".$_GET['page'];
+            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
         }
-
-        $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
-        if(!isset($_GET['orphan'])){
-            if($nb == 0){
-                $main_content .= sprintf(_("No entry for the group %s."),$group);
-            }
-            else if($nb == 1){
+        
+        if($nb == 1){
+            if(!isset($_GET['orphan'])){
                 $main_content .= sprintf(_("An entry for the group %s."),$group);
             }
             else{
-                $main_content .= sprintf(_("%d entries for the group %s."),$nb,$group);
+                $main_content .= sprintf(_("1 orphan."));
             }
         }
-                
+        else{
+            if(!isset($_GET['orphan'])){
+                $main_content .= sprintf(_("%d entries for the group %s."),$nb,$group);
+            }
+            else{
+                $main_content .= sprintf(_("%d orphans."),$nb);
+            }
+        }
+            
+        if(isset($_GET['orphan'])){
+            $extraparam = "orphan=1&amp;sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."&amp;page=".$_GET['page'];
+        }
+        else{
+            $extraparam = "group=$group&amp;sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."&amp;page=".$_GET['page'];
+        }
         
         // create the header
         $start = "<div style='result_header'>";
-        if($GLOBALS['DISPLAY_SORT']){
-            $start = sort_div($GLOBALS['sort'],$_GET['mode'],$group).$start;
+        if(isset($_GET['orphan'])){
+            $extra['orphan'] = 1;
         }
-        $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode'],"group=$group&amp;sort=".$GLOBALS['sort']);
+        else{
+            $extra['group'] = $group;
+        }
+                
+        if($GLOBALS['DISPLAY_SORT']){
+            $start = sort_div($GLOBALS['sort'],$GLOBALS['sort_order'],$_GET['mode'],$extra).$start;
+        }
+        $start .= add_all_to_basket_div($flatids,$_GET['mode'],$extraparam);
         $start .= "</div>";
+        
+        // create a nav bar to display entries
+        $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),$_GET['mode'],$extraparam);
+        
         $main_content .= "<br/><br/>".$start;
         $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+    }
+    else{
+        if(!isset($_GET['orphan'])){
+            $main_content .= sprintf(_("No entry for the group %s."),$group);
+        }
+        else{
+            $main_content .= sprintf(_("No orphan."));
+        }
     }
     $html .= main($title,$main_content);
     $html .= html_close();
@@ -777,7 +831,7 @@ function bibindex_display_search(){
     
     if($searchvalue){
         $fields =array();
-            $extra_param ="search=$searchvalue";
+        $extra_param ="search=$searchvalue";
         
         if(array_key_exists('author',$_GET)){
             array_push($fields,'author');
@@ -807,27 +861,42 @@ function bibindex_display_search(){
             array_push($fields,'sort');
             $extra_param .= "&sort=".$_GET['sort'];
         }
-	
-        $entries = $_SESSION['bibdb']->search_entries($searchvalue,$fields);
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-        $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
-        $param = $GLOBALS['xslparam'];
-        $param['bibindex_mode'] = $_GET['mode'];
-        $param['basketids'] = $_SESSION['basket']->items_to_string();
-        $param['extra_get_param'] = $extra_param;
-        
-        // add all
-        $start = "<div class='result_header'>"; 
-        $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode'],$extra_param);
-        $start .= "</div>";
-        
-        if($nb==1){
-            $main_content .= sprintf(_("One match for %s"),$searchvalue).$start;
-            $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+        if(array_key_exists('sort_order',$_GET)){
+            $extra_param .= "&sort_order=".$_GET['sort_order'];
         }
-        else if($nb>1) {
-            $main_content .= sprintf(_("%d matches for %s."),$nb,$searchvalue).$start;
-            $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+	
+        // store the ids in session if we come from an other page.
+        if(!isset($_GET['page'])){
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_search($searchvalue,$fields),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+            $_GET['page'] = 0;
+        }
+        $flatids = flatten_array($_SESSION['ids']);
+        if(count($flatids)>0){
+            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $nb = count($flatids);
+            $param = $GLOBALS['xslparam'];
+            $param['bibindex_mode'] = $_GET['mode'];
+            $param['basketids'] = $_SESSION['basket']->items_to_string();
+            $extra_param .= "&page=".$_GET['page'];
+            $param['extra_get_param'] = $extra_param;
+            
+            // add all
+            $start = "<div class='result_header'>"; 
+            $start .= add_all_to_basket_div($flatids,$_GET['mode'],$extra_param);
+            $start .= "</div>";
+            
+            // create a nav bar to display entries
+            $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),$_GET['mode'],$extra_param);
+            
+            if($nb==1){
+                $main_content .= sprintf(_("One match for %s"),$searchvalue).$start;
+                $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+            }
+            else if($nb>1) {
+                $main_content .= sprintf(_("%d matches for %s."),$nb,$searchvalue).$start;
+                $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+            }
         }
         else{
             $main_content .= sprintf(_("No match for %s."),$searchvalue);
@@ -916,7 +985,7 @@ function bibindex_display_advanced_search(){
 	$content .= "<strong>"._("BibTeX Fields")."</strong><br/>";
     
     foreach($bibtex_fields as $field){
-        $content .= "<label for='$field'>$field</label>";
+        $content .= "<label>$field</label>";
         if(array_key_exists($field,$_GET)){
             $thefield = remove_accents(trim($_GET[$field]));
             $content .= "<input name='$field' value='".$thefield."'/>";
@@ -929,7 +998,7 @@ function bibindex_display_advanced_search(){
     }
     $content .= "<strong>"._("BibORB Fields")."</strong><br/>";
     foreach($biborb_fields as $field){
-        $content .= "<label for='$field'>$field</label>";
+        $content .= "<label>$field</label>";
         if(array_key_exists($field,$_GET)){
             $thefield = remove_accents(trim($_GET[$field]));
             $content .= "<input name='$field' value='".$thefield."'/>";
@@ -966,27 +1035,37 @@ function bibindex_display_advanced_search(){
     }
     $main_content = "";
     if(count($searchArray) > 1){
-        $entries = $_SESSION['bibdb']->advanced_search_entries($searchArray);
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-        $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
-        $param = $GLOBALS['xslparam'];
-        $param['bibindex_mode'] = 'displayadvancedsearch';
-        $param['basketids'] = $_SESSION['basket']->items_to_string();
-        
-        $param['extra_get_param'] = $extraparam;
-        
-        // add all
-        $start = "<div class='result_header'>";
-        $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode'],$extraparam);
-        $start .= "</div>";
-        
-        if($nb==1){
-            $main_content = _("One match.").$start;
-            $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+        // store the ids in session if we come from an other page.
+        if(!isset($_GET['page'])){
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_advanced_search($searchArray),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+            $_GET['page'] = 0;
         }
-        else if($nb>1) {
-            $main_content = sprintf(_("%d matches."),$nb).$start;
-            $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+        $flatids = flatten_array($_SESSION['ids']);
+        if(count($flatids)>0){
+            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $nb = count($flatids);
+            $param = $GLOBALS['xslparam'];
+            $param['bibindex_mode'] = 'displayadvancedsearch';
+            $param['basketids'] = $_SESSION['basket']->items_to_string();
+            $extraparam .= "page=".$_GET['page'];
+            $param['extra_get_param'] = $extraparam;
+            
+            // add all
+            $start = "<div class='result_header'>";
+            $start .= add_all_to_basket_div($flatids,$_GET['mode'],$extraparam);
+            $start .= "</div>";
+            // create a nav bar to display entries
+            $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),$_GET['mode'],$extraparam);
+            
+            if($nb==1){
+                $main_content = _("One match.").$start;
+                $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+            }
+            else if($nb>1) {
+                $main_content = sprintf(_("%d matches."),$nb).$start;
+                $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+            }
         }
         else{
             $main_content = _("No match.");
@@ -1036,14 +1115,20 @@ function bibindex_display_basket(){
     $param = $GLOBALS['xslparam'];
     $param['bibindex_mode'] = $_GET['mode'];
     $param['basketids'] = $_SESSION['basket']->items_to_string();
-
-    $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
-    $nb = $_SESSION['basket']->count_items();
-    $main_content = replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
-    if($nb == 0){
-        $content = _("No entry in the basket.");
+    
+    // store the ids in session if we come from an other page.
+    if(!isset($_GET['page'])){
+        $_SESSION['ids'] = array_chunk($_SESSION['basket']->items,$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+        $_GET['page'] = 0;
     }
-    else{
+    $flatids = flatten_array($_SESSION['ids']);
+    $nb = count($flatids);
+    if($nb>0){
+        $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+        // create a nav bar to display entries
+        $start = create_nav_bar($_GET['page'],count($_SESSION['ids']),"displaybasket","page=".$_GET['page']);
+        $param['extra_get_param'] = "page=".$_GET['page'];
+        $main_content = replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
         $content = "<div>";
         if($nb == 1){
             $content = _("An entry in the basket.");
@@ -1058,9 +1143,12 @@ function bibindex_display_basket(){
             $content .= "</a>";
             $content .= "</div>";
         }
-        $content .= "</div>";
-	
+        $content .= "</div>".$start;
+
         $content .= $main_content;
+    }
+    else{
+        $content = _("No entry in the basket.");
     }
     
     $html .= main($title,$content);
@@ -1430,35 +1518,45 @@ function bibindex_display_xpath_search()
     $content .= "<input type='submit' class='submit' value='"._("Search")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "Go to <a href='bibindex.php?mode=displaysearch'>Simple Search</a>, <a href='bibindex.php?mode=displayxpathsearch'>XPath Search</a>.<br/><br/>";
+    $content .= "Go to <a href='bibindex.php?mode=displaysearch'>Simple Search</a>, <a href='bibindex.php?mode=displayadvancedsearch'>Advanced Search</a>.<br/><br/>";
     
     // execute an Xpath query
     if(array_key_exists("xpath_query",$_GET)){
-        $entries = $_SESSION['bibdb']->xpath_search(myhtmlentities($_GET['xpath_query']));
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-        $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
-        $param = $GLOBALS['xslparam'];
-        $param['bibindex_mode'] = $_GET['mode'];
-        $param['basketids'] = $_SESSION['basket']->items_to_string();
-        $param['extra_get_param'] = "xpath_query=".$_GET['xpath_query'];
-    
-        // add all
-        $start = "<div class='result_header'>";
-        $start .= add_all_to_basket_div(extract_ids_from_xml($entries),$_GET['mode']);
-        $start .= "</div>";
-        
-        if($nb==1){
-            $content .= _("One match.").$start;
-            $content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+        // store the ids in session if we come from an other page.
+        if(!isset($_GET['page'])){
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_xpath_search(myhtmlentities($_GET['xpath_query'])),$GLOBALS['MAX_REFERENCES_BY_PAGE']);
+            $_GET['page'] = 0;
         }
-        else if($nb>1) {
-            $content .= sprintf(_("%d matches."),$nb).$start;
-            $content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+        $flatids = flatten_array($_SESSION['ids']);
+        if(count($flatids)>0){
+            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $nb = count($flatids);
+            $param = $GLOBALS['xslparam'];
+            $param['bibindex_mode'] = "displayxpathsearch";
+            $param['basketids'] = $_SESSION['basket']->items_to_string();
+            $extraparam = "xpath_query=".urlencode($_GET['xpath_query']);
+            $extraparam .= "&page=".$_GET['page'];
+            // add all
+            $start = "<div class='result_header'>";
+            $start .= add_all_to_basket_div($flatids,"displayxpathsearch",$extraparam);
+            $start .= "</div>";
+            // create a nav bar to display entries
+            $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),"displayxpathsearch",$extraparam);
+            $param['extra_get_param'] = $extraparam;
+            if($nb==1){
+                $content .= _("One match.").$start;
+                $content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+            }
+            else if($nb>1) {
+                $content .= sprintf(_("%d matches."),$nb).$start;
+                $content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
+            }
+            $xsltp->free();
         }
         else{
             $content .= _("No match.");
         }
-         $xsltp->free();
     }
     $html .= main($title,$content);
     $html .= html_close();
