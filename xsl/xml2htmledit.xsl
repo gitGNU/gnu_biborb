@@ -36,21 +36,23 @@
   exclude-result-prefixes="bibtex"
   version="1.0">
   
-  <xsl:output method="xml" encoding="iso-8859-1"/>
+    <xsl:output method="xml" encoding="iso-8859-1"/>
 
-  <xsl:param name="bibname"/>
-  <xsl:param name="id"/>
-  <xsl:param name="add"/>
+    <xsl:param name="bibname"/>
+    <xsl:param name="id"/>
+    <xsl:param name="add"/>
 
-  <xsl:template match="/entrylist">
-    <xsl:variable name="bibfile" select="document($bibname)//bibtex:entry[@id=$id]"></xsl:variable>
-    <xsl:variable name="type"><xsl:value-of select="local-name($bibfile/*[position() =1])"/></xsl:variable>
-    <input type='hidden' name='add_type' value="{$type}"/>
-    <b>Required Fields</b>
-    <table class='required'>
-      <tbody>
-        <xsl:for-each select="entry[@type=$type]/required/*">
-          <xsl:choose>
+    <xsl:template match="/entrylist">
+    
+        <xsl:variable name="bibfile" select="document($bibname)//bibtex:entry[@id=$id]"></xsl:variable>
+        <xsl:variable name="type"><xsl:value-of select="local-name($bibfile/*[position() =1])"/></xsl:variable>
+        
+        <input type="hidden" name="add_type" value="{$type}"/>
+        <b>Required Fields</b>
+        <table class="required">
+            <tbody>
+                <xsl:for-each select="entry[@type=$type]/required/*">
+                <xsl:choose>
             <xsl:when test="name() = 'alternative'">
               <xsl:variable name="cpt"><xsl:value-of select="count(*)"/></xsl:variable>
               <xsl:for-each select='*'>
@@ -99,9 +101,7 @@
               <tr>
                 <td class='required-entry'><xsl:value-of select="name()"/>:</td>
                 <td class='required-value'>
-                  <xsl:variable name="nm">
-                    <xsl:value-of select="name()"/>
-                  </xsl:variable>
+                  <xsl:variable name="nm"><xsl:value-of select="name()"/></xsl:variable>
                   <xsl:variable name="val">
                     <xsl:choose>
                       <xsl:when test="name()='id'">
@@ -117,10 +117,10 @@
                   <xsl:choose>
                     <xsl:when test="local-name() = 'id' and $add=0">
                       <xsl:value-of select="$val"/>
-                      <input name="_{name()}" value='{$val}' type='hidden' />
+                      <input name="_{name()}" value="{$val}" type="hidden" />
                     </xsl:when>
                     <xsl:otherwise>
-                      <input name="_{name()}" value='{$val}' />
+                      <input name="_{name()}" value="{$val}" />
                     </xsl:otherwise>
                   </xsl:choose>
                 </td>
@@ -233,6 +233,17 @@
                     current:<input class='current' name="current_{name()}" value='{$val}' /><br/>
                     new:<input class='newfile' name="{name()}" type='file'/>
                   </td>
+                </xsl:when>
+                <xsl:when test="name() = 'groups'">
+                    <td class='additional-value'>
+                        <xsl:variable name="val">
+                           <xsl:for-each select="$bibfile//*[local-name() = 'group']">
+                                <xsl:value-of select="current()"/>
+                                <xsl:if test="position() != last()">,</xsl:if>
+                            </xsl:for-each>
+                        </xsl:variable>
+                        <input name="_groups" value="{$val}" />
+                    </td>
                 </xsl:when>
                 <xsl:otherwise>
                   <td class='additional-value'>

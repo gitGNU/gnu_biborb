@@ -56,6 +56,20 @@
                 <xsl:call-template name="link2bibtex">
                     <xsl:with-param name="id" select="$theid"/>
                 </xsl:call-template>
+                <xsl:variable name="getval">
+                    <xsl:if test="$session_name != ''"><xsl:value-of select="$session_name"/>=<xsl:value-of select="$session_id"/>&amp;id=<xsl:value-of select="@id"/>&amp;mode=edit</xsl:if>
+                </xsl:variable>
+                <xsl:if test="$mode='admin'">
+                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=edit">edit</a>
+                    <a class="bibtex_action" href="./action_proxy.php?{$getval}&amp;action=delete">delete</a>
+                </xsl:if>
+                <xsl:if test="$basket = '' and $basket != 'no'">
+                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=add_to_basket">+</a>
+                </xsl:if>
+                <xsl:if test="$basket != '' and $basket != 'no'">
+                    <a class="basket_action" href="./action_proxy.php?{$getval}&amp;action=delete_from_basket">-</a>
+                </xsl:if>
+                <!--
                 <form method="get" action="action_proxy.php" class="bibtex_button">
                     <xsl:if test="$session_name != ''">
                         <input type="hidden" name="{$session_name}" value="{$session_id}" />
@@ -72,7 +86,7 @@
                     <xsl:if test="$basket != '' and $basket != 'no'">
                         <input type="submit" name="action" value="delete_from_basket" />
                     </xsl:if>
-                </form>
+                </form>-->
             </td>
         </tr>
         <!-- second row for this entry -->
@@ -121,6 +135,9 @@
         </span>
     </xsl:template>
     
+    <!--
+        Some javascript here to display the abstract. If javascript is not supported, another page is generated to display the abstract of the given entry.
+    -->
     <xsl:template name="abstract">
         <xsl:param name="id"/>
         <span>
@@ -128,7 +145,6 @@
         document.write(&quot;&lt;a href=\&quot;javascript:toggle_abstract(\'<xsl:value-of select="$id"/>\')\&quot;&gt;abstract&lt;/a&gt;&quot;);
         //--&gt;</script>
             <noscript><a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}">abstract</a></noscript>
-        
         </span>
     </xsl:template>
     
