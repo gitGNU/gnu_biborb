@@ -51,6 +51,11 @@ session_name($session_id);
 session_start();
 
 /**
+ *  i18n
+ */
+load_i18n_config($language);
+
+/**
  * To store an error or a message. (mode=result)
  */
 $error_or_message = array('error' => null,
@@ -91,7 +96,7 @@ if(isset($_GET['action'])){
         /*
             Create a database
          */
-        case 'create':
+        case _("Create"):
             $error_or_message = create_database($_GET['database_name'],
                                                 $_GET['description']);
             break;
@@ -99,14 +104,14 @@ if(isset($_GET['action'])){
         /*
             Delete a database
          */
-        case 'delete':
+        case _("Delete"):
             $error_or_message['message'] = delete_database($_GET['database_name']);
             break;
         
         /*
             Logout
          */
-        case 'logout':
+        case "logout":
             $_SESSION['usermode'] = "user";
             break;
             
@@ -124,11 +129,11 @@ if(isset($_POST['action'])){
         /*
             Login
          */
-        case 'login':
+        case _("Login"):
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
             if($login=="" || $mdp==""){
-                $error_or_message['error'] = "You must fill both login and password!";
+                $error_or_message['error'] = _("LOGIN_MISSING_VALUES");
                 $mode = "login";
             }
             else {
@@ -138,7 +143,7 @@ if(isset($_POST['action'])){
                     $_SESSION['usermode'] = "admin";
                 }
                 else {
-                    $error_or_message['error'] = "Wrong login or password";
+                    $error_or_message['error'] = _("LOGIN_WRONG_USERNAME_PASSWORD");
                     $mode = "login";
                 }
             }

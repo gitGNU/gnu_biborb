@@ -34,6 +34,12 @@
  */
 
 /**
+ * Localisation
+ * Default: en
+ */
+$language = "fr";
+
+/**
  * Version of Biborb
  */
 $biborb_version = "CVS";
@@ -44,7 +50,7 @@ $date_release = "29 May 2004";
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = TRUE;
+$disable_authentication = FALSE;
 
 
 /**
@@ -65,7 +71,7 @@ $display_images = TRUE;
 /**
  *  Sould action be represented by text or not.
  */
-$display_text = FALSE;
+$display_text = TRUE;
 
 /**
  * Name of the PHP SESSION
@@ -162,9 +168,9 @@ $CSS_FILE="style.css";
 /**
  * Display sort in all/group/search view
  * If no, displayed only on search
- * true/no
+ * TRUE/FALSE
  */
-$DISPLAY_SORT="no";
+$DISPLAY_SORT=TRUE;
 
 /**
  * Default sort method: ID,title,year

@@ -149,5 +149,38 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null)
     return $result;
 }
 
+function load_i18n_config($language)
+{
+    putenv("LANG=$language");
+    setlocale(LC_ALL, $language);
+    $domain = 'biborb';
+    bindtextdomain($domain,'./locale');
+    textdomain($domain);
+}
+
+function load_localized_file($filename)
+{
+    $default = "./locale/en/$filename";
+    $i18nfile = "./locale/".$GLOBALS['language']."/".$filename;
+    if(file_exists($i18nfile)){
+        return load_file($i18nfile);
+    }
+    else{
+        return load_file($default);
+    }
+}
+
+// Parse a string and replace with localized data
+function replace_localized_strings($string)
+{
+    // get all key to translate
+    preg_match_all("(BIBORB_OUTPUT\w+)",$string,$matches);
+    $keys = array_unique($matches[0]);
+    // get the localized value for each element and replace it
+    foreach($keys as $val){
+        $string = str_replace($val,_("$val"),$string);
+    }
+    return $string;
+}
 
 ?>

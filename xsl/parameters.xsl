@@ -58,7 +58,7 @@
 	<xsl:param name="display_basket_actions"/>
 	
 	<!-- Display the "add all to basket" button  	  -->
-	<xsl:param name="display_add_all"/>
+<!--	<xsl:param name="display_add_all"/>-->
 	
 	<!-- A group value								  -->
 	<xsl:param name="group"/>
@@ -102,7 +102,7 @@
     
     <!-- Sort -->
     <xsl:param name="sort"/>
-    <xsl:param name="display_sort"/>
+<!--    <xsl:param name="display_sort"/>-->
     
     <!-- Basket action images -->
     <xsl:variable name="add-basket-image">cvs-add-16.png</xsl:variable>

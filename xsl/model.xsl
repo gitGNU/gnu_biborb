@@ -40,9 +40,9 @@
         <input name="add_type" type="hidden" value="{$typeentry}"/>
         <!-- Required BibTeX fields -->
         <div class="form_menu">
-            <a href="#required_ref" class="required_item">Required Fields</a>
-            <a href="#optional_ref" class="optional_item">Optional Fields</a>
-            <a href="#additional_ref" class="additional_item">Additional Fields</a>
+            <a href="#required_ref" class="required_item">BIBORB_OUTPUT_REQUIRED_FIELDS</a>
+            <a href="#optional_ref" class="optional_item">BIBORB_OUTPUT_OPTIONAL_FIELDS</a>
+            <a href="#additional_ref" class="additional_item">BIBORB_OUTPUT_ADDITIONAL_FIELDS</a>
         </div>
         
         <div class="form_item" id="required_ref">
@@ -157,13 +157,13 @@
                             </xsl:when>
                             <xsl:when test="name() = 'url' or name() = 'urlzip' or name() = 'pdf'">
                                 <td>
-                                    <input type="file" name="{name(.)}" size="45"/>
+                                    <input type="file" name="{name(.)}" size="45" />
                                 </td>
                             </xsl:when>
                             <xsl:when test="name() = 'groups'">
                                 <td class="additional-value"><input name="_{name(.)}"/>
                                 <br/>
-                                <span style='color:black;font-weight:normal;'>Add a group:</span>#XHTMLGROUPSLIST
+                                <span style='color:black;font-weight:normal;'>BIBORB_OUTPUT_ADD_A_GROUP</span>#XHTMLGROUPSLIST
                                 </td>
                             </xsl:when>
                             <xsl:otherwise>

@@ -147,7 +147,7 @@ html > body #menu {position:fixed;}
  */
 #main {
     position:relative;
-    float:left;
+    float:middle;
     width:65%;
     margin-left:200px;
     margin-top:1em;
@@ -234,6 +234,7 @@ a.bibname, a:visited.bibname {
     text-decoration:none;
     color:navy;
     font-weight:bold;
+    display:block;
 }
 
 .bib_description {
@@ -384,5 +385,6 @@ a.admin, a.admin:visited, a.admin:hover {
     color:red;
     text-decoration:none;
 }
+
 
 

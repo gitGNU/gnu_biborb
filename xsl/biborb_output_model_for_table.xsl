@@ -40,7 +40,7 @@
 	<!-- This is the template to apply to a bibtex entry -->
     <xsl:template match="bibtex:entry">
 	
-		<!-- 
+		<!--
 			Look if the id is present in the basket.
 			If true, $inbasket = inbasket. For latter use.
 		-->
@@ -102,25 +102,25 @@
 						<!-- display images if necessary: $display_images!=null -->
 						<xsl:if test="$display_images">
 							<a href="./bibindex.php?mode=update&amp;id={@id}">
-								<img src="./data/images/{$edit-image}" alt="edit" title="Edit"  />
+								<img src="./data/images/{$edit-image}" alt='BIBORB_OUTPUT_EDIT_ALT' title='BIBORB_OUTPUT_EDIT_TITLE'/>
 							</a>
 						</xsl:if>
 						<!-- display text if necessary: $display_text != null -->
 						<xsl:if test="$display_text">
-							<a class="bibtex_action" href="./bibindex.php?mode=update&amp;id={@id}">
-								edit
+							<a class="bibtex_action" href="./bibindex.php?mode=update&amp;id={@id}" title='BIBORB_OUTPUT_EDIT_TITLE'>
+								BIBORB_OUTPUT_EDIT_ALT
 							</a>
 						</xsl:if>
 						
 						<!-- Delete action -->
 						<xsl:if test="$display_images">
 							<a href="./bibindex.php?mode={$bibindex_mode}&amp;id={@id}&amp;action=delete&amp;{$extra_get_param}">
-								<img src="./data/images/{$delete-image}" alt="delete" title="Delete" />
+								<img src="./data/images/{$delete-image}" alt='BIBORB_OUTPUT_DELETE_ALT' title='BIBORB_OUTPUT_DELETE_TITLE' />
 							</a>
 						</xsl:if>
 						<xsl:if test="$display_text">                        
-							<a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;id={@id}&amp;action=delete&amp;{$extra_get_param}">
-								delete
+							<a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;id={@id}&amp;action=delete&amp;{$extra_get_param}" title='BIBORB_OUTPUT_DELETE_TITLE'>
+								BIBORB_OUTPUT_DELETE_ALT
 							</a>
 						</xsl:if>
 					</xsl:if>
@@ -133,12 +133,12 @@
 						<xsl:if test="$display_basket_actions = '' and contains($inbasket,'notinbasket')">
 							<xsl:if test="$display_images">
 								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}">
-									<img src="./data/images/{$add-basket-image}" alt="add to basket" title="Add to basket" />
+									<img src="./data/images/{$add-basket-image}" alt='BIBORB_OUTPUT_ADD_BASKET_ALT' title='BIBORB_OUTPUT_ADD_BASKET_TITLE' />
 								</a>
 							</xsl:if>
 							<xsl:if test="$display_text">
-								<a class="basket_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}">
-									+
+								<a class="basket_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}" title='BIBORB_OUTPUT_ADD_BASKET_TITLE'>
+									BIBORB_OUTPUT_ADD_BASKET_ALT
 								</a>
 							</xsl:if>
 						</xsl:if>
@@ -147,12 +147,12 @@
 						<xsl:if test="$display_basket_actions != '' or not( contains($inbasket,'notinbasket'))">
 							<xsl:if test="$display_images">
 								<a href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}">
-									<img src="./data/images/{$remove-basket-image}" alt="remove from basket" title="Remove from basket" />
+									<img src="./data/images/{$remove-basket-image}" alt='BIBORB_OUTPUT_REMOVE_BASKET_ALT' title='BIBORB_OUTPUT_REMOVE_BASKET_TITLE' />
 								</a>
 							</xsl:if>
 							<xsl:if test="$display_text">
-								<a class="basket_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}">
-									-
+								<a class="basket_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=delete_from_basket&amp;id={@id}&amp;{$extra_get_param}" title='BIBORB_OUTPUT_REMOVE_BASKET_TITLE'>
+									BIBORB_OUTPUT_REMOVE_BASKET_ALT
 								</a>
 							</xsl:if>
 						</xsl:if>
@@ -215,12 +215,12 @@
     <xsl:template match="bibtex:pdf">
         <xsl:if test="$display_images">
             <a href="./bibs/{$bibname}/papers/{node()}">
-                <img src="data/images/{$pdf-image}" alt="pdf" title="View PDF file" />
+                <img src="data/images/{$pdf-image}" alt='BIBORB_OUTPUT_PDF_ALT' title='BIBORB_OUTPUT_PDF_ALT' />
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
-            <a href="./bibs/{$bibname}/papers/{node()}">
-                pdf
+            <a href="./bibs/{$bibname}/papers/{node()}" title='BIBORB_OUTPUT_PDF_TITLE'>
+                BIBORB_OUTPUT_PDF_ALT
             </a>
         </xsl:if>
     </xsl:template>
@@ -232,12 +232,12 @@
     <xsl:template match="bibtex:url">
         <xsl:if test="$display_images">
             <a href="./bibs/{$bibname}/papers/{node()}">
-                <img src="data/images/{$ps-image}" alt="ps" title="View PS file"  />
+                <img src="data/images/{$ps-image}" alt='BIBORB_OUTPUT_PS_ALT' title='BIBORB_OUTPUT_PS_TITLE'/>
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
-            <a href="./bibs/{$bibname}/papers/{node()}">
-                ps
+            <a href="./bibs/{$bibname}/papers/{node()}" title='BIBORB_OUTPUT_PS_TITLE'>
+                BIBORB_OUTPUT_PS_ALT
             </a>
         </xsl:if>
     </xsl:template>
@@ -249,12 +249,12 @@
     <xsl:template match="bibtex:urlzip">
         <xsl:if test="$display_images">
             <a href="./bibs/{$bibname}/papers/{node()}">
-                <img src="data/images/{$ps.gz-image}" alt="ps" title="Download compressed file"  />
+                <img src="data/images/{$ps.gz-image}" alt='BIBORB_OUTPUT_PSGZ_ALT' title='BIBORB_OUTPUT_PSGZ_TITLE'/>
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
-            <a href="./bibs/{$bibname}/papers/{node()}">
-                ps.gz
+            <a href="./bibs/{$bibname}/papers/{node()}" title='BIBORB_OUTPUT_PSGZ_TITLE'>
+                BIBORB_OUTPUT_PSGZ_ALT
             </a>
         </xsl:if>
     </xsl:template>
@@ -266,12 +266,12 @@
     <xsl:template match="bibtex:website">
         <xsl:if test="$display_images">
             <a href="http://{node()}">
-                <img src="data/images/{$url-image}" alt="website" title="Go to a related website" />
+                <img src="data/images/{$url-image}" alt='BIBORB_OUTPUT_WEBSITE_ALT' title='BIBORB_OUTPUT_WEBSITE_TITLE' />
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
-            <a href="http://{node()}">
-                website
+            <a href="http://{node()}" title='BIBORB_OUTPUT_WEBSITE_TITLE'>
+                BIBORB_OUTPUT_WEBSITE_ALT
             </a>
         </xsl:if>
     </xsl:template>
@@ -283,12 +283,12 @@
     <xsl:template match="bibtex:link">
         <xsl:if test="$display_images">
             <a href="{node()}">
-                <img src="data/images/stock_jump-to-16.png" alt="link" title="Go to a related link" />
+                <img src="data/images/stock_jump-to-16.png" alt='BIBORB_OUTPUT_LINK_ALT' title='BIBORB_OUTPUT_LINK_TITLE' />
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
-            <a href="{node()}">
-                link
+            <a href="{node()}" title='BIBORB_OUTPUT_LINK_TITLE'>
+                BIBORB_OUTPUT_TITLE_ALT
             </a>
         </xsl:if>
     </xsl:template>
@@ -308,7 +308,7 @@
 			<!-- if javascript is supported -->
             <script type="text/javascript">
                 <xsl:comment><![CDATA[
-                    document.write("<a href=\"javascript:toggle_abstract(\']]><xsl:value-of select="$id"/><![CDATA[\')\"><img src=\"data/images/stock_about-16.png\" alt=\"abstract\" title=\"Display abstract\" /></a>");]]>
+                    document.write("<a href=\"javascript:toggle_abstract(\']]><xsl:value-of select="$id"/><![CDATA[\')\"><img src=\"data/images/stock_about-16.png\" alt=\'BIBORB_OUTPUT_ABSTRACT_ALT\' title=\'BIBORB_OUTPUT_ABSTRACT_TITLE\' /></a>");]]>
                 </xsl:comment>
 				<!-- easy to insert javasacript in XSL, isn'it? :-D -->
             </script>
@@ -316,7 +316,7 @@
             <noscript>
                 <div style="display:inline;">
                     <a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}">
-                        <img src="data/images/{$abstract-image}" alt="abstract" title="Display abstract"/>
+                        <img src="data/images/{$abstract-image}" alt='BIBORB_OUTPUT_ABSTRACT_ALT' title='BIBORB_OUTPUT_ABSTRACT_TITLE'/>
                     </a>
                 </div>
             </noscript>
@@ -326,13 +326,13 @@
 		<xsl:if test="$display_text">
             <script type="text/javascript">
                 <xsl:comment><![CDATA[
-                    document.write("<a href=\"javascript:toggle_abstract(\']]><xsl:value-of select="$id"/><![CDATA[\')\">abstract</a>");]]>
+                    document.write("<a href=\"javascript:toggle_abstract(\']]><xsl:value-of select="$id"/><![CDATA[\')\" title=\'BIBORB_OUTPUT_ABSTRACT_TITLE\'>BIBORB_OUTPUT_ABSTRACT_ALT</a>");]]>
                 </xsl:comment>
             </script>
             <noscript>
                 <div>
-                    <a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}">
-                        abstract
+                    <a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}" title='BIBORB_OUTPUT_ABSTRACT_TITLE'>
+                        BIBORB_OUTPUT_ABSTRACT_ALT
                     </a>
                 </div>
             </noscript>
@@ -348,13 +348,13 @@
 		<!-- image version -->
         <xsl:if test="$display_images">
             <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}">
-                <img src="data/images/{$bibtex-image}" alt="BibTeX source" title="BibTeX source"/>
+                <img src="data/images/{$bibtex-image}" alt='BIBORB_OUTPUT_BIBTEX_ALT' title='BIBORB_OUTPUT_BIBTEX_TITLE'/>
             </a>
         </xsl:if>
 		<!-- text version -->
         <xsl:if test="$display_text">
-            <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}">
-                bibtex
+            <a href ="./bibindex.php?mode=bibtex&amp;bibname={$bibname}&amp;id={$id}" title='BIBORB_OUTPUT_BIBTEX_TITLE'>
+                BIBORB_OUTPUT_BIBTEX_ALT
             </a>
         </xsl:if>
     </xsl:template>

@@ -231,7 +231,7 @@ class BibORB_DataBase {
         // add the new entry
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $data = bibtex2xml($bibtex);
-	
+
         $xsl = load_file("./xsl/add_entries.xsl");
         $param = array('bibname' => $this->xml_file());
         $result = $xsltp->transform($data[2],$xsl,$param);
@@ -604,10 +604,10 @@ function create_database($name,$description){
         if(!in_array($name,$databases_names)){
             $res = mkdir("./bibs/$name",0775);
             if($res){
-                $resArray['message'] = "The database was successfully created.";
+                $resArray['message'] = _("BIB_CREATION_SUCCESS");
             }
             else{
-                $resArray['message'] = "Unabled to create the database.";
+                $resArray['message'] = _("BIB_CREATION_ERROR");
             }
             
             mkdir("./bibs/$name/papers",0775);
@@ -626,11 +626,11 @@ function create_database($name,$description){
             fclose($fp);
         }
         else{
-            $resArray['error'] = "Database already exists!";
+            $resArray['error'] = _("BIB_EXISTS");
         }
     }
     else {
-        $resArray['error'] = "Empty database name!!";
+        $resArray['error'] = _("BIB_EMPTY_NAME");
     }
     return $resArray;
 }
@@ -645,8 +645,8 @@ function delete_database($name){
     }
     // save the bibto .trash folder
     rename("./bibs/$name","./bibs/.trash/$name-".date("Ymd"));
-    $res = "Database $name moved to trash.<br/>";
-    $res .= "Remove <code>./bibs/.trash/$name-".date("Ymd")."</code> to definitively delete it.";
+    $res = sprintf(_("Database %s moved to trash."),$name)."<br/>";
+    $res .= sprintf(_("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>");
     return $res;
 }
 
@@ -664,4 +664,12 @@ function get_databases_names(){
     return $databases_names;
 }
 
+/**
+    Extract ids from the xml
+*/
+function extract_ids_from_xml($xmlstring)
+{
+    preg_match_all("/id=['|\"](.*)['|\"]/",$xmlstring,$matches);
+    return array_unique($matches[1]);
+}
 ?>

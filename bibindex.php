@@ -81,6 +81,11 @@ session_name($session_id);
 session_start();
 
 /**
+ *  i18n
+ */
+load_i18n_config($GLOBALS['language']);
+
+/**
  * Global variables to store an error message or a standad message.
  */
 $error = null;
@@ -196,7 +201,7 @@ if(isset($_GET['action'])){
             else{
                 $confirm = FALSE;
                 if(array_key_exists('confirm_delete',$_GET)){
-                    $confirm = (strcmp($_GET['confirm_delete'],'Yes') == 0);
+                    $confirm = (strcmp($_GET['confirm_delete'],_("Yes")) == 0);
                 }
             
                 $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");		
@@ -207,44 +212,42 @@ if(isset($_GET['action'])){
                     // delete it
                     $_SESSION['bibdb']->delete_entry($_GET['id']);
                     // update message
-                    $message = "The following entry was deleted: <pre>".$bibtex."</pre>";
+                    $message = sprintf(_("The following entry was deleted: <pre>%s</pre>"),$bibtex);
                     // if present, remvove entries from the basket
                     $_SESSION['basket']->remove_item($_GET['id']);
                     $_GET['mode'] = "operationresult";
             }
-            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],'No') == 0){
+            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],_("No")) == 0){
                 $_GET['mode'] = "welcome";
             }
             else{
                 $theid = $_GET['id'];
-                $message = "Delete this entry?";
-                $message .= "<pre>$bibtex</pre>";
-                $message .= <<<HTML
-                    <form action='bibindex.php' method='get' style='margin:auto;'>
-                    <fieldset style='border:none;'>
-                    <input type='hidden' name='action' value='delete'/>
-                    <input type='hidden' name='id' value='$theid'/>
-                    <input type='submit' name='confirm_delete' value='No'/>
-                    <input type='submit' name='confirm_delete' value='Yes'/>
-                    </fieldset>
-                    </form>
-HTML;
+                $message = sprintf(_("Delete this entry? <pre>%s</pre>"),$bibtex);
+                $message .= "<form action='bibindex.php' method='get' style='margin:auto;'>";
+                $message .= "<fieldset style='border:none;'>";
+                $message .= "<input type='hidden' name='action' value='delete'/>";
+                $message .= "<input type='hidden' name='id' value='$theid'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='"._("No")."'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='"._("Yes")."'/>";
+                $message .= "</fieldset>";
+                $message .= "</form>";
+
                 $_GET['mode'] = "operationresult";
             }
             $xsltp->free();		
         }
         break;
 	
-        case 'Add':					// Add entries in the basket to a given group
+        case _("Add"):					// Add entries in the basket to a given group
             if(!isset($_GET['groupvalue'])){
-                die("No group specified!");
+                die(_("No group specified!"));
             }
             else if(trim($_GET['groupvalue']) != ""){
                 $_SESSION['bibdb']->add_to_group($_SESSION['basket']->items,trim($_GET['groupvalue']));
             }
             break;
 	
-        case 'Reset':				// Reset the groups fields of entries in the basket
+        case _("Reset"):				// Reset the groups fields of entries in the basket
             $_SESSION['bibdb']->reset_groups($_SESSION['basket']->items);
             break;
 	
@@ -252,24 +255,24 @@ HTML;
             $_SESSION['usermode'] = "user";
             break;
 	    
-        case 'cancel':
+        case _("Cancel"):
             $_GET['mode'] = "welcome";
             break;
 	
-        case 'update_type':
+        case _("update_type"):
             // get the entry
             $_SESSION['bibdb']->change_type($_GET['bibtex_key'],$_GET['bibtex_type']);
             $_GET['mode']='update';
             break;
 	
-        case 'update_key':
+        case _("update_key"):
             if(!$_SESSION['bibdb']->is_bibtex_key_present($_GET['bibtex_key'])){
                 $_SESSION['bibdb']->change_id($_GET['id'],$_GET['bibtex_key']);
                 $_GET['mode']='update';
                 $_GET['id'] = $_GET['bibtex_key'];
             }
             else{
-                $error = "BibTeX key <code>".$_GET['bibtex_key']."</code> already exists.";
+                $error = sprintf(_("BibTeX key <code>%s</code> already exists."),$_GET['bibtex_key']);
                 $_GET['mode'] = 'operationresult';
             }
             break;
@@ -277,7 +280,7 @@ HTML;
         case 'delete_basket':
             $confirm = FALSE;
             if(array_key_exists('confirm_delete',$_GET)){
-                $confirm = (strcmp($_GET['confirm_delete'],'Yes')==0);
+                $confirm = (strcmp($_GET['confirm_delete'],_("Yes"))==0);
             }
             $ids_to_remove = $_SESSION['basket']->items;
             $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -287,27 +290,24 @@ HTML;
                 $_SESSION['bibdb']->delete_entries($ids_to_remove);
                 // update message
                 $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
-                $message = "The following entries were deleted: <pre>".$bibtex."</pre>";
+                $message = sprintf(_("The following entries were deleted: <pre>%s</pre>"),$bibtex);
                 $_SESSION['basket']->reset();
                 $_GET['mode'] = "operationresult";
             }
-            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],'No') == 0){
+            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],_("No")) == 0){
                 $_GET['mode'] = "welcome";
             }
             else{
-                $param['display_add_all'] = 'no';
-                $html_entries = $xsltp->transform($xml_content,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-                $message = "Delete the following entries?";
+                $html_entries = replace_localized_strings($xsltp->transform($xml_content,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$GLOBALS['xslparam']));
+                $message = _("Delete the following entries?");
                 $message .= $html_entries;
-                $message .= <<<HTML
-                    <form action='bibindex.php' method='get' style='margin:auto;'>
-                    <fieldset style='border:none;'>
-                    <input type='hidden' name='action' value='delete_basket'/>
-                    <input type='submit' name='confirm_delete' value='No'/>
-                    <input type='submit' name='confirm_delete' value='Yes'/>
-                    </fieldset>
-                    </form>
-HTML;
+                $message .= "<form action='bibindex.php' method='get' style='margin:auto;'>";
+                $message .= "<fieldset style='border:none;'>";
+                $message .= "<input type='hidden' name='action' value='delete_basket'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='"._("No")."'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='"._("Yes")."'/>";
+                $message .= "</fieldset>";
+                $message .= "</form>";
         		  $_GET['mode'] = "operationresult";
             }
             $xsltp->free();
@@ -324,18 +324,16 @@ if(isset($_POST['action'])){
         /**
             Add an entry to the database
         */
-        case 'add': 
+        case _("Add"): 
             $res = $_SESSION['bibdb']->add_new_entry($_POST);
             if($res['added']){
-                $message = "The following entry was added:<br/>";
+                $message = _("ENTRY_ADDED_SUCCESS")."<br/>";
                 $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
                 $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
                 $param = $GLOBALS['xslparam'];
                 $param['bibindex_mode'] = "displaybasket";
-                $param['display_add_all'] = "no";
                 $param['mode'] = "user";
-                $param['display_sort'] = 'no';
-                $message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+                $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
                 $xsltp->free();
             }
             else{
@@ -344,18 +342,16 @@ if(isset($_POST['action'])){
             break;
     
         // update an entry
-        case 'update':
+        case _("Update"):
             $res = $_SESSION['bibdb']->update_entry($_POST);
             if($res['updated']){
-                $message = "The following entry was updated:<br/>";
+                $message = _("The following entry was updated:")."<br/>";
                 $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
                 $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
                 $param = $GLOBALS['xslparam'];
                 $param['bibindex_mode'] = "displaybasket";
-                $param['display_add_all'] = "no";
                 $param['mode'] = "user";
-                $param['display_sort']='no';
-                $message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+                $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
                 $xsltp->free();
             }
             else{
@@ -388,10 +384,10 @@ if(isset($_POST['action'])){
                 $formated = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
                 $xsltp->free();
                 if($res == 1){
-                    $message = "The following entry was added to the database:";
+                    $message = _("The following entry was added to the database:");
                 }
                 else {
-                    $message = "The following entries were added to the database:";
+                    $message = _("The following entries were added to the database:");
                 }
                 //$message .= "<br/><pre>".print_r($bibtex_data)."</pre>";
                 $message .= $formated;
@@ -401,11 +397,11 @@ if(isset($_POST['action'])){
         /*
             Login
         */
-        case 'login':
+        case _("Login"):
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
             if($login=="" || $mdp==""){
-                $error = "You must fill both login and password!";
+                $error = _("LOGIN_MISSING_VALUES");
             }
             else {
                 $loggedin = check_login($login,$mdp);
@@ -415,19 +411,19 @@ if(isset($_POST['action'])){
                     $login_success = "welcome";	    
                 }
                 else {
-                    $error = "Wrong login or password";
+                    $error = _("LOGIN_WRONG_USERNAME_PASSWORD");
                 }
             }
             break;
 	
-        case 'cancel':
+        case _("Cancel"):
             $_GET['mode'] = "welcome";
             break;
 	
         /**
          * Export the basket to bibtex
          */
-        case 'export':
+        case _("Export"):
             if($_SESSION['basket']->count_items() != 0){
                 // basket not empty -> processing
                 // get entries
@@ -522,7 +518,7 @@ switch($mode) {
     case 'addentry':echo bibindex_entry_to_add(); break;
     
     // Select the type of the new entry to add
-    case 'select': echo bibindex_add_entry($_GET['type']); break;
+    case _("Select"): echo bibindex_add_entry($_GET['type']); break;
     
     // Update an entry
     case 'update': echo bibindex_update_entry(); break;

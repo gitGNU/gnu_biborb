@@ -49,12 +49,12 @@
                 <xsl:if test="position() != last()">*</xsl:if>
             </xsl:for-each>
         </xsl:variable>
+        <br/>
         
-
-        <div style="margin:0;border:none;padding:0;vertical-align:center;">
-            <xsl:if test="$display_sort = 'true'">
+<!--        <div style="margin:0;border:none;padding:0;vertical-align:center;">-->
+        <!--    <xsl:if test="$display_sort = 'true'">
             <div class="sort">
-            Sort by:
+            _("Sort by"):
                 <form method="get" action="bibindex.php">
                     <fieldset>
                         <select name='sort' size='1'>
@@ -66,18 +66,18 @@
                                 ID
                             </xsl:element>
                             <xsl:element name="option">
-                                <xsl:attribute name='value'>title</xsl:attribute>
+                                <xsl:attribute name='value'>_("title")</xsl:attribute>
                                 <xsl:if test="$sort = 'title'">
                                     <xsl:attribute name='selected'>selected</xsl:attribute>
                                 </xsl:if>
-                                Title
+                                _("Title")
                             </xsl:element>
                             <xsl:element name="option">
-                                <xsl:attribute name='value'>year</xsl:attribute>
+                                <xsl:attribute name='value'>_("year")</xsl:attribute>
                                 <xsl:if test="$sort = 'year'">
                                     <xsl:attribute name='selected'>selected</xsl:attribute>
                                 </xsl:if>
-                                Year
+                                _("Year")
                             </xsl:element>
                         </select>
                         <input type='hidden' name='mode' value='{$bibindex_mode}'/>
@@ -88,13 +88,13 @@
                     </fieldset>
                 </form>
                 </div>
-            </xsl:if>
-            <xsl:if test="$cpt != 0 and $display_basket_actions != 'no' and $display_add_all != 'no'">
+            </xsl:if>--><!--
+       <xsl:if test="$cpt != 0 and $display_basket_actions != 'no' and $display_add_all != 'no'">
             <div class="addtobasket">
-                Add all entries to basket <a href="bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={$ids}&amp;{$extra_get_param}"><img src="./data/images/add.png" alt="add" /></a>
+                BIBORB_OUTPUT_ADD_ALL_TO_BASKET<a href="bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={$ids}&amp;{$extra_get_param}"><img src="./data/images/add.png" alt="add" /></a>
             </div>
-		</xsl:if>
-        </div>
+		</xsl:if>-->
+<!--        </div>-->
 		<br/>
 		
         <!-- start the table -->

@@ -56,9 +56,9 @@
 		
         <!-- Display required fields -->
         <div class="form_menu">
-            <a href="#required_ref" class="required_item">Required Fields</a>
-            <a href="#optional_ref" class="optional_item">Optional Fields</a>
-            <a href="#additional_ref" class="additional_item">Additional Fields</a>
+            <a href="#required_ref" class="required_item">BIBORB_OUTPUT_REQUIRED_FIELDS</a>
+            <a href="#optional_ref" class="optional_item">BIBORB_OUTPUT_OPTIONAL_FIELDS</a>
+            <a href="#additional_ref" class="additional_item">BIBORB_OUTPUT_ADDITIONAL_FIELDS</a>
         </div>
         <div class="form_item" id="required_ref">
         <table class="required">
@@ -230,11 +230,11 @@
                                     <table>
                                         <tbody>
                                             <tr>
-                                                <td>current:</td>
+                                                <td>BIBORB_OUTPUT_CURRENT_FILE</td>
                                                 <td><input class='current' name="current_{name()}" value='{$val}' /></td>
                                             </tr>
                                             <tr>
-                                                <td>new:</td>
+                                                <td>BIBORB_OUTPUT_NEW_FILE</td>
                                                 <td><input class='newfile' name="{name()}" type='file'/></td>
                                             </tr>
                                         </tbody>
@@ -251,7 +251,7 @@
                                         </xsl:for-each>
                                     </xsl:variable>
                                     <input name="_groups" value="{$val}" /><br/>
-                                    <span style='color:black;font-weight:normal;'>Add a group:</span>#XHTMLGROUPSLIST
+                                    <span style='color:black;font-weight:normal;'>BIBORB_OUTPUT_ADD_A_GROUP</span>#XHTMLGROUPSLIST
                                 </td>
                             </xsl:when>
                             <!-- any other fields -->

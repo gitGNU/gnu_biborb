@@ -173,7 +173,7 @@ function bibtex2xml($bibtext,$group=NULL){
  * Returns: <bitex:entry id='$id'><bibtex:$type>
  */
 function new_bibentry($type,$id){
-  return "<bibtex:entry id='".$id."'>\n"."<bibtex:".strtolower($type).">\n";
+  return "<bibtex:entry id=\"".$id."\">\n"."<bibtex:".strtolower($type).">\n";
 }
 
 /**
@@ -343,6 +343,70 @@ function check_login($thelogin,$thepasswd){
     $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
     return (mysql_num_rows($result)>0);
   }
+}
+
+/**
+    Generate the add all to basket div section
+*/
+
+function add_all_to_basket_div($ids,$mode,$extraparam=null){
+    $html = "<div class='addtobasket'>";
+    $html .= _("Add all entries to the basket.");
+    $addalllink = "bibindex.php?mode=$mode&action=add_to_basket&id=";
+    foreach($ids as $id){
+        $addalllink .= "$id*";
+    }
+    if($extraparam){
+        $addalllink .= "&$extraparam";
+    }
+    $html .= "<a href='".$addalllink."'>";
+    $html .= "<img src='./data/images/add.png' alt='add' />";
+    $html .= "</a>";
+    $html .= "</div>";
+    return $html;
+}
+
+/**
+    Generate the sort div section
+*/
+function sort_div($selected_sort,$mode,$group){
+    $html = "<div class='sort'>";
+    $html .= _("Sort by:");
+    $html .= "<form method='get' action='bibindex.php'>";
+    $html .= "<fieldset>";
+    $html .= "<select name='sort' size='1'>";
+    
+    if($selected_sort == 'ID'){
+        $html .= "<option value='ID' selected='selected'>ID</option>";
+    }
+    else{
+        $html .= "<option value='ID'>ID</option>";
+    }
+    
+    if($selected_sort == 'title'){
+        $html .= "<option value='title' selected='selected'>"._("Title")."</option>";
+    }
+    else{
+        $html .= "<option value='title'>"._("Title")."</option>";
+    }
+    
+    if($selected_sort == 'year'){
+        $html .= "<option value='year' selected='selected'>"._("Year")."</option>";
+    }
+    else{
+        $html .= "<option value='year'>"._("Year")."</option>";
+    }
+    $html .= "</select>";
+    $html .= "<input type='hidden' name='mode' value='$mode'/>";
+    if($group){
+        $html .= "<input type='hidden' name='group' value='$group'/>";
+    }
+    $html .= "<input type='submit' value='"._("Sort")."'/>";
+    $html .= "</fieldset>";
+    $html .= "</form>";
+    $html .= "</div>";
+    
+    return $html;
 }
 
 ?>
