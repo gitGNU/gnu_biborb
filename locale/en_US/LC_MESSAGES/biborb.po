@@ -1148,3 +1148,12 @@ msgstr ""
 
 msgid "Existing series:"
 msgstr ""
+
+msgid "BIBINDEX_MENU_BASKET_EXPORT_HELP"
+msgstr "Export the basket to given bibliographic format"
+
+msgid "BIBINDEX_MENU_BASKET_EXPORT"
+msgstr "Export..."
+
+msgid "Select an export format:"
+msgstr ""

@@ -450,8 +450,11 @@ function bibindex_menu($bibname)
     if($_SESSION['user_can_modify'] || DISABLE_AUTHENTICATION){
         $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_GROUP_HELP")."' class='admin' href='bibindex.php?mode=groupmodif'>".msg("BIBINDEX_MENU_BASKET_GROUP")."</a></li>";
     }
+    $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_EXPORT_HELP")."' href='bibindex.php?mode=exportbasket'>".msg("BIBINDEX_MENU_BASKET_EXPORT")."</a></li>";
+    /*
     $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_BIBTEX_HELP")."' href='bibindex.php?mode=exportbaskettobibtex'>".msg("BIBINDEX_MENU_BASKET_BIBTEX")."</a></li>";
     $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_HTML_HELP")."' href='bibindex.php?mode=exportbaskettohtml'>".msg("BIBINDEX_MENU_BASKET_HTML")."</a></li>";
+     */
     $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_RESET_HELP")."' href='bibindex.php?mode=".$GLOBALS['mode']."&amp;action=resetbasket";
 	if($GLOBALS['mode'] == "displaybygroup" && array_key_exists('group',$_GET)){
 		$html  .= "&amp;group=".$_GET['group'];
@@ -1526,11 +1529,42 @@ function bibindex_import(){
     echo $html;
 }
 
+
+/**
+ * bibindex_export
+ */
+function bibindex_export_basket(){
+    $html = bibheader();
+    $html .= bibindex_menu($_SESSION['bibdb']->name());
+    $title = msg("BIBINDEX_EXPORT_BASKET");
+    $content = "<span class='emphit'>".msg("")."</span>";
+    // create the form to select which fields to export
+    $content .= "<form action='bibindex.php' method='post'>";
+    $content .= "<fieldset style='border:none;'>";
+    $content .= "<div style='text-align:center'>";
+    $content .= msg("Select an export format:")."&nbsp;";
+    $content .= "<select size='1' name='export_format'>";
+    $content .= "<option value='bibtex'>BibTeX</option>";
+    $content .= "<option value='ris'>RIS</option>";
+    $content .= "<option value='html'>HTML</option>";
+    $content .= "</select>";
+    $content .= "<input type='hidden' name='action' value='export_basket'/>";
+    $content .= "<input type='submit' value='".msg("Select")."'/>";
+    $content .= "</div>";
+    $content .= "</fieldset>";
+    $content .= "</form>";
+    $html .= main($title,$content);
+    $html .= html_close();
+    echo $html;
+}
+
+
+
 /**
  * bibindex_export_basket_to_bibtex
  */
 function bibindex_export_basket_to_bibtex(){
-    
+    echo "ere";
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = msg("BIBINDEX_EXPORT_TO_BIBTEX_TITLE");

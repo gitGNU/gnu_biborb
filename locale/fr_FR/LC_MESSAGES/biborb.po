@@ -1096,3 +1096,12 @@ msgstr "Groupes présents :"
 
 msgid "Existing series:"
 msgstr "Séries présentes :"
+
+msgid "BIBINDEX_MENU_BASKET_EXPORT_HELP"
+msgstr "Exporter le panier vers un format bibliographique."
+
+msgid "BIBINDEX_MENU_BASKET_EXPORT"
+msgstr "Exporter..."
+
+msgid "Select an export format:"
+msgstr "Sélection d'un format pour l'export :"

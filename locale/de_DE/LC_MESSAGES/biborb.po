@@ -1138,3 +1138,12 @@ msgstr ""
 
 msgid "Existing series:"
 msgstr ""
+
+msgid "BIBINDEX_MENU_BASKET_EXPORT_HELP"
+msgstr ""
+
+msgid "BIBINDEX_MENU_BASKET_EXPORT"
+msgstr ""
+
+msgid "Select an export format:"
+msgstr ""

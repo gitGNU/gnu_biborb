@@ -653,6 +653,26 @@ if(isset($_POST['action'])){
                 $_GET['mode'] = 'displaybasket';
             }
             break;
+        
+        /*
+            Select which export format for basket
+         */
+        case 'export_basket':
+            switch($_POST['export_format']){
+                case 'bibtex':
+                    $_GET['mode'] = 'exportbaskettobibtex';
+                    break;
+                case 'ris':
+                    $_GET['mode'] = 'exportbaskettoris';
+                    break;
+                case 'html':
+                    $_GET['mode'] = 'exportbaskettohtml';
+                    break;
+                default:
+                    $_GET['mode'] = 'welcome';
+                    break;
+            }
+            break;
     
         case 'bibtex_from_aux':
             $bibtex_keys = bibtex_keys_from_aux($_FILES['aux_file']['tmp_name']);
@@ -771,7 +791,19 @@ switch($mode) {
     
     // Export the basket to bibtex
     case 'exportbaskettobibtex': echo bibindex_export_basket_to_bibtex(); break;
+        
+    // Page to select which export
+    case 'exportbasket': echo bibindex_export_basket(); break;
     
+    // Export the basket to RIS format
+    case 'exportbaskettoris':
+        $bt = new BibTeX_Tools();
+        $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
+        $tab = $bt->xml_to_bibtex_array($entries);
+        header("Content-Type: text/plain");
+        echo $bt->array_to_RIS($tab);
+        break;
+        
     // bibtex of a given entry
     case 'bibtex':
         $bt = new BibTeX_Tools();

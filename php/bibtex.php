@@ -199,7 +199,7 @@ class BibTeX_Tools
     }
     
     /**
-    
+        Export an array of references to a RIS formated string
      */
     function array_to_RIS($tab){
         $ris_type_translate = array('article'       => 'JOUR',
