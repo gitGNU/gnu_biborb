@@ -1416,7 +1416,7 @@ function bibindex_export_basket_to_bibtex(){
 	    if(!(array_search($field,$GLOBALS['fields_to_export']) === false)){
             $content .= " checked='checked' ";
 	    }
-	    $content .= "/>$field</td>";
+	    $content .= " title='$field'/>".msg($field)."</td>";
 	    $cpt++;
 	    if($cpt == 4){
 		$content .= "</tr>";
