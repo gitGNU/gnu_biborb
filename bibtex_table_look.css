@@ -160,6 +160,8 @@ links */
     color:navy;
     text-align:right;
     float:right;
+    position:relative;
+    top:-1.5em;
 }
 .addtobasket a,.addtobasket a:hover,.addtobasket a:active,.addtobasket a:visited,.addtobasket a:focus {
     text-decoration:none;
@@ -186,8 +188,7 @@ links */
 .sort form {
     display:inline;
     border:none;
+    margin:0;
+    padding:0;
 }
 
-div.sort {
-    height:1em;
-}

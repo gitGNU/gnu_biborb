@@ -123,7 +123,7 @@ $bibtex_entries = array(
 $CSS_FILE="style.css";
 
 /**
- * Display sort in all/group/search
+ * Display sort in all/group/search view
  * If no, displayed only on search
  */
 $DISPLAY_SORT="no";

@@ -53,7 +53,6 @@
 		<xsl:variable name="type" select="local-name($entry/*[position()=1])"/>
         <!-- set the type -->
         <input type="hidden" name="type" value="{$type}"/>
-        <xsl:value-of select="$type"/>
 		
         <!-- Display required fields -->
         <b>Required Fields</b>

@@ -264,7 +264,6 @@ if(isset($_POST['action'])){
 		case 'add': 
 			$res = $_SESSION['bibdb']->add_new_entry($_POST);
 			if($res['added']){
-                $xslparam['sort'] = null;
 				$message = "The following entry was added:<br/>";
 				$entry = $_SESSION['bibdb']->entry_with_id($res['id']);
 				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -272,6 +271,7 @@ if(isset($_POST['action'])){
 				$param['bibindex_mode'] = "displaybasket";
 				$param['display_add_all'] = "no";
 				$param['mode'] = "user";
+                $param['display_sort'] = 'no';
 				$message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
 				$xsltp->free();
                 
@@ -285,7 +285,6 @@ if(isset($_POST['action'])){
 		case 'update':
 			$res = $_SESSION['bibdb']->update_entry($_POST);
 			if($res['updated']){
-                $xslparam['sort'] = null;
 				$message = "The following entry was updated:<br/>";
 				$entry = $_SESSION['bibdb']->entry_with_id($res['id']);
 				$xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
@@ -293,6 +292,7 @@ if(isset($_POST['action'])){
 				$param['bibindex_mode'] = "displaybasket";
 				$param['display_add_all'] = "no";
 				$param['mode'] = "user";
+                $param['display_sort']='no';
 				$message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
 				$xsltp->free();
 			}

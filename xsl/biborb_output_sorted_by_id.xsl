@@ -51,8 +51,9 @@
         </xsl:variable>
         
 
-        <div class="sort">
+        <div style="margin:0;border:none;padding:0;vertical-align:center;">
             <xsl:if test="$display_sort = 'true'">
+            <div class="sort">
             Sort by:
                 <form method="get" action="bibindex.php">
                     <fieldset>
@@ -86,6 +87,7 @@
                         <input type='submit' value='sort'/>
                     </fieldset>
                 </form>
+                </div>
             </xsl:if>
             <xsl:if test="$cpt != 0 and $display_basket_actions != 'no' and $display_add_all != 'no'">
             <div class="addtobasket">
