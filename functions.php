@@ -420,6 +420,9 @@ function delete_only_bibtex_entry($bibname,$id)
   
   //update the bibtex file.
   xml2bibtex($bibname);
+  // update the list of groups
+  $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
+  
 }
 
 /*
@@ -456,6 +459,8 @@ function delete_bibtex_entry($bibname,$id)
   
   //update the bibtex file.
   xml2bibtex($bibname);
+  // update the list of groups
+  $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
 }
 
 // Test if a bibtex entry with a given ID exists in a bibtex file.
@@ -477,6 +482,8 @@ function add_bibtex_entry($type,$tab,$urlfile,$urlzipfile,$pdffile){
   fwrite($file,to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile));
   fclose($file);
   update_xml($_SESSION['bibname']);
+  // update the list of groups
+  $_SESSION["group_list"] = get_group_list($_SESSION['bibname']);
 }
 
 // convert to BibTeX according to POST data

@@ -154,6 +154,9 @@ Description:
           <xsl:if test=".//bibtex:abstract">
             <a class='button' href="./bibindex.php?mode=abstract&amp;id={@id}&amp;bibname={$bibname}">abstract</a>
           </xsl:if>
+          <xsl:if test=".//bibtex:website">
+            <a class='button' href="http://{.//bibtex:website}" target="blank">website</a>
+          </xsl:if>
           <a class='button' href="./bibindex.php?mode=bibtex&amp;id={@id}&amp;bibname={$bibname}">bibtex</a>
         <xsl:if test="$mode='admin'">
           <form method='get' action='bibindex.php' style='display:inline;'>
