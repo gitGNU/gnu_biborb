@@ -134,7 +134,7 @@
 								</a>
 							</xsl:if>
 							<xsl:if test="$display_text">
-								<a class="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}">
+								<a class="basket_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=add_to_basket&amp;id={@id}&amp;{$extra_get_param}">
 									+
 								</a>
 							</xsl:if>
