@@ -259,7 +259,7 @@ class Auth
         }
     }
     /**
-        *
+        Return an array containing preferences for a given user.
      */
     function get_preferences($user){
         //connection to the users database
@@ -315,7 +315,7 @@ class Auth
     }
     
     /**
-        
+        Set the preferences for a given user. 
      */
     function set_preferences($pref,$user){
         //connection to the users database

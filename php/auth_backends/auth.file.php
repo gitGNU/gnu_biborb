@@ -168,7 +168,7 @@ class Auth
     }
     
     /**
-     *
+        Return an array containing preferences for a given user.
      */
     function get_preferences($user){
         $prefFile = "./data/users_pref/pref_".$user.".txt";
@@ -231,7 +231,7 @@ class Auth
     }
     
     /**
-        
+        Set the preferences for a given user.
      */
     function set_preferences($pref,$user){
         $prefTxt = "";
