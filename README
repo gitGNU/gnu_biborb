@@ -1,142 +1,79 @@
-author: Guillaume Gardey (ggardey@club-internet.fr)
+Author: Guillaume Gardey (ggardey@club-internet.fr)
 Licence: GPL
 
 DESCRIPTION
 -----------
 
-This tool aims to provide a web-based interface to BibTeX
-bibliographies. It offers some basic functionalities to manage a
-bibliography:
+	BibORB provides a web-based frontend to BibTeX. It was first designed to 
+provide a web-interface to browse and share bibliographies using the BibTeX 
+format and easily archive electronic releases of articles (upload copies of 
+papers into BibORB so that they are available for anyone consulting the 
+database). Now, it also includes a basic web-based BibTeX editor, search 
+functions and a basic user management system to set permissions (add / modify /
+delete) to recorded bibliographies.
 
-	* Simple user management
-	* Editing / Modifying a bibtex entry
-	* Searching some bibtex entries
-	* Classifying (one level using "group")
-	* Instant access to electronic version of papers
+	BibORB can be installed:
+        - for a personal use (on a local machine running a webserver): edit your
+bibliography (using BibORB or your favorite text editor) and easily browe it by
+using your web browser.
 
-The tool may be used in two different mode:
+        - on a network to share bibliographic references. You will have then the
+choice to allow other people to add, delete or update the references or only 
+install BibORB to allow references viewing and searching.
 
-	* Any people connecting to the webpage will be authorized to
-	view bibliographies.
-	* By login in, people may modify, add or even delete bibtex
-	entries.
-
-For people (like me :)) who don't even think about using anything else
-that their prefered text editor to write their biliographies, BibORB
-can be use to offer a more convenient output and to access quickly
-electronic papers. 
-
-BibORB is designed to provide a bibliographic "browser". It also may
-be used to access directly bibtex entry.
-For instance, creating the following link within an html page:
-	bibindex.php?bibname=example&id=paper1&mode=details&abstract=1
-
-will produce an html page giving details on the article with id
-'paper1' of the bibliography 'example'. The abstract will be present
-in the output.
-
-DETAILS
--------
-
-It is based on:
-	* BibTeX
-		To provide an input format for references.
-	* XML
-		To provide an easier input format for manipulating the
-		references.
-	* XSLT
-		To transform in any needed format the references.
-	* CSS
-		Some nice web design :-) .
-	* PHP
-		To link every thing together.
-	* Mysql or any other database
-		Account management if enabled
-
-
-The directory structure of the tool is:
-	
-	admin 	stores tools (one for the moment) to create or
-		manipulate bibliographies
-	xsl	stores XSLT stylesheets to translate into HTML or BibTeX
-		some references
-	doc	some documentation
-	bibs	directory where to put all bibliographies you want
-
-All directories in bibs must have the same structure. For instance for
-the bibliography 'example', the 'bibs/example' directory contains:
-	* example.bib => the BibTeX file containing references
-	* example.xml => XML traduction of the BibTeX file.
-	* description.txt => a brief description of this
-bibliography('My own very personal biblio' for instance)
-	* papers/ => the directory where electronic version of
-references are stored.
-
-If you want to put more than one BibTeX file, it is possible. The tool
-will then use their name to create corresponding groups. See BibTeX
-section for more details.
-
-
-INSTALLATION
+REQUIREMENTS
 ------------
+	BibORB is based on PHP, XML, XSL and use web pages formated using XHTML/CSS
+standards. Consequently, you should ensure that:
 
-As the tool is based on PHP, XML, XSL and CSS ensure that :
-	* XSL functions are activate in your PHP(>=4.0.3)
-configuration (xslt.so/xslt.dll)
-	* You have a CSS2 compliant web browser so that the interface
-behaves "normally"
+	* PHP (>=4.0.3) is installed on your webserver.
+	* PHP XSLT functions are available.
+	* MySQL or any other database if you wish to use authentication.
 
-Now decompress the archive in any web accessible folder (for instance
-~/public_html, /var/www or anywhere you want).
 
-Check that the directory "bibs" is writable by the group to which belong 
-the http server (www-data or www or apache ....). 
+BIBLIOGRAPHIES
+--------------
 
-If you want account management, set $disable_authentication to FALSE
-in the config.php file. If you set it to TRUE, skip the next
-paragraph.
+    The "bibs" directory contains all bibliographies created by BibORB as well
+as the electronic releases of papers that would have been uploaded.
 
-Then the next step is to setup the database to activate account management.
-You will have to create a new database called "biborb". Then use the
-"biborb.sql" to create the table that will store people who will be
-allowed to edit/add/modify the bibliography. Last step is to edit the
-config.php script and adapt variables to your
-configuration.($host,$dbuser,$pass,$db,$table) Finally, add needed
-account to the database.
+    Under the hypothesis that the bibliography named "test" exists, "bibs" is
+structured as follows:
 
+    bibs/
+     |->test/
+         |->test.bib
+         |->test.xml
+         |->description.txt
+         |->papers/
+             |->...lots of pdf, ps, ps.gz :) ...
+     |->otherdatabases.....
+
+    References are stored in the test.xml but a BibTeX copy is maintained 
+up-to-date for convenience. It is also possible to modify directly the test.bib
+file to modify your bibliography and then use "Update from BibTeX" in the Admin
+BibORB menu to update the BibORB bibliography. (it may be usefull for users that
+edit their BibTeX file with other tools).
 
 BIBTEX - XML
 ------------
 
-Well, the only thing to do is to write your BibTeX file or edit it
-through the web interface.
-
-The tool has a PHP script to translate a BibTeX file into an XML
-file. The DTD used is an adapted version of the DTD available at
-http://bibtexml.sourceforge.net.
-
-Some additional BibTeX fields have been added:
-	* ABSTRACT: 	abstract of the paper
+Some bibtex fields were added :
+    * ABSTRACT: 	abstract of the paper
 	* GROUPS: 	for classification purpose, separate each group by comma
-        * KEYWORDS: 	paper's keywords
+    * KEYWORDS: 	paper's keywords
 	* URL: 		link to the ps version of the paper for instance
 	* URLZIP: 	link to the ps.gz version of the paper
 	* PDF: 		link to the pdf version of the paper
 	* WEBSITE:	url of author website, or tool or....
-        * LINK:         url of a local page
+    * LINK:         url of a local page
 
 
 If you edit your BibTeX independently of the tool, only the filename
 is needed in url, urlzip and pdf. You will have to put manually the
 e-papers into the appropriate papers directory.
 
-Warning!! the script does not transform LaTeX code and do not
-interpret BibTeX constants. It also does not transform authors name
+Warning!! the script used to load BibTeX data into BibORB does not transform 
+LaTeX code. If @string macros is present in bibtex data, they are expanded 
+before adding the data to BibORB. It also does not transform authors name
 and lastname.
-
-
-TODO
-----
-
-Well, certainly some bugs to resolve, and some CSS work to have
-something "browser independent" unless they all comply to W3C standards.

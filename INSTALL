@@ -1,28 +1,48 @@
+REQUIREMENTS
+------------
+	BibORB is based on PHP, XML, XSL and use web pages formated using XHTML/CSS
+standards. Consequently, you should ensure that:
+
+	* PHP (>=4.0.3) is installed on your webserver.
+	* PHP XSLT functions are available.
+	* MySQL or any other database if you wish to use authentication.
+
+
 INSTALLATION
 ------------
 
-As the tool is based on PHP, XML, XSL and CSS you shoule ensure that :
-	* XSL functions are activate in your PHP(>=4.0.3)
-configuration (xslt.so/xslt.dll)
-	* You have a CSS2 compliant web browser so that the interface
-behaves "normally"
+    1. Untar the archive: tar -xvzf biborb-x.tar.gz to your webserver's document
+root (/var/www for instance) or your personal web directory ( ~/public_html for
+instance)
+
+    2. Make the "bibs" directory writable by the webserver. You can:
+        - change its group to the webserver's group and give this group write 
+        access to "bibs":
+            chgrp www-data bibs
+            chmod g+w bibs
+        
+        - or allow anyone to have a write access (not recommended for security
+        reasons!)
+            chmod a+w bibs
+
+    3. Edit the "config.php" file and customize BibORB to feet your needs.
 
 
-    1. Decompress the archive in any web accessible folder (for
-instance ~/public_html, /var/www or anywhere you want).
+AUTHENTICATION
+--------------
 
-    2. Check that the directory "bibs" is writable by the group to
-which belong the http server (www-data or www or apache ....).
-
-If you want account management, set $disable_authentication to FALSE
-in the config.php file. If you set it to TRUE, skip the next
-paragraph.
-
-Then the next step is to setup the database to activate account
-management. You will have to create a new database called
-"biborb". Then use the "biborb.sql" to create the table that will
-store people who will be allowed to edit/add/modify the
-bibliography. Last step is to edit the config.php script and adapt
-variables to your configuration
-($host,$dbuser,$pass,$db,$table). Finally, add needed account to the
-database.
+    At the moment, only MySQL is supported for authentication. The MySQL's 
+structure for BibORB is given in "data/biborb.sql".
+    
+    If you need to restrict access to BibORB, you will have to:
+        - set $disable_authentication to FALSE in "config.php"
+        - configure the following variables in "php/auth.php"
+            $host = "localhost";
+            $dbuser = "biborb-admin";
+            $pass = "biborbdev";
+            $db = "biborb";
+            $table = "biborb_users";
+            $auth_table = "biborb_auth";
+        - then add new user to the "biborb_users" table and restrict access 
+foreach database in "biborb_auth"
+   

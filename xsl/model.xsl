@@ -51,7 +51,7 @@
                             <label for="{name()}"><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                <span style='color:black;font-weight:normal'>or/and</span><br/>
+                                <span style='color:black;font-weight:normal;font-size:x-small;'>or/and</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -62,7 +62,7 @@
                             <label for="{name()}"><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                <span style='color:black;font-weight:normal'>or</span><br/>
+                                <span style='color:black;font-weight:normal;font-size:x-small;'>or</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -86,7 +86,7 @@
                             <label for="{name()}"><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                <span style='color:black;font-weight:normal'>or/and</span><br/>
+                                <span style='color:black;font-weight:normal;font-size:x-small;'>or/and</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -97,7 +97,7 @@
                             <label for="{name()}"><xsl:value-of select="name()"/>:</label>
                             <input name="{name(.)}"/><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                <span style='color:black;font-weight:normal'>or</span><br/>
+                                <span style='color:black;font-weight:normal;font-size:x-small;'>or</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
