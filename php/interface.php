@@ -829,8 +829,9 @@ function bibindex_display_by_group(){
  */
 function bibindex_display_search(){
 
-    $searchvalue = array_key_exists('search',$_GET) ? remove_accents(trim($_GET['search'])) :"";
+    $searchvalue = array_key_exists('search',$_GET) ? trim(htmlentities(remove_accents($_GET['search']))) :"";
     
+    print_r($searchvalue);
     $title = msg("BIBINDEX_SIMPLE_SEARCH_TITLE");
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
@@ -1092,7 +1093,7 @@ function bibindex_display_advanced_search(){
     foreach($bibtex_fields as $field){
         $content .= "<label>".msg($field)."</label>";
         if(array_key_exists($field,$_GET)){
-            $thefield = remove_accents(trim($_GET[$field]));
+            $thefield = trim(htmlentities(remove_accents($_GET[$field])));
             $content .= "<input name='$field' value='".$thefield."'/>";
             $extraparam .= "$field=".$thefield."&";
         }
@@ -1105,7 +1106,7 @@ function bibindex_display_advanced_search(){
     foreach($biborb_fields as $field){
         $content .= "<label>".msg($field)."</label>";
         if(array_key_exists($field,$_GET)){
-            $thefield = remove_accents(trim($_GET[$field]));
+            $thefield = trim(htmlentities(remove_accents($_GET[$field])));
             $content .= "<input name='$field' value='".$thefield."'/>";
             $extraparam .= "$field=".$thefield."&";
         }
@@ -1124,14 +1125,14 @@ function bibindex_display_advanced_search(){
     
     $searchArray = array();
     foreach($bibtex_fields as $val){
-        if(array_key_exists($val,$_GET) && trim($_GET[$val]) != ''){
-            $searchArray['search_'.$val]=remove_accents(trim($_GET[$val]));
+        if(array_key_exists($val,$_GET) && trim(htmlentities($_GET[$val])) != ''){
+            $searchArray['search_'.$val]=trim(htmlentities(remove_accents($_GET[$val])));
         }
     }
     
     foreach($biborb_fields as $val){
-        if(array_key_exists($val,$_GET) && trim($_GET[$val]) != ''){
-            $searchArray['search_'.$val]=remove_accents(trim($_GET[$val]));
+        if(array_key_exists($val,$_GET) && trim(htmlentities($_GET[$val])) != ''){
+            $searchArray['search_'.$val]=trim(htmlentities(remove_accents($_GET[$val])));
         }
     }
     if(array_key_exists('connector',$_GET)){

@@ -352,10 +352,9 @@ class BibORB_DataBase {
             $bibtex_val = extract_bibtex_data($dataArray);
             if(array_key_exists('author',$bibtex_val)){
                 $pc = new PARSECREATORS();
-                $authors = $pc->creators($bibtex_val['author']);
+                list($authors,$etal) = $pc->creators($bibtex_val['author']);
                 $bibtex_val['lastName'] = $authors[0][2];
             }
-            $bibtex_val['lastName'] = $authors;
             $bibtex_val['___type'] = $dataArray['add_type'];
             $bibtex_val['dateAdded'] = date("Y-m-d");
             $bibtex_val['dateModified'] = date("Y-m-d");
@@ -516,7 +515,7 @@ class BibORB_DataBase {
             $bibtex_val = extract_bibtex_data($dataArray);
             if(array_key_exists('author',$bibtex_val)){
                 $pc = new PARSECREATORS();
-                $authors = $pc->creators($bibtex_val);
+                list($authors,$etal) = $pc->parse($bibtex_val['author']);
                 $bibtex_val['lastName'] = $authors[0][2];
             }
             $bibtex_val['___type'] = $dataArray['type_ref'];
