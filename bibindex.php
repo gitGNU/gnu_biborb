@@ -328,7 +328,7 @@ function bibindex_details()
 
 		$param = array( 'bibnameurl' => xmlfilename($_SESSION['bibname']),
 						'bibname' => $_SESSION['bibname'],
-						'basket' => 'false',
+						'basket' => '',
 						'mode' => $usermode,
 						'abstract' => $_SESSION['abstract'],
 						'display_images' => $GLOBALS['display_images'],
