@@ -46,9 +46,9 @@
         <xsl:value-of select="translate($search,$ucletters,$lcletters)"/>
     </xsl:param>
   
-    <xsl:template match="/">
+    <xsl:template match="/bibtex:file">
 		<xsl:element name="bibtex:file">
-			<xsl:apply-templates/>
+			<xsl:apply-templates />
 		</xsl:element>
 	</xsl:template>
 	
@@ -116,9 +116,7 @@
 			<xsl:when test="$year and contains($year_val,$thesearch)">
 				<xsl:element name="bibtex:entry">
 					<xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
-					<xsl:copy>
-						<xsl:apply-templates/>
-					</xsl:copy>
+				    <xsl:apply-templates/>
 				</xsl:element>
 			</xsl:when>
 		</xsl:choose>

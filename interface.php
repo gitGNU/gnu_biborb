@@ -836,14 +836,54 @@ HTML;
     }
     
     $content .= "</tbody></table>";
+    $content .= "<input type='hidden' name='mode' value='displayadvancedsearch'/>";
     $content .= "<div style='text-align:center;'><input type='submit' value='search'/></div>";
     $content .= "</fieldset>";
     $content .= "</form>";
 
+    $searchArray = array();
+    foreach($bibtex_fields as $val){
+        if(array_key_exists($val,$_POST) && trim($_POST[$val]) != ''){
+            $searchArray['search_'.$val]=trim($_POST[$val]);
+        }
+    }
+    
+    foreach($biborb_fields as $val){
+        if(array_key_exists($val,$_POST) && trim($_POST[$val]) != ''){
+            $searchArray['search_'.$val]=trim($_POST[$val]);
+        }
+    }
+    if(array_key_exists('connector',$_POST)){
+        $searchArray['search_connector'] = $_POST['connector'];
+    }
+    $main_content = "";
+    if(count($searchArray) > 1){
+        $entries = $_SESSION['bibdb']->advanced_search_entries($searchArray);
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $nb = trim($xsltp->transform($entries,load_file("./xsl/count_entries.xsl")));
+        $param = $GLOBALS['xslparam'];
+        $param['bibindex_mode'] = 'displayadvancedsearch';
+        $param['basketids'] = $_SESSION['basket']->items_to_string();
+        $param['display_sort'] = 'no';
+        
+//        $param['extra_get_param'] = $extra_param;
+        if($nb==1){
+            $main_content = "One match.";
+            $main_content .= $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+        }
+        else if($nb>1) {
+            $main_content = "$nb matches.";
+            $main_content .= $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+        }
+        else{
+            $main_content = "No match.";
+        }
+    }
+    
     $title = "Advanced Search";
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
-    $html .= main($title,$content);
+    $html .= main($title,$content.$main_content);
     $html .= html_close();
     return $html;
 }

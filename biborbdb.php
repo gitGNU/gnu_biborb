@@ -454,6 +454,22 @@ class BibORB_DataBase {
 		return $result;
 	}
 	
+    /**
+        Advanced search function
+     */
+    function advanced_search_entries($searchArray){
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+		$xml_content =$this->all_entries();
+		$xsl_content = load_file("./xsl/advanced_search.xsl");
+		$param = array( 'bibname' => $this->xml_file());
+		foreach($searchArray as $key => $val){
+			$param[$key] = $val; 
+		}
+
+		$result = $xsltp->transform($xml_content,$xsl_content,$param); 
+		$xsltp->free();
+		return $result;
+    }
 	/**
 		Count entries
 	 */
