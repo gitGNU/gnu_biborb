@@ -120,6 +120,7 @@ function xml2bibtex($bibname){
     $nb = $record[0];
 
     $xml_content = load_file($xmlfile);
+    $xml_content = ereg_replace("<br/>","",$xml_content);
     $xsl_content = load_file("./xsl/xml2bibtex.xsl");
 
     $xh = xslt_create();
@@ -173,7 +174,7 @@ function bibtex2xml($bibfile,$group=NULL){
             }
             $first = 0;
         } 
-        else if(preg_match("/\s*(\w*)\s*=(.*)/",$line,$matches)){
+        else if(!$openfield && preg_match("/\s*(\w*)\s*=(.*)/",$line,$matches)){
             $key = $matches[1];
             // new version of biborb: translate group into groups
             if($key == 'group'){
@@ -209,7 +210,13 @@ function bibtex2xml($bibfile,$group=NULL){
             // or additionnal brace or quote, who knows :)
             if($openfield){	
                 $data_content .= $matches[1];
-                $data_content = preg_replace("/\s+/"," ",$data_content);
+                //keeps formatting for abstract
+                if($key != 'abstract'){
+                    $data_content = preg_replace("/\s+/"," ",$data_content);
+                }
+                else{
+                    $data_content = preg_replace("/\n\n/","<br/><br/>",$data_content);
+                }
                 // new version of biborb: need to create group field if multiple groups defined
                 if($key == 'groups'){
                     $xml_content .= "<bibtex:groups>\n";
@@ -363,6 +370,7 @@ function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mo
 function get_bibtex($bibname,$bibid)
 {
     $xml_content = load_xml_bibfile($bibname);
+    $xml_content = ereg_replace("<br/>","",$xml_content);
     $xsl_content = load_file("./xsl/xml2bibtex.xsl");
     $param = array('id'=>$bibid);
     $result = xslt_transform($xml_content,$xsl_content,$param); 
@@ -581,6 +589,7 @@ function extract_bibtex_data($tab){
  */
 function add_new_entry($bibname,$type,$tab,$urlfile,$urlzipfile,$pdffile){
     $xml = to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile);
+    echo $xml;
     $xsl = load_file("./xsl/add_entry.xsl");
     $param = array('bibname' => "file://".realpath(xmlfilename($bibname)));
     $result = xslt_transform($xml,$xsl,$param);

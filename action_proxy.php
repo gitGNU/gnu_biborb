@@ -170,10 +170,10 @@ if(array_key_exists('action',$_GET)){
                     mkdir("./bibs/".$_GET['database_name']."/papers",0777);
                     copy("./data/template/template.bib","./bibs/".$_GET['database_name']."/".$_GET['database_name'].".bib");
                     copy("./data/template/template.xml","./bibs/".$_GET['database_name']."/".$_GET['database_name'].".xml");
-                    copy("./data/template/description.txt","./bibs/".$_GET['database_name']."/description.txt");
+                    //copy("./data/template/description.txt","./bibs/".$_GET['database_name']."/description.txt");
                     chmod("./bibs/".$_GET['database_name']."/".$_GET['database_name'].".xml",0666);
                     chmod("./bibs/".$_GET['database_name']."/".$_GET['database_name'].".bib",0666);
-                    chmod("./bibs/".$_GET['database_name']."/description.txt",0766);
+                    //chmod("./bibs/".$_GET['database_name']."/description.txt",0766);
                     $fp = fopen("./bibs/".$_GET['database_name']."/description.txt","w");
                     fwrite($fp,$_GET['description']);
                     fclose($fp);

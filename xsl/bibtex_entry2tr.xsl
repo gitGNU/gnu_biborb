@@ -149,7 +149,7 @@
         <xsl:param name="id"/>
         <span>
         <script type="text/javascript">&lt;!--
-        document.write(&quot;&lt;a href=\&quot;javascript:toggle_abstract(\'<xsl:value-of select="$id"/>\')\&quot;&gt;abstract&lt;/a&gt;&quot;);
+        document.write(&quot;&lt;a href=\&quot;javascript:toggle_abstract(\'<xsl:value-of select="$id"/>\')\&quot;&gt;abstract &lt;/a&gt;&quot;);
         //--&gt;</script>
             <noscript><a href="./bibindex.php?mode=details&amp;abstract=1&amp;menu=0&amp;bibname={$bibname}&amp;id={$id}">abstract</a></noscript>
         </span>
@@ -165,12 +165,14 @@
         <xsl:choose>
             <xsl:when test="$abstract != ''">
                 <span id="{$id}">
-                    <xsl:value-of select=".//bibtex:abstract"/>
+<!--                    <xsl:value-of select=".//bibtex:abstract"/>-->
+                    <xsl:copy-of select=".//bibtex:abstract"/>
                 </span>
             </xsl:when>
             <xsl:otherwise>
-                <span id="{$id}" style="display:none;white-space:pre">
-                    <xsl:value-of select=".//bibtex:abstract"/>
+<!--                <span id="{$id}" style="display:none;white-space:pre">-->
+                <span id="{$id}" style="display:none;">
+                    <xsl:copy-of select=".//bibtex:abstract"/>
                 </span>
             </xsl:otherwise>
         </xsl:choose>
