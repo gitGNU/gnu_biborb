@@ -1,0 +1,2 @@
+This menu give access to management functions. If you logged in or use BiBORB wihtout authentication, you may add, edit or delete entries.
+<br/>

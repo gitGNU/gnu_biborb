@@ -1,388 +1,351 @@
 /**
-This file is part of BibORB
-
-Copyright (C) 2003  Guillaume Gardey
-
-BibORB is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-BibORB is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-**/
-
+ *
+ * This file is part of BibORB
+ * 
+ * Copyright (C) 2003  Guillaume Gardey
+ * 
+ * BibORB is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * BibORB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ */
+ 
 /**
-
-File: style.css
-Author: Guillaume Gardey (ggardey@club-internet.fr)
-Year: 2003
-Licence: GPL
-
-Description:
-
-   The artist playground :-)
-
-**/
+ * 
+ * File: style.css
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Year: 2003
+ * Licence: GPL
+ * 
+ * Description:
+ * 
+ *      The artist's playground. :) 
+ * 
+ */
 
 body {
-  margin: 0;
   font-family:sans-serif;
-  font-size:12px;
+  font-size:small;
   background-color:white;
   color:black;
 }
 
-.left
-{
-  position:relative;
-  top:1em;
-  left:1em;
-  padding-left:1em;
-  padding-right:1em;
-  padding-bottom:1em;
-  border:solid 1px #666;
-  width:150px;
-  float:left;
-  background-color:#ADD8E6;
+/**
+ * Style for the Menu 
+ */
+#bibname {
+    font-weight:bold;
+    text-align:center;
+    padding:0.5em;
+    display:block;
+    color:navy;
+    border-top:solid black;
+    border-bottom:solid black;
+    margin-bottom:0.5em;
 }
 
-html>body .left {
-  position: fixed;
+#title {
+    font-weight:bold;
+    text-align:center;
+    display:block;
+    font-size:x-large;
 }
 
-.left_title
-{
-  text-align: center;
-  color: black;
+html > body #menu {position:fixed;}
+#menu {
+    margin-top:1em;
+    position:relative;
+    float:left;
+    margin-left:10px;
 }
 
-.main
-{
-  position:relative;
-  width:550px;
-  float:left;
-  margin-left:200px;
-  margin-top:1em;
-  padding:1em;
-  border: solid 1px #666;
-  background-color:#DCDCDC;
+#menu ul {
+    margin:0;
+    padding:0;
+    list-style-type:none;
 }
 
-.menu
-{
-  width: 120px;
-  font-size:14px;
+#menu li {
+    margin:0;
 }
 
-.menutitle
-{
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 1em;
-  text-align: left;
+
+#menu a {
+    display: block;
+    color: #333;
+    background-color: transparent;
+    width: 160px;
+    padding: 2px 5px;
+    font-weight: bold;
+    text-decoration:none;
+    border: 1px solid #aaa;
+    font-size:small;
+} 
+
+#menu a:hover {
+    background-color: #aae;
+    color: #333;
+    padding: 2px 5px;
+}
+
+#menu ul ul {
+    margin-left:10px;
+    margin-bottom:10px;
+    padding:0;
+    list-style-type:none;
+    border-bottom:1px dashed #aaa;
+}
+
+#menu li li a {
+    display: block;
+    color: #333;
+    background-color: transparent;
+    width: 150px;
+    padding: 2px 5px;
+    margin:0;
+    border-top: none;
+    border-bottom: none;
+    border-left: 1px dashed #aaa;
+    border-right: 1px dashed #aaa;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+#menu li li a:hover{
+    background-color:#ade;
+}
+
+/**
+ * Style for the main panel
+ */
+#main {
+    position:relative;
+    float:left;
+    width:65%;
+    margin-left:200px;
+    margin-top:1em;
+    padding:1em;
+    border: solid 1px #aaa;
+    background-color:#eef;
+}
+
+#main_title {
   color:black;
 }
 
-.menubloc
-{
-  text-align: left;
-  margin-top:0.5em;
-  border-bottom:solid 2px;
-  border-top:solid 2px;
+#error_title {
+    color:red;
+    font-weight:bold;
+    font-size:x-large;
+    text-align:center;
+    display:block;
+    padding-bottom:1em;
 }
 
-a.menuitem 
-{ 
-  color:navy;
-  text-decoration:none;
-  font-weight:bold;
-  text-align:left;
-  background-color:transparent;
-  display:block;
+#error {
+    color:red;
+    border:1px solid red;
+    margin:1em;
+    padding:1em;
+    text-align:center;
 }
 
-a.menuitem:hover
-{
-  color:red;
-  text-decoration:none;
-  background-color:#DCDCDC;
+#message_title {
+    color:navy;
+    font-weight:bold;
+    font-size:x-large;
+    text-align:center;
+    display:block;
+    padding-bottom:1em;
 }
 
-.menufooter
-{
-  background-image: none;
-  height: 24px;
+#message { 
+    color:navy;
+    border:1px solid navy;
+    margin:1em;
+    padding:1em;
+}
+
+/**
+ * Style for the table recording available databases
+ */
+
+#available_bibliographies table {
+    border-collapse:collapse;
+    margin:auto;
+}
+
+#available_bibliographies th {
+    border-bottom:3px solid black;
+}
+
+#available_bibliographies td {
+    padding:0.5em;
+    border-bottom:dashed 1px black;
+}
+
+#available_bibliographies a, #available_bibliographies a:hover,#available_bibliographies a:hover,#available_bibliographies a:active,#available_bibliographies a:visited,#available_bibliographies a:focus {
+    text-decoration:none;
+}
+
+/**
+ * Style for the bibtex2html table output
+ */
+
+#bibtex_table {
+    color:black;
+    border-spacing:0;
+    border:collapse;
+    width:100%;
+}
+
+#bibtex_table .bibtex_start {
+    border-top:solid 2px;
+    color:navy;
+}
+
+#bibtex_table .bibtex_key {
+    color:navy;
+    background-color:transparent;
+    font-weight:bold;
+    font-size:xx-small;
+    padding:1px;
+}
+
+#bibtex_table .bibtex_button {
+    display:inline;
+}
+
+#bibtex_table .bibtex_button input {
+    font-size:xx-small;
+    display:relative;
+}
+
+#bibtex_table .bibtex_title {
+    font-weight:bold;
+    border-bottom:dotted 1px;
+    font-size:normal;
+}
+
+#bibtex_table .bibtex_author {
+    font-style:italic;
+    font-size:normal;
+    text-align:right;
+}
+
+#bibtex_table .bibtex_abstract {
+    font-size:xx-small;
+}
+
+#bibtex_table .bibtex_keywords {
+    font-family:monospace;
+    font-size:x-small;
+    text-align:right;
 }
 
 
-.left2
-{ 
-  position:absolute;
-  top:260px;
-  left:1em;
-  width: 150px;
-  height: 250px;
-  padding-left:1em;
-  padding-right:1em;
-}
 
-html>body .left2 {
-  position: fixed;
-}
-
-.bibname
-{
-  color:white;
-  font-weight:bold;
-  text-align:center;
-  background-color:navy;
-  font-size:120%;
+#bibtex_table a, #bibtex_table a:hover,#bibtex_table a:hover,#bibtex_table a:active,#bibtex_table a:visited,#bibtex_table a:focus {
+    text-decoration:none;
+    display:inline;
+    padding-left:2px;
+    padding-right:2px;
+    color:#088;
+    font-size:xx-small;
+    font-weight:bold;
 }
 
 
-.main_title
-{
-  color:black;
+/**
+ * Style for the simple output
+ */
+
+.bibtex_simple dt {
+    font-family:monospace;
 }
 
-.error
-{ 
-  color:red;
-  border:1px solid red;
-  margin:1em;
-  padding:1em;
+.bibtex_simple a, .bibtex_simple a:hover, .bibtex_simple a:visited, .bibtex_simple a:selected, .bibtex_simple focus {
+    text-decoration:none;
 }
 
-.message
-{ 
-  color:navy;
-  border:1px solid navy;
-  margin:1em;
-  padding:1em;
+.field_id {
+    display:inline;
+    padding-bottom:1em;
 }
 
-.website
-{
-  background-color:silver;
-  color:black;
+.field_author, .field_editor, .field_publisher {
+    padding-right:0.5em;
+    font-style:italic;
 }
 
-.website h1 
-{ 
-  color:navy;
-  border-bottom:solid 5px;
-  background-color:transparent;
+.field_title {
+    padding-right:0.5em;
+    font-weight:bold;
 }
 
-.website h3
-{
-  border-bottom:dashed 2px;
+.field_journal, .field_year, .field_school, .field_institution, .field_note, .field_booktitle, .field_pages, .field_chapter, .field_ {
+    padding-right:0.5em;
 }
 
-.website table
-{
-  border-collapse:collapse;margin-left:150px;
+/**
+ * Style for edition
+ */
+
+.required {
+    padding:0;
+    border-top:solid 2px red;	
+    color:red;
+    font-size:11px;
+    font-weight:bold;
+    border-collapse:collapse;
+    border-spacing:0;
+    width:100%
 }
 
-.website th 
-{  
-  border:solid 1px black;
-  background-color:navy;
-  color:white;
+.optional {
+    border-top:solid 2px navy;	
+    color:navy;
+    font-size:11px;
+    font-weight:bold;
+    border-collapse:collapse;
+    border-spacing:0;
+    width:100%
 }
 
-.website td 
-{ 
-  border:solid 1px;
+.additional {
+    border-top:solid 2px green;	
+    color:green;
+    font-size:11px;
+    font-weight:bold;
+    border-collapse:collapse;
+    border-spacing:0;
+    width:100%
 }
 
-/*
- bibtex style
-*/
-
-.bibtab
-{
-  border-spacing:0;
-  border:collapse;
-}
-
-.startbibitem
-{
-  background-color:transparent;
-  border-top:groove 5px;
-  color:navy;
-}
-
-.key 
-{
-  color:white;
-  background-color:navy;
-  font-family:monospace;
-  font-size:10px;
-  padding:1px;
-}
-
-a.button
-{
-  border:1px solid navy;
-  margin:1px;
-  font-family:monospace;
-  text-decoration:none;
-  padding-left:2px;
-  padding-right:2px;
-  font-size:10px;
-}
-
-a.button:visited
-{
-  text-decoration:none;
-  color:blue;
-  background-color:transparent;
-}
-
-.keywords
-{ 
-  font-family:monospace;
-  font-size:10px;
-  text-align:right;
-}
- 
-.title
-{
-  font-weight:bold;
-  border-bottom:dotted 1px;
-  font-size:13px;
-}
-
-.author
-{
-  font-style:italic;
-  font-size:12px;
-  text-align:right;
-}
-
-a.clean
-{
-  text-decoration:none;
-  border-style:none;
-}
-
-a.bibtex:link
-{
-  color:black;
-  text-decoration:none;
-  font-family:monospace;
-  background-color:transparent;
-}
-
-a.bibtex:visited
-{
-  color:black;
-  text-decoration:none;
-  font-family:monospace;
-  background-color:transparent; 
-}
-
-a.bibtex:hover 
-{ 
-  color:black;
-  text-decoration:none;
-  font-family:monospace;
-  background-color:transparent;
-}
-
-a.bibtex:active
-{ 
-  color:black;
-  text-decoration:none;
-  font-family:monospace;
-  background-color:transparent;
-}
-
-a.bibtex:focus
-{
-  color:black;
-  text-decoration:none;
-  font-family:monospace;
-  background-color:transparent;
-}
-
-.required
-{
-  border-top:solid 2px red;	
-  color:red;
-  font-size:11px;
-  font-weight:bold;
-  border-collapse:collapse;
-  border-spacing:0;
-}
-
-.optional
-{
-  border-top:solid 2px navy;	
-  color:navy;
-  font-size:11px;
-  font-weight:bold;
-  border-collapse:collapse;
-  border-spacing:0;
-}
-
-.additional
-{
-  border-top:solid 2px green;	
-  color:green;
-  font-size:11px;
-  font-weight:bold;
-  border-collapse:collapse;
-  border-spacing:0;
-}
-
-.required-entry, .optional-entry, .additional-entry
-{ 
+.required-entry, .optional-entry, .additional-entry {  
   width:80px;
 }
 
-.required-value input,
-.optional-value input,
-.additional-value input
-{ 
+.required-value input, .optional-value input, .additional-value input { 
   border:1px solid black;
-  width:470px;
+  width:95%
 }
 
-.additional-value textarea
-{
+.additional-value textarea {
   border:1px solid black;
-  width:470px;
+  width:95%;
 }
 
-.current, .newfile
-{ 
+.current, .newfile { 
   border:1px solid black;
-}
-
-
-input, select
-{ 
-  border:1px solid black;
-  font-weight:bold;
-}
-
-input.inbib
-{
-  font-size:10px;
-}
-
-table.bibtex
-{ 
-  font-family:monospace;
-  font-size:11px;
 }

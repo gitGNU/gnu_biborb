@@ -20,25 +20,38 @@
  * 
 -->
 <!--
- * File: group_list.xsl
+ * File: basket2simple_html.xsl
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Year: 2003
  * Licence: GPL
  *
  * Description:
  *
- *    Get groups in the bibliograhy
+ *    Simple html output
  *
 -->
-<xsl:stylesheet version="1.0" 
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:bibtex="http://bibtexml.sf.net/">
-    
-  <xsl:output method="html"/>
-  <xsl:template match="/">
-    <xsl:for-each select="//bibtex:group">
-      <xsl:value-of select="."/>~
-    </xsl:for-each>
-  </xsl:template>
 
+<xsl:stylesheet
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:bibtex="http://bibtexml.sf.net/"
+    version="1.0">
+    
+    <xsl:output method="html" encoding="iso-8859-1"/>
+    
+    <xsl:param name="bibname"/>
+    <xsl:param name="bibnameurl"/>
+    
+    <xsl:template match="/entrylist">
+        <!-- load the xml file into a variable -->
+        <xsl:variable name="bibfile" select="document($bibnameurl)" />
+        <xsl:variable name="bibid" select="//id"/>
+        <!-- look for all id in the xml file and output the corresponding bibtex entry --> 
+        <div class="bibtex_simple">
+        <dl><xsl:apply-templates select="$bibfile//bibtex:entry[@id = $bibid]"/></dl>
+        </div>
+        
+    </xsl:template>
+    
+    <xsl:include href="./xsl/bibtex_entry2simple_html.xsl"/>
+    
 </xsl:stylesheet>

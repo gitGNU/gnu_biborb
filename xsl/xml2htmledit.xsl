@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!--
-This file is part of BibORB
-
-Copyright (C) 2003  Guillaume Gardey
-
-BibORB is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-BibORB is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * This file is part of BibORB
+ * 
+ * Copyright (C) 2003  Guillaume Gardey
+ * 
+ * BibORB is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * BibORB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
 -->
 <!--
-File: xml2htmledit.xsl
-Author: Guillaume Gardey (ggardey@club-internet.fr)
-Year: 2003
-Licence: GPL
-
-Description:
-
-     Produce a HTML form output for bibtex entries.
-
+ * File: xml2htmledit.xsl
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Year: 2003
+ * Licence: GPL
+ *
+ * Description:
+ *
+ *      
+ *
 -->
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:bibtex="http://bibtexml.sf.net/"
+  exclude-result-prefixes="bibtex"
   version="1.0">
   
-  <xsl:output method="html" encoding="iso-8859-1"/>
+  <xsl:output method="xml" encoding="iso-8859-1"/>
 
   <xsl:param name="bibname"/>
   <xsl:param name="id"/>
@@ -63,7 +65,7 @@ Description:
                         <xsl:value-of select="current()"/>
                       </xsl:for-each>
                     </xsl:variable>
-                    <input name="_{name()}" value='{$val}' />
+                    <input name="_{name()}" value="{$val}" />
                   </td>
                 </tr>
                 <xsl:if test="not(position() = $cpt)">
@@ -85,7 +87,7 @@ Description:
                         <xsl:value-of select="current()"/>
                       </xsl:for-each>
                     </xsl:variable>
-                    <input name="_{name()}" value='{$val}' />
+                    <input name="_{name()}" value="{$val}" />
                   </td>
                 </tr>
                 <xsl:if test="not(position() = $cpt)">
@@ -207,13 +209,14 @@ Description:
               <xsl:choose>
                 <xsl:when test="name() = 'abstract' or name()='longnotes'">
                   <td class='additional-value'>
-                    <textarea name="_{name()}" rows='5' >
+                    <textarea name="_{name()}" rows="5" cols="40" >
                       <xsl:variable name="nm">
                         <xsl:value-of select="name()"/>
                       </xsl:variable>
                       <xsl:for-each select="$bibfile//*[local-name() = $nm]">
                         <xsl:value-of select="current()"/>
                       </xsl:for-each>
+                      <xsl:text> </xsl:text>
                     </textarea>
                   </td>
                 </xsl:when>
@@ -227,8 +230,8 @@ Description:
                         <xsl:value-of select="current()"/>
                       </xsl:for-each>
                     </xsl:variable>
-                    <input class='current' name="current_{name()}" value='{$val}' />
-                    <input class='newfile' name="{name()}" type='file'/>
+                    current:<input class='current' name="current_{name()}" value='{$val}' /><br/>
+                    new:<input class='newfile' name="{name()}" type='file'/>
                   </td>
                 </xsl:when>
                 <xsl:otherwise>

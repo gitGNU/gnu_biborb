@@ -1,0 +1,8 @@
+This menu give access to an HTML representation of the BibTeX bibliography.
+
+You can:
+<ul>
+    <li>display all entries,</li>
+    <li>display entries of a given group,</li>
+    <li>search the database for an entry.</li>
+</ul>

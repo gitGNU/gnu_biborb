@@ -20,25 +20,27 @@
  * 
 -->
 <!--
- * File: group_list.xsl
+ * File: search_entry.xsl
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Year: 2003
  * Licence: GPL
  *
  * Description:
  *
- *    Get groups in the bibliograhy
+ *    Return true if the entry id is present in the bibliography
  *
 -->
-<xsl:stylesheet version="1.0" 
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:bibtex="http://bibtexml.sf.net/">
+<xsl:stylesheet
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:bibtex="http://bibtexml.sf.net/"
+    version="1.0">
+  
+    <xsl:output method="xml"/>
     
-  <xsl:output method="html"/>
-  <xsl:template match="/">
-    <xsl:for-each select="//bibtex:group">
-      <xsl:value-of select="."/>~
-    </xsl:for-each>
-  </xsl:template>
+    <xsl:param name="id"/>
 
+    <xsl:template match="bibtex:file">
+        <xsl:if test="//bibtex:entry[@id=$id]">true</xsl:if>
+    </xsl:template>
+    
 </xsl:stylesheet>

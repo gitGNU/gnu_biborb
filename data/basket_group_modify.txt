@@ -1,0 +1,15 @@
+<h3>Groups modification</h3>
+
+
+<form style='display:inline;' action='action_proxy.php' method='get'>
+<fieldset style='border:none;'>
+Reset groups: <input type='submit' name='action' value='resetgroup'/>
+</fieldset>
+</form>
+<br/>
+<form style='display:inline;' action='action_proxy.php' method='get'>
+<fieldset style='border:none;'>
+Add a group: <input name='groupvalue' size='20'/>
+<input type='submit' name='action' value='addgroup'/>
+</fieldset>
+</form>

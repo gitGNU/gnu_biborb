@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!--
-This file is part of BibORB
-
-Copyright (C) 2003  Guillaume Gardey
-
-BibORB is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-BibORB is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * This file is part of BibORB
+ * 
+ * Copyright (C) 2003  Guillaume Gardey
+ * 
+ * BibORB is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * BibORB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
 -->
 <!--
-File: model.xml
-Author: Guillaume Gardey (ggardey@club-internet.fr)
-Year: 2003
-Licence: GPL
-
-Description:
-
-Definition of fields needed in each bibtex entries.
-
+ * File: model.xml
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Year: 2003
+ * Licence: GPL
+ *
+ * Description:
+ *
+ *    Definition of fields present in BibTeX entries
+ *
 -->
 <entrylist>
   <entry type="article">
@@ -38,7 +39,7 @@ Definition of fields needed in each bibtex entries.
       <volume/><number/><pages/><month/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional>
   </entry>
   
@@ -57,7 +58,7 @@ Definition of fields needed in each bibtex entries.
       <series/><address/><edition/><month/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional>
   </entry>
   
@@ -69,7 +70,7 @@ Definition of fields needed in each bibtex entries.
       <author/><howpublished/><address/><month/><year/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional>
   </entry>
 
@@ -88,7 +89,7 @@ Definition of fields needed in each bibtex entries.
       <series/><type/><address/><edition/><month/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional>
   </entry>
 
@@ -104,7 +105,7 @@ Definition of fields needed in each bibtex entries.
       <series/><type/><chapter/><pages/><address/><edition/><month/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional>
   </entry>
 
@@ -120,7 +121,7 @@ Definition of fields needed in each bibtex entries.
       <series/><pages/><address/><month/><organization/><publisher/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional>
   </entry>
 
@@ -136,7 +137,7 @@ Definition of fields needed in each bibtex entries.
       <series/><pages/><address/><month/><organization/><publisher/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional>  
   </entry>
 
@@ -148,7 +149,7 @@ Definition of fields needed in each bibtex entries.
       <author/><organization/><address/><edition/><month/><year/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional> 
   </entry>
 
@@ -160,7 +161,7 @@ Definition of fields needed in each bibtex entries.
       <type/><address/><month/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional> 
   </entry>
 
@@ -172,7 +173,7 @@ Definition of fields needed in each bibtex entries.
       <type/><address/><month/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional> 
   </entry>
 
@@ -184,7 +185,7 @@ Definition of fields needed in each bibtex entries.
       <author/><title/><howpublished/><month/><year/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional> 
   </entry>
 
@@ -200,7 +201,7 @@ Definition of fields needed in each bibtex entries.
       <series/><address/><month/><organization/><publisher/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional> 
   </entry>
 
@@ -212,7 +213,7 @@ Definition of fields needed in each bibtex entries.
       <type/><number/><address/><month/><note/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional> 
   </entry>
 
@@ -224,7 +225,7 @@ Definition of fields needed in each bibtex entries.
       <month/><year/>
     </optional>
     <additional>
-      <group/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
+      <groups/><abstract/><keywords/><url/><urlzip/><pdf/><website/><longnotes/>
     </additional> 
   </entry>
   

@@ -1,0 +1,10 @@
+This menu give access to the basket. The basket records entries you have selected in the bibliograpy.
+<br/>
+You can:
+<ul>
+    <li>display all entries in the basket,</li>
+    <li>change the group of all entries in basket,</li>
+    <li>reset groups of all entries in the basket,</li>
+    <li>export the selection to BibTeX,</li>
+    <li>export the selection to HTML.</li>
+</ul>
