@@ -131,6 +131,6 @@ $DISPLAY_SORT="no";
 /**
  * Default sort method: ID,title,year
  */
-$DEFAULT_SORT="year";
+$DEFAULT_SORT="ID";
 
 ?>

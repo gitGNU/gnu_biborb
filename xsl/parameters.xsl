@@ -105,7 +105,7 @@
     <xsl:param name="display_sort"/>
     
     <!-- Basket action images -->
-    <xsl:variable name="add-image">cvs-add-16.png</xsl:variable>
-    <xsl:variable name="remove-image">cvs-remove-16.png</xsl:variable>
+    <xsl:variable name="add-basket-image">cvs-add-16.png</xsl:variable>
+    <xsl:variable name="remove-basket-image">cvs-remove-16.png</xsl:variable>
 	
 </xsl:stylesheet>
