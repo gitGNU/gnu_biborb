@@ -47,11 +47,8 @@
         <!-- get all ids of entries to display -->
         <xsl:variable name="ids" select="//id"/>
         <xsl:element name="bibtex:file">
-            <xsl:for-each select="$bibfile//bibtex:entry[@id=$ids]">
-                <xsl:element name='bibtex:entry'>
-                    <xsl:attribute name='id'><xsl:value-of select='@id'/></xsl:attribute>
-                    <xsl:apply-templates select='./*'/>
-                </xsl:element>
+                <xsl:for-each select="//id">
+                    <xsl:apply-templates select='$bibfile//bibtex:entry[@id=current()]'/>
             </xsl:for-each>
         </xsl:element>
 	</xsl:template>

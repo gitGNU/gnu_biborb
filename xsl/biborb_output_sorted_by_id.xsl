@@ -38,7 +38,7 @@
     <xsl:output method="xml" encoding="iso-8859-1" />
     
 	<!-- include generic parameters -->
-	<xsl:include href="xsl/parameters.xsl"/>
+    <xsl:include href="xsl/parameters.xsl"/>
 
     <xsl:template match="/">
 		<xsl:variable name="cpt" select="count(//bibtex:entry)"/>
@@ -51,11 +51,11 @@
             </xsl:for-each>
         </xsl:variable>
         <br/>
-		
+
         <!-- start the table -->
         <table id="bibtex_table">
             <tbody>
-                <xsl:apply-templates select='//bibtex:entry'/>
+	        <xsl:apply-templates select='//bibtex:entry'/>
             </tbody>
         </table>
     </xsl:template>
