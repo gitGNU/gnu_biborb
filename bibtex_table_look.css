@@ -52,17 +52,18 @@ links */
 
 /* Look of the bibtex id */
 #bibtex_table .bibtex_key {
-    color:navy;
-    border:solid 1px #333;
+    color:#666;
+    /*border:solid 1px #333;*/
     border-bottom:none;
-    background-color:#ddd;
+    /*background-color:#ddd;*/
     font-weight:bold;
     font-size:x-small;
 	display:inline;
 	float:left;
-	min-width:8em;
+/*	min-width:12em;*/
 	position:relative;
 	padding-left:2px;
+	padding-right:2px;
 	padding-bottom:2px;
 	left:-1px;
 	top:2px;
