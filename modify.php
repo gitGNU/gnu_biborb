@@ -55,7 +55,7 @@ else
   
   if(file_exists($_FILES['url']['tmp_name'])){
     $infofile = pathinfo($_FILES['url']['name']);
-    $urlfile = get_new_name($infofile['basename'],$_POST['id']);
+    $urlfile = get_new_name($infofile['basename'],$_POST['_id']);
     $path = "./bibs/".$_SESSION['bibname']."/papers/".$urlfile;
     if(file_exists($path)){
       unlink($path);
@@ -71,7 +71,7 @@ else
   
   if(file_exists($_FILES['urlzip']['tmp_name'])){
     $infofile = pathinfo($_FILES['urlzip']['name']);
-    $urlzipfile = get_new_name($infofile['basename'],$_POST['id']);
+    $urlzipfile = get_new_name($infofile['basename'],$_POST['_id']);
     $path = "./bibs/".$_SESSION['bibname']."/papers/".$urlzipfile;
     if(file_exists($path)){
       unlink($path);
@@ -87,7 +87,7 @@ else
 
   if(file_exists($_FILES['pdf']['tmp_name'])){
     $infofile = pathinfo($_FILES['pdf']['name']);
-    $pdffile = get_new_name($infofile['basename'],$_POST['id']);
+    $pdffile = get_new_name($infofile['basename'],$_POST['_id']);
     $path = "./bibs/".$_SESSION['bibname']."/papers/".$pdffile;
     if(file_exists($path)){
       unlink($path);
