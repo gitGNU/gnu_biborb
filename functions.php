@@ -589,7 +589,6 @@ function extract_bibtex_data($tab){
  */
 function add_new_entry($bibname,$type,$tab,$urlfile,$urlzipfile,$pdffile){
     $xml = to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile);
-    echo $xml;
     $xsl = load_file("./xsl/add_entry.xsl");
     $param = array('bibname' => "file://".realpath(xmlfilename($bibname)));
     $result = xslt_transform($xml,$xsl,$param);
@@ -607,7 +606,6 @@ function add_new_entry($bibname,$type,$tab,$urlfile,$urlzipfile,$pdffile){
  */
 function update_entry($bibname,$type,$tab,$urlfile,$urlzipfile,$pdffile){
     $xml = to_xml($type,$tab,$urlfile,$urlzipfile,$pdffile);
-    echo $xml;
     $xsl = load_file("./xsl/update_xml.xsl");
     $param = array('bibname' => "file://".realpath(xmlfilename($bibname)));
     $result = xslt_transform($xml,$xsl,$param);
