@@ -960,7 +960,11 @@ function create_database($name,$description){
     // get name of existing databases
     $databases_names = get_databases_names();
     
-    if($name != null){
+    // check it is not a pathname
+    if(!ereg('^[^./][^/]*$', $name)){
+        $resArray['error'] = msg("Invalid name for bibliography!");
+    }
+    else if($name != null){
         // Create the new bibliography if it doesn't exist.
         if(!in_array($name,$databases_names)){
             $name = remove_accents($name);
@@ -1007,7 +1011,10 @@ function delete_database($name){
     }
     // create .trash folder if it does not exit
     if(!file_exists("./bibs/.trash")){
-        mkdir("./bibs/.trash",0775);
+        $oldmask = umask();
+        umask(DMASK);
+        mkdir("./bibs/.trash");
+        umask($oldmask);
     }
     // save the bibto .trash folder
     rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or trigger_error("Error while moving $name to .trash folder");

@@ -171,7 +171,7 @@ class Auth
         Return an array containing preferences for a given user.
      */
     function get_preferences($user){
-        $prefFile = "./data/users_pref/pref_".$user.".txt";
+        $prefFile = "./data/auth_files/pref_".$user.".txt";
         $pref = array();
         if(file_exists($prefFile)){
             $lines = file($prefFile);
@@ -204,7 +204,7 @@ class Auth
                     $pref['default_sort_order'] = $match[1];
                 }
                 if(preg_match("/max_ref_by_page:(.*)/",$line,$match)){
-                    $pref['max_ref_by_page'] = $match[1];
+                    $pref['max_ref_by_page'] = (int)$match[1];
                 }
                 if(preg_match("/display_shelf_actions:(.*)/",$line,$match)){
                     $pref['display_shelf_actions'] = $match[1];
@@ -247,7 +247,7 @@ class Auth
         $prefTxt .= "max_ref_by_page:".(array_key_exists("max_ref_by_page",$pref) ? $pref['max_ref_by_page'] : "10")."\n";
         $prefTxt .= "display_shelf_actions:".(array_key_exists("display_shelf_actions",$pref) ? $pref['display_shelf_actions'] : "no")."\n";
         
-        $fp = fopen("./data/users_pref/pref_".$user.".txt",'w');
+        $fp = fopen("./data/auth_files/pref_".$user.".txt",'w');
         fwrite($fp,$prefTxt);
         fclose($fp);
     }

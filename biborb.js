@@ -37,7 +37,7 @@ function change_lang(name){
     window.location="./bibindex.php?language="+name;
 }
 function change_lang_index(name){
-    window.location="./index.php?language="+name;
+    window.location="./index.php?action=select_lang&lang="+name;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -44,21 +44,24 @@ require_once("php/functions.php");  // load needed functions
 require_once("php/biborbdb.php");   // load biborb database
 require_once("php/interface.php");  // load function to generate the interface
 require_once("php/auth.php");       // load authentication class
+require_once("php/i18n.php");       // load i18n functions
 require_once("php/error.php");
 
 
-/**
- * Load the session
+
+/*
+    Load the session
  */
+// do not put web pages in browser cache
 session_cache_limiter('nocache');
-session_name($session_id);
+session_name("SID");
 session_start();
 
-// Set the error_handler
+// Set the error_handler for biborb
 set_error_handler("biborb_error_handler");
 
-/**
-
+/*
+    stripslashes
  */
 if(get_magic_quotes_gpc()) {
     $_POST = array_map('stripslashes_deep', $_POST);
@@ -66,22 +69,15 @@ if(get_magic_quotes_gpc()) {
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 }
 
-/**
- *  i18n
+
+/*
+    i18n, choose default lang if not set up
  */
-// try to load user preferences if exist
-if(array_key_exists('user_pref',$_SESSION)){
-    $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
+if(!array_key_exists('language',$_SESSION)){
+    $_SESSION['language'] = DEFAULT_LANG;
+    load_i18n_config($_SESSION['language']);
 }
-else if(!array_key_exists('language',$_GET)){
-    if(!array_key_exists('language',$_SESSION) || !DISPLAY_LANG_SELECTION){
-        $_SESSION['language'] = DEFAULT_LANG;
-    }
-}
-else{
-    $_SESSION['language'] = $_GET['language'];
-}
-load_i18n_config($_SESSION['language']);
+
 
 
 /**
@@ -137,7 +133,7 @@ if(isset($_GET['action'])){
         /*
             Create a database
          */
-        case msg("Create"):
+        case 'create':
             $error_or_message = create_database($_GET['database_name'],
                                                 $_GET['description']);
             break;
@@ -145,14 +141,14 @@ if(isset($_GET['action'])){
         /*
             Delete a database
          */
-        case msg("Delete"):
+        case 'delete':
             $error_or_message['message'] = delete_database($_GET['database_name']);
             break;
         
         /*
             Logout
          */
-        case "logout":
+        case 'logout':
             $_SESSION['user_is_admin'] = FALSE;
             unset($_SESSION['user']);
             unset($_SESSION['user_pref']);

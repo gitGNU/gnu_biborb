@@ -41,8 +41,10 @@ error_reporting(FATAL | ERROR | WARNING | E_ALL);
 */
 function biborb_error_handler($errno, $errstr, $errfile, $errline){
     switch ($errno) {
-        case FATAL:
+            
         case ERROR:
+        case FATAL:
+        case E_ALL:
         default:
             $html = html_header("BibORB - Error",CSS_FILE,null,null);
             $html .= "<div class='error_report'>";
@@ -70,4 +72,5 @@ function biborb_error_handler($errno, $errstr, $errfile, $errline){
             break;*/
     }
 }
+    
 ?>

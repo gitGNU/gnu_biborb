@@ -37,7 +37,7 @@
  * Version of Biborb
  */
 define("BIBORB_VERSION","CVS");
-define("BIBORB_RELEASE_DATE","22 November 2004");
+define("BIBORB_RELEASE_DATE","4 February 2005");
 
 /**
  * Path where is install biborb
@@ -67,7 +67,7 @@ define("DISABLE_AUTHENTICATION",FALSE);
  * Authentication methods: mysql, files
  * Used if DISABLE_AUTHENTICATION = FALSE
  */
-define("AUTH_METHOD",'mysql');
+define("AUTH_METHOD",'files');
 
 /**
  *  Should a confirmation be displayed when deleting entries
@@ -212,9 +212,4 @@ define("UMASK",0111);
  */
 define("DMASK",0000);
 
-/**
- * Name of the PHP SESSION
- * You shouldn't need to change this value.
- */
-$session_id = "SID";
 ?>

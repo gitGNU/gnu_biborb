@@ -76,12 +76,13 @@ require_once("php/interface.php"); // generate interface
 require_once("php/auth.php");
 require_once("php/third_party/Tar.php");
 require_once("php/error.php");
+require_once("php/i18n.php");       // load i18n functions
 
 /**
  * Session
  */
 session_cache_limiter('nocache');
-session_name($session_id);
+session_name("SID");
 session_start();
 
 // Set the error_handler
@@ -94,46 +95,38 @@ if(get_magic_quotes_gpc()) {
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 }
 
-/**
- *  i18n
+/*
+    i18n, choose default lang if not set up
  */
-if(array_key_exists('user_pref',$_SESSION)){
-    $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
+if(!array_key_exists('language',$_SESSION)){
+    $_SESSION['language'] = DEFAULT_LANG;
+    load_i18n_config($_SESSION['language']);
 }
-else if(!array_key_exists('language',$_GET)){
-    if(!array_key_exists('language',$_SESSION) || !DISPLAY_LANG_SELECTION){
-        $_SESSION['language'] = DEFAULT_LANG;
-    }
-}
-else{
-    $_SESSION['language'] = $_GET['language'];
-}
-load_i18n_config($_SESSION['language']);
 
 
-/**
- * Global variables to store an error message or a standard message.
+/*
+    Global variables to store an error message or a standard message.
  */
 $error = null;
 $message = null;
 
-/**
- * Display an error if there is no active bibtex database
+/*
+    Display an error if there is no active bibtex database
  */
 if(!array_key_exists('bibdb',$_SESSION) && !array_key_exists('bibname',$_GET)){
     trigger_error("Bibliography's name is not set!",ERROR);
 }
 
-/**
- *  If the basket doesn't exists, create it.
+/*
+    If the basket doesn't exists, create it.
  */
 if(!isset($_SESSION['basket'])){
     $_SESSION['basket'] = new Basket();
 } 
 
-/**
- * If the session variable 'bibdb' is not set, get the bibliography name from 
- * GET variables and create a new Biborb_Database.
+/*
+    If the session variable 'bibdb' is not set, get the bibliography name from 
+    GET variables and create a new Biborb_Database.
  */
 $update_auth = FALSE;
 if(!array_key_exists('update_authorizations',$_SESSION)){
@@ -152,10 +145,8 @@ if(array_key_exists('bibname',$_GET)){
     $update_auth = TRUE;
 }
 
-/**
- * Select the user's mode:
- *  admin => may modify, create or delete
- *  user => only for read purpose
+/*
+    Set the authorization levels
  */
 if(!DISABLE_AUTHENTICATION){
     if(!array_key_exists('auth',$_SESSION)){
@@ -214,7 +205,7 @@ else{
 
 //abstract
 if(array_key_exists('user_pref',$_SESSION)){
-    $abst = $_SESSION['user_pref']['display_abstract'];
+    $abst = $_SESSION['user_pref']['display_abstract'] == "yes";
 }
 else{
     $abst = array_key_exists('abstract',$_GET) ? $_GET['abstract'] : DISPLAY_ABSTRACT;
@@ -267,7 +258,7 @@ if(isset($_GET['action'])){
             
         case 'add_to_basket':		// Add an item to the basket
             if(!isset($_GET['id'])){
-                trigger_error("Trying to add a null value in basket!");
+                trigger_error("Trying to add a null value in basket!",ERROR);
             }
             else{
                 $_SESSION['basket']->add_items(explode("*",$_GET['id']));
@@ -276,7 +267,7 @@ if(isset($_GET['action'])){
 	
         case 'delete_from_basket':  // delete an entry from the basket
         if(!isset($_GET['id'])){
-            trigger_error("Trying to remove a null value from basket!");
+            trigger_error("Trying to remove a null value from basket!",ERROR);
         }
         else{
             $_SESSION['basket']->remove_item($_GET['id']);
@@ -291,32 +282,36 @@ if(isset($_GET['action'])){
             Delete an entry from the database
         */
         case 'delete':
+            // check that there is an id
             if(!isset($_GET['id'])){
-                trigger_error("BibTeX key not set. Can not remove a reference from the database.");
-            }  
-            else{
-                $confirm = FALSE;
-                if(array_key_exists('confirm_delete',$_GET)){
-                    $confirm = (strcmp($_GET['confirm_delete'],msg("Yes")) == 0);
-                }
-            
-                $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");		
-                // save the bibtex entry to show which entry was deleted
-                $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
-                $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
-                if(!WARN_BEFORE_DELETING || $confirm){		    
-                    // delete it
-                    $_SESSION['bibdb']->delete_entry($_GET['id']);
-                    // update message
-                    $message = sprintf(msg("The following entry was deleted: <pre>%s</pre>"),$bibtex);
-                    // if present, remvove entries from the basket
-                    $_SESSION['basket']->remove_item($_GET['id']);
-                    $_GET['mode'] = "operationresult";
+                trigger_error("BibTeX key not set. Can not remove a reference from the database.",ERROR);
+            } 
+            // check we have the authorization to delete
+            if(!array_key_exists('user_can_delete',$_SESSION) || !$_SESSION['user_can_delete']){
+                trigger_error("You are not authorized to delete references!",ERROR);
+            }
+            $confirm = FALSE;
+            if(array_key_exists('confirm_delete',$_GET)){
+                $confirm = (strcmp($_GET['confirm_delete'],msg("Yes")) == 0);
+            }
+        
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");		
+            // save the bibtex entry to show which entry was deleted
+            $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+            $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
+            if(!WARN_BEFORE_DELETING || $confirm){		    
+                // delete it
+                $_SESSION['bibdb']->delete_entry($_GET['id']);
+                // update message
+                $message = sprintf(msg("The following entry was deleted: <pre>%s</pre>"),$bibtex);
+                // if present, remvove entries from the basket
+                $_SESSION['basket']->remove_item($_GET['id']);
+                $_GET['mode'] = "operationresult";
             }
             else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],msg("No")) == 0){
                 $_GET['mode'] = "welcome";
             }
-            else{
+            else {
                 $theid = $_GET['id'];
                 $message = sprintf(msg("Delete this entry? <pre>%s</pre>"),$bibtex);
                 $message .= "<form action='bibindex.php' method='get' style='margin:auto;'>";
@@ -332,18 +327,17 @@ if(isset($_GET['action'])){
                 $_GET['mode'] = "operationresult";
             }
             $xsltp->free();		
-        }
-        break;
+            break;
 	
         case 'add':					// Add entries in the basket to a given group
             if(isset($_GET['groupvalue'])){
-                $gval = trim($_GET['groupvalue']);
+                $gval = htmlentities(trim($_GET['groupvalue']));
             }
             if(isset($_GET['newgroupvalue'])){
-                $gval = trim($_GET['newgroupvalue']);
+                $gval = htmlentities(trim($_GET['newgroupvalue']));
             }
             if(!isset($gval)){
-                die(msg("No group specified!"));
+                trigger_error(msg("No group specified!"),ERROR);
             }
             else if($gval != ""){
                 $_SESSION['bibdb']->add_to_group($_SESSION['basket']->items,$gval);
@@ -364,26 +358,42 @@ if(isset($_GET['action'])){
             break;
 	
         case 'update_type':
-            $_SESSION['bibdb']->change_type($_GET['id'],$_GET['bibtex_type']);
+            // check we have the authorization to modify
+            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
+                trigger_error("You are not authorized to modify references!",ERROR);
+            }
+            $_SESSION['bibdb']->change_type(htmlentities($_GET['id']),htmlentities($_GET['bibtex_type']));
             $_GET['mode']='update';
             break;
             
         case 'update_key': // update the BibTeX key of a reference
-            if(!$_SESSION['bibdb']->is_bibtex_key_present($_GET['bibtex_key'])){
-                $_SESSION['bibdb']->change_id($_GET['id'],$_GET['bibtex_key']);
-                $_GET['mode']='update';
-                $_GET['id'] = $_GET['bibtex_key'];
+            // check we have the authorization to modify
+            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
+                trigger_error("You are not authorized to modify references!",ERROR);
+            }
+            $oldid = htmlentities($_GET['id']);
+            $newid = htmlentities($_GET['bibtex_key']);
+            if(!$_SESSION['bibdb']->is_bibtex_key_present($newid)){
+                $_SESSION['bibdb']->change_id($oldid,$newid);
+                $_GET['mode'] = 'update';
+                $_GET['id'] = $newid;
                 // change the value in the basket
-                $_SESSION['basket']->remove_item($_GET['id']);
-                $_SESSION['basket']->add_item($_GET['bibtex_key']);
+                $_SESSION['basket']->remove_item($oldid);
+                $_SESSION['basket']->add_item($newid);
             }
             else{
-                $error = sprintf(msg("BibTeX key <code>%s</code> already exists."),$_GET['bibtex_key']);
+                $error = sprintf(msg("BibTeX key <code>%s</code> already exists."),$newid);
                 $_GET['mode'] = 'operationresult';
             }
             break;
 
         case 'delete_basket':
+
+            // check we have the authorization to delete
+            if(!array_key_exists('user_can_delete',$_SESSION) || !$_SESSION['user_can_delete']){
+                trigger_error("You are not authorized to delete references!",ERROR);
+            }
+
             $confirm = FALSE;
             if(array_key_exists('confirm_delete',$_GET)){
                 $confirm = (strcmp($_GET['confirm_delete'],msg("Yes"))==0);
@@ -423,6 +433,10 @@ if(isset($_GET['action'])){
             Shelf mode: update the owner ship
          */
         case 'update_ownership':
+            // check we have the authorization to modify
+            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
+                trigger_error("You are not authorized to modify references!",ERROR);
+            }
             $_SESSION['bibdb']->change_ownership($_GET['id'], $_GET['ownership']);
             break;
             
@@ -430,6 +444,10 @@ if(isset($_GET['action'])){
             Shelf mode: update the read status of a reference
          */
         case 'update_readstatus':
+            // check we have the authorization to modify
+            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
+                trigger_error("You are not authorized to modify references!",ERROR);
+            }
             $_SESSION['bibdb']->change_readstatus($_GET['id'], $_GET['readstatus']);
             break;
             
@@ -438,16 +456,18 @@ if(isset($_GET['action'])){
          */
         case 'add_browse_item':
             if(array_key_exists('type',$_GET) && array_key_exists('value',$_GET)){
+                $theType = htmlentities($_GET['type']);
+                $theValue = htmlentities($_GET['value']);
                 $found = false;
                 $cpt = 0;
                 if(array_key_exists('browse_history',$_SESSION)){
                     for($cpt=0;$cpt<count($_SESSION['browse_history']) && !$found; $cpt++){
-                        $found = $_SESSION['browse_history'][$cpt]['type'] == $_GET['type'];
+                        $found = $_SESSION['browse_history'][$cpt]['type'] == $theType;
                     }
                 }
                 
                 if($found){
-                    $_SESSION['browse_history'][$cpt-1]['value'] = $_GET['value'];
+                    $_SESSION['browse_history'][$cpt-1]['value'] = $theValue;
                     $_GET['start'] = $cpt;
                     array_splice($_SESSION['browse_history'],$cpt);
                     /*for($i=$cpt;$i<count($_SESSION['browse_history']);$i++){
@@ -455,12 +475,12 @@ if(isset($_GET['action'])){
                     }*/
                     $_SESSION['browse_ids'] = $_SESSION['bibdb']->all_bibtex_ids();
                     for($i=0;$i<count($_SESSION['browse_history']);$i++){
-                        $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$_GET['type'],$_GET['value']);
+                        $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$theType,$theValue);
                     }
                 }
                 else{
-                    $_SESSION['browse_history'][] = array('type'=>$_GET['type'],'value'=>$_GET['value']);
-                    $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$_GET['type'],$_GET['value']);
+                    $_SESSION['browse_history'][] = array('type'=>$theType,'value'=>$theValue);
+                    $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$theType,$theValue);
                 }
                 $_GET['start'] = count($_SESSION['browse_history']);
             }
@@ -478,6 +498,10 @@ if(isset($_POST['action'])){
             Add an entry to the database
         */
         case 'add_entry': 
+            // check we have the authorization to modify
+            if(!array_key_exists('user_can_add',$_SESSION) || !$_SESSION['user_can_add']){
+                trigger_error("You are not authorized to add references!",ERROR);
+            }
             if(isset($_POST['ok'])){
                 $res = $_SESSION['bibdb']->add_new_entry($_POST);
                 if($res['added']){
@@ -502,6 +526,10 @@ if(isset($_POST['action'])){
         // update an entry
         case 'update_entry':
             if(isset($_POST['ok'])){
+                // check we have the authorization to modify
+                if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
+                    trigger_error("You are not authorized to modify references!",ERROR);
+                }
                 $res = $_SESSION['bibdb']->update_entry($_POST);
                 if($res['updated']){
                     $message = msg("The following entry was updated:")."<br/>";
@@ -526,9 +554,13 @@ if(isset($_POST['action'])){
             Import bibtex entries.
         */
         case 'import':
+            // check we have the authorization to modify
+            if(!array_key_exists('user_can_add',$_SESSION) || !$_SESSION['user_can_add']){
+                trigger_error("You are not authorized to add references!",ERROR);
+            }
             // Error if no value given
             if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
-                die("Error, no bibtex data provided!");
+                trigger_error("Error, no bibtex data provided!",ERROR);
             }
             else{
                 // get bibtex data from $_POST or $_FILES

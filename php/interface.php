@@ -94,7 +94,8 @@ function index_add_database(){
     $content .= "<input type='text' name='database_name' id='database_name'/><br/>";
     $content .= "<label for='description'>".msg("INDEX_CREATE_DESCRIPTION").":</label>";
     $content .= "<input type='text' name='description' id='description'/><br/>";
-    $content .= "<input class='submit' type='submit' name='action' value='".
+    $content .= "<input type='hidden' name='action' value='create'/>";
+    $content .= "<input class='submit' type='submit' value='".
         msg("Create")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
@@ -128,7 +129,8 @@ function index_delete_database(){
     }
 
     $content .= "</select>";
-    $content .= "&nbsp;<input class='submit' type='submit' name='action' value='".msg("Delete")."'/>";
+    $content .= "<input type='hidden' name='action' value='delete'/>";
+    $content .= "&nbsp;<input class='submit' type='submit' value='".msg("Delete")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     
@@ -1727,6 +1729,9 @@ function bibindex_display_tools(){
     echo $html;
 }
 
+/*
+    Preferences panel
+ */
 function pref_content(){
     $pref = $_SESSION['auth']->get_preferences($_SESSION['user']);
     
