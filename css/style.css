@@ -47,8 +47,8 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
  */
 #bibname {font-weight:bold;text-align:center;display:block;color:navy;border-top:solid black;border-bottom:solid black;margin-bottom:0.5em;}
 #title {font-weight:bold;text-align:center;display:block;font-size:x-large;text-shadow: #666 2px 2px 2px;letter-spacing:2px;}
-html > body #menu {position:fixed;}
-#menu {margin-top:0em;position:relative;float:left;margin-left:10px;text-shadow:#bbb 2px 2px 3px;}
+#menu {position:fixed;}
+//#menu {margin-top:0em;position:relative;float:left;margin-left:10px;text-shadow:#bbb 2px 2px 3px;}
 #menu ul {margin:0;padding:0;list-style-type:none;}
 #menu li {margin:0;}
 #menu ul li a {display: block;color: #333;background-color: transparent;width: 160px;padding: 2px 5px;font-weight: bold;text-decoration:none;border: 1px solid #aaa;font-size:9pt;} 
@@ -61,7 +61,7 @@ html > body #menu {position:fixed;}
 /**
  * Style for the main panel
  */
-#main {position:relative;float:middle;width:65%;margin-left:200px;padding:0 1em 1em 1em;border: solid 1px #aaa;background-color:#eef;}
+#main {width:65%;margin-left:200px;padding:0 1em 1em 1em;border: solid 1px #aaa;background-color:#eef;}
 #main_title {color:navy;text-align:center;border-bottom:dashed 2px gray;padding-bottom:0.5em;margin-bottom:1em;text-shadow:#666 2px 2px 2px;}
 #error {color:red;border:1px solid red;margin:1em;padding:1em;}
 #message {color:navy;border:1px solid navy;margin:1em;padding:1em;}
