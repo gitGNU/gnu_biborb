@@ -51,23 +51,26 @@
             - is_admin_user($user)
                 Check if $user is an admin user.
             
-        It is then easy to redefines these methods to match your needs (other 
+        It is then easy to redefine these methods to match your needs (other 
     databases, ldap, postgres, xml databases....)
 
 
-        The following definition of Auth uses a mysql databas to store the 
+        The following definition of Auth uses a mysql database to store the 
     authorizations.
 
     The database is organized as follows:
+
         biborb_users(id,login,password,name,firstname,admin)
             password is stored using the md5 function
             admin: Y if the user is an admin, N otherwise
     
         biborb_auth(user_id,db_name,access)
             user_id: a valid biborb_users id
-            db_name: the bibliography 
+            db_name: the bibliography's name or '*' to set authorizations for
+                     all databases
             access: a 3 characters field (add|modify|delete)
-                so 111 == add modify and delete, 100 == add no modify no delete...
+                       111 == add modify and delete, 
+                       100 == add no modify no delete ...
 */
 
 /**
@@ -80,6 +83,11 @@ $db = "biborb";
 $table = "biborb_users";
 $auth_table = "biborb_auth";
 
+
+/**
+    Class Auth: a genreic class to check authorizations.
+    This implementation of Auth uses a MySQL database.
+*/
 class Auth
 {
     var $host;
@@ -105,12 +113,14 @@ class Auth
         Returns TRUE/FALSE
      */
     function is_valid_user($user,$pass){
+        // connection to the users database
         $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
             die("Unable to connect to the users database!");
         }
         else{
+            // Get ($user,$pass) record
             $query = "SELECT login,password FROM ".$this->users_table." WHERE login='$user' AND password=md5('$pass')";
             $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
             return (mysql_num_rows($result)>0);
@@ -122,12 +132,14 @@ class Auth
         Returns TRUE/FALSE
      */
     function is_admin_user($user){
+        //connection to the users database
         $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
             die("Unable to connect to the users database!");
         }
         else{
+            // get $admin value for $user
             $query = "SELECT admin FROM ".$this->users_table." WHERE login='$user'";
             $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
             
@@ -146,23 +158,36 @@ class Auth
         Returns TRUE/FALSE
      */
     function can_delete_entry($user, $database_name){
+    //connection to the users database
         $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or die("Unable to connect to mysql!");
         $base = @mysql_select_db($this->dbname,$connect);
         if(!$base){
             die("Unable to connect to the users database!");
         }
         else{
+            // get records where $id = $user
             $query = "SELECT id FROM ".$this->users_table." WHERE login='$user'";
             $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
             
             if(mysql_num_rows($result) != 0){
                 $row = mysql_fetch_assoc($result);
                 $id = $row['id'];
-                $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
+
+                // look for *
+                $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='*'";
                 $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
-                $row = mysql_fetch_assoc($result);
-                $access = $row['access'];
-                return $access[2] == '1';
+                if(mysql_num_rows($result) != 0){
+                    $row = mysql_fetch_assoc($result);
+                    $access = $row['access'];
+                    return $access[2] == '1';
+                }
+                else{
+                    $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
+                    $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+                    $row = mysql_fetch_assoc($result);
+                    $access = $row['access'];
+                    return $access[2] == '1';
+                }
             }
             else{
                 return FALSE;
@@ -187,11 +212,22 @@ class Auth
             if(mysql_num_rows($result) != 0){
                 $row = mysql_fetch_assoc($result);
                 $id = $row['id'];
-                $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
+                
+                $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='*'";
                 $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
-                $row = mysql_fetch_assoc($result);
-                $access = $row['access'];
-                return $access[0] == '1';
+
+                if(mysql_num_rows($result) != 0){
+                    $row = mysql_fetch_assoc($result);
+                    $access = $row['access'];
+                    return $access[0] == '1';
+                }
+                else{
+                    $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
+                    $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+                    $row = mysql_fetch_assoc($result);
+                    $access = $row['access'];
+                    return $access[0] == '1';
+                }
             }
             else{
                 return FALSE;
@@ -216,11 +252,22 @@ class Auth
             if(mysql_num_rows($result) != 0){
                 $row = mysql_fetch_assoc($result);
                 $id = $row['id'];
-                $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
+                
+                $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='*'";
                 $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
-                $row = mysql_fetch_assoc($result);
-                $access = $row['access'];
-                return $access[1] == '1';
+
+                if(mysql_num_rows($result) != 0){
+                    $row = mysql_fetch_assoc($result);
+                    $access = $row['access'];
+                    return $access[1] == '1';
+                }
+                else{
+                    $query = "SELECT access FROM ".$this->users_auth." WHERE user_id='$id' AND db_name='$database_name'";
+                    $result = mysql_query($query,$connect) or die("Invalid request".mysql_error());
+                    $row = mysql_fetch_assoc($result);
+                    $access = $row['access'];
+                    return $access[1] == '1';
+                }
             }
             else{
                 return FALSE;
