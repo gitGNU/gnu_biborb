@@ -215,9 +215,9 @@ fieldset.required {
     height:11px;
 }
 
-.required input {
+.required input{
     width:80%;
-    margin:0.1em;
+    margin:0.2em;
 }
 
 .optional {

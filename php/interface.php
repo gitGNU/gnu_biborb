@@ -397,7 +397,7 @@ function bibindex_menu($bibname)
     // jump to a given bibliography
     $avbibs = get_databases_names();
     $html .= "<li>";
-    $html .= "<form style='padding:0;margin:0' action='bibindex.php'>";
+    $html .= "<form style='margin:0;padding:0;action='bibindex.php'>";
     $html .= "<fieldset class='fieldset'>";
     $html .= "<select class='misc_button' onchange='javascript:change_db(this.value)'>";
     foreach($avbibs as $bib){

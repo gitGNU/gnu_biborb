@@ -34,6 +34,14 @@
  */
 
 /**
+ * Sets magic_quotes behavior of PHP
+ */
+ini_set("magic_quotes_gpc",1);
+ini_set("magic_quotes_sysbase",0);
+ini_set("magic_quotes_runtime",0);
+
+
+/**
  * Localisation
  * Available: en_US, fr_FR
  */
@@ -49,7 +57,7 @@ $display_language_selection = TRUE;
  * Version of Biborb
  */
 $biborb_version = "CVS";
-$date_release = "20 August 2004";
+$date_release = "22 August 2004";
 
 
 /**
@@ -60,7 +68,7 @@ $disable_authentication = TRUE;
 
 
 /**
- *  Sould a confirmation may be displayed when deleting an entry
+ *  Should a confirmation may be displayed when deleting entries
  */
 $warn_before_deleting = TRUE;
 

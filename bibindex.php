@@ -81,6 +81,14 @@ require_once("php/auth.php");
 session_name($session_id);
 session_start();
 
+
+if(get_magic_quotes_gpc()) {
+    $_POST = array_map('stripslashes_deep', $_POST);
+    $_GET = array_map('stripslashes_deep', $_GET);
+    $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
+}
+
+
 /**
  *  i18n
  */
@@ -434,7 +442,6 @@ if(isset($_POST['action'])){
                     $bibtex_data= file($_FILES['bibfile']['tmp_name']);
                 }
                 // add the new entry	
-
                 $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
 
                 $entries = $_SESSION['bibdb']->entries_with_ids($res);

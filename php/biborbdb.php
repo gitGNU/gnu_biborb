@@ -235,6 +235,7 @@ class BibORB_DataBase {
         // add the new entry
         $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
         $bt = new BibTeX_Tools();
+
         $data = $bt->bibtex_string_to_xml($bibtex);
 
         $xsl = load_file("./xsl/add_entries.xsl");

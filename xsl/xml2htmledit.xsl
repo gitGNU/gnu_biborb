@@ -70,7 +70,7 @@
                             <label for="{name()}"><xsl:value-of select="$field"/>:</label>
                             <input name="{name()}" value="{$val}" /><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                or/and<br/>
+                                <span style='color:black;font-weight:normal;font-size:small;'>or/and</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -83,36 +83,19 @@
                             <label for="{name()}"><xsl:value-of select="$field"/>:</label>
                             <input name="{name()}" value="{$val}" /><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                or<br/>
+                                <span style='color:black;font-weight:normal;font-size:small;'>or</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
+                    <xsl:when test="name() != 'id'">
                     <!-- any other case -->
-                    <xsl:otherwise>
                         <xsl:variable name="field" select="name()"/>
                         <label for="{name()}"><xsl:value-of select="name()"/>:</label>
                         <xsl:variable name="val">
-                            <xsl:choose>
-                                <!-- the id, not editable -->
-                                <xsl:when test="local-name()='id'">
-                                    <xsl:value-of select="$entry//@id"/>
-                                </xsl:when>
-                                <!-- other fields, editable -->
-                                <xsl:otherwise>
-                                    <xsl:value-of select="$entry//*[local-name() = $field]"/>
-                                </xsl:otherwise>
-                            </xsl:choose>
+                            <xsl:value-of select="$entry//*[local-name() = $field]"/>
                         </xsl:variable>
-                        <xsl:choose>
-                            <xsl:when test="local-name() = 'id' and $update">
-                                <input name="{name()}" value="{$val}" type="hidden" />
-                                <xsl:value-of select="$val"/><br/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <input name="{name()}" value="{$val}" /><br/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:otherwise>
+                        <input name="{name()}" value="{$val}" /><br/>
+                    </xsl:when>
                 </xsl:choose>
             </xsl:for-each>
         </fieldset>
@@ -132,7 +115,7 @@
                             <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
                             <input name="{name()}" value='{$val}' /><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                or/and<br/>
+                                <span style='color:black;font-weight:normal;font-size:small;'>or/and</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -145,7 +128,7 @@
                             <xsl:variable name="val" select="$entry//*[local-name() = $field]"/>
                             <input name="{name()}" value='{$val}' /><br/>
                             <xsl:if test="not(position() = $cpt)">
-                                or/and<br/>
+                                <span style='color:black;font-weight:normal;font-size:small;'>or/and</span><br/>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
