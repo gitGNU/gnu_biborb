@@ -47,13 +47,12 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
  */
 #bibname {font-weight:bold;text-align:center;display:block;color:navy;border-top:solid black;border-bottom:solid black;margin-bottom:0.5em;}
 #title {font-weight:bold;text-align:center;display:block;font-size:x-large;text-shadow: #666 2px 2px 2px;letter-spacing:2px;}
-#menu {position:fixed;}
-//#menu {margin-top:0em;position:relative;float:left;margin-left:10px;text-shadow:#bbb 2px 2px 3px;}
-#menu ul {margin:0;padding:0;list-style-type:none;}
+#menu {margin-top:0em;position:relative;float:left;margin-left:10px;text-shadow:#bbb 2px 2px 3px;width:170px;padding:0;}
+#menu ul {margin:0;padding:0;list-style-type:none;width:170px;}
 #menu li {margin:0;}
 #menu ul li a {display: block;color: #333;background-color: transparent;width: 160px;padding: 2px 5px;font-weight: bold;text-decoration:none;border: 1px solid #aaa;font-size:9pt;} 
 #menu ul li a:hover {background-color: #aae;color: #333;padding: 2px 5px;}
-#menu ul ul {margin-left:10px;margin-bottom:10px;padding:0;list-style-type:none;border-bottom:1px dashed #aaa;}
+#menu ul ul {margin-left:10px;margin-bottom:10px;padding:0;list-style-type:none;border-bottom:1px dashed #aaa;width:160px;}
 #menu li li a {font-size:9pt;display:block;color: #333;background-color: transparent;width: 150px;padding: 2px 5px;margin:0;border-top: none;border-bottom: none;border-left: 1px dashed #aaa;border-right: 1px dashed #aaa;text-decoration: none;font-weight: normal;}
 #menu li li a:hover{background-color:#ade;color:black;}
 #menu li li a.admin:hover {background-color:#e44;color:black;}
@@ -61,7 +60,7 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 /**
  * Style for the main panel
  */
-#main {width:65%;margin-left:200px;padding:0 1em 1em 1em;border: solid 1px #aaa;background-color:#eef;}
+#main {float:middle;width:70%;margin-left:200px;padding:0 1em 1em 1em;border: solid 1px #aaa;background-color:#eef;}
 #main_title {color:navy;text-align:center;border-bottom:dashed 2px gray;padding-bottom:0.5em;margin-bottom:1em;text-shadow:#666 2px 2px 2px;}
 #error {color:red;border:1px solid red;margin:1em;padding:1em;}
 #message {color:navy;border:1px solid navy;margin:1em;padding:1em;}
