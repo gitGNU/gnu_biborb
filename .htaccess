@@ -1,6 +1,6 @@
-Options -Indexes
+#Options -Indexes
 
-<Files .ht*>
-  order allow,deny
-  deny from all
-</Files>
+#<Files .ht*>
+#  order allow,deny
+#  deny from all
+#</Files>
