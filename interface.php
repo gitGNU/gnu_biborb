@@ -896,8 +896,9 @@ HTML;
     foreach($bibtex_fields as $field){
         $content .= "<tr><td style='width:100px;'>$field</td><td>";
 	if(array_key_exists($field,$_GET)){
-	    $content .= "<input style='width:85%;' name='$field' value='".$_GET[$field]."'/></td></tr>";
-	    $extraparam .= "$field=".$_GET[$field]."&";
+	    $thefield = remove_accents(trim($_GET[$field]));
+	    $content .= "<input style='width:85%;' name='$field' value='".$thefield."'/></td></tr>";
+	    $extraparam .= "$field=".$thefield."&";
 	}
 	else{
 	    $content .= "<input style='width:85%;' name='$field'/></td></tr>";
@@ -907,8 +908,9 @@ HTML;
     foreach($biborb_fields as $field){
 	$content .= "<tr><td>$field</td><td>";
 	if(array_key_exists($field,$_GET)){
-	    $content .= "<input style='width:85%;' name='$field' value='".$_GET[$field]."'/></td></tr>";
-	    $extraparam .= "$field=".$_GET[$field]."&";
+	    $thefield = remove_accents(trim($_GET[$field]));
+	    $content .= "<input style='width:85%;' name='$field' value='".$thefield."'/></td></tr>";
+	    $extraparam .= "$field=".$thefield."&";
 	}
 	else{
 	    $content .= "<input style='width:85%;' name='$field'/></td></tr>";
@@ -926,13 +928,13 @@ HTML;
     $searchArray = array();
     foreach($bibtex_fields as $val){
         if(array_key_exists($val,$_GET) && trim($_GET[$val]) != ''){
-            $searchArray['search_'.$val]=trim($_GET[$val]);
+            $searchArray['search_'.$val]=remove_accents(trim($_GET[$val]));
         }
     }
     
     foreach($biborb_fields as $val){
         if(array_key_exists($val,$_GET) && trim($_GET[$val]) != ''){
-            $searchArray['search_'.$val]=trim($_GET[$val]);
+            $searchArray['search_'.$val]=remove_accents(trim($_GET[$val]));
         }
     }
     if(array_key_exists('connector',$_GET)){
