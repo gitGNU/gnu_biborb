@@ -46,7 +46,7 @@ BibORB presently supports:
 BibORB does not support:
 <ul>
     <li><span style='color:red;'>IMPORTANT!</span> Presently, BibORB has not
-    been designed so that different users may 'securely' modified the same
+    been designed so that different users may 'securely' modify the same
     bibliography. Concurrent access is not supported. (may be in a latter
     version) </li>
     <li> No support for use of @string or @preamble </li>
