@@ -1328,14 +1328,14 @@ function bibindex_export_basket_to_bibtex(){
     $content .= "<tbody>";
     $cpt = 0;
     for($i=0;$i<count($GLOBALS['bibtex_entries']);$i++){
-	if(strcmp($GLOBALS['bibtex_entries'][$i],'_id') != 0){
+	if(strcmp($GLOBALS['bibtex_entries'][$i],'id') != 0){
 	    $field = $GLOBALS['bibtex_entries'][$i];
 	    if($cpt == 0){
-		$content .= "<tr>";
+            $content .= "<tr>";
 	    }
 	    $content .= "<td><input type='checkbox' name='$field'";
 	    if(!(array_search($field,$GLOBALS['fields_to_export']) === false)){
-		$content .= " checked='checked' ";
+            $content .= " checked='checked' ";
 	    }
 	    $content .= "/>$field</td>";
 	    $cpt++;
