@@ -29,6 +29,16 @@ PHP PEAR
 http://pear.php.net/ provides instructions to install it on your system.
 
 
+UPGRADE
+-------
+    When upgrading from a previous version:
+    
+    1. Rename the biborb directory:
+        mv biborb biborb.old
+    
+    2. Untar the archive: tar -xvzf biborb-x.tar.gz
+    
+    3. Copy (or move) biborb.old/bibs to the new biborb directory.
 
 INSTALLATION
 ------------
