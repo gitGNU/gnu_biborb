@@ -1105,3 +1105,6 @@ msgstr "Exporter..."
 
 msgid "Select an export format:"
 msgstr "Sélection d'un format pour l'export :"
+
+msgid "BIBINDEX_EXPORT_BASKET"
+msgstr "Export Basket"
