@@ -37,7 +37,7 @@
  * Version of Biborb
  */
 $biborb_version = "CVS";
-$date_release = "24 September 2004";
+$date_release = "06 October 2004";
 
 /**
  * Name of the PHP SESSION
