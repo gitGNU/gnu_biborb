@@ -134,6 +134,11 @@ if(isset($_GET['action'])){
             Create a database
          */
         case 'create':
+            // check we have the authorization to modify
+            if(!array_key_exists('user_is_admin',$_SESSION) || !$_SESSION['user_is_admin']){
+                trigger_error("You are not authorized to create bibliographies!",ERROR);
+            }
+            
             $error_or_message = create_database($_GET['database_name'],
                                                 $_GET['description']);
             break;
@@ -142,6 +147,11 @@ if(isset($_GET['action'])){
             Delete a database
          */
         case 'delete':
+            // check we have the authorization to modify
+            if(!array_key_exists('user_is_admin',$_SESSION) || !$_SESSION['user_is_admin']){
+                trigger_error("You are not authorized to delete bibliographies!",ERROR);
+            }
+            
             $error_or_message['message'] = delete_database($_GET['database_name']);
             break;
         
