@@ -1329,7 +1329,7 @@ function bibindex_export_basket_to_bibtex(){
     $cpt = 0;
     for($i=0;$i<count($GLOBALS['bibtex_entries']);$i++){
 	if(strcmp($GLOBALS['bibtex_entries'][$i],'_id') != 0){
-	    $field = substr($GLOBALS['bibtex_entries'][$i],1);
+	    $field = $GLOBALS['bibtex_entries'][$i];
 	    if($cpt == 0){
 		$content .= "<tr>";
 	    }
