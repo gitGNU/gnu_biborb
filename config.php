@@ -184,6 +184,7 @@ $DEFAULT_SORT_ORDER="ascending";
  */
 $MAX_REFERENCES_BY_PAGE=10;
 
+
 /**
  * Keep an up-to-date BibTeX file.
  * If true, each time a bibliography is modified, a BibTeX file is updated

@@ -230,11 +230,31 @@ function create_nav_bar($current_page,$max_page,$mode,$extraparam=null){
         if($extraparam != null){
             $extraparam = "&amp;".$extraparam;
         }
+        // left arrows to display if this isn't the first page
         if($current_page != 0){
             $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=0'><img src='data/images/stock_first-16.png' alt='First' title='First'/></a>";
             $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=".($current_page-1)."'><img src='data/images/stock_left-16.png' alt='Previous' title='Previous'/></a>";
         }
-        for($i=0;$i<$max_page;$i++){
+        
+        // computes which index to display
+        $nb = 10;
+        if($current_page-$nb<0){
+            $start_index = 0;
+        }
+        else if($current_page==$max_page-1){
+            $start_index = max($max_page-2*$nb ,0);
+        }
+        else{
+            $start_index = max($current_page - $nb-1,0);
+        }
+        
+        // if $start_index is not 0 display dots
+        if($start_index != 0){
+            $html .= "&nbsp;...&nbsp;";
+        }
+        
+        // output the numbered navigation bar
+        for($i=$start_index;$i<$max_page && $i<$start_index+2*$nb ;$i++){
             if($current_page==$i){
                 $html .= "<a id='current_page' href='bibindex.php?mode=$mode$extraparam&amp;page=$i'>".($i+1)."</a>";
             }
@@ -242,6 +262,13 @@ function create_nav_bar($current_page,$max_page,$mode,$extraparam=null){
                 $html .= "<a class='num_page' href='bibindex.php?mode=$mode$extraparam&amp;page=$i'>".($i+1)."</a>";
             }
         }
+        
+        // if the last page number is not displayed, output dots.
+        if($i != $max_page){
+            $html .= "&nbsp;...&nbsp;";
+        }
+        
+        // right arrows to display if this isn't the last page
         if($current_page != $max_page-1){
             $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=".($current_page+1)."'><img src='data/images/stock_right-16.png' alt='Next' title='Next'/></a>";
             $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=".($max_page-1)."'><img src='data/images/stock_last-16.png' alt='Last' title='Last'/></a>";
