@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="iso-8859-1" ?>
-<!--
+<?php
+
+/**
+
 This file is part of BibORB
 
 Copyright (C) 2003  Guillaume Gardey
@@ -17,27 +19,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
--->
-<!--
-File: count.xsl
+
+**/
+
+/**
+
+File: config.php
 Author: Guillaume Gardey (ggardey@club-internet.fr)
 Year: 2003
 Licence: GPL
 
 Description:
 
-Count entries in xml file.
--->
+  some config values
 
-<xsl:stylesheet version="1.0" 
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:bibtex="http://bibtexml.sf.net/">
-  
-  <xsl:output method="text"/>
-  <xsl:template match="/">
-    <!-- Nombre total d'entrŽe -->
-    <xsl:value-of select="count(//bibtex:entry)"/>.
-    <!-- Nombre total de fichier -->
-    <xsl:value-of select="count(//*[local-name() = 'url' or local-name() = 'urlzip' or local-name() = 'pdf'])"/>
-  </xsl:template>
-</xsl:stylesheet>
+**/
+
+$session_id = "id";
+
+$host = "localhost";
+$dbuser = "biborb-admin";
+$pass = "biborbdev";
+$db = "biborb";
+$table = "biborb_users";
+
+
+?>

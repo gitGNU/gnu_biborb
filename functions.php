@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 
 This file is part of BibORB
@@ -37,11 +37,8 @@ papers specified in the bibfile.
   Have a look to README for more details.
 
 **/
-?>
 
-
-
-<?
+include("config.php");
 
 // Update the XML file
 // If more than one bibfile is present, content is merged in one XML file
@@ -56,24 +53,27 @@ function update_xml($bibname)
       array_push($tab,$file);      
     }
   }
-
+  
   if(count($tab) > 1){
     $fp = fopen("./bibs/".$bibname."/".$bibname.".xml","w");
     fwrite($fp,"<?xml version='1.0' encoding='iso-8859-1'?>\n");
-    fwrite($fp,"<file name='".$bibname."'>\n");
+    fwrite($fp,"<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' name='".$bibname."'>\n");
     fclose($fp);      
     foreach($tab as $bibfile){      
       write_xml_file("./bibs/".$bibname."/".$bibname.".xml","./bibs/".$bibname."/".$bibfile,true);
     }    
     $fp = fopen("./bibs/".$bibname."/".$bibname.".xml","a");   
-    fwrite($fp,"</file>");
+    fwrite($fp,"</bibtex:file>");
     fclose($fp);
   }
   else{
     write_xml_file("./bibs/".$bibname."/".$bibname.".xml","./bibs/".$bibname."/".$tab[0]);
-  }   
+  }
 }
 
+/*
+Convert a bibtex file to an xml file.
+*/
 function write_xml_file($xmlfile,$bibfile,$append = false)
 {  
   $inf = pathinfo($bibfile);  
@@ -89,15 +89,37 @@ function write_xml_file($xmlfile,$bibfile,$append = false)
   else{
     $inf = pathinfo($xmlfile);
     $xml_content ="<?xml version='1.0' encoding='iso-8859-1'?>\n";
-    $xml_content .= "<file name='".$bibname."'>";    
+    $xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' name='".$bibname."'>\n";    
     $xml_content .= bibtex2xml($bibfile);
-    $xml_content .= "</file>\n";    
+    $xml_content .= "</bibtex:file>\n";    
     $fp = fopen($xmlfile,"w");
     fwrite($fp,$xml_content);
     fclose($fp);
   }    
 }
 
+
+/*
+update the .bib file according to data present in the xml file.
+ */
+function xml2bibtex($bibname)
+{
+
+  $xmlfile = "./bibs/".$bibname."/".$bibname.".xml";
+  $bibfile = "./bibs/".$bibname."/".$bibname.".bib";
+  
+  $xml_content = load_file($xmlfile);
+  $xsl_content = load_file("./xsl/xml2bibtex.xsl");
+  $bibtex = xslt_transform($xml_content,$xsl_content);
+  
+  $fp = fopen($bibfile,"w");
+  fwrite($fp,$bibtex);
+  fclose($fp);
+}
+
+/*
+Translate a bibtex file into XML
+*/
 function bibtex2xml($bibfile,$group=NULL)
 {
   $content = file($bibfile); 
@@ -105,7 +127,8 @@ function bibtex2xml($bibfile,$group=NULL)
   $xml_content = null;
   $key = null;
   $data_content = null;
-  $open_field = false;
+  $openfield = false;
+  $type = null;
 
   for($i=0;$i<sizeof($content);$i++){
     // recode &, <, >
@@ -116,11 +139,12 @@ function bibtex2xml($bibfile,$group=NULL)
     //new entry (spaces)@(spaces)(alphanum)(spaces){(spaces)(anychar)(spaces),
     if(preg_match("/\s*@\s*(\w*)\s*{\s*(.*)\s*,/",$line,$matches)){
       if($first==0){
-	$xml_content .= end_bibentry();
-      }      
+        $xml_content .= end_bibentry($type);
+      }
+      $type = $matches[1];
       $xml_content .= new_bibentry($matches[1],$matches[2]);
       if($group!=NULL){	
-	$xml_content .= bibfield("group",$group);	
+        $xml_content .= bibfield("group",$group);	
       }
       
       $first = 0;
@@ -158,7 +182,7 @@ function bibtex2xml($bibfile,$group=NULL)
   }
   
   if($first == 0){
-    $xml_content .= end_bibentry();
+    $xml_content .= end_bibentry($type);
   }
 
   return $xml_content;
@@ -167,39 +191,48 @@ function bibtex2xml($bibfile,$group=NULL)
 // Create a new bibentry
 function new_bibentry($type,$id)
 {
-  return "<bibentry type='".strtolower($type)."' id='".$id."'>\n";
+  return "<bibtex:entry id='".$id."'>\n"."<bibtex:".strtolower($type).">\n";
 }
 // Create an end tag for bibentry
-function end_bibentry()
+function end_bibentry($type)
 {
-  return $buffer."</bibentry>\n";
+  return "</bibtex:".strtolower($type).">\n</bibtex:entry>\n";
 }
 
 // Create a new bibfield tag
 function bibfield($type,$value)
 {
-  if(strtolower($type) == "author"){
+  /*  if(strtolower($type) == "author"){
     $value = ereg_replace(" and ",", ",$value);
-  }
+  }*/
 
-  return "<".strtolower($type).">".$value."</".strtolower($type).">\n";
+  return "<bibtex:".strtolower($type).">".$value."</bibtex:".strtolower($type).">\n";
 }
 
+//load a text file
 function load_file($filename)
 {
   return implode('',file($filename));  
 }
 
+// XSLT processor
 function xslt_transform($xmlstring,$xslstring,$xslparam = array())
 {
   $xh = xslt_create();
-  xslt_set_encoding($xh,"iso-8859-1");  
+  xslt_set_encoding($xh,"iso-8859-1");
+  $xslparam['session_name'] = session_name();
+  $xslparam['session_id'] = session_id();
   $arguments = array('/_xml' => $xmlstring, '/_xsl' => $xslstring);  
   $result = xslt_process($xh,'arg:/_xml','arg:/_xsl',NULL,$arguments,$xslparam);
+  if (!$result) {
+    die(sprintf("Impossible de traiter le document XSLT [%d]: %s", 
+                xslt_errno($xh), xslt_error($xh)));
+  }
   xslt_free($xh);
   return $result;  
 }
 
+// Create an HTML header
 function html_header($title = NULL, $style = NULL, $bodyclass=NULL)
 {
   $html  = '<?xml version="1.0" encoding="ISO-8859-1"?>';
@@ -223,16 +256,18 @@ function html_header($title = NULL, $style = NULL, $bodyclass=NULL)
   return $html;  
 }
 
+// Close an HTML page.
 function html_close()
 {
   return "</body></html>";  
 }
 
-function get_group_list()
+function get_group_list($bibname)
 {
-  $xml_content = load_file("./bibs/".$GLOBALS['bibname']."/".$GLOBALS['bibname'].".xml");
+  $xml_content = load_file("./bibs/".$bibname."/".$bibname.".xml");
   $xsl_content = load_file("./xsl/group_list.xsl");  
   $group_list = xslt_transform($xml_content,$xsl_content);
+ 
   $group_list = split("[,~]",$group_list);
   $list = array();
   $j=0;
@@ -244,31 +279,50 @@ function get_group_list()
 	$j++;
       }
     }
-  }    
+  }
+ 
   return $list;    
 }
 
+/*
+Load an XML file
+ */
 function load_xml_bibfile($bibname)
 {
   return load_file("./bibs/".$bibname."/".$bibname.".xml");
 }
 
-function get_all_bibentries($bibname)
+/*
+Return an html output of all entries of a bibfile
+*/
+function get_all_bibentries($bibname,$mode)
 {
   $xml_content = load_xml_bibfile($bibname);
   $xsl_content = load_file("./xsl/xml2htmltab.xsl");
-  return xslt_transform($xml_content,$xsl_content);
-}
-
-function get_bibentries_of_group($bibname,$groupname)
-{
-  $xml_content = load_xml_bibfile($bibname);    
-  $xsl_content = load_file("./xsl/xml2htmltab.xsl");  
-  $param = array('groupval'=>$groupname);
+  $param = array();
+  $param["mode"] = $mode;
+  
   return xslt_transform($xml_content,$xsl_content,$param);
 }
 
-function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords){
+/*
+Return an html output of entries of a given group
+*/
+function get_bibentries_of_group($bibname,$groupname,$mode)
+{
+  $xml_content = load_xml_bibfile($bibname);    
+  $xsl_content = load_file("./xsl/xml2htmltab.xsl");  
+  $param = array();
+  $param["groupval"]=$groupname;
+  $param["mode"] = $mode;
+ 
+  return xslt_transform($xml_content,$xsl_content,$param);
+}
+
+/*
+Return an html output of entries matching search paramters
+*/
+function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords,$mode){
   $xml_content = load_xml_bibfile($bibname);
   $xsl_content = load_file("./xsl/xml2htmltab.xsl");  
   $param = array();
@@ -281,11 +335,14 @@ function search_bibentries($bibname,$value,$forauthor,$fortitle,$forkeywords){
   if($forkeywords!=null){
     $param["keywords"]=$value;
   }
-
+  $param["mode"] = $mode;
+  
   return xslt_transform($xml_content,$xsl_content,$param);
 }
 
-
+/*
+Translate an entry into bibtex format
+*/
 function get_bibtex($bibname,$bibid)
 {
   $xml_content = load_xml_bibfile($bibname);
@@ -294,14 +351,31 @@ function get_bibtex($bibname,$bibid)
   return xslt_transform($xml_content,$xsl_content,$param);  
 }
 
+/*
+Return an html output of a given entry
+*/
 function get_bibentry($bibname,$bibid)
 {
   $xml_content = load_xml_bibfile($bibname);
   $xsl_content = load_file("./xsl/xml2htmltab.xsl");
-  $param = array('id'=>$bibid,'mode'=>"abstract");
+  $param = array('id'=>$bibid,'type'=>"abstract");
   return xslt_transform($xml_content,$xsl_content,$param);
 }
 
+/*
+Return a nice formulary to modify an entry
+*/
+function get_bibentry_for_edition($bibname,$bibid)
+{
+  $xml_content = load_file("./xsl/model.xml");
+  $xsl_content = load_file("./xsl/xml2htmledit.xsl");
+  $param = array('id' => $bibid,'bibname' => "file:".realpath("bibs/".$bibname."/".$bibname.".xml"));
+  return xslt_transform($xml_content,$xsl_content,$param);
+}
+
+/*
+Get some stats of the database
+*/
 function get_stat($bibname)
 {
   $xml_content = load_xml_bibfile($bibname);
@@ -325,6 +399,169 @@ function get_stat($bibname)
   $html .= "</table>";
 
   return $html;  
+}
+
+/*
+delete only a bibtex entry, do not erase files
+1) delete from the bibtex file
+2) update the bibtex file according to the xml file
+*/
+function delete_only_bibtex_entry($bibname,$id)
+{
+  $xml_content = load_xml_bibfile($bibname,$id);
+  $xsl_content = load_file("./xsl/delete.xsl");
+  $param = array('id'=>$id);  
+  $newxml = xslt_transform($xml_content,$xsl_content,$param);
+  
+  // update the xml file.
+  $fp = fopen("./bibs/".$bibname."/".$bibname.".xml","w");
+  fwrite($fp,$newxml);
+  fclose($fp);
+  
+  //update the bibtex file.
+  xml2bibtex($bibname);
+}
+
+/*
+delete a bibtex entriy
+1) delete from the bibtex file
+2) update the bibtex file according to the xml file
+3) delete papers from the database
+*/
+function delete_bibtex_entry($bibname,$id)
+{
+  $xml_content = load_xml_bibfile($bibname,$id);
+  $xsl_content = load_file("./xsl/delete.xsl");
+  $param = array('id'=>$id);  
+  $newxml = xslt_transform($xml_content,$xsl_content,$param);
+  
+  // detect all file corresponding to this id.
+  $ar = opendir("./bibs/".$bibname."/papers/");
+  $tab = array(); 
+  while($file = readdir($ar)) {
+    $inf = pathinfo($file);
+    if(strcmp(substr($inf['basename'],0,strlen($id)+1),$id.".")==0){
+      array_push($tab,$file);
+    }
+  }
+  
+  foreach($tab as $file){
+    unlink("./bibs/".$bibname."/papers/".$file);
+  }
+ 
+  // update the xml file.
+  $fp = fopen("./bibs/".$bibname."/".$bibname.".xml","w");
+  fwrite($fp,$newxml);
+  fclose($fp);
+  
+  //update the bibtex file.
+  xml2bibtex($bibname);
+}
+
+// Test if a bibtex entry with a given ID exists in a bibtex file.
+function exists_entry_with_id($id){
+  $content = file("./bibs/".$_SESSION['bibname']."/".$_SESSION['bibname'].".bib");
+  $found = 1;
+  for($i=0;$i<sizeof($content) && $found!=0 ;$i++){
+    if(preg_match("/\s*@\s*(\w*)\s*{\s*(.*)\s*,/",$content[$i],$matches)){
+      $found = strcmp($matches[2],$id);
+    }
+  }
+  return ($found==0);
+}
+
+// Add a bibtex entry to a bibtex file
+function add_bibtex_entry($type,$tab,$urlfile,$urlzipfile,$pdffile){
+  $filename = "./bibs/".$_SESSION['bibname']."/".$_SESSION['bibname'].".bib";
+  $file = fopen($filename,"a+");
+  fwrite($file,to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile));
+  fclose($file);
+  update_xml($_SESSION['bibname']);
+}
+
+// convert to BibTeX according to POST data
+function to_bibtex($type,$tab,$urlfile,$urlzipfile,$pdffile){
+  $bibtex_entries = array("_id", "_address", "_annote", "_author", "_booktitle", "_chapter", "_crossref", "_edition", "_editor", "_howpublished", "_institution", "_journal", "_key", "_month", "_note", "_number", "_organisation", "_pages", "_publisher", "_school", "_series", "_title", "_type", "_volume", "_year","_abstract", "_keywords","_url","_urlzip","_pdf","_group","_website");
+    
+  if ($urlfile != null){
+    $tab['_url'] = $urlfile;
+  }
+  if ($urlzipfile != null){
+    $tab['_urlzip'] = $urlzipfile;
+  }
+  if ($pdffile != null){
+    $tab['_pdf'] = $pdffile;
+  }
+  $array_key = array_keys($tab);
+  $txt = "@".$type."{".$tab['_id'].",\n";
+  $first = 1;
+  foreach($array_key as $key){
+    if($key != "_id" && in_array($key,$bibtex_entries)){
+      if($tab[$key] != ""){
+        if($first == 0){
+          $txt .= ",\n";
+        }
+        $first = 0;
+        $txt .= "\t".substr($key,1)." = {".stripslashes($tab[$key])."}";
+      }
+    }
+  }
+
+  $txt .= "\n}\n";
+  
+  return $txt;
+}
+
+//same thing but html formatted
+function to_bibtex_tab($type,$tab,$urlfile,$urlzipfile,$pdffile){
+  $bibtex_entries = array("_id", "_address", "_annote", "_author", "_booktitle", "_chapter", "_crossref", "_edition", "_editor", "_howpublished", "_institution", "_journal", "_key", "_month", "_note", "_number", "_organisation", "_pages", "_publisher", "_school", "_series", "_title", "_type", "_volume", "_year","_abstract", "_keywords","_url","_urlzip","_pdf","_group","_website");
+    
+  if ($urlfile != null){
+    $tab['_url'] = $urlfile;
+  }
+  if ($urlzipfile != null){
+    $tab['_urlzip'] = $urlzipfile;
+  }
+  if ($pdffile != null){
+    $tab['_pdf'] = $pdffile;
+  }
+  $array_key = array_keys($tab);
+  $txt = "<table class='bibtex'>";
+  $txt .= "<tbody>";
+  $txt .= "<tr>";
+  $txt .= "<td>"."@".$type."{".$tab['_id'].",</td>";
+  $txt .= "</tr>";
+
+  foreach($array_key as $key){
+    if($key != "_id" && in_array($key,$bibtex_entries)){
+      if($tab[$key] != ""){
+	$txt .= "<tr>";
+        $txt .= "<td>".substr($key,1)."</td><td> = {".stripslashes($tab[$key])."},</td>";
+	$txt .= "</tr>";
+      }
+    }
+  }
+  
+  $txt .= "</tbody></table>}<br/>";
+  
+  return $txt;
+}
+
+/*
+Use to change the base name of a file, keeping its extension
+returns the new name
+*/
+function get_new_name($old,$bibid)
+{
+  $elem = explode(".",$old);
+  
+  $newname = $bibid;
+  
+  for($i=1;$i<sizeof($elem);$i++){
+    $newname .= ".".$elem[$i];
+  }
+  
+  return $newname;
 }
 
 ?>

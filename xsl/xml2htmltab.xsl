@@ -29,15 +29,24 @@ Description:
      Produce a table-like HTML output for bibtex entries.
 
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"> 
+<xsl:stylesheet
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:bibtex="http://bibtexml.sf.net/"
+  version="1.0"> 
    
   <xsl:output method="html"/> 
-
+  <!-- Possible input parameters -->
   <xsl:param name="groupval"/>
-  
   <xsl:param name="author"/>
   <xsl:param name="title"/>
   <xsl:param name="keywords"/>
+  <xsl:param name="mode"/>
+  <xsl:param name="id"/>
+  <xsl:param name="type"/>
+  <xsl:param name="session_id"/>
+  <xsl:param name="session_name"/>
+  
+  <!-- every parameter values to lower case -->
   <xsl:variable name="lcletters">abcdefghijklmnopqrstuvwxyz</xsl:variable>
   <xsl:variable name="ucletters">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
   <xsl:param name="authorsearch">
@@ -50,62 +59,68 @@ Description:
     <xsl:value-of select="translate($keywords,$ucletters,$lcletters)"/>
   </xsl:param>
   
-  <xsl:param name="id"/>
-  <xsl:param name="mode"/>
-
-  <xsl:template match="/file">
+  <xsl:template match="/bibtex:file">
     <xsl:variable name='bibname' select='@name'/>
 
-    <table width="100%">
+    <table width="100%" class="bibtab">
       <tbody>
         <xsl:choose>
           <!-- Affichage par groupe -->
           <xsl:when test="string-length($groupval)!=0">
-            <xsl:for-each select="bibentry[contains(group,$groupval)]">
+            <xsl:for-each select="bibtex:entry[contains(.//bibtex:group,$groupval)]">
               <xsl:sort select="@id" order="ascending" data-type="text"/>
               <xsl:call-template name='bibdisplay'>
                 <xsl:with-param name='bibname' select='$bibname'/>
+                <xsl:with-param name='type' select='$type'/>
                 <xsl:with-param name='mode' select='$mode'/>
+                <xsl:with-param name='session_name' select='$session_name'/>
+                <xsl:with-param name='session_id' select='$session_id'/>
               </xsl:call-template>
             </xsl:for-each>
           </xsl:when>
           <!-- Recherche (auteurs,titre,mots-clé) -->
           <xsl:when test="string-length($author)!=0 or string-length($title)!=0 or string-length($keywords)!=0">            
-            <xsl:for-each select="bibentry">
+            <xsl:for-each select="bibtex:entry">
               <xsl:sort select="@id" order="ascending" data-type="text"/>
               <xsl:variable name="authornames">
-                <xsl:value-of select="translate(author,$ucletters,$lcletters)"/>
+                <xsl:value-of select="translate(.//bibtex:author,$ucletters,$lcletters)"/>
               </xsl:variable>
               <xsl:variable name="titlenames">
-                <xsl:value-of select="translate(title,$ucletters,$lcletters)"/>
+                <xsl:value-of select="translate(.//bibtex:title,$ucletters,$lcletters)"/>
               </xsl:variable>
               <xsl:variable name="keywordsnames">
-                <xsl:value-of select="translate(keywords,$ucletters,$lcletters)"/>
+                <xsl:value-of select="translate(.//bibtex:keywords,$ucletters,$lcletters)"/>
               </xsl:variable>
               <xsl:if test="(contains($authornames,$authorsearch) and (string-length($authorsearch) != 0)) or (contains($titlenames,$titlesearch) and (string-length($titlesearch) != 0)) or (contains($keywordsnames,$keywordssearch) and (string-length($keywordssearch)!=0))">
                 <xsl:call-template name='bibdisplay'>
                   <xsl:with-param name='bibname' select='$bibname'/>
+                  <xsl:with-param name='type' select='$type'/>
                   <xsl:with-param name='mode' select='$mode'/>
+                  <xsl:with-param name='session_name' select='$session_name'/>
+                  <xsl:with-param name='session_id' select='$session_id'/>
                 </xsl:call-template>
               </xsl:if>
             </xsl:for-each>
           </xsl:when>
           <!-- Afficahge complet d'une entrée -->
           <xsl:when test="string-length($id)!=0">
-            <xsl:for-each select="bibentry[@id=$id]">
+            <xsl:for-each select="bibtex:entry[@id=$id]">
               <xsl:call-template name='bibdisplay'>
                 <xsl:with-param name='bibname' select='$bibname'/>
-                <xsl:with-param name='mode' select='$mode'/>
+                <xsl:with-param name='type' select='$type'/>
               </xsl:call-template>              
             </xsl:for-each>
           </xsl:when>
           <!-- Tout afficher -->
           <xsl:otherwise>
-            <xsl:for-each select="bibentry">
+            <xsl:for-each select="bibtex:entry">
               <xsl:sort select="@id" order="ascending" data-type="text"/>
               <xsl:call-template name='bibdisplay'>
                 <xsl:with-param name='bibname' select='$bibname'/>
+                <xsl:with-param name='type' select='$type'/>
                 <xsl:with-param name='mode' select='$mode'/>
+                <xsl:with-param name='session_name' select='$session_name'/>
+                <xsl:with-param name='session_id' select='$session_id'/>
               </xsl:call-template>
             </xsl:for-each>
           </xsl:otherwise>
@@ -113,62 +128,60 @@ Description:
       </tbody>
     </table>
   </xsl:template>
-
+  
+  <!-- Modèle principal -->
   <xsl:template name="bibdisplay">
     <xsl:param name='bibname'/>
+    <xsl:param name='type'/>
     <xsl:param name='mode'/>
+    <xsl:param name='session_name'/>
+    <xsl:param name='session_id'/>
       <tr>
-        <td class='startbib'>
+        <td class='startbibitem'>
           <span class='key'><xsl:value-of select="@id"/></span>
-          <xsl:if test="./url">
-            <a href="./bibs/{$bibname}/papers/{url}" class='button'>ps</a>
+          <xsl:if test=".//bibtex:url">
+            <xsl:variable name="url"><xsl:value-of select=".//bibtex:url"/></xsl:variable>
+            <a href="./bibs/{$bibname}/papers/{$url}" class='button'>ps</a>
           </xsl:if>
-          <xsl:if test="./urlzip">
-            <a href="./bibs/{$bibname}/papers/{urlzip}" class='button'>ps.gz</a>
+          <xsl:if test=".//bibtex:urlzip">
+           <xsl:variable name="urlzip"><xsl:value-of select=".//bibtex:urlzip"/></xsl:variable>
+            <a href="./bibs/{$bibname}/papers/{$urlzip}" class='button'>ps.gz</a>
           </xsl:if>
-          <xsl:if test="./pdf">
-            <a href="./bibs/{$bibname}/papers/{pdf}" class='button'>pdf</a>
+          <xsl:if test=".//bibtex:pdf">
+            <xsl:variable name="pdf"><xsl:value-of select=".//bibtex:pdf"/></xsl:variable>
+            <a href="./bibs/{$bibname}/papers/{$pdf}" class='button'>pdf</a>
           </xsl:if>
-          <xsl:if test="./abstract">
+          <xsl:if test=".//bibtex:abstract">
             <a class='button' href="./bibindex.php?mode=abstract&amp;id={@id}&amp;bibname={$bibname}">abstract</a>
           </xsl:if>
-          <a class='button' href="./bibindex.php?mode=bibtex&amp;id={@id}&amp;bibname={$bibname}">bibtex</a>          
+          <a class='button' href="./bibindex.php?mode=bibtex&amp;id={@id}&amp;bibname={$bibname}">bibtex</a>
+        <xsl:if test="$mode='admin'">
+          <form method='get' action='bibindex.php' style='display:inline;'>
+            <input type='hidden' name='{$session_name}' value='{$session_id}'/>
+            <input type='hidden' name='id' value='{@id}'/>
+            <input type='hidden' name='mode' value='edit' />
+            <input class='inbib' type='submit' name='action' value='modify' />
+            <input class='inbib' type='submit' name='action' value='delete' />
+          </form>
+        </xsl:if>
+      </td>
+      </tr>
+      <tr>
+        <td  class="title">
+          <xsl:value-of select=".//bibtex:title"/>                  
         </td>
       </tr>
       <tr>
-        <td>
-          <span class="title">
-            <xsl:choose>
-              <xsl:when test="./txttitle">
-                <xsl:value-of select="./txttitle"/>                  
-              </xsl:when>
-              <xsl:when test="./title">
-                <xsl:value-of select="./title"/>                  
-              </xsl:when>
-            </xsl:choose>
-          </span>
+        <td class="author">
+          <xsl:value-of select=".//bibtex:author"/>
         </td>
       </tr>
-      <tr>
-        <td>
-          <span class="author">
-            <xsl:choose>
-              <xsl:when test="./txtauthor">
-                <xsl:value-of select="txtauthor"/>
-              </xsl:when>
-              <xsl:when test="./author">
-                <xsl:value-of select="author"/>
-              </xsl:when>
-            </xsl:choose>
-          </span>
-        </td>
-      </tr>
-      <xsl:if test="$mode='abstract'">
+      <xsl:if test="$type='abstract'">
         <tr>
-          <td><xsl:value-of select="abstract"/></td>
+          <td><xsl:value-of select=".//bibtex:abstract"/></td>
         </tr>
       </xsl:if>
-      <tr><td><span class="keywords"><xsl:value-of select="keywords"/></span></td></tr>
+      <tr><td class="keywords"><xsl:value-of select=".//bibtex:keywords"/></td></tr>
   </xsl:template>
   
 </xsl:stylesheet>

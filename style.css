@@ -35,139 +35,355 @@ Description:
 body {
   margin: 0;
   font-family:sans-serif;
-  background-color:silver;
+  font-size:12px;
+  background-color:white;
   color:black;
 }
 
-.left {
-        position:relative;
-        top:2em;
-        left:1em;
-        padding-left:1em;
-        padding-right:1em;
-        padding-bottom:1em;
-        border:solid 1px;
-        width:auto;
-        float:left;
-}
-
-.main {
-        position:relative;
-        top:2em;
-        width:650px;
-        float:left;
-        padding-left:2em;
-        margin-left:180px;
+.left
+{
+  position:relative;
+  top:1em;
+  left:1em;
+  padding-left:1em;
+  padding-right:1em;
+  padding-bottom:1em;
+  border:solid 1px #666;
+  width:150px;
+  float:left;
+  background-color:#ADD8E6;
 }
 
 html>body .left {
   position: fixed;
 }
 
-.menu{
-       width: 140px;
+.left_title
+{
+  text-align: center;
+  color: black;
 }
 
-.menutitle{
-            font-size: 120%;
-            font-weight: bold;
-            margin-top: 1em;
-            text-align: left;
+.main
+{
+  position:relative;
+  width:550px;
+  float:left;
+  margin-left:200px;
+  margin-top:1em;
+  padding:1em;
+  border: solid 1px #666;
+  background-color:#DCDCDC;
 }
 
-.menubloc{
-           text-align: left;
-           margin-top:0.5em;
-           border-bottom:solid 2px;
-           border-top:solid 2px;
-
-}
-.menubloc a { color:navy; text-decoration:none; font-weight:bold;text-align:center;background-color:transparent;}
-.menubloc a:hover { color:red; text-decoration:none;background-color:transparent;}
-
-.menufooter{
-             background-image: none;
-             height: 24px;
+.menu
+{
+  width: 120px;
+  font-size:14px;
 }
 
+.menutitle
+{
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 1em;
+  text-align: left;
+  color:black;
+}
 
-.left2{ 
-        position:absolute;
-        top:260px;
-        left:1em;
-        width: 150px;
-        height: 250px;
-        padding-left:1em;
-        padding-right:1em;
+.menubloc
+{
+  text-align: left;
+  margin-top:0.5em;
+  border-bottom:solid 2px;
+  border-top:solid 2px;
+}
+
+a.menuitem 
+{ 
+  color:navy;
+  text-decoration:none;
+  font-weight:bold;
+  text-align:left;
+  background-color:transparent;
+  display:block;
+}
+
+a.menuitem:hover
+{
+  color:red;
+  text-decoration:none;
+  background-color:#DCDCDC;
+}
+
+.menufooter
+{
+  background-image: none;
+  height: 24px;
+}
+
+
+.left2
+{ 
+  position:absolute;
+  top:260px;
+  left:1em;
+  width: 150px;
+  height: 250px;
+  padding-left:1em;
+  padding-right:1em;
 }
 
 html>body .left2 {
   position: fixed;
 }
 
-.bibname{ color:white;font-weight:bold; text-align:center;background-color:navy;font-size:120%}
+.bibname
+{
+  color:white;
+  font-weight:bold;
+  text-align:center;
+  background-color:navy;
+  font-size:120%;
+}
 
 
-.website { background-color:silver; color:black; }
-body.website { width:600px; }
-.website h1 { color:navy;width:600px;border-bottom:solid 5px; background-color:transparent; }
-.website h3 { border-bottom:dashed 2px;width:600px; }
-.website table { border-collapse:collapse;margin-left:150px; }
-.website th {  border:solid 1px black;background-color:navy;color:white;}
-.website td { border:solid 1px; }
+.main_title
+{
+  color:black;
+}
 
-.boldred { background-color:transparent;color:red;font-weight:bold; }
-.clean { text-decoration:none; border:none; }
+.error
+{ 
+  color:red;
+  border:1px solid red;
+  margin:1em;
+  padding:1em;
+}
+
+.message
+{ 
+  color:navy;
+  border:1px solid navy;
+  margin:1em;
+  padding:1em;
+}
+
+.website
+{
+  background-color:silver;
+  color:black;
+}
+
+.website h1 
+{ 
+  color:navy;
+  width:470px;
+  border-bottom:solid 5px;
+  background-color:transparent;
+}
+
+.website h3
+{
+  border-bottom:dashed 2px;width:470px;
+}
+
+.website table
+{
+  border-collapse:collapse;margin-left:150px;
+}
+
+.website th 
+{  
+  border:solid 1px black;
+  background-color:navy;
+  color:white;
+}
+
+.website td 
+{ 
+  border:solid 1px;
+}
 
 /*
  bibtex style
 */
 
-.startbib{
-           background-color:transparent;
-           border-top:dashed 2px;
-           color:navy;
-           padding-top:1em;
- }
-
-.key {
-       color:white;
-       background-color:navy;
-       font-family:monospace;
-       padding:1px;
+.bibtab
+{
+  border-spacing:0;
+  border:collapse;
 }
 
-a.button {
-          border:1px solid navy;
-          margin:1px;
-          font-family:monospace;
-          text-decoration:none;
-          padding-left:2px;
-          padding-right:2px;
+.startbibitem
+{
+  background-color:transparent;
+  border-top:groove 5px;
+  color:navy;
 }
 
-a.button:visited{ text-decoration:none;color:blue;background-color:transparent;}
+.key 
+{
+  color:white;
+  background-color:navy;
+  font-family:monospace;
+  font-size:10px;
+  padding:1px;
+}
 
-.id { 
-      font-family:monospace;
- }
+a.button
+{
+  border:1px solid navy;
+  margin:1px;
+  font-family:monospace;
+  text-decoration:none;
+  padding-left:2px;
+  padding-right:2px;
+  font-size:10px;
+}
+
+a.button:visited
+{
+  text-decoration:none;
+  color:blue;
+  background-color:transparent;
+}
+
+.keywords
+{ 
+  font-family:monospace;
+  font-size:10px;
+  text-align:right;
+}
  
-.keywords { 
-            font-family:monospace;
- }
- 
-.title { font-weight:bold; }
+.title
+{
+  font-weight:bold;
+  border-bottom:dotted 1px;
+  font-size:13px;
+}
 
-.author {font-style:italic; }
+.author
+{
+  font-style:italic;
+  font-size:12px;
+  text-align:right;
+}
+
+a.clean
+{
+  text-decoration:none;
+  border-style:none;
+}
+
+a.bibtex:link
+{
+  color:black;
+  text-decoration:none;
+  font-family:monospace;
+  background-color:transparent;
+}
+
+a.bibtex:visited
+{
+  color:black;
+  text-decoration:none;
+  font-family:monospace;
+  background-color:transparent; 
+}
+
+a.bibtex:hover 
+{ 
+  color:black;
+  text-decoration:none;
+  font-family:monospace;
+  background-color:transparent;
+}
+
+a.bibtex:active
+{ 
+  color:black;
+  text-decoration:none;
+  font-family:monospace;
+  background-color:transparent;
+}
+
+a.bibtex:focus
+{
+  color:black;
+  text-decoration:none;
+  font-family:monospace;
+  background-color:transparent;
+}
+
+.required
+{
+  border-top:solid 2px red;	
+  color:red;
+  font-size:11px;
+  font-weight:bold;
+  border-collapse:collapse;
+  border-spacing:0;
+}
+
+.optional
+{
+  border-top:solid 2px navy;	
+  color:navy;
+  font-size:11px;
+  font-weight:bold;
+  border-collapse:collapse;
+  border-spacing:0;
+}
+
+.additional
+{
+  border-top:solid 2px green;	
+  color:green;
+  font-size:11px;
+  font-weight:bold;
+  border-collapse:collapse;
+  border-spacing:0;
+}
+
+.required-entry, .optional-entry, .additional-entry
+{ 
+  width:80px;
+}
+
+.required-value input,
+.optional-value input,
+.additional-value input
+{ 
+  border:1px solid black;
+  width:470px;
+}
+
+.additional-value textarea
+{
+  border:1px solid black;
+  width:470px;
+}
+
+.current, .newfile
+{ 
+  border:1px solid black;
+}
 
 
-a.clean{
-        text-decoration:none;
-        border-style:none;
-        }
+input, select
+{ 
+  border:1px solid black;
+  font-weight:bold;
+}
 
-a.bibtex:link { color:black; text-decoration:none; font-family:monospace;background-color:transparent; }
-a.bibtex:visited { color:black; text-decoration:none;font-family:monospace;background-color:transparent; }
-a.bibtex:hover { color:black; text-decoration:none; font-family:monospace;background-color:transparent;}
-a.bibtex:active { color:black; text-decoration:none; font-family:monospace;background-color:transparent;}
-a.bibtex:focus { color:black; text-decoration:none;font-family:monospace;background-color:transparent;}
+input.inbib
+{
+  font-size:10px;
+}
+
+table.bibtex
+{ 
+  font-family:monospace;
+  font-size:11px;
+}

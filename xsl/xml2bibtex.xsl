@@ -28,25 +28,35 @@ Description:
 
      Transform the XML bibentry in a true bib entry.
 -->
-<xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
-  <xsl:output method='html'/>
+<xsl:stylesheet version="1.0" 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:bibtex="http://bibtexml.sf.net/"> 
+  
+  <xsl:output method='txt'/>
+  
   <xsl:param name="id"/>
+
   <xsl:template match='/'>
-    <xsl:apply-templates select='//bibentry[@id=$id] '/>
+    <xsl:choose>
+      <xsl:when test="$id != ''">
+        <pre>
+          <xsl:apply-templates select='bibtex:file/bibtex:entry[@id=$id]/bibtex:*'/>
+        </pre>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select='//bibtex:entry/*'/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
-  <xsl:template match='bibentry'><span style="font-family:monospace">
-    @<xsl:value-of select="@type"/>{<xsl:value-of select="@id"/>,<br/>
-    <xsl:for-each select="*">
-      <xsl:choose>
-        <xsl:when test="position() = last()">
-          <xsl:value-of select="name()"/> = {<xsl:value-of select="node()"/>}<br/>
-}
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="name()"/> = {<xsl:value-of select="node()"/>},<br/>
-        </xsl:otherwise>
-      </xsl:choose>      
-    </xsl:for-each>
-</span>
+  
+  <xsl:template match='bibtex:*'>
+@<xsl:value-of select="local-name()"/>{<xsl:value-of select="../@id"/>,
+<xsl:for-each select="*">
+    <xsl:choose>
+      <xsl:when test="position() = last()"><xsl:text>        </xsl:text><xsl:value-of select="local-name()"/> = {<xsl:value-of select="node()"/>}
+}</xsl:when>
+      <xsl:otherwise><xsl:text>        </xsl:text><xsl:value-of select="local-name()"/> = {<xsl:value-of select="node()"/>},&#10;</xsl:otherwise>
+    </xsl:choose>      
+  </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>

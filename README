@@ -5,55 +5,66 @@ DESCRIPTION
 -----------
 
 This tool aims to provide a web-based interface to BibTeX
-bibliographies and electronic version of papers.
-A 'group' facility has been introduced to create a simple classement
-method.
-It supports search over titles, authors and keywords.
+bibliographies. It offers some basic functionalities to manage a
+bibliography:
+
+	* Simple user management
+	* Editing / Modifying a bibtex entry
+	* Searching some bibtex entries
+	* Classifying (one level using "group")
+	* Instant access to electronic version of papers
+
+
+The tool may be used in two different mode:
+
+	* Any people connecting to the webpage will be authorized to
+	consult regitered bibliographies.
+	* By login in, people may modify, add or even delete bibtex
+	entries.
+
+For people (like me :)) who don't even think about using anything else
+that their prefered text editor to write their biliographies, BibORB
+can be use to offer a more convenient output and to access quickly
+electronic papers. 
+
+
+
+DETAILS
+-------
 
 It is based on:
 	* BibTeX
 		To provide an input format for references.
 	* XML
 		To provide an easier input format for manipulating the
-references.
+		references.
 	* XSLT
 		To transform in any needed format the references.
 	* CSS
 		Some nice web design :-) .
 	* PHP
 		To link every thing together.
+	* Mysql or any other database
+		Account management
 
-This tool does not provide editor facility (and will never) and will
-not checked if the BibTeX file is correctly written.
-
-
-HOW DOES IT WORKS?
-------------------
-
-Well, I try to apply KISS method. Hope it works and it is not too dirty. :)
 
 The directory structure of the tool is:
 	
-	admin => stores tools (one for the moment) to create or
-manipulate bibliographies
-	xsl => stores XSLT stylesheets to translate into HTML or BibTeX
-some references
-	doc => some documentation
-	bibs => directory where to put all bibliographies you want
-	bibs/example => a directory example. It contains the
-bibliography name 'example'.
-	bibs/example/papers => to store electronic version of papers
+	admin 	stores tools (one for the moment) to create or
+		manipulate bibliographies
+	xsl	stores XSLT stylesheets to translate into HTML or BibTeX
+		some references
+	doc	some documentation
+	bibs	directory where to put all bibliographies you want
 
 All directories in bibs must have the same structure. For instance for
 the bibliography 'example', the 'bibs/example' directory contains:
 	* example.bib => the BibTeX file containing references
-	* example.xml => XML traduction of the BibTeX file. This file
-MUST(!!!) be writable for anyone so that it could be updated through
-the web interface.
+	* example.xml => XML traduction of the BibTeX file.
 	* description.txt => a brief description of this
 bibliography('My own very personal biblio' for instance)
-	* papers/ => the directory where to put local electronic version of
-references.
+	* papers/ => the directory where electronic version of
+references are stored.
 
 If you want to put more than one BibTeX file, it is possible. The tool
 will then use their name to create corresponding groups. See BibTeX
@@ -69,17 +80,29 @@ configuration (xslt.so)
 	* You have a CSS2 compliant web browser so that the interface
 behaves "normally"
 
-Now decompress the archive in any web accessible place (for instance
+Now decompress the archive in any web accessible folder (for instance
 ~/public_html, /var/www or anywhere you want).
 
-...and it should work.
+Change permissions on the example files.
+Precisely, "papers" directory, ".bib" files and ".xml" files  must be
+writable by the group to which belong the http server (www-data or www
+or apache ....). So do a 'chmod a+w papers example.*' so into the
+bibs/example directory.  
 
-Ensure that all XML files are writable (chmod a+w) for anyone if you want to be
-able to update references through the web interface.
+It is needed to allow the transformation BibTeX <-> XML 
 
-For convenience, a script is given in "admin" repertory to create all
-needed files and repertories  for a new bibliography. Run it in the
-repertory admin.
+Next step is to setup the database to activate account management.
+You will have to create a new database called "biborb". Then use the
+"biborb.sql" to create the table that will store people who will be
+allowed to edit/add/modify the bibliography.
+
+Last step is to edit the config.php script and adapt variables to your
+configuration.($host,$dbuser,$pass,$db,$table)
+
+Finally, add needed account to the database.
+
+To create a new bibliography run the script 'create-new-bib.sh'. It
+will create necessary folders and files.
 
 BIBTEX - XML
 ------------
@@ -87,31 +110,30 @@ BIBTEX - XML
 Well, the only thing to do is to write your BibTeX file.
 
 The tool has a PHP script to translate a BibTeX file into an XML
-file. Briefly, it translates:
-	* @atype{id, into an <bibentry type='atype' id='anid'> tag.
-	* key = { data } into  an <key>data</key> tag. ( " are also
-recognized, and multiple lines data too)
+file. The DTD used is an adapted version of the DTD available at
+http://bibtexml.sourceforge.net.
+
+Some additional BibTeX fields have been added:
+	* ABSTRACT: 	abstract of the paper
+	* GROUP: 	for classification purpose for a single bibfile
+			bibliography. If more than two bibfile, the
+			GROUP tag takes its value from the name of the
+			bibfile. 
+	* KEYWORDS: 	paper's keywords
+	* URL: 		link to the ps version of the paper for instance
+	* URLZIP: 	link to the ps.gz version of the paper
+	* PDF: 		link to the pdf version of the paper
+	* WEBSITE:	url of author website, or tool or....
+
+
+If you edit your BibTeX independently of the tool, only the filename
+is needed in url, urlzip and pdf. You will have to put manually the
+e-papers into the appropriate papers directory.
 
 Warning!! the script does not transform LaTeX code and do not
 interpret BibTeX constants. It also does not transform authors name
 and lastname.
 
-Some additional BibTeX fields have been added:
-
-	* TXTAUTHOR: if present will be used as author data (for
-instance if AUTHOR contains LaTeX code or mutliple lastname)
-	* TXTTITLE: if present will be used as title
-	* ABSTRACT: abstract of the paper
-	* GROUP: for classification purpose for a single bibfile
-bibliography. If more than two bibfile, the GROUP tag takes its value from the
-name of the bibfile.
-	* KEYWORDS: paper's keywords
-	* URL: link to the ps version of the paper
-	* URLZIP: link to the ps.gz version of the paper
-	* PDF: link to the pdf version of the paper
-
-In URL, URLZIP, PDF, only the filename is needed. It will look for papers in the
-paper directory.
 
 TODO
 ----

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 This file is part of BibORB
 
@@ -31,13 +31,13 @@ Description:
 The starter page.
 
 **/
-?>
 
-<?
 include("functions.php");
 
-$XHTML11_compliance = '<a class="clean" href="http://validator.w3.org/check/referer"><img src="http://www.w3.org/Icons/valid-xhtml11" alt="Valid XHTML 1.1!" height="31" width="88" class="clean"/></a>';  
-$CSS2_compliance = '<a class="clean" href="http://jigsaw.w3.org/css-validator/"><img src="http://jigsaw.w3.org/css-validator/images/vcss" alt="Valid CSS!" height="31" width="88" class="clean"/></a>';
+$XHTML11_compliance = '<a class="clean" href="http://validator.w3.org/check/referer">
+<img src="http://www.w3.org/Icons/valid-xhtml11" alt="Valid XHTML 1.1!" height="31" width="88" border="0"/></a>';  
+$CSS2_compliance = '<a class="clean" href="http://jigsaw.w3.org/css-validator/">
+<img src="http://jigsaw.w3.org/css-validator/images/vcss" alt="Valid CSS!" height="31" width="88" border="0"/></a>';
 
 $mode = 'website';
 //$mode = 'use';
@@ -66,7 +66,7 @@ if($mode == 'website'){
   $html_content .= "<div class='down'>";
   $html_content .= $XHTML11_compliance;
   $html_content .= $CSS2_compliance;  
-  $html_content .= "<a href='mailto:ggardey@club-internet.fr'>Guillaume Gardey</a>, 2003";
+  $html_content .= "Guillaume Gardey, 2003";
   $html_content .= "</div>";
 }
 

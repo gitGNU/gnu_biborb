@@ -48,6 +48,8 @@ else
 
     echo "Creating $bibrep$bibname/$bibname.bib...";
     touch $bibrep$bibname"/"$bibname".bib";
+    echo "Chmod a+w $bibrep$bibname/$bibname.bib";
+    chmod a+w $bibrep$bibname"/"$bibname".bib";
     if [ $? != 0 ]
     then
 	echo "Aborting...";
@@ -62,7 +64,8 @@ else
 	exit;
     fi;
     echo "<?xml version='1.0' encoding='iso-8859-1'?>" > $bibrep$bibname"/"$bibname".xml";
-
+    echo "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' name='"$bibname"'>">>$bibrep$bibname"/"$bibname".xml";
+    echo "</bibtex:file>" >> $bibrep$bibname"/"$bibname".xml";
     echo "Chmod a+w $bibrep$bibname/$bibname.xml";
     chmod a+w $bibrep$bibname"/"$bibname".xml";
     if [ $? != 0 ]
