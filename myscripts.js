@@ -45,7 +45,17 @@ function addGroup()
     }
 }
 
-function test(){
-    var elt = document.getElementsByTagName('select');
-    var selected_bib = elt[0].value;
+// Change the database
+function change_db(name){
+    window.location="./bibindex.php?bibname="+name;
 }
+
+function change_lang(name){
+    window.location="./bibindex.php?language="+name;
+}
+function change_lang_index(name){
+    window.location="./index.php?language="+name;
+}
+
+
+

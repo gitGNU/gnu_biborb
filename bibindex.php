@@ -84,8 +84,13 @@ session_start();
 /**
  *  i18n
  */
-if(!array_key_exists('language',$_SESSION) || !$GLOBALS['display_language_selection']){
-    $_SESSION['language'] = $GLOBALS['language'];
+if(!array_key_exists('language',$_GET)){
+    if(!array_key_exists('language',$_SESSION) || !$GLOBALS['display_language_selection']){
+        $_SESSION['language'] = $GLOBALS['language'];
+    }
+}
+else{
+    $_SESSION['language'] = $_GET['language'];
 }
 load_i18n_config($_SESSION['language']);
 

@@ -94,11 +94,11 @@ function index_add_database(){
     $content .= "<tbody>";
     $content .= "<tr>";
     $content .= "<td class='emphit'>"._("INDEX_CREATE_BIBNAME").": </td>";
-    $content .= "<td><input class='misc_input' type='text' size='40' name='database_name'/></td>";
+    $content .= "<td><input class='misc_input' type='text' name='database_name'/></td>";
     $content .= "</tr>";
     $content .= "<tr>";
     $content .= "<td class='emphit'>"._("INDEX_CREATE_DESCRIPTION").": </td>";
-    $content .= "<td><input class='misc_input' type='text' size='40' name='description'/></td>";
+    $content .= "<td><input class='misc_input' type='text' name='description'/></td>";
     $content .= "</tr>";
     $content .= "<tr>";
     $content .= "<td style='text-align:center' colspan='2'><input class='misc_button' type='submit' name='action' value='".
@@ -130,7 +130,7 @@ function index_delete_database(){
     $content .= "<form method='get' action='index.php'>";
     $content .= "<fieldset style='border:none;'>";
     $content .= "<input type='hidden' name='mode' value='result'/>";
-    $content .= "<select class='misc_button' name='database_name' size='1'>";
+    $content .= "<select class='misc_button' name='database_name'>";
 
     foreach($databases as $name){
         if($name != ".trash"){
@@ -262,18 +262,18 @@ function index_menu(){
         $html .= "<li><a title='"._("INDEX_MENU_DELETE_BIB_HELP")."' class='admin' href='index.php?mode=delete_database'>"._("INDEX_MENU_DELETE_BIB")."</a></li>";
     }
     if(!$GLOBALS['disable_authentication'] && array_key_exists('user',$_SESSION)){
-        $html .= "<li><a title='"._("INDEX_MENU_LOGOUT_HELP")."' href='index.php?mode=welcome&action=logout'>"._("INDEX_MENU_LOGOUT")."</a></li>";
+        $html .= "<li><a title='"._("INDEX_MENU_LOGOUT_HELP")."' href='index.php?mode=welcome&amp;action=logout'>"._("INDEX_MENU_LOGOUT")."</a></li>";
     }
     $html .= "</ul>";
     $html .= "</li>";
     $html .= "</ul>";
     if($GLOBALS['display_language_selection']){
-        $html .= "<form name='language_selection' action='index.php' method='get'>";
-        $html .= "<div style='text-align:center'>"._("Language:")."<br/>";
-        $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language']);
+        $html .= "<form action='index.php' method='get'>";
+        $html .= "<fieldset class='fieldset'>"._("Language:")."<br/>";
+        $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language'],"javascript:change_lang_index(this.value)");
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
-        $html .= "<input class='misc_button' type='submit' value='"._("Select")."'/>";
-        $html .= "</div>";
+        $html .= "<noscript><div><input class='misc_button' type='submit' value='"._("Select")."'/></div></noscript>";
+        $html .= "</fieldset>";
         $html .= "</form>";
     }
     $html .= "</div>";
@@ -397,20 +397,20 @@ function bibindex_menu($bibname)
     // jump to a given bibliography
     $avbibs = get_databases_names();
     $html .= "<li>";
-    $html .= "<form style='padding:0;margin:0' select='bibindex.php'>";
-    $html .= "<div style='text-align:center'>";
-    $html .= "<select class='misc_button' name='bibname' size='1' onchange='javascript:test()'>";
+    $html .= "<form style='padding:0;margin:0' action='bibindex.php'>";
+    $html .= "<fieldset class='fieldset'>";
+    $html .= "<select class='misc_button' onchange='javascript:change_db(this.value)'>";
     foreach($avbibs as $bib){
         if($bib == $bibname){
-            $html .= "<option name='$bib' selected='selected'>$bib</option>";
+            $html .= "<option selected='selected'>$bib</option>";
         }
         else{
-            $html .= "<option name='$bib'>$bib</option>";
+            $html .= "<option>$bib</option>";
         }
     }
     $html .= "</select><br/>";
-    $html .= "<input class='misc_button' type='submit' value='Go'>";
-    $html .= "</div>";
+    $html .= "<noscript><div><input class='misc_button' type='submit' value='Go'/></div></noscript>";
+    $html .= "</fieldset>";
     $html .= "</form>";
     $html .= "</li>";
     $html .= "</ul></li>";
@@ -488,18 +488,18 @@ function bibindex_menu($bibname)
         $html .= "<li><a title='"._("BIBINDEX_MENU_ADMIN_IMPORT_HELP")."' class='admin' href='bibindex.php?mode=import'>"._("BIBINDEX_MENU_ADMIN_IMPORT")."</a></li>";
     }
     if(array_key_exists('user',$_SESSION) && !$GLOBALS['disable_authentication']){
-        $html .= "<li><a title='"._("BIBINDEX_MENU_ADMIN_LOGOUT_HELP")."' href='bibindex.php?mode=welcome&action=logout'>"._("BIBINDEX_MENU_ADMIN_LOGOUT")."</a></li>";
+        $html .= "<li><a title='"._("BIBINDEX_MENU_ADMIN_LOGOUT_HELP")."' href='bibindex.php?mode=welcome&amp;action=logout'>"._("BIBINDEX_MENU_ADMIN_LOGOUT")."</a></li>";
     }
     $html .= "</ul>";
     $html .= "</li>";
     $html .= "</ul>";
     
     if($GLOBALS['display_language_selection']){
-        $html .= "<form name='language_selection' action='bibindex.php' method='get'>";
+        $html .= "<form action='bibindex.php' method='get'>";
         $html .= "<div style='text-align:center;'>"._("Language:")."<br/>";
-        $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language']);
+        $html .= xhtml_select("lang",1,get_locales(),$_SESSION['language'],"javascript:change_lang(this.value)");
         $html .= "<input type='hidden' name='action' value='select_lang'/>";
-        $html .= "<input class='misc_button' type='submit' value='"._("Select")."'/>";
+        $html .= "<noscript><div><input class='misc_button' type='submit' value='"._("Select")."'/></div></noscript>";
         $html .= "</div>";
         $html .= "</form>";
     }
@@ -696,7 +696,7 @@ function bibindex_display_search(){
     $main_content = "<form action='bibindex.php' method='get' style='text-align:center'>";
     $main_content .= "<fieldset style='border:none'>";
     $main_content .= "<input type='hidden' name='mode' value='displaysearch' />";
-    $main_content .= "<input class='misc_input' name='search' size='40' value='".$searchvalue."' />";
+    $main_content .= "<input class='misc_input' name='search' value='".$searchvalue."' />";
     $main_content .= "<input class='misc_button' type='submit' value='"._("Search")."' /><br/>";
     //	$main_content .= "<span style='font-weight:bold'>Search in fields:</span>";
     $main_content .= "<table style='margin:auto;text-align:left;'>";
@@ -737,7 +737,7 @@ function bibindex_display_search(){
     
     $main_content .= "</tr>";
     $main_content .=  "<tr style='text-align:center'><td colspan='3'>"._("Sort by:");
-    $main_content .= "<select name='sort' size='1'>";
+    $main_content .= "<select name='sort'>";
     
     $main_content .= "<option value='ID' ";
     $sort = null;
@@ -869,7 +869,7 @@ function bibindex_display_advanced_search(){
 	$content .= "<tbody>";
 	$content .= "<tr>";
     $content .= "<td style='width:50%;'><span class='emphit'>"._("Connector:")." </span>";
-    $content .= "<select name='connector' size='1'>";
+    $content .= "<select name='connector'>";
 
     if(array_key_exists('connector',$_GET)){
 	$extraparam .= "connector=".$_GET['connector']."&";
@@ -890,7 +890,7 @@ function bibindex_display_advanced_search(){
     $content .= "</select></td>";
     $content .= "<td style='50%'>";
     $content .= "<span class='emphit'>"._("Sort by:")." </span>";
-    $content .= "<select name='sort' size='1'>";
+    $content .= "<select name='sort' >";
     $content .= "<option value='year' ";
     $sort = null;
     if(array_key_exists('sort',$_GET)){
@@ -1096,7 +1096,7 @@ function bibindex_basket_modify_group(){
 	$main_content .= "<form style='margin-left:70px;margin-bottom:O;' action='bibindex.php' method='get'>";
 	$main_content .= "<fieldset style='border:none;margin:0;margin-top:1em;padding:0'>";
 	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-	$main_content .= "<span style='font-style:italic'>"._("New group:")." </span> <input class='misc_input' name='groupvalue' size='20'/>";
+	$main_content .= "<span style='font-style:italic'>"._("New group:")." </span> <input class='misc_input' name='groupvalue' />";
 	$main_content .= "<input  class='misc_button' type='submit' name='action' value='"._("Add")."'/>";
 	$main_content .= "</fieldset>";
 	$main_content .= "</form>";

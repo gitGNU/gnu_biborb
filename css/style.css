@@ -274,6 +274,8 @@ a.admin, a.admin:visited, a.admin:hover {
 .fieldset {
     border: none;
     text-align:center;
+    margin:0;
+    padding:0;
 }
 
 .fieldset label {
