@@ -1335,6 +1335,7 @@ function bibindex_update_entry(){
     $content .= "<input type='hidden' name='id' value='$theid'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
+    
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields' id='f_bibtex_entry'>";
     $content .= eval_php($fields);
     $content .= "<fieldset class='clean'>";
