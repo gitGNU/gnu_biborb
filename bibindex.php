@@ -536,6 +536,19 @@ if(isset($_POST['action'])){
             }
             break;
     
+        case 'bibtex_from_aux':
+            $bibtex_keys = bibtex_keys_from_aux($_FILES['aux_file']['tmp_name']);
+            $xmldata = $_SESSION['bibdb']->entries_with_ids($bibtex_keys);
+            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $param = $GLOBALS['xslparam'];
+            $param['fields_to_export'] = implode(".",$fields_to_export);
+            
+            header("Content-disposition: attachment; filename=".$_FILES['aux_file']['name'].".bib"); 
+            header("Content-Type: application/force-download");
+            echo $xsltp->transform($xmldata,load_file("./xsl/xml2bibtex_advanced.xsl"),$param);
+            $xsltp->free();
+            die();
+            
         default:
             break;
     }
@@ -636,6 +649,9 @@ switch($mode) {
     // Export the basket to html
     case 'exportbaskettohtml': echo bibindex_export_basket_to_html();break;
     
+        
+    // Display Tools
+    case 'displaytools': echo bibindex_display_tools();break;
     // By default
     default: echo bibindex_welcome(); break;
 }

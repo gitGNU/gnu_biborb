@@ -40,7 +40,13 @@ $biborb_version = "CVS";
 $date_release = "12 September 2004";
 
 /**
- * Localisation
+ * Name of the PHP SESSION
+ * You shouldn't need to change this value.
+ */
+$session_id = "SID";
+
+/**
+ * Localization
  * Available: en_US, fr_FR
  */
 $language = "en_US";
@@ -57,7 +63,6 @@ $display_language_selection = TRUE;
  * All users will have the administrator status
  */
 $disable_authentication = TRUE;
-
 
 /**
  *  Should a confirmation may be displayed when deleting entries
@@ -77,12 +82,7 @@ $display_images = TRUE;
 /**
  *  Sould action be represented by text or not.
  */
-$display_text = TRUE;
-
-/**
- * Name of the PHP SESSION
- */
-$session_id = "SID";
+$display_text = FALSE;
 
 /**
  * List of all possible fields in a BibTeX record.

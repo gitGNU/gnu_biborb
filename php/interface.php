@@ -407,10 +407,11 @@ function bibindex_menu($bibname)
     $html .= "<ul>";
     $html .= "<li><a title='"._("BIBINDEX_MENU_DISPLAY_ALL_HELP")."' href='bibindex.php?mode=displayall'>"._("BIBINDEX_MENU_DISPLAY_ALL")."</a></li>";
     $html .= "<li><a title='"._("BIBINDEX_MENU_DISPLAY_BY_GROUP_HELP")."'href='bibindex.php?mode=displaybygroup'>"._("BIBINDEX_MENU_DISPLAY_BY_GROUP")."</a></li>";
-    $html .= "<li><a title='"._("BIBINDEX_MENU_DISPLAY_SIMPLE_SEARCH_HELP")."' href='bibindex.php?mode=displaysearch'>"._("BIBINDEX_MENU_DISPLAY_SIMPLE_SEARCH")."</a></li>";
-    $html .= "<li><a title='"._("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH_HELP")."' href='bibindex.php?mode=displayadvancedsearch'>"._("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH")."</a></li>";
+    $html .= "<li><a title='"._("BIBINDEX_MENU_DISPLAY_SEARCH_HELP")."' href='bibindex.php?mode=displaysearch'>"._("BIBINDEX_MENU_DISPLAY_SEARCH")."</a></li>";
+//    $html .= "<li><a title='"._("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH_HELP")."' href='bibindex.php?mode=displayadvancedsearch'>"._("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH")."</a></li>";
     $html .= "</ul>";
     $html .= "</li>";
+    $html .= "<li><a title='"._("BIBINDEX_MENU_TOOLS_HELP")."' href='bibindex.php?mode=displaytools'>"._("BIBINDEX_MENU_TOOLS")."</a><ul><li/></ul></li>";
     // third menu item
     // -> Basket
     //      | -> Display basket
@@ -447,7 +448,7 @@ function bibindex_menu($bibname)
 	$html .= "'>"._("BIBINDEX_MENU_BASKET_RESET")."</a></li>";
     $html .= "</ul>";
     $html .= "</li>";
-    
+        
     // fourth menu item
     // -> Manager
     //      | -> Login (if not admin and authentication enabled
@@ -772,6 +773,8 @@ function bibindex_display_search(){
     $main_content .= "</fieldset>";
     $main_content .= "</form>";
     
+    $main_content .= "Go to <a href='bibindex.php?mode=displayadvancedsearch'>Advanced Search</a>.<br/><br/>";
+    
     if($searchvalue){
         $fields =array();
             $extra_param ="search=$searchvalue";
@@ -823,7 +826,7 @@ function bibindex_display_search(){
             $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
         }
         else if($nb>1) {
-            $main_content .= sprintf(_("%d match for %s."),$nb,$searchvalue).$start;
+            $main_content .= sprintf(_("%d matches for %s."),$nb,$searchvalue).$start;
             $main_content .= replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
         }
         else{
@@ -943,7 +946,8 @@ function bibindex_display_advanced_search(){
     $content .= "<input class='submit' type='submit' value='"._("Search")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
-    $content .= "</div>";
+    $content .= "</div><br/>";
+    $content .= "Go to <a href='bibindex.php?mode=displaysearch'>Simple Search</a>.<br/><br/>";
     
     $searchArray = array();
     foreach($bibtex_fields as $val){
@@ -1373,6 +1377,43 @@ function bibindex_export_basket_to_html(){
 	else{
 		echo bibindex_display_basket();
 	}
+}
+/**
+    
+ */
+function bibindex_display_tools(){
+    $html = bibheader();
+    $html .= bibindex_menu($_SESSION['bibdb']->name());
+    $title = _("BIBINDEX_EXPORT_TO_BIBTEX_TITLE");
+    
+    $content = "<h4 class='tool_name'>XPath query</h4>";
+    $content .= "<div class='tool_help'>";
+    $content .= "A small help on XPath";
+    $content .= "</div>";
+    $content .= "<form method='get' action='bibindex.php' id='xpath_form'>";
+    $content .= "<fieldset>";
+    $content .= "<label>"._("XPath query")."</label>";
+    $content .= "&nbsp;<input type='text' name='xpath_query' value='contains(author, \" someone\" and year >= 2004'/>";
+    $content .= "&nbsp;<input type='submit' class='submit' value='"._("Search")."'/>";
+    $content .= "</fieldset>";
+    $content .= "</form>";
+    
+    $content .= "<h4 class='tool_name'>AUX to BibTeX</h4>";
+    $content .= "<div class='tool_help'>";
+    $content .= "A small help on Aux file";
+    $content .= "</div>";
+    $content .= "<form method='post' enctype='multipart/form-data' action='bibindex.php'  onsubmit='return validate_bibtex2aux_form(\"".$_SESSION['language']."\")' id='bibtex2aux_form'>";
+    $content .= "<fieldset>";
+    $content .= "<label>"._("AUX_TO_BIBTEX_DESC")."</label><br/>";
+    $content .= "&nbsp;<input type='file' name='aux_file'/>";
+    $content .= "<input type='hidden' name='action' value='bibtex_from_aux'/>";
+    $content .= "&nbsp;<input type='submit' class='submit' value='"._("Download")."'/>";
+    $content .= "</fieldset>";
+    $content .= "</form>";
+    
+    $html .= main($title,$content);
+    $html .= html_close();
+    echo $html;
 }
 
 ?>

@@ -1,6 +1,6 @@
 This file contains instructions to localize BibORB.
 
-Gettext methods is used to provide the localization of biborb.
+Gettext methods are used to provide the localization of biborb.
 See http://www.gnu.org/software/gettext/manual/gettext.html for more details.
 
 The 'locale' directory contains localized data used to display messages in a 

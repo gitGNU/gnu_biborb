@@ -304,6 +304,14 @@ msgstr "Afficher les références par groupe"
 msgid "BIBINDEX_MENU_DISPLAY_BY_GROUP"
 msgstr "Par Groupe"
 
+#: interface.php:413
+msgid "BIBINDEX_MENU_DISPLAY_SEARCH_HELP"
+msgstr "Simple / Advanced search engine"
+
+#: interface.php:413
+msgid "BIBINDEX_MENU_DISPLAY_SEARCH"
+msgstr "Search"
+
 #: interface.php:412
 msgid "BIBINDEX_MENU_DISPLAY_SIMPLE_SEARCH_HELP"
 msgstr "Un moteur de recherche simple"
@@ -319,6 +327,9 @@ msgstr "Un moteur de recherche plus précis"
 #: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH"
 msgstr "Recherche (Avancée)"
+
+msgid "BIBINDEX_MENU_TOOLS"
+msgstr "Outils"
 
 #: interface.php:423
 msgid "BIBINDEX_MENU_BASKET_HELP"
@@ -744,3 +755,5 @@ msgstr "Références n'appartenant à aucun groupe :"
 msgid "Orphans"
 msgstr "Orphelins"
 
+msgid "AUX_TO_BIBTEX_DESC"
+msgstr "Générer un fichier BibTeX contenant les références présentes dans le fichier <code>.aux</code> : "

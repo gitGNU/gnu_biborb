@@ -199,6 +199,13 @@ html > body #menu {position:fixed;}
 #f_bibtex_entry .additional input {width:80%;border:1px solid black;margin:0.1em;}
 #f_bibtex_entry .additional textarea {height:165px;width:80%;border:1px solid black;margin:0.1em;}
 
+
+/**
+ * Style for the Tools section
+ */
+.tool_name {display:block;border-bottom:black 1px dotted;text-decoration:none;color:navy;font-weight:bold; margin:0;padding:0;}
+
+
 /**
  * Generic style
  */

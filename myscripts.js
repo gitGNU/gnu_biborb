@@ -146,6 +146,27 @@ function validate_new_bibtex_key(lang){
     }
 }
 
+
+function validate_bibtex2aux_form(lang){
+    var msg;
+    var group = document.forms['bibtex2aux_form'].elements['aux_file'].value;
+    
+    if(lang == 'fr_FR'){
+		msg = "Aucun fichier sélectionné!";
+	}
+	else if(lang == 'en_US'){
+		msg = "No file selected!";
+	}
+    
+	if(trim(group) == ""){
+		alert(msg);
+		return false;
+	}
+    else{
+        return true;
+    }
+}
+
 //
 function trim(str)
 {

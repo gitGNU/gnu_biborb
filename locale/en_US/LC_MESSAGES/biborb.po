@@ -313,12 +313,24 @@ msgid "BIBINDEX_MENU_DISPLAY_SIMPLE_SEARCH"
 msgstr "Simple Search"
 
 #: interface.php:413
+msgid "BIBINDEX_MENU_DISPLAY_SEARCH_HELP"
+msgstr "Simple / Advanced search engine"
+
+#: interface.php:413
+msgid "BIBINDEX_MENU_DISPLAY_SEARCH"
+msgstr "Search"
+
+
+#: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH_HELP"
 msgstr "An advanced search engine"
 
 #: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH"
 msgstr "Advanced search"
+
+msgid "BIBINDEX_MENU_TOOLS"
+msgstr "Tools"
 
 #: interface.php:423
 msgid "BIBINDEX_MENU_BASKET_HELP"
@@ -742,3 +754,6 @@ msgstr ""
 
 msgid "Orphans"
 msgstr ""
+
+msgid "AUX_TO_BIBTEX_DESC"
+msgstr "Generate a BibTeX file containing references present in an <code>.aux</code> file: "

@@ -195,4 +195,13 @@ function sort_div($selected_sort,$mode,$group){
     return $html;
 }
 
+/**
+    Analyze a .dot aux file and return an array of bibtex ids
+ */
+function bibtex_keys_from_aux($auxfile){
+    $lines = load_file($auxfile);
+    preg_match_all("/citation{(.*)}/i",$lines,$res);
+    return $res[1];
+}
+
 ?>
