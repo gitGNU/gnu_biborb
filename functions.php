@@ -109,6 +109,7 @@ function write_xml_file($xmlfile,$bibfile,$append = false){
 function xml2bibtex($bibname){
     $xmlfile = xmlfilename($bibname);
     $bibfile = bibfilename($bibname);
+    
     // get the number of entries
     // xsl_process seems to return null both if an error occur or the file is empty
     // so we have to check with the number of entries
