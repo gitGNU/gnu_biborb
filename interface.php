@@ -1128,7 +1128,6 @@ HTML;
  */
 function bibindex_add_entry($type){
 	
-	
     // xslt transformation
     $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
     $param = $GLOBALS['xslparam'];
@@ -1137,12 +1136,15 @@ function bibindex_add_entry($type){
     $param = array("typeentry"=>$type);
     $fields = $xsltp->transform($xml_content,$xsl_content,$param);
     $xsltp->free();
-    
+    $glist = $_SESSION['bibdb']->groups();
+    array_push($glist,"");
+    $groups=xhtml_select("groupslist",1,$glist,"","addGroup()");
+	$fields = str_replace("#XHTMLGROUPSLIST",$groups,$fields);
     $html = bibheader("");
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = "New entry";
     $content = <<<HTML
-<form method='post' action='bibindex.php' enctype='multipart/form-data'>
+<form method='post' action='bibindex.php' enctype='multipart/form-data' name="fields">
 	<fieldset style='border:none'>
 		<input name='type' value='$type' type='hidden'/>
 		$fields
@@ -1208,6 +1210,7 @@ function bibindex_update_entry(){
                         </tr>
                     </tbody>
                 </table>
+                <input type='hidden' name='id' value='$theid'/>
             </fieldset>
         </form>
         <form method='post' action='bibindex.php' enctype='multipart/form-data' name="fields">

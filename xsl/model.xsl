@@ -160,6 +160,12 @@
                                     <input type="file" name="{name(.)}" size="45"/>
                                 </td>
                             </xsl:when>
+                            <xsl:when test="name() = 'groups'">
+                                <td class="additional-value"><input name="_{name(.)}"/>
+                                <br/>
+                                <span style='color:black;font-weight:normal;'>Add a group:</span>#XHTMLGROUPSLIST
+                                </td>
+                            </xsl:when>
                             <xsl:otherwise>
                                 <td class="additional-value"><input name="_{name(.)}"/></td>
                             </xsl:otherwise>

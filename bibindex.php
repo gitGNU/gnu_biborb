@@ -106,12 +106,12 @@ if(!isset($_SESSION['basket'])){
  */
 if(array_key_exists('bibname',$_GET)){
     if(!array_key_exists('bibdb',$_SESSION)){
-	$_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
-	$_SESSION['basket']->reset();
+        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
+        $_SESSION['basket']->reset();
     }
     else if($_SESSION['bibdb']->name()!=$_GET['bibname']){
-	$_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
-	$_SESSION['basket']->reset();
+        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname']);
+        $_SESSION['basket']->reset();
     }
 }
 
@@ -132,15 +132,15 @@ else if(array_key_exists('sort',$_POST)){
 }
 
 
-$xslparam = array('bibname' => $_SESSION['bibdb']->name(),
-		  'bibnameurl' => $_SESSION['bibdb']->xml_file(),
-		  'display_images' => $GLOBALS['display_images'],
-		  'display_text' => $GLOBALS['display_text'],
-		  'abstract' => $abst,
-		  'display_add_all'=> 'true',
-                  'sort' => $sort,
-                  'display_sort'=> $DISPLAY_SORT,
-                  'mode' => $_SESSION['usermode']);
+$xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
+                    'bibnameurl' => $_SESSION['bibdb']->xml_file(),
+                    'display_images' => $GLOBALS['display_images'],
+                    'display_text' => $GLOBALS['display_text'],
+                    'abstract' => $abst,
+                    'display_add_all'=> 'true',
+                    'sort' => $sort,
+                    'display_sort'=> $DISPLAY_SORT,
+                    'mode' => $_SESSION['usermode']);
 
 /**
  * Select the user's mode:
@@ -150,12 +150,12 @@ $xslparam = array('bibname' => $_SESSION['bibdb']->name(),
 if(!$disable_authentication){
     if(!array_key_exists('usermode',$_SESSION)){
         $_SESSION['usermode'] = "user";
-		$xslparam['mode'] = "user";
+        $xslparam['mode'] = "user";
     }
 }
 else{
     $_SESSION['usermode'] = "admin";
-	$xslparam['mode'] = "admin";
+    $xslparam['mode'] = "admin";
 }
 
 /**
@@ -164,56 +164,56 @@ else{
  */
 if(isset($_GET['action'])){
     switch($_GET['action']){
-    case 'add_to_basket':		// Add an item to the basket
-	if(!isset($_GET['id'])){
-	    die("Error in add_to_basket: id not set");
-	}
-	else{
-	    $_SESSION['basket']->add_items(explode("*",$_GET['id']));
-	}
-	break;
-	
-    case 'delete_from_basket':  // delete an entry from the basket
-	if(!isset($_GET['id'])){
-	    die("Error in delete_from_basket: id not set");
+        case 'add_to_basket':		// Add an item to the basket
+            if(!isset($_GET['id'])){
+                die("Error in add_to_basket: id not set");
             }
-	else{
-	    $_SESSION['basket']->remove_item($_GET['id']);
-	}
-	break;
+            else{
+                $_SESSION['basket']->add_items(explode("*",$_GET['id']));
+            }
+        break;
 	
-    case 'resetbasket':			// reset the basket
-	$_SESSION['basket']->reset();
-	break;
+        case 'delete_from_basket':  // delete an entry from the basket
+        if(!isset($_GET['id'])){
+            die("Error in delete_from_basket: id not set");
+        }
+        else{
+            $_SESSION['basket']->remove_item($_GET['id']);
+        }
+        break;
+	
+        case 'resetbasket':			// reset the basket
+            $_SESSION['basket']->reset();
+            break;
         
         /**
             Delete an entry from the database
         */
-    case 'delete':
-        if(!isset($_GET['id'])){
-            die("Error while deleting: no Bibtex ID selected!");
-        }  
-        else{
-            $confirm = FALSE;
-            if(array_key_exists('confirm_delete',$_GET)){
-                $confirm = (strcmp($_GET['confirm_delete'],'Yes') == 0);
-            }
+        case 'delete':
+            if(!isset($_GET['id'])){
+                die("Error while deleting: no Bibtex ID selected!");
+            }  
+            else{
+                $confirm = FALSE;
+                if(array_key_exists('confirm_delete',$_GET)){
+                    $confirm = (strcmp($_GET['confirm_delete'],'Yes') == 0);
+                }
             
-            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");		
-            // save the bibtex entry to show which entry was deleted
-            $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
-            $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
-            if(!$GLOBALS['warn_before_deleting'] || $confirm){		    
-                // delete it
-                $_SESSION['bibdb']->delete_entry($_GET['id']);
-                // update message
-                $message = "The following entry was deleted: <pre>".$bibtex."</pre>";
-                // if present, remvove entries from the basket
-                $_SESSION['basket']->remove_item($_GET['id']);
-                $_GET['mode'] = "operationresult";
+                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");		
+                // save the bibtex entry to show which entry was deleted
+                $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+                $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
+                if(!$GLOBALS['warn_before_deleting'] || $confirm){		    
+                    // delete it
+                    $_SESSION['bibdb']->delete_entry($_GET['id']);
+                    // update message
+                    $message = "The following entry was deleted: <pre>".$bibtex."</pre>";
+                    // if present, remvove entries from the basket
+                    $_SESSION['basket']->remove_item($_GET['id']);
+                    $_GET['mode'] = "operationresult";
             }
             else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],'No') == 0){
-            $_GET['mode'] = "welcome";
+                $_GET['mode'] = "welcome";
             }
             else{
                 $theid = $_GET['id'];
@@ -229,68 +229,77 @@ if(isset($_GET['action'])){
                     </fieldset>
                     </form>
 HTML;
-        		$_GET['mode'] = "operationresult";
+                $_GET['mode'] = "operationresult";
             }
             $xsltp->free();		
         }
         break;
 	
-    case 'Add':					// Add entries in the basket to a given group
-	if(!isset($_GET['groupvalue'])){
-	    die("No group specified!");
-	}
-	else if(trim($_GET['groupvalue']) != ""){
-	    $_SESSION['bibdb']->add_to_group($_SESSION['basket']->items,trim($_GET['groupvalue']));
-	}
-	break;
+        case 'Add':					// Add entries in the basket to a given group
+            if(!isset($_GET['groupvalue'])){
+                die("No group specified!");
+            }
+            else if(trim($_GET['groupvalue']) != ""){
+                $_SESSION['bibdb']->add_to_group($_SESSION['basket']->items,trim($_GET['groupvalue']));
+            }
+            break;
 	
-    case 'Reset':				// Reset the groups fields of entries in the basket
-	$_SESSION['bibdb']->reset_groups($_SESSION['basket']->items);
-	break;
+        case 'Reset':				// Reset the groups fields of entries in the basket
+            $_SESSION['bibdb']->reset_groups($_SESSION['basket']->items);
+            break;
 	
-    case 'logout':
-	$_SESSION['usermode'] = "user";
-	break;
+        case 'logout':
+            $_SESSION['usermode'] = "user";
+            break;
 	    
-    case 'cancel':
-	$_GET['mode'] = "welcome";
-	break;
-	
-    case 'update_type':
-	// get the entry
-	$_SESSION['bibdb']->change_type($_GET['bibtex_key'],$_GET['bibtex_type']);
-	break;
-	
-    case 'update_key':
-	// TO IMPLEMENT
-	break;
-	
-    case 'delete_basket':
-        $confirm = FALSE;
-        if(array_key_exists('confirm_delete',$_GET)){
-            $confirm = (strcmp($_GET['confirm_delete'],'Yes')==0);
-        }
-        $ids_to_remove = $_SESSION['basket']->items;
-        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-        $xml_content = $_SESSION['bibdb']->entries_with_ids($ids_to_remove);
-        
-        if(!$GLOBALS['warn_before_deleting'] || $confirm){
-            $_SESSION['bibdb']->delete_entries($ids_to_remove);
-            // update message
-            $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
-            $message = "The following entries were deleted: <pre>".$bibtex."</pre>";
-            $_SESSION['basket']->reset();
-            $_GET['mode'] = "operationresult";
-        }
-       else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],'No') == 0){
+        case 'cancel':
             $_GET['mode'] = "welcome";
-        }
-        else{
-            $param['display_add_all'] = 'no';
-            $html_entries = $xsltp->transform($xml_content,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-            $message = "Delete the following entries?";
-            $message .= $html_entries;
-            $message .= <<<HTML
+            break;
+	
+        case 'update_type':
+            // get the entry
+            $_SESSION['bibdb']->change_type($_GET['bibtex_key'],$_GET['bibtex_type']);
+            $_GET['mode']='update';
+            break;
+	
+        case 'update_key':
+            if(!$_SESSION['bibdb']->is_bibtex_key_present($_GET['bibtex_key'])){
+                $_SESSION['bibdb']->change_id($_GET['id'],$_GET['bibtex_key']);
+                $_GET['mode']='update';
+                $_GET['id'] = $_GET['bibtex_key'];
+            }
+            else{
+                $error = "BibTeX key <code>".$_GET['bibtex_key']."</code> already exists.";
+                $_GET['mode'] = 'operationresult';
+            }
+            break;
+	
+        case 'delete_basket':
+            $confirm = FALSE;
+            if(array_key_exists('confirm_delete',$_GET)){
+                $confirm = (strcmp($_GET['confirm_delete'],'Yes')==0);
+            }
+            $ids_to_remove = $_SESSION['basket']->items;
+            $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+            $xml_content = $_SESSION['bibdb']->entries_with_ids($ids_to_remove);
+        
+            if(!$GLOBALS['warn_before_deleting'] || $confirm){
+                $_SESSION['bibdb']->delete_entries($ids_to_remove);
+                // update message
+                $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
+                $message = "The following entries were deleted: <pre>".$bibtex."</pre>";
+                $_SESSION['basket']->reset();
+                $_GET['mode'] = "operationresult";
+            }
+            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],'No') == 0){
+                $_GET['mode'] = "welcome";
+            }
+            else{
+                $param['display_add_all'] = 'no';
+                $html_entries = $xsltp->transform($xml_content,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+                $message = "Delete the following entries?";
+                $message .= $html_entries;
+                $message .= <<<HTML
                     <form action='bibindex.php' method='get' style='margin:auto;'>
                     <fieldset style='border:none;'>
                     <input type='hidden' name='action' value='delete_basket'/>
@@ -299,15 +308,13 @@ HTML;
                     </fieldset>
                     </form>
 HTML;
-        		$_GET['mode'] = "operationresult";
+        		  $_GET['mode'] = "operationresult";
             }
             $xsltp->free();
-
-    	break;
+            break;
 	
-	
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -316,147 +323,148 @@ if(isset($_POST['action'])){
     switch($_POST['action']){
         /**
             Add an entry to the database
-	*/
-    case 'add': 
-	$res = $_SESSION['bibdb']->add_new_entry($_POST);
-	if($res['added']){
-	    $message = "The following entry was added:<br/>";
-	    $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
-	    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-	    $param = $GLOBALS['xslparam'];
-	    $param['bibindex_mode'] = "displaybasket";
-	    $param['display_add_all'] = "no";
-	    $param['mode'] = "user";
-	    $param['display_sort'] = 'no';
-	    $message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-	    $xsltp->free();
-	}
-	else{
-	    $error = $res['message'];
-	}
-	break;
-	
-	// update an entry
-    case 'update':
-	$res = $_SESSION['bibdb']->update_entry($_POST);
-	if($res['updated']){
-	    $message = "The following entry was updated:<br/>";
-	    $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
-	    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-	    $param = $GLOBALS['xslparam'];
-	    $param['bibindex_mode'] = "displaybasket";
-	    $param['display_add_all'] = "no";
-	    $param['mode'] = "user";
-	    $param['display_sort']='no';
-	    $message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-	    $xsltp->free();
-	}
-	else{
-	    $error = $res['message'];
-	}
-	break;
+        */
+        case 'add': 
+            $res = $_SESSION['bibdb']->add_new_entry($_POST);
+            if($res['added']){
+                $message = "The following entry was added:<br/>";
+                $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
+                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                $param = $GLOBALS['xslparam'];
+                $param['bibindex_mode'] = "displaybasket";
+                $param['display_add_all'] = "no";
+                $param['mode'] = "user";
+                $param['display_sort'] = 'no';
+                $message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+                $xsltp->free();
+            }
+            else{
+                $error = $res['message'];
+            }
+            break;
+    
+        // update an entry
+        case 'update':
+            $res = $_SESSION['bibdb']->update_entry($_POST);
+            if($res['updated']){
+                $message = "The following entry was updated:<br/>";
+                $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
+                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                $param = $GLOBALS['xslparam'];
+                $param['bibindex_mode'] = "displaybasket";
+                $param['display_add_all'] = "no";
+                $param['mode'] = "user";
+                $param['display_sort']='no';
+                $message .= $xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+                $xsltp->free();
+            }
+            else{
+                $error = $res['message'];
+            }
+            break;
 	
         /*
             Import bibtex entries.
-	*/
-    case 'import':
-	if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
-	    die("Error, no bibtex data provided!");
-	}
-	else{
+        */
+        case 'import':
+            if(!array_key_exists('bibfile',$_FILES) && !array_key_exists('bibval',$_POST)){
+                die("Error, no bibtex data provided!");
+            }
+            else{
 	    
-	    if(array_key_exists('bibval',$_POST)){
-		$bibtex_data = explode("\n",$_POST['bibval']);
-	    }
-	    else{
-		$bibtex_data= file($_FILES['bibfile']['tmp_name']);
-	    }
-	    // add the new entry			 
-	    $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
-	    $entries = $_SESSION['bibdb']->entries_with_ids($res);
-	    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-	    $param = $GLOBALS['xslparam'];
-	    $param['bibindex_mode'] = "displaybasket";
-	    $param['mode'] = "admin";
-	    $formated = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
-	    $xsltp->free();
-	    if($res == 1){
-		$message = "The following entry was added to the database:";
-	    }
-	    else {
-		$message = "The following entries were added to the database:";
-	    }
-	    //$message .= "<br/><pre>".print_r($bibtex_data)."</pre>";
-	    $message .= $formated;
-	}
-	break;
+                if(array_key_exists('bibval',$_POST)){
+                    $bibtex_data = explode("\n",$_POST['bibval']);
+                }
+                else{
+                    $bibtex_data= file($_FILES['bibfile']['tmp_name']);
+                }
+                // add the new entry			 
+                $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
+                $entries = $_SESSION['bibdb']->entries_with_ids($res);
+                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                $param = $GLOBALS['xslparam'];
+                $param['bibindex_mode'] = "displaybasket";
+                $param['mode'] = "admin";
+                $formated = $xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param);
+                $xsltp->free();
+                if($res == 1){
+                    $message = "The following entry was added to the database:";
+                }
+                else {
+                    $message = "The following entries were added to the database:";
+                }
+                //$message .= "<br/><pre>".print_r($bibtex_data)."</pre>";
+                $message .= $formated;
+            }
+            break;
 	
         /*
             Login
-	*/
-    case 'login':
-	$login = $_POST['login'];
-	$mdp = $_POST['mdp'];
-	if($login=="" || $mdp==""){
-	    $error = "You must fill both login and password!";
-	}
-	else {
-	    $loggedin = check_login($login,$mdp);
-	    if($loggedin){
-		$_SESSION['user'] = $login;
-		$_SESSION['usermode'] = "admin";
-		$login_success = "welcome";	    
-	    }
-	    else {
-		$error = "Wrong login or password";
-	    }
-	}
-	break;
+        */
+        case 'login':
+            $login = $_POST['login'];
+            $mdp = $_POST['mdp'];
+            if($login=="" || $mdp==""){
+                $error = "You must fill both login and password!";
+            }
+            else {
+                $loggedin = check_login($login,$mdp);
+                if($loggedin){
+                    $_SESSION['user'] = $login;
+                    $_SESSION['usermode'] = "admin";
+                    $login_success = "welcome";	    
+                }
+                else {
+                    $error = "Wrong login or password";
+                }
+            }
+            break;
 	
-    case 'cancel':
-	$_GET['mode'] = "welcome";
-	break;
+        case 'cancel':
+            $_GET['mode'] = "welcome";
+            break;
 	
-	/**
-	 * Export the basket to bibtex
-	 */
-    case 'export':
-	if($_SESSION['basket']->count_items() != 0){
-	    // basket not empty -> processing
-	    // get entries
-	    $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
+        /**
+         * Export the basket to bibtex
+         */
+        case 'export':
+            if($_SESSION['basket']->count_items() != 0){
+                // basket not empty -> processing
+                // get entries
+                $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
 	    
-	    // xslt transformation
-	    $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-	    $param = $GLOBALS['xslparam'];
-	    // hide basket actions
-	    $param['display_basket_actions'] = 'no';
-	    // hide edition/delete
-	    $param['mode'] = 'user';
-	    // create a parameter containing fields to export
-	    $toexport = ".";
-	    foreach($GLOBALS['bibtex_entries'] as $field){
-		if(array_key_exists(substr($field,1),$_POST)){
-		    $toexport .= substr($field,1).".";
-		}
-	    }
+                // xslt transformation
+                $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+                $param = $GLOBALS['xslparam'];
+                // hide basket actions
+                $param['display_basket_actions'] = 'no';
+                // hide edition/delete
+                $param['mode'] = 'user';
+                // create a parameter containing fields to export
+                $toexport = ".";
+                foreach($GLOBALS['bibtex_entries'] as $field){
+                    if(array_key_exists(substr($field,1),$_POST)){
+                        $toexport .= substr($field,1).".";
+                    }
+                }
 	    
-	    $param['fields_to_export'] = $toexport;
-	    //process
-	    $content = $xsltp->transform($entries,load_file("./xsl/xml2bibtex_advanced.xsl"),$param);
-	    $xsltp->free();
-	    
-	    // bibtex output
-	    header("Content-Type: text/plain");
-	    echo $content;
-	    exit();
-	}
-	else{
-	    $_GET['mode'] = 'displaybasket';
-	}
-	
-    default:
-	break;
+                $param['fields_to_export'] = $toexport;
+                //process
+                $content = $xsltp->transform($entries,load_file("./xsl/xml2bibtex_advanced.xsl"),$param);
+                $xsltp->free();
+                
+                // bibtex output
+                header("Content-Type: text/plain");
+                echo $content;
+                exit();
+            }
+            else{
+                $_GET['mode'] = 'displaybasket';
+            }
+            break;
+    
+        default:
+            break;
     }
 }
 
@@ -471,7 +479,7 @@ else if(array_key_exists('mode',$_GET)){
     $mode = $_GET['mode'];
 }
 else if(array_key_exists('mode',$_POST)){
-	$mode = $_POST['mode'];
+    $mode = $_POST['mode'];
 }
 else {
     $mode = "welcome";
@@ -479,86 +487,83 @@ else {
 
 switch($mode) {
     // Welcome page
- case 'welcome': echo bibindex_welcome(); break;
+    case 'welcome': echo bibindex_welcome(); break;
      
-     // Generice page to display operations results
- case 'operationresult': echo bibindex_operation_result(); break;
-     
-     // Help on the display menu item
- case 'display': echo bibindex_display_help(); break;
-     
-     // Display all entries
- case 'displayall': echo bibindex_display_all(); break;
-     
-     // Display by group
- case 'displaybygroup': echo bibindex_display_by_group(); break;
-     
-     // Display search page
- case 'displaysearch': echo bibindex_display_search(); break;
-     
- case 'displayadvancedsearch': echo bibindex_display_advanced_search(); break;
-     
-     // Help on the basket menu item
- case 'basket': echo bibindex_basket_help(); break;
-     
-     
-     // Display the basket
- case 'displaybasket': echo bibindex_display_basket(); break;
-     
-     // Display the page to modify groups of entries in the basket
- case 'groupmodif': echo bibindex_basket_modify_group(); break;
-     
-     
-     // Help on the Manager Menu
- case 'manager': echo bibindex_manager_help(); break;
-     
-     // Add a new entry 
- case 'addentry':echo bibindex_entry_to_add(); break;
-     
-     // Select the type of the new entry to add
- case 'select': echo bibindex_add_entry($_GET['type']); break;
-     
-     // Update an entry
- case 'update': echo bibindex_update_entry(); break;
-     
-     // Login page
- case 'login': echo bibindex_login(); break;
-     
-     // Logout 
- case 'logout': echo bibindex_logout(); break;
-     
-     // Update the XML file according to values present in the BibTeX file.
- case 'update_xml_from_bibtex':
-     $_SESSION['bibdb']->reload_from_bibtex();
-     echo bibindex_welcome();
-     break;
-     
-     // Mode to access directly to an article
- case 'details': echo bibindex_details(); break;
-     
-     // Import references
- case 'import': echo bibindex_import(); break;
-     
-     // Export the basket to bibtex
- case 'exportbaskettobibtex': echo bibindex_export_basket_to_bibtex(); break;
-     
-	// bibtex of a given entry
- case 'bibtex':
-     $entries = $_SESSION['bibdb']->entry_with_id($_GET['id']);
-     $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
-     $bibtex = $xsltp->transform($entries,load_file("./xsl/xml2bibtex.xsl"));
-     $bibtex = preg_replace(array('/(\s*\\1)?/','/ +/'),array("\\1",' '),$bibtex);
-     $xsltp->free();
-     
-     header("Content-Type: text/plain");
-     echo $bibtex;
-     break;
-
-     // Export the basket to html
- case 'exportbaskettohtml': echo bibindex_export_basket_to_html();break;
-     
-     // By default
- default: echo bibindex_welcome(); break;
+    // Generice page to display operations results
+    case 'operationresult': echo bibindex_operation_result(); break;
+    
+    // Help on the display menu item
+    case 'display': echo bibindex_display_help(); break;
+    
+    // Display all entries
+    case 'displayall': echo bibindex_display_all(); break;
+    
+    // Display by group
+    case 'displaybygroup': echo bibindex_display_by_group(); break;
+    
+    // Display search page
+    case 'displaysearch': echo bibindex_display_search(); break;
+    
+    case 'displayadvancedsearch': echo bibindex_display_advanced_search(); break;
+    
+    // Help on the basket menu item
+    case 'basket': echo bibindex_basket_help(); break;
+    
+    // Display the basket
+    case 'displaybasket': echo bibindex_display_basket(); break;
+    
+    // Display the page to modify groups of entries in the basket
+    case 'groupmodif': echo bibindex_basket_modify_group(); break;
+    
+    // Help on the Manager Menu
+    case 'manager': echo bibindex_manager_help(); break;
+    
+    // Add a new entry 
+    case 'addentry':echo bibindex_entry_to_add(); break;
+    
+    // Select the type of the new entry to add
+    case 'select': echo bibindex_add_entry($_GET['type']); break;
+    
+    // Update an entry
+    case 'update': echo bibindex_update_entry(); break;
+    
+    // Login page
+    case 'login': echo bibindex_login(); break;
+    
+    // Logout 
+    case 'logout': echo bibindex_logout(); break;
+    
+    // Update the XML file according to values present in the BibTeX file.
+    case 'update_xml_from_bibtex':
+        $_SESSION['bibdb']->reload_from_bibtex();
+        echo bibindex_welcome();
+        break;
+    
+    // Mode to access directly to an article
+    case 'details': echo bibindex_details(); break;
+    
+    // Import references
+    case 'import': echo bibindex_import(); break;
+    
+    // Export the basket to bibtex
+    case 'exportbaskettobibtex': echo bibindex_export_basket_to_bibtex(); break;
+    
+    // bibtex of a given entry
+    case 'bibtex':
+        $entries = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+        $xsltp = new XSLT_Processor("file://".getcwd()."/biborb","ISO-8859-1");
+        $bibtex = $xsltp->transform($entries,load_file("./xsl/xml2bibtex.xsl"));
+        $bibtex = preg_replace(array('/(\s*\\1)?/','/ +/'),array("\\1",' '),$bibtex);
+        $xsltp->free();
+        header("Content-Type: text/plain");
+        echo $bibtex;
+        break;
+    
+    // Export the basket to html
+    case 'exportbaskettohtml': echo bibindex_export_basket_to_html();break;
+    
+    // By default
+    default: echo bibindex_welcome(); break;
 }
 
 ?>
