@@ -49,14 +49,14 @@ $display_language_selection = TRUE;
  * Version of Biborb
  */
 $biborb_version = "CVS";
-$date_release = "29 May 2004";
+$date_release = "20 August 2004";
 
 
 /**
  * If TRUE, this will disable authentification.
  * All users will have the administrator status
  */
-$disable_authentication = FALSE;
+$disable_authentication = TRUE;
 
 
 /**
