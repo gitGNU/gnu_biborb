@@ -1156,8 +1156,8 @@ function bibindex_add_entry($type){
 	$content .= $fields;
 	$content .= "<fieldset class='clean'>";
 	$content .= "<input type='hidden' name='mode' value='operationresult'/>";
-	$content .= "<input class='misc_button' type='submit' name='action' value='"._("Cancel")."'/>&nbsp;";
-	$content .= "<input class='misc_button' type='submit' name='action' value='"._("Add")."'/>";
+	$content .= "<input class='submit' type='submit' name='action' value='"._("Cancel")."'/>&nbsp;";
+	$content .= "<input class='submit' type='submit' name='action' value='"._("Add")."'/>";
 	$content .= "</fieldset>";
 	$content .= "</form>";
 
@@ -1222,8 +1222,8 @@ function bibindex_update_entry(){
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields' id='f_bibtex_entry'>";
     $content .= $fields;
     $content .= "<fieldset class='clean'>";
-    $content .= "<input class='misc_button' type='submit' name='action' value='"._("Cancel")."'/>";
-    $content .= "&nbsp;<input class='misc_button' type='submit' name='action' value='"._("Update")."'/>";
+    $content .= "<input class='submit' type='submit' name='action' value='"._("Cancel")."'/>";
+    $content .= "&nbsp;<input class='submit' type='submit' name='action' value='"._("Update")."'/>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
@@ -1261,7 +1261,7 @@ function bibindex_import(){
     $content .= "<h3 style='padding:0;margin:0'>BibTeX</h3>";
     $content .= "<form method='post' action='bibindex.php'>";
     $content .= "<fieldset class='fieldset-bordered' title='BibTeX'>";
-    $content .= "<textarea class='misc_input' name='bibval' cols='55' rows='15'></textarea>";
+    $content .= "<textarea name='bibval' cols='55' rows='15'></textarea>";
     $content .= "<input type='hidden' name='mode' value='operationresult'/>";
     $content .= "<div style='text-align:center'>";
     $content .= "<input class='submit' type='submit' name='action' value='"._("Import")."'/>";

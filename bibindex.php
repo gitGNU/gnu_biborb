@@ -286,7 +286,7 @@ if(isset($_GET['action'])){
                 $theid = $_GET['id'];
                 $message = sprintf(_("Delete this entry? <pre>%s</pre>"),$bibtex);
                 $message .= "<form action='bibindex.php' method='get' style='margin:auto;'>";
-                $message .= "<fieldset class='fieldset'>";
+                $message .= "<fieldset style='border:none;text-align:center'>";
                 $message .= "<input type='hidden' name='action' value='delete'/>";
                 $message .= "<input type='hidden' name='id' value='$theid'/>";
                 $message .= "<input type='submit' name='confirm_delete' value='"._("No")."'/>";
