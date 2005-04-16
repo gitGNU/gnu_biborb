@@ -78,10 +78,16 @@
 					</xsl:if>
 					<!-- url -->
 					<xsl:apply-templates select=".//bibtex:url"/>
+                    <!-- ad_url -->
+					<xsl:apply-templates select=".//bibtex:ad_url"/>
 					<!-- urlzip -->
 					<xsl:apply-templates select=".//bibtex:urlzip"/>
+                    <!-- ad_urlzip -->
+					<xsl:apply-templates select=".//bibtex:ad_urlzip"/>
 					<!-- pdf -->
 					<xsl:apply-templates select=".//bibtex:pdf"/>
+                    <!-- ad_pdf -->
+					<xsl:apply-templates select=".//bibtex:ad_pdf"/>
 					<!-- website -->
 					<xsl:apply-templates select=".//bibtex:website"/>
 					<!-- link -->
@@ -415,18 +421,29 @@
 	-->
     <xsl:template match="bibtex:pdf">
         <xsl:variable name="link">
-            <xsl:choose>
-                <xsl:when test="contains(node(),'http://') or contains(node(),'https://') or contains(node(),'ftp://')">
-                    <xsl:value-of select="."/>
-                </xsl:when>
-                <xsl:otherwise>
-                    ./bibs/<xsl:value-of select="$bibname"/>/papers/<xsl:value-of select="."/>
-                </xsl:otherwise>
-            </xsl:choose>
+            ./bibs/<xsl:value-of select="$bibname"/>/papers/<xsl:value-of select="."/>
         </xsl:variable>
         <xsl:if test="$display_images">
             <a href="{$link}">
                 <img src="data/images/{$pdf-image}" alt='BIBORB_OUTPUT_PDF_ALT' title='BIBORB_OUTPUT_PDF_ALT' />
+            </a>
+        </xsl:if>
+        <xsl:if test="$display_text">
+            <a href="{$link}" title='BIBORB_OUTPUT_PDF_TITLE'>
+                BIBORB_OUTPUT_PDF_ALT
+            </a>
+        </xsl:if>
+    </xsl:template>
+    
+    <!--
+		Template for the ad_pdf field.
+		Display a link(text/image) to the recorded pdf link.
+	-->
+    <xsl:template match="bibtex:ad_pdf">
+        <xsl:variable name="link"><xsl:value-of select="."/></xsl:variable>
+        <xsl:if test="$display_images">
+            <a href="{$link}">
+                <img src="data/images/{$pdf-image-link}" alt='BIBORB_OUTPUT_PDF_ALT' title='BIBORB_OUTPUT_PDF_ALT' />
             </a>
         </xsl:if>
         <xsl:if test="$display_text">
@@ -442,14 +459,7 @@
 	-->
     <xsl:template match="bibtex:url">
         <xsl:variable name="link">
-            <xsl:choose>
-                <xsl:when test="contains(node(),'http://') or contains(node(),'https://') or contains(node(),'ftp://')">
-                    <xsl:value-of select="."/>
-                </xsl:when>
-                <xsl:otherwise>
-                    ./bibs/<xsl:value-of select="$bibname"/>/papers/<xsl:value-of select="."/>
-                </xsl:otherwise>
-            </xsl:choose>
+            ./bibs/<xsl:value-of select="$bibname"/>/papers/<xsl:value-of select="."/>
         </xsl:variable>
         <xsl:if test="$display_images">
             <a href="{$link}">
@@ -463,20 +473,53 @@
         </xsl:if>
     </xsl:template>
     
+    <!--
+		Template for the ad_url field.
+		Display a link(text/image) to the recorded url (ps file).
+	-->
+    <xsl:template match="bibtex:ad_url">
+        <xsl:variable name="link">
+            <xsl:value-of select="."/>
+        </xsl:variable>
+        <xsl:if test="$display_images">
+            <a href="{$link}">
+                <img src="data/images/{$ps-image-link}" alt='BIBORB_OUTPUT_PS_ALT' title='BIBORB_OUTPUT_PS_TITLE'/>
+            </a>
+        </xsl:if>
+        <xsl:if test="$display_text">
+            <a href="{$link}" title='BIBORB_OUTPUT_PS_TITLE'>
+                BIBORB_OUTPUT_PS_ALT
+            </a>
+        </xsl:if>
+    </xsl:template>
+    
 	<!--
+		Template for the urlzip field.
+		Display a link(text/image) to the recorded urlzip (ps.gz file).
+	-->
+    <xsl:template match="bibtex:ad_urlzip">
+        <xsl:variable name="link">
+            <xsl:value-of select="."/>
+        </xsl:variable>
+        <xsl:if test="$display_images">
+            <a href="{$link}">
+                <img src="data/images/{$ps.gz-image-link}" alt='BIBORB_OUTPUT_PSGZ_ALT' title='BIBORB_OUTPUT_PSGZ_TITLE'/>
+            </a>
+        </xsl:if>
+        <xsl:if test="$display_text">
+            <a href="{$link}" title='BIBORB_OUTPUT_PSGZ_TITLE'>
+                BIBORB_OUTPUT_PSGZ_ALT
+            </a>
+        </xsl:if>
+    </xsl:template>
+    
+    <!--
 		Template for the urlzip field.
 		Display a link(text/image) to the recorded urlzip (ps.gz file).
 	-->
     <xsl:template match="bibtex:urlzip">
         <xsl:variable name="link">
-            <xsl:choose>
-                <xsl:when test="contains(node(),'http://') or contains(node(),'https://') or contains(node(),'ftp://')">
-                    <xsl:value-of select="."/>
-                </xsl:when>
-                <xsl:otherwise>
-                    ./bibs/<xsl:value-of select="$bibname"/>/papers/<xsl:value-of select="."/>
-                </xsl:otherwise>
-            </xsl:choose>
+            ./bibs/<xsl:value-of select="$bibname"/>/papers/<xsl:value-of select="."/>
         </xsl:variable>
         <xsl:if test="$display_images">
             <a href="{$link}">
@@ -489,6 +532,7 @@
             </a>
         </xsl:if>
     </xsl:template>
+    
     
 	<!--
 		Template for the website field.

@@ -48,8 +48,9 @@ require_once("php/bibtex.php");
 function extract_bibtex_data($tab){
     $result = array();
     foreach($tab as $key => $value){
-        if(in_array($key,$GLOBALS['bibtex_entries']) && trim($value)!= ''){
-            $result[$key] = trim($value);
+        $val = trim($value);
+        if(in_array($key,$GLOBALS['bibtex_entries']) && $val != ''){
+            $result[$key] = $val;
         }
     }
     return $result;   

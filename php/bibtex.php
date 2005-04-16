@@ -41,25 +41,49 @@ require_once("php/utilities.php");
 
 class BibTeX_Tools
 {
+    
+    var $latex_conversion_table = 
+        array("\'a" => "à",
+              "\`a" => "á",
+              "\^a" => "â",
+              "\~a" => "ã",
+              '\"a' => "ä",
+              "\aa" => "å",
+              "\ae" => "æ",
+              "\c{c}" => "ç",
+              "\'e" => "é",
+              "\^e" => "ê",
+              "\`e" => "è",
+              "\"e" => "ë",
+              "\'i" => "í",
+              "\`i" => "ì",
+              "\^i" => "î",
+              '\"i' => "ï",
+              "\~n" => "ñ",
+              "\'o" => "ó",
+              "\^o" => "ô",
+              "\`o" => "ò",
+              "\"o" => "ö",
+              "\~o" => "õ",
+              "\'u" => "ú",
+              "\`u" => "ù",
+              "\^u" => "û",
+              '\"u' => "ü",
+              "\'y" => "ý",
+              '\"y' => "ÿ");
+    
     /**
         Return an array of entries.
         $string is a BibTeX string
      */
     function get_array_from_string($string){
         $bibtex_parser = new PARSEENTRIES();
-        for($i=0;$i<count($string);$i++){
-            $string[$i] = $string[$i];
-        }
         $bibtex_parser->loadBibtexString($string);
         $bibtex_parser->expandMacro = TRUE;
         $bibtex_parser->extractEntries();
         $res = $bibtex_parser->returnArrays();
         $entries = $res[2];
-        for($i=0;$i<count($entries);$i++){
-            foreach($entries[$i] as $key => $value){
-                $entries[$i][$key] = $entries[$i][$key];
-            }
-        }
+        $this->bibtex_import_post_traitment($entries);
         return $entries;
     }
         
@@ -74,6 +98,7 @@ class BibTeX_Tools
         $bibtex_parser->expandMacro = TRUE;
         $bibtex_parser->closeBib();
         $res = $bibtex_parser->returnArrays();
+        $this->bibtex_import_post_traitment($entries);
         return $res[2];
     }
     
@@ -385,6 +410,44 @@ class BibTeX_Tools
         }
         $export .= "</bibliography>";
         return $export;
+    }
+    
+    function bibtex_import_post_traitment(&$entries){
+        for($i=0;$i<count($entries);$i++){
+            if(isset($entries[$i]['pdf'])){
+                if(strpos($entries[$i]['pdf'],"http://") !== FALSE ||
+                   strpos($entries[$i]['pdf'],"https://") !== FALSE ||
+                   strpos($entries[$i]['pdf'],"ftp://") !== FALSE){
+                    $entries[$i]['ad_pdf'] = $entries[$i]['pdf'];
+                    unset($entries[$i]['pdf']);
+                }
+            }
+            if(isset($entries[$i]['url'])){
+                if(strpos($entries[$i]['url'],"http://") !== FALSE ||
+                   strpos($entries[$i]['url'],"https://") !== FALSE ||
+                   strpos($entries[$i]['url'],"ftp://") !== FALSE){
+                    $entries[$i]['ad_url'] = $entries[$i]['url'];
+                    unset($entries[$i]['url']);
+                }
+            }
+            if(isset($entries[$i]['urlzip'])){
+                if(strpos($entries[$i]['urlzip'],"http://") !== FALSE ||
+                   strpos($entries[$i]['urlzip'],"https://") !== FALSE ||
+                   strpos($entries[$i]['urlzip'],"ftp://") !== FALSE){
+                    $entries[$i]['ad_urlzip'] = $entries[$i]['urlzip'];
+                    unset($entries[$i]['urlzip']);
+                }
+            }
+            foreach($entries[$i] as $key => $value){
+                $entries[$i][$key] = str_replace(array_keys($this->latex_conversion_table),
+                            array_values($this->latex_conversion_table),
+                            $value);
+            }
+        }
+        
+        // replace LaTeX accents
+        
+                    
     }
 }
 ?>

@@ -364,9 +364,6 @@ XSLT_END;
                     $res['message'] .= "<br/>";
                 }
             }
-            else if(array_key_exists('ad_url',$dataArray)){
-                $dataArray['url'] = $dataArray['ad_url'];
-            }
             
             if(array_key_exists('up_urlzip',$_FILES) && file_exists($_FILES['up_urlzip']['tmp_name'])){
                 $fileInfo = pathinfo($_FILES['up_urlzip']['name']);
@@ -378,9 +375,6 @@ XSLT_END;
                     $res['message'] .= "<br/>";
                 }
             }
-            else if(array_key_exists('ad_urlzip',$dataArray)){
-                $dataArray['urlzip'] = $dataArray['ad_urlzip'];
-            }
             
             if(array_key_exists('up_pdf',$_FILES) && file_exists($_FILES['up_pdf']['tmp_name'])){
                 $fileInfo = pathinfo($_FILES['up_pdf']['name']);
@@ -391,9 +385,6 @@ XSLT_END;
                     $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_pdf']['name']);
                     $res['message'] .= "<br/>";
                 }
-            }
-            else if(array_key_exists('ad_url',$dataArray)){
-                $dataArray['pdf'] = $dataArray['ad_pdf'];
             }
 	    
             // add the new entry
@@ -542,7 +533,6 @@ XSLT_END;
         Update an entry.
     */
     function update_entry($dataArray){
-
         $res = array('updated'=>false,
                      'message'=>"");
         
@@ -562,9 +552,6 @@ XSLT_END;
                     $res['message'] .= "<br/>";
                 }
             }
-            else if(array_key_exists('ad_url',$dataArray)){
-                $dataArray['url'] = $dataArray['ad_url'];
-            }
             
             if(array_key_exists('up_urlzip',$_FILES) && file_exists($_FILES['up_urlzip']['tmp_name'])){
                 $fileInfo = pathinfo($_FILES['up_urlzip']['name']);
@@ -576,9 +563,6 @@ XSLT_END;
                     $res['message'] .= "<br/>";
                 }
             }
-            else if(array_key_exists('ad_urlzip',$dataArray)){
-                $dataArray['urlzip'] = $dataArray['ad_urlzip'];
-            }
             
             if(array_key_exists('up_pdf',$_FILES) && file_exists($_FILES['up_pdf']['tmp_name'])){
                 $fileInfo = pathinfo($_FILES['up_pdf']['name']);
@@ -589,10 +573,6 @@ XSLT_END;
                     $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_pdf']['name']);
                     $res['message'] .= "<br/>";
                 }
-                
-            }
-            else if(array_key_exists('ad_url',$dataArray)){
-                $dataArray['pdf'] = $dataArray['ad_pdf'];
             }
             
             $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
@@ -607,7 +587,7 @@ XSLT_END;
             $bibtex_val['lastDateModified'] = date("Y-m-d");
             $data = $bt->entries_array_to_xml(array($bibtex_val));
             $xml = $data[2];
-
+            
             $xsl = load_file("./xsl/update_xml.xsl");
             $param = array('bibname' => $this->xml_file(),
                            'biborb_xml_version' => BIBORB_XML_VERSION);

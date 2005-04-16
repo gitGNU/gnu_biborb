@@ -169,17 +169,17 @@
                             <tr>
                                 <td>
                                     <xsl:if test="$field = 'urlzip' and $val ">
-                                        <a href="{$val}">
+                                        <a href="./bibs/{$bibname}/papers/{$val}">
                                             <img src="./data/images/tar.png" alt="ps.gz"/>
                                         </a>
                                     </xsl:if>
                                     <xsl:if test="$field = 'pdf' and $val">
-                                        <a href="{$val}">
+                                        <a href="./bibs/{$bibname}/papers/{$val}">
                                             <img src="./data/images/pdf-document.png" aldt="pdf"/>
                                         </a>
                                     </xsl:if>
                                     <xsl:if test="$field = 'url' and $val">
-                                        <a href="{$val}">
+                                        <a href="./bibs/{$bibname}/papers/{$val}">
                                             <img src="./data/images/stock-book-16.png" aldt="url"/>
                                         </a>
                                     </xsl:if>
@@ -188,15 +188,11 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><xsl:processing-instruction name="php">echo msg("Change (upload):");</xsl:processing-instruction> <input name="up_{name()}" type='file' />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><xsl:processing-instruction name="php">echo msg("Change (address):");</xsl:processing-instruction> <input name="ad_{name()}" />
+                                <td><input name="up_{name()}" type='file' />
                                 </td>
                             </tr>
                         </table>
-                        <input type='hidden' name="{name()}" value="$val"/>
+                        <input type="hidden" name="{name()}" value="{$val}"/>
                     </xsl:when>
                     <!-- groups -->
                     <xsl:when test="$field = 'groups'">

@@ -123,16 +123,7 @@
                         <textarea name="{name(.)}" rows="5" cols="80"><xsl:text> </xsl:text></textarea><br/>
                     </xsl:when>
                     <xsl:when test="name() = 'url' or name() = 'urlzip' or name() = 'pdf'">
-                        <table style='font-size:x-small;font-weight:normal;color:black;width:80%'>
-                            <tr>
-                                <td><xsl:processing-instruction name="php">echo msg("Choose a file:");</xsl:processing-instruction> <input name="up_{name()}" type='file' />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><xsl:processing-instruction name="php">echo msg("Enter an url:");</xsl:processing-instruction> <input name="ad_{name()}" />
-                                </td>
-                            </tr>
-                        </table>
+                        <input name="up_{name()}" type='file' />
                     </xsl:when>
                     <xsl:when test="name() = 'groups'">
                         <input name="{name(.)}"/><br/>

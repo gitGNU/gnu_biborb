@@ -110,6 +110,9 @@
     <xsl:variable name="pdf-image">pdf-document.png</xsl:variable>
     <xsl:variable name="ps-image">stock_book-16.png</xsl:variable>
     <xsl:variable name="ps.gz-image">tar.png</xsl:variable>
+    <xsl:variable name="pdf-image-link">pdf-document-link.png</xsl:variable>
+    <xsl:variable name="ps-image-link">stock_book-16-link.png</xsl:variable>
+    <xsl:variable name="ps.gz-image-link">tar-link.png</xsl:variable>
     <xsl:variable name="url-image">link-url-16.png</xsl:variable>
     <xsl:variable name="bibtex-image">stock_convert-16.png</xsl:variable>
     <xsl:variable name="abstract-image">stock_about-16.png</xsl:variable>

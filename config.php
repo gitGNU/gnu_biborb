@@ -126,6 +126,9 @@ $bibtex_entries = array(
     "url",
     "urlzip",
     "pdf",
+    "ad_url",
+    "ad_pdf",
+    "ad_urlzip",
     "groups",
     "website",
     "longnotes",
@@ -216,5 +219,5 @@ define("DMASK",0000);
 /**
  *  List of file types that can be uploaded
  */
-$valid_upload_extensions = array('ps','pdf','gz','bz2','zip');
+$valid_upload_extensions = array('ps','pdf','gz','bz2','zip','html');
 ?>
