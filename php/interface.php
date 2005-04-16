@@ -1272,6 +1272,7 @@ function bibindex_basket_modify_group(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
 
+    // reset groups
     $main_content = "<form id='reset_groups' action='bibindex.php' method='get'>";
     $main_content .= "<fieldset>";
 	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
@@ -1283,6 +1284,8 @@ function bibindex_basket_modify_group(){
 	$main_content .= msg("Add all entries in the basket to a group:");
     $main_content .= "<br/>";
     $main_content .= "<br/>";
+    
+    //  create a new group
 	$main_content .= "<form id='add_new_group' action='bibindex.php' method='get' onsubmit='return validate_add_group(\"".$_SESSION['language']."\")'>";
 	$main_content .= "<fieldset>";
 	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
@@ -1564,7 +1567,6 @@ function bibindex_export_basket(){
  * bibindex_export_basket_to_bibtex
  */
 function bibindex_export_basket_to_bibtex(){
-    echo "ere";
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->name());
     $title = msg("BIBINDEX_EXPORT_TO_BIBTEX_TITLE");

@@ -33,7 +33,7 @@
  * 
  */
  
-/*
+/**
     Use to change the base name of a file, keeping its extension
     returns the new file name
  */
@@ -48,7 +48,7 @@ function get_new_name($filename,$newbasename) {
     return $newfilename;
 }
 
-/*
+/**
     Close an HTML page.
  */
 function html_close() {
@@ -131,11 +131,6 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
     $result .= "</select>";
     return $result;
 }
-
-
-
-
-
 
 
 /**

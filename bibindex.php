@@ -347,7 +347,10 @@ if(isset($_GET['action'])){
             $xsltp->free();		
             break;
 	
-        case 'add':					// Add entries in the basket to a given group
+        /*
+            Add entries in the basket to a given group
+         */
+        case 'add':
             if(isset($_GET['groupvalue'])){
                 $gval = htmlentities(trim($_GET['groupvalue']));
             }
