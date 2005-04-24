@@ -1153,3 +1153,9 @@ msgstr ""
 
 msgid "BIBINDEX_EXPORT_BASKET"
 msgstr "Export Basket"
+
+msgid "BIBINDEX_MENU_ADMIN_PREF"
+msgstr ""
+
+msgid "BIBINDEX_MENU_ADMIN_PREF_HELP"
+msgstr ""
