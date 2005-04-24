@@ -438,16 +438,12 @@ class BibTeX_Tools
                     unset($entries[$i]['urlzip']);
                 }
             }
-            foreach($entries[$i] as $key => $value){
-                $entries[$i][$key] = str_replace(array_keys($this->latex_conversion_table),
-                            array_values($this->latex_conversion_table),
-                            $value);
-            }
+    //         foreach($entries[$i] as $key => $value){
+//                 $entries[$i][$key] = str_replace(array_keys($this->latex_conversion_table),
+//                             array_values($this->latex_conversion_table),
+//                             $value);
+            //}
         }
-        
-        // replace LaTeX accents
-        
-                    
     }
 }
 ?>

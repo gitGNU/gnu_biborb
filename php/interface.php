@@ -501,7 +501,7 @@ function bibindex_menu($bibname)
     }
     if(array_key_exists('user',$_SESSION)){
         $html .= "<li>";
-        $html .= "<a href='index.php?mode=preferences'>Preferences</a>";
+        $html .= "<a href='index.php?mode=preferences' title='".msg("BIBINDEX_MENU_ADMIN_PREF_HELP")."'>".msg("BIBINDEX_MENU_ADMIN_PREF")."</a>";
         $html .= "</li>";
     }
     if(array_key_exists('user',$_SESSION) && !DISABLE_AUTHENTICATION){

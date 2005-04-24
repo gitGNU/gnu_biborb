@@ -450,10 +450,12 @@ XSLT_END;
                        'biborb_xml_version' => BIBORB_XML_VERSION);
         
         // entries to add
-        $entries_to_add = $bt->get_array_from_string($bibtex); 
+        $entries_to_add = $bt->get_array_from_string($bibtex);
+        
         // bibtex key present in database
         $dbids = $this->all_bibtex_ids();
-
+        $xml_to_add = "";
+        
         // iterate and add ref which id is not present in the database
         foreach($entries_to_add as $entry){
             if(array_search($entry['id'],$dbids) === FALSE){
@@ -464,17 +466,23 @@ XSLT_END;
                 }
                 $entry['dateAdded'] = date("Y-m-d");
                 $entry['lastDateModified'] = date("Y-m-d");
-                $data = $bt->entries_array_to_xml(array($entry));
-                $result = $xsltp->transform($data[2],$xsl,$param);
-                $fp = fopen($this->xml_file(),"w"); 
-                fwrite($fp,$result);
-                fclose($fp);
+                $xml_to_add .= $bt->entry_array_to_xml($entry);
                 $res['added'][] = $entry['id'];
             }
             else{
                 $res['notadded'][] = $entry['id'];
             }
         }
+        
+
+        $xml_content = "<?xml version='1.0' encoding='ISO-8859-1'?>";
+        $xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' version='".BIBORB_XML_VERSION."' >";
+        $xml_content .= $xml_to_add;
+        $xml_content .= "</bibtex:file>";
+        $result = $xsltp->transform($xml_content,$xsl,$param);
+        $fp = fopen($this->xml_file(),"w"); 
+        fwrite($fp,$result);
+        fclose($fp);
         $xsltp->free();
         
         
