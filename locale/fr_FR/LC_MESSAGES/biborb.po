@@ -604,6 +604,13 @@ msgid "BIBINDEX_IMPORT_HELP"
 msgstr "Sélectionnez un fichier BibTeX ou copiez les références dans la zone de texte. "
 "Les références seront ajoutées à la bibliographie."
 
+
+msgid "BIBINDEX_IMPORT_FILE_DESC"
+msgstr "Fichier : "
+
+msgid "BIBINDEX_IMPORT_TXT_DESC"
+msgstr "Copier ou éditer des données BibTeX dans la zone de texte."
+
 #: interface.php:1241
 msgid "File"
 msgstr "Fichier"
@@ -1108,3 +1115,9 @@ msgstr "Sélection d'un format pour l'export :"
 
 msgid "BIBINDEX_EXPORT_BASKET"
 msgstr "Export Basket"
+
+msgid "BIBINDEX_MENU_ADMIN_PREF"
+msgstr "Préférences"
+
+msgid "BIBINDEX_MENU_ADMIN_PREF_HELP"
+msgstr "Editer vos préférences."

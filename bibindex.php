@@ -589,15 +589,14 @@ if(isset($_POST['action'])){
                 // get bibtex data from $_POST or $_FILES
                 if(array_key_exists('bibval',$_POST)){
                     $bibtex_data = explode("\n",$_POST['bibval']);
-                    
                 }
                 else{
                     $bibtex_data= file($_FILES['bibfile']['tmp_name']);
                 }
-                // add the new entry	
+                // add the new entry
                 $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
-
-                if(count($res['added']) > 0){
+                
+                if(count($res['added']) > 0 && count($res['added']) <= 20){
                     $entries = $_SESSION['bibdb']->entries_with_ids($res['added']);
                     $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                     $param = $GLOBALS['xslparam'];
@@ -613,6 +612,10 @@ if(isset($_POST['action'])){
                     }
                     $message .= $formated;
                 }
+                else{
+                    $message .= sprintf(msg("%d entries were added to the database."),count($res['added']));
+                }
+                
                 
                 if(count($res['notadded']) != 0){
                     $error = msg("Some entries were not imported. Their BibTeX keys were already present in the bibliography. ");
