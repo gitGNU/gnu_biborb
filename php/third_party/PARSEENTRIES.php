@@ -148,10 +148,14 @@ class PARSEENTRIES
 // Extract value part of @string field enclosed by double-quotes.
 	function extractStringValue($string)
 	{
-		$split = explode("\"", strrev($string), 2);
-                $output = substr(strrev($split[1]), 1);
-                return substr($output, 1);
+        $oldvalue = $this->expandMacro;
+        $this->expandMacro = false;
+        $string = trim(substr($string,0,strlen($string)-1));
+        $string = $this->removeDelimiters($string);
+        $this->expandMacro = $oldvalue;
+        return $string;
 	}
+    
 // Extract a field
 	function fieldSplit($seg)
 	{
@@ -160,6 +164,7 @@ class PARSEENTRIES
 			return array($array[0], FALSE);
 		return array($array[0], $array[1]);
 	}
+    
 // Extract and format fields
 	function reduceFields($oldString)
 	{
@@ -273,7 +278,7 @@ class PARSEENTRIES
 		{
 // macro are case insensitive
 			foreach($this->strings as $key => $value)
-                		$string = eregi_replace($key,$value,$string);
+                $string = eregi_replace($key,$value,$string);
 // 22/08/2004 Mark Grimshaw - make sure a '#' surrounded by any number of spaces is replaced by just one space.
                 	$string = preg_replace("/\s*#\s*/", " ", $string);
 //            		$string = str_replace('#',' ',$string);
@@ -341,7 +346,8 @@ class PARSEENTRIES
 			for($i=0;$i<count($this->entries);$i++)
 			{
 		            	foreach($this->entries[$i] as $key => $value)
-		                	$this->entries[$i][$key] = trim($this->removeDelimiters($this->entries[$i][$key])); 
+                            if($key != 'id')
+                                $this->entries[$i][$key] = trim($this->removeDelimiters($this->entries[$i][$key])); 
 		        }
 		}
 		if(empty($this->preamble))
