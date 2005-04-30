@@ -45,6 +45,9 @@ standards. Consequently, you should ensure that:
 <div class="topic" id="help_xslt">
     <h3>PHP XSLT</h3>
     <div class="topic_content">
+      <p>Use the script "<a href="#check">check your installation</a>" to detect if XSLT is activated.</p>
+
+      
     <p>It appears that XSLT support is not always enabled in some PHP distributions. You will have to check that PHP is compiled with the option <code>--with-sablot</code> or <code>--with-xslt-sablot</code>. <a href='http://www.php.net/xslt'>http://www.php.net/xslt</a> is a good starting point to get information on the install process.</p>
     <p>Once XSLT support is enabled, you'll have to activate XSLT module in the configuration of PHP (<code class='file'>php.ini</code>):</p>
         <ul>
@@ -57,6 +60,7 @@ standards. Consequently, you should ensure that:
 <div class="topic" id="help_pear">
     <h3>PHP Pear</h3>
     <div class="topic_content">
+      <p>Use the script "<a href="#check">check your installation</a>" to detect if PEAR is activated.</p>
     <p>PHP Pear package may be available on your OS distribution. Otherwise
 <a href='http://pear.php.net'>http://pear.php.net</a> provides instructions to install it on your system.</p>
     </div>
@@ -70,8 +74,14 @@ standards. Consequently, you should ensure that:
         <li>Rename your old BibORB directory
         <pre>mv biborb biborb.old</pre></li>
         <li>Untar the archive: <code>tar -xvzf biborb-x.tar.gz</code></li>
-        <li>Copy or move the <code class='file'>biborb.old/bibs</code> directory to the new biborb directory.</li>
-        <li>If you were using files authentication, copy <code class='file'>bib_access.txt</code> and <code class='file'>bib_users.txt</code> (located in the directory <code class='file'>php/auth_backends</code>) to <code class='file'>data/auth_files</code>.
+        <li>Copy the <code class='file'>biborb.old/bibs</code> directory to the new biborb directory.</li>
+        <li>If you were using files authentication,
+        copy <code class='file'>bib_access.txt</code>
+        and <code class='file'>bib_users.txt</code> (located in the
+        directory <code class='file'>php/auth_backends</code>)
+        to <code class='file'>data/auth_files</code>. Ensure that
+        the <code class='file'>data/auth_files</code> is writtable by
+        the webserver.</li>
     </ol>
     </div>
 </div>

@@ -66,10 +66,10 @@ $NO_REPORT = "<span class='error'>NO</span>";
 <h2>Information</h2>
 <table class="report">
     <tbody>
-        <tr>
+<!--        <tr>
             <th>BibORB directory</th>
             <td><?php echo realpath("."); ?></td>
-        </tr>
+        </tr>-->
         <tr>
             <th>PHP version</th>
             <td><?php echo phpversion() ?></td>
