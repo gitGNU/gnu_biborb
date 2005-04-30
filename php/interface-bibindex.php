@@ -1522,13 +1522,15 @@ function bibindex_display_tools(){
     echo $html;
 }
 
-/*
+/**
+ * Browse the bibliography using filters
  */
 function bibindex_browse(){
     $html = bibheader();
     $html .= bibindex_menu($_SESSION['bibdb']->fullname());
     $title = msg("BIBINDEX_BROWSE_TITLE");
-    
+
+    // filter history
     $content = "<div class='browse_history'>";
     $content .= "&gt;&gt;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=0'>Start</a>";
     if(array_key_exists('browse_history',$_SESSION)){
@@ -1538,6 +1540,8 @@ function bibindex_browse(){
         }
     }
     $content .= "</div>";
+
+    // filters available
     $content .= "<div class='browse'>";
     $content .= "<ul>";
     $content .= "<li><a href='#years'>".msg("Years")."</a></li>";
@@ -1551,16 +1555,55 @@ function bibindex_browse(){
     $content .= "<div class='browse_items'>";
     
     // years
+    // years are listed by decades
     $content .= "<ul id='years'>".msg("Existing years:");
-    foreach($_SESSION['misc']['years'] as $year){
-        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=year&value=$year'>$year</a></li>";
+    for($i=0;$i<count($_SESSION['misc']['years']);$i++){
+        $year = $_SESSION['misc']['years'][$i];
+        if(!isset($oldyear)){
+            $oldyear = $year;
+            $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=year&value=$year'>$year</a>";
+        }
+        else{
+            if( floor($oldyear/10) != floor($year/10)){
+                $content .= "</li><li>";
+            }
+            else{
+                $content .= ", ";
+            }
+            $content .= "<a href='bibindex.php?mode=browse&action=add_browse_item&type=year&value=$year'>$year</a>";
+        }
+        $oldyear = $year;
+        if($i==count($_SESSION['misc']['years'])-1){
+            $content .= "</li>";
+        }
+        
     }
     $content .= "</ul>";
     
-    // authors
+    // authors are listed by alphabetic order
+    // one list item by letter of the alphabet
     $content .= "<ul id='authors'>".msg("Existing authors:");
-    foreach($_SESSION['misc']['authors'] as $author){
-        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=author&value=$author'>$author</a></li>";
+        
+    for($i=0;$i<count($_SESSION['misc']['authors']);$i++){
+        $author = remove_accents($_SESSION['misc']['authors'][$i]);
+        if(!isset($oldauthor)){
+            $oldauthor = $author;
+            $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=author&value=$author'>$author</a>";
+        }
+        else{
+            if($author[0] != $oldauthor[0]){
+                $content .= "</li><li>";
+            }
+            else{
+                $content .= ", ";
+            }
+            $content .= "<a href='bibindex.php?mode=browse&action=add_browse_item&type=author&value=$author'>$author</a>";
+            $oldauthor = $author;
+        }
+
+        if($i == count($_SESSION['misc']['authors'])-1){
+            $content .= "</li>";
+        }
     }
     $content .= "</ul>";
     

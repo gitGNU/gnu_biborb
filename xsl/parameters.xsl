@@ -138,5 +138,8 @@
     
     <!-- XML version -->
     <xsl:param name="biborb_xml_version"/>
-    
+
+
+    <xsl:variable name="lcletters">abcdefghijklmnopqrstuvwxyzYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy</xsl:variable>
+    <xsl:variable name="ucletters">ABCDEFGHIJKLMNOPQRSTUVWXYZ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ‗אבגדהוזחטיךכלםמןנסעףפץצרשתûü‎ÿ</xsl:variable>    
 </xsl:stylesheet>

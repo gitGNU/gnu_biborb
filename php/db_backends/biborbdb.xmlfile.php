@@ -977,8 +977,8 @@ XSLT_END;
     }
     
     /**
-        Get all different values for a specific field in the database
-    */
+     * Get all different values for a specific field in the database
+     */
     function get_values_for($field){
         if($field == 'author'){
             $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
@@ -1010,8 +1010,9 @@ XSLT_END;
                            'field' => $field);
             $res = $xsltp->transform($xml_content,$xsl_content,$param);
             $xsltp->free();
-            $tab = remove_null_values(explode('|',$res));
-            sort($tab);
+            $tab = array_values(remove_null_values(explode('|',$res)));
+            natcasesort($tab);
+            
             return $tab;
         }
     }
@@ -1023,7 +1024,7 @@ XSLT_END;
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         $xml_content = $this->entries_with_ids($ids);
         if($field == 'author'){
-            $xpath_query = "contains(.//bibtex:$field,'$value')";
+            $xpath_query = "contains(translate(.//bibtex:$field,\$ucletters,\$lcletters),translate('$value',\$ucletters,\$lcletters))";
         }
         else{
             $xpath_query = ".//bibtex:$field='$value'";
