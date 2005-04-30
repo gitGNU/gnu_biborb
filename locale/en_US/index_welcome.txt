@@ -1,15 +1,20 @@
 <acronym class='biborb'>BibORB</acronym> is a tool to manage and consult BibTeX bibliographies using a web browser.
 
-<p> The main aims in its design were to allow sharing of bibliographies on a local network and accessing easily electronic releases of  papers. It grew from this to permit: creation and deletion of bibliographies, then the facilities to edit BibTeX entries were added thus creating a simple web front-end to BibTeX.
+<p> The main aims in its design were to allow the sharing of
+bibliographies on a network (intranet, internt) and provide a
+repository for documents associated to recorded references (ps, pdf
+document). It grew from this to permit: creation and
+deletion of bibliographies, then the facilities to edit entries
+were added thus creating a simple web front-end for bibliographies management.
+
 </p>
 
-<span class='biborb'>BibORB</span> presently supports: 
+Overview of <span class='biborb'>BibORB</span> features: 
 <ul>
-    <li> Extensive functions via the web based interface including:
-    <ul>
+
         <li> Import <acronym>BibTeX</acronym> bibliographies.</li>
         <li> Add / Delete bibliographies.</li>
-        <li> Export bibliographies in <acronym>BibTeX</acronym> format.</li>
+        <li> Export bibliographies in <acronym>BibTeX</acronym>,<acronym>RIS</acronym>,<acronym>DocBook</acronym> format.</li>
         <li> Browse different bibliographies.</li>
         <li> Add / Delete / Modify references.</li>
         <li> Uploader electronic releases of papers (.ps, .ps. gz, .pdf).</li>
@@ -17,16 +22,10 @@
         <li> Search in a bibliography (simple, detailed, XPath).</li>
         <li> Classify references by groups.</li>
         <li> Select references (shopping basket function).</li>
-        <li> Export basket to <acronym>BibTeX</acronym>,<acronym>HTML</acronym> </li>
-        <li> Generate the <acronym>BibTeX</acronym> file associated to the <acronym>LaTeX</acronym> <code>.aux</code> file. </li>
-    </ul>
-    </li>
-
-    <li> You can also use your favorite text editor to edit the bib file and then click on "Update from BiBTeX" to update the database. This bibliography can then be browsed etc. as above.
-    </li>
+        <li> Generate the <acronym>BibTeX</acronym> file associated to
+        the <acronym>LaTeX</acronym> <code>.aux</code> file. </li>
 </ul>
 
-<p><acronym class='biborb'>BibORB</acronym> also provides basic authentication methods to restrict write access to bibliographies.</p>
 
 <hr/>
 <span style="font-family:serif"><acronym class='biborb'>BibORB</acronym> $biborb_version release,

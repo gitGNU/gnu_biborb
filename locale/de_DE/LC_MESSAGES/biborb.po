@@ -1076,6 +1076,9 @@ msgstr "Warne vor dem Löschen."
 msgid "Default sort attribute."
 msgstr "Sortieren nach"
 
+msgid "Display sort functions."
+msgstr ""
+
 msgid "Default sort order."
 msgstr "Anordnen nach"
 
@@ -1158,4 +1161,13 @@ msgid "BIBINDEX_MENU_ADMIN_PREF"
 msgstr ""
 
 msgid "BIBINDEX_MENU_ADMIN_PREF_HELP"
+msgstr ""
+
+msgid "Available BibTeX fields"
+msgstr ""
+
+msgid "TOOL_EXPORT_TITLE"
+msgstr ""
+
+msgid "TOOL_EXPORT_HELP"
 msgstr ""

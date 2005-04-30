@@ -69,8 +69,8 @@ class Auth
     }
     
     /**
-        Is the login/password valid?
-        Returns TRUE/FALSE
+     * Is the login/password valid?
+     * Returns TRUE/FALSE
      */
     function is_valid_user($user,$pass){
         $content = file($this->f_users);
@@ -79,19 +79,6 @@ class Auth
             if($line != '' && $line[0] != '#'){
                 if(preg_match("/(\S*)\s*:\s*(\S*),([01])$/",$line,$match)){
                     if($match[1] == $user){
-                        // select the good salt
-                        if(CRYPT_STD_DES){
-                            $salt = substr(0,2,$match[2]);
-                        }
-                        if(CRYPT_EXT_DES){
-                            $salt = substr(0,9,$match[2]);
-                        }
-                        if(CRYPT_MD5){
-                            $salt = substr(0,12,$match[2]);
-                        }
-                        if(CRYPT_BLOWFISH){
-                            $salt = substr(0,16,$match[2]);
-                        }
                         return crypt($pass,$match[2]) == $match[2];
                     }
                 }
@@ -99,10 +86,10 @@ class Auth
         }
         return FALSE;
     }
-    
+
     /**
-        Is the user an administrator?
-        Returns TRUE/FALSE
+     * Is the user an administrator?
+     * Returns TRUE/FALSE
      */
     function is_admin_user($user){
         $content = file($this->f_users);
@@ -120,8 +107,8 @@ class Auth
     }
     
     /**
-        Can the user delete entries?
-        Returns TRUE/FALSE
+     * Can the user delete entries?
+     * Returns TRUE/FALSE
      */
     function can_delete_entry($user, $database_name){
         $users = $this->registered_users_for_bibliography($database_name);
@@ -131,8 +118,8 @@ class Auth
     }
     
     /**
-        Can the user add entries?
-        Return TRUE/FALSE
+     * Can the user add entries?
+     * Return TRUE/FALSE
      */
     function can_add_entry($user, $database_name){
         $users = $this->registered_users_for_bibliography($database_name);
@@ -142,8 +129,8 @@ class Auth
     }
     
     /**
-        Can the user update entries?
-        Return TRUE/FALSE
+     * Can the user update entries?
+     * Return TRUE/FALSE
      */
     function can_modify_entry($user, $database_name){
         $users = $this->registered_users_for_bibliography($database_name);
@@ -152,6 +139,9 @@ class Auth
         }
     }
 
+    /**
+     * Get the list of users associated to a bibliography.
+     */
     function registered_users_for_bibliography($bibname){
         $content = file($this->f_access);
         $users = array();
@@ -183,7 +173,8 @@ class Auth
     }
     
     /**
-        Return an array containing preferences for a given user.
+     * Get the preferences of a user.
+     * @return An array of preferences for the user $user.
      */
     function get_preferences($user){
         $prefFile = "./data/auth_files/pref_".$user.".txt";
@@ -212,6 +203,9 @@ class Auth
                 if(preg_match("/warn_before_deleting:(.*)/",$line,$match)){
                     $pref['warn_before_deleting'] = $match[1];
                 }
+                if(preg_match("/display_sort:(.*)/",$line,$match)){
+                    $pref['display_sort'] = $match[1];
+                }
                 if(preg_match("/default_sort:(.*)/",$line,$match)){
                     $pref['default_sort'] = $match[1];
                 }
@@ -235,6 +229,7 @@ class Auth
             $pref['display_txt'] = "no";
             $pref['display_abstract'] = "no";
             $pref['warn_before_deleting'] = "yes";
+            $pref['display_sort'] = "yes";
             $pref['default_sort'] = "ID";
             $pref['default_sort_order'] = "ascending";
             $pref['max_ref_by_page'] = "10";
@@ -257,6 +252,7 @@ class Auth
         $prefTxt .= "display_txt:".(array_key_exists("display_txt",$pref) ? $pref['display_txt'] : "no")."\n";
         $prefTxt .= "display_abstract:".(array_key_exists("display_abstract",$pref) ? $pref['display_abstract'] : "no")."\n";
         $prefTxt .= "warn_before_deleting:".(array_key_exists("warn_before_deleting",$pref) ? $pref['warn_before_deleting'] : "yes")."\n";
+        $prefTxt .= "display_sort:".(array_key_exists("display_sort",$pref) ? $pref['display_sort'] : "yes")."\n";
         $prefTxt .= "default_sort:".(array_key_exists("default_sort",$pref) ? $pref['default_sort'] : "ID")."\n";
         $prefTxt .= "default_sort_order:".(array_key_exists("default_sort_order",$pref) ? $pref['default_sort_order'] : "ascending")."\n";
         $prefTxt .= "max_ref_by_page:".(array_key_exists("max_ref_by_page",$pref) ? $pref['max_ref_by_page'] : "10")."\n";

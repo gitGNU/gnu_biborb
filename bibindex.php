@@ -72,7 +72,7 @@ require_once("php/functions.php"); // functions
 require_once("php/basket.php"); // basket functions
 require_once("php/biborbdb.php"); // database
 require_once("php/xslt_processor.php"); // xslt processing
-require_once("php/interface.php"); // generate interface
+require_once("php/interface-bibindex.php"); // generate interface
 require_once("php/auth.php");
 require_once("php/third_party/Tar.php");
 require_once("php/error.php");
@@ -192,10 +192,7 @@ else{
 $_SESSION['update_authorizations'] = FALSE;
 
 
-/**
- * Default paramaters for XSLT transformation
- */
-//
+// user preferences
 if(array_key_exists('user_pref',$_SESSION)){
     $max_ref = $_SESSION['user_pref']['max_ref_by_page'];
 }
@@ -210,10 +207,15 @@ if(array_key_exists('user_pref',$_SESSION)){
 else{
     $abst = array_key_exists('abstract',$_GET) ? $_GET['abstract'] : DISPLAY_ABSTRACT;
 }
+
 // sort
+$display_sort = DISPLAY_SORT;
 $sort = DEFAULT_SORT;
 $sort_order = DEFAULT_SORT_ORDER;
 
+// sort order
+if(array_key_exists('user_pref',$_SESSION)){$display_sort = $_SESSION['user_pref']['display_sort'];}
+// sort ID
 if(array_key_exists('sort',$_GET)){$sort = $_GET['sort'];}
 else if(array_key_exists('sort',$_POST)){$sort = $_POST['sort'];}
 else if(array_key_exists('user_pref',$_SESSION)){$sort = $_SESSION['user_pref']['default_sort'];}
@@ -364,11 +366,21 @@ if(isset($_GET['action'])){
                 $_SESSION['bibdb']->add_to_group($_SESSION['basket']->items,$gval);
             }
             break;
-	
-        case 'reset':				// Reset the groups fields of entries in the basket
+
+        /*
+         * Reset the group field of entries in the basket.
+         */
+        case 'reset':
+            // check we have the authorization to modify
+            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
+                trigger_error("You are not authorized to modify references!",ERROR);
+            }
             $_SESSION['bibdb']->reset_groups($_SESSION['basket']->items);
             break;
-	
+
+        /*
+         * Logout
+         */
         case 'logout':
             $_SESSION['user_can_add'] = FALSE;
             $_SESSION['user_can_delete'] = FALSE;
@@ -377,7 +389,10 @@ if(isset($_GET['action'])){
             unset($_SESSION['user']);
             unset($_SESSION['user_pref']);
             break;
-	
+
+        /*
+         * Change the BibTeX type of an entry
+         */ 
         case 'update_type':
             // check we have the authorization to modify
             if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
@@ -386,7 +401,10 @@ if(isset($_GET['action'])){
             $_SESSION['bibdb']->change_type(htmlentities($_GET['id']),htmlentities($_GET['bibtex_type']));
             $_GET['mode']='update';
             break;
-            
+
+        /*
+         * Change the BibTeX key of a reference
+         */
         case 'update_key': // update the BibTeX key of a reference
             // check we have the authorization to modify
             if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
@@ -435,7 +453,7 @@ if(isset($_GET['action'])){
                 $_GET['mode'] = "welcome";
             }
             else{
-                $html_entries = replace_localized_strings($xsltp->transform($xml_content,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$GLOBALS['xslparam']));
+                $html_entries = biborb_html_render($xml_content,$GLOBALS['xslparam']);
                 $message = msg("Delete the following entries?");
                 $message .= $html_entries;
                 $message .= "<form action='bibindex.php' method='get' style='margin:auto;'>";
@@ -515,9 +533,9 @@ if(isset($_GET['action'])){
 // analyse POST
 if(isset($_POST['action'])){
     switch($_POST['action']){
-        /**
-            Add an entry to the database
-        */
+        /*
+         * Add an entry to the database
+         */
         case 'add_entry': 
             // check we have the authorization to modify
             if(!array_key_exists('user_can_add',$_SESSION) || !$_SESSION['user_can_add']){
@@ -528,12 +546,10 @@ if(isset($_POST['action'])){
                 if($res['added']){
                     $message = msg("ENTRY_ADDED_SUCCESS")."<br/>";
                     $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
-                    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                     $param = $GLOBALS['xslparam'];
                     $param['bibindex_mode'] = "displaybasket";
                     $param['mode'] = "user";
-                    $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
-                    $xsltp->free();
+                    $message .= biborb_html_render($entry,$param);
                     $error = $res['message'];
                 }
                 else{
@@ -544,8 +560,10 @@ if(isset($_POST['action'])){
                 $_GET['mode'] = 'welcome';
             }
             break;
-    
-        // update an entry
+            
+        /*
+         * Update a reference
+         */
         case 'update_entry':
             if(isset($_POST['ok'])){
                 // check we have the authorization to modify
@@ -556,12 +574,10 @@ if(isset($_POST['action'])){
                 if($res['updated']){
                     $message = msg("The following entry was updated:")."<br/>";
                     $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
-                    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                     $param = $GLOBALS['xslparam'];
                     $param['bibindex_mode'] = "displaybasket";
                     $param['mode'] = "user";
-                    $message .= replace_localized_strings($xsltp->transform($entry,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
-                    $xsltp->free();
+                    $message .= biborb_html_render($entry,$param);
                     $error = $res['message'];
                 }
                 else{
@@ -598,12 +614,10 @@ if(isset($_POST['action'])){
                 
                 if(count($res['added']) > 0 && count($res['added']) <= 20){
                     $entries = $_SESSION['bibdb']->entries_with_ids($res['added']);
-                    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
                     $param = $GLOBALS['xslparam'];
                     $param['bibindex_mode'] = "displaybasket";
                     $param['mode'] = "admin";
-                    $formated = replace_localized_strings($xsltp->transform($entries,load_file("./xsl/biborb_output_sorted_by_id.xsl"),$param));
-                    $xsltp->free();
+                    $formated = biborb_html_render($entries,$param);
                     if(count($res['added']) == 1){
                         $message = msg("The following entry was added to the database:");
                     }
@@ -657,7 +671,7 @@ if(isset($_POST['action'])){
             }
             break;
 	
-        /**
+        /*
          * Export the basket to bibtex
          */
         case 'export':
@@ -669,16 +683,15 @@ if(isset($_POST['action'])){
                 $tab = $bt->xml_to_bibtex_array($entries);
                 header("Content-Type: text/plain");
                 echo $bt->array_to_bibtex_string($tab,$GLOBALS['fields_to_export']);
-                //echo $bt->array_to_RIS($tab);
                 exit();
             }
             else{
                 $_GET['mode'] = 'displaybasket';
             }
             break;
-        
-        /*
-            Select which export format for basket
+
+        /**
+         * Select which export format for basket
          */
         case 'export_basket':
             switch($_POST['export_format']){
@@ -699,7 +712,40 @@ if(isset($_POST['action'])){
                     break;
             }
             break;
-    
+
+            /**
+             * Export all references.
+             */
+        case 'export_all':
+            $bt = new BibTeX_Tools();   
+            $_GET['mode'] = "displaytools";
+            $entries = $bt->xml_to_bibtex_array($_SESSION['bibdb']->all_entries());
+            $filename = $_SESSION['bibdb']->name();
+            switch($_POST['export_format']){
+                case 'bibtex':
+                    $filename .= ".bib";
+                    $content = $bt->array_to_bibtex_string($entries,$GLOBALS['fields_to_export']);
+                    break;
+                case 'ris':
+                    $filename .= ".ris";
+                    $content = $bt->array_to_RIS($entries);
+                    break;
+                case 'docbook':
+                    $filename .= ".xml";
+                    $content = $bt->array_to_DocBook($entries);
+                    break;
+                default:
+                    trigger_error("Unknown export format.",ERROR);
+                    break;
+            }
+            header("Content-Type:text/plain");
+            header("Content-Disposition:attachment;filename=$filename");
+            echo $content;
+            break;
+
+        /*
+         * Get BibTeX references from .aux LaTeX file.
+         */ 
         case 'bibtex_from_aux':
             $bibtex_keys = bibtex_keys_from_aux($_FILES['aux_file']['tmp_name']);
             $xmldata = $_SESSION['bibdb']->entries_with_ids($bibtex_keys);
@@ -728,7 +774,7 @@ if(isset($_POST['action'])){
             $tar->create($_SESSION['bibdb']->name()) or trigger_error("Failed to create an archive of the Bibliography", FATAL);
             // Save as...
             header("Content-disposition: attachment; filename=".$tar_name);
-            header("Content_Type: application/octed-stream");
+            header("Content-Type: application/octed-stream");
             readfile($tar_name);
             die();
             
@@ -782,8 +828,15 @@ switch($mode) {
     case 'displaybasket': echo bibindex_display_basket(); break;
     
     // Display the page to modify groups of entries in the basket
-    case 'groupmodif': echo bibindex_basket_modify_group(); break;
-    
+    case 'groupmodif':
+        if($_SESSION['basket']->count_items() != 0){
+            echo bibindex_basket_modify_group();
+        }
+        else{
+            echo bibindex_display_basket();
+        }
+        break;
+        
     // Help on the Manager Menu
     case 'manager': echo bibindex_manager_help(); break;
     
@@ -819,7 +872,15 @@ switch($mode) {
     case 'exportbaskettobibtex': echo bibindex_export_basket_to_bibtex(); break;
         
     // Page to select which export
-    case 'exportbasket': echo bibindex_export_basket(); break;
+    case 'exportbasket':
+        // Display export selection form if some entries in the basket
+        if($_SESSION['basket']->count_items() != 0){
+            echo bibindex_export_basket();
+        }
+        else{
+            echo bibindex_display_basket();
+        }
+        break;
     
     // Export the basket to RIS format
     case 'exportbaskettoris':

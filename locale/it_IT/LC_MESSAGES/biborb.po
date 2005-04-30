@@ -1079,6 +1079,9 @@ msgstr "Mostra l&prime;abstract."
 msgid "Warn before deleting."
 msgstr "Avverti prima di cancellare."
 
+msgid "Display sort functions."
+msgstr ""
+
 msgid "Default sort attribute."
 msgstr "Attributo di default per l&prime;ordinamento."
 
@@ -1164,4 +1167,13 @@ msgid "BIBINDEX_MENU_ADMIN_PREF"
 msgstr ""
 
 msgid "BIBINDEX_MENU_ADMIN_PREF_HELP"
+msgstr ""
+
+msgid "Available BibTeX fields"
+msgstr ""
+
+msgid "TOOL_EXPORT_TITLE"
+msgstr ""
+
+msgid "TOOL_EXPORT_HELP"
 msgstr ""

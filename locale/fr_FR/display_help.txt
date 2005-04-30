@@ -35,15 +35,15 @@ Pour chaque référence affichée et selon votre configuration de <acronym class='b
 <table class='help'>
   <tbody>
     <tr class='colored'>
-       <th class='img'><img src="data/images/stock_book-16.png" alt="ps"/></th>
+       <th class='img'><img src="data/images/stock_book-16.png" alt="ps"/>&nbsp;<img src="data/images/stock_book-16-link.png" alt="ps"/></th>
        <td>Télécharger la version PS du papier.</td>
    </tr>
    <tr>
-       <th  class='img'><img src="data/images/tar.png" alt="ps.gz"/></th>
+       <th  class='img'><img src="data/images/tar.png" alt="ps.gz"/>&nbsp;<img src="data/images/tar-link.png" alt="ps.gz"/></th>
        <td>Télécharger la version PS compressée du papier.</td>
     </tr>
     <tr class='colored'>
-        <th class='img'><img src="data/images/pdf-document.png" alt="pdf"/></th>
+        <th class='img'><img src="data/images/pdf-document.png" alt="pdf"/>&nbsp;<img src="data/images/pdf-document-link.png" alt="pdf"/></th>
         <td>Télécharger la version PDF du papier.</td>
     </tr>
     <tr>

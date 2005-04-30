@@ -1038,6 +1038,9 @@ msgstr "Afficher les abstract."
 msgid "Warn before deleting."
 msgstr "Avertir avant suppression."
 
+msgid "Display sort functions."
+msgstr "Afficher les fonctions de tris."
+
 msgid "Default sort attribute."
 msgstr "Critère de tri."
 
@@ -1121,3 +1124,12 @@ msgstr "Préférences"
 
 msgid "BIBINDEX_MENU_ADMIN_PREF_HELP"
 msgstr "Editer vos préférences."
+
+msgid "Available BibTeX fields"
+msgstr "Champs BibTeX"
+
+msgid "TOOL_EXPORT_TITLE"
+msgstr "Exporter"
+
+msgid "TOOL_EXPORT_HELP"
+msgstr "Exporter toutes les références dans un format bibliographique (BibTeX, RIS, DocBook)."

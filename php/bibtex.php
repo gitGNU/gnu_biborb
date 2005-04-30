@@ -41,37 +41,6 @@ require_once("php/utilities.php");
 
 class BibTeX_Tools
 {
-    
-    var $latex_conversion_table = 
-        array("\'a" => "à",
-              "\`a" => "á",
-              "\^a" => "â",
-              "\~a" => "ã",
-              '\"a' => "ä",
-              "\aa" => "å",
-              "\ae" => "æ",
-              "\c{c}" => "ç",
-              "\'e" => "é",
-              "\^e" => "ê",
-              "\`e" => "è",
-              "\"e" => "ë",
-              "\'i" => "í",
-              "\`i" => "ì",
-              "\^i" => "î",
-              '\"i' => "ï",
-              "\~n" => "ñ",
-              "\'o" => "ó",
-              "\^o" => "ô",
-              "\`o" => "ò",
-              "\"o" => "ö",
-              "\~o" => "õ",
-              "\'u" => "ú",
-              "\`u" => "ù",
-              "\^u" => "û",
-              '\"u' => "ü",
-              "\'y" => "ý",
-              '\"y' => "ÿ");
-    
     /**
         Return an array of entries.
         $string is a BibTeX string
@@ -202,10 +171,10 @@ class BibTeX_Tools
     }
     
     /**
-        Convert an array to bibtex
-        @param $tab An array of references
-        @param $fields_to_export Array of fields to export
-        @return A bibtex formated string.
+     * Convert an array to bibtex
+     * @param $tab An array of references
+     * @param $fields_to_export Array of fields to export
+     * @return A bibtex formated string.
      */
     function array_to_bibtex_string($tab,$fields_to_export){
         $export = "";
@@ -224,7 +193,9 @@ class BibTeX_Tools
     }
     
     /**
-        Export an array of references to a RIS formated string
+     * Export an array of references to a RIS formated string.
+     * @param $tab An array of references.
+     * @return A RIS formated string.
      */
     function array_to_RIS($tab){
         $ris_type_translate = array('article'       => 'JOUR',
@@ -347,7 +318,9 @@ class BibTeX_Tools
     }
     
     /**
-        Export an array of references to DocBook
+     * Export an array of references to DocBook.
+     * @param $tab An array of entries.
+     * @return A DocBook string.
      */
     function array_to_DocBook($tab){
         $pc = new PARSECREATORS();
@@ -411,7 +384,11 @@ class BibTeX_Tools
         $export .= "</bibliography>";
         return $export;
     }
-    
+
+    /**
+     * Some transformations to perform after importing BibTeX entries.
+     * @param &$entries A reference to an array of imported entries.
+     */
     function bibtex_import_post_traitment(&$entries){
         for($i=0;$i<count($entries);$i++){
             if(isset($entries[$i]['pdf'])){
@@ -438,12 +415,29 @@ class BibTeX_Tools
                     unset($entries[$i]['urlzip']);
                 }
             }
-    //         foreach($entries[$i] as $key => $value){
-//                 $entries[$i][$key] = str_replace(array_keys($this->latex_conversion_table),
-//                             array_values($this->latex_conversion_table),
-//                             $value);
-            //}
         }
     }
 }
+
+/**
+ * Convert LaTeX code to HTML
+ * @param $latex A string with LaTeX macros
+ */
+function latex_macro_to_html($latex)
+{
+    $latex_conversion_table =
+        array("\'a" => "á", "\`a" => "à", "\^a" => "â", "\~a" => "ã", "\\\"a" => "ä", "\aa" => "å", "\ae" => "æ",
+              "\c{c}" => "ç",
+              "\'e" => "é", "\^e" => "ê", "\`e" => "è", "\\\"e" => "ë",
+              "\'i" => "í", "\`i" => "ì", "\^i" => "î", "\\\"i" => "ï",
+              "\~n" => "ñ",
+              "\'o" => "ó", "\^o" => "ô", "\`o" => "ò", "\\\"o" => "ö", "\~o" => "õ",
+              "\'u" => "ú", "\`u" => "ù", "\^u" => "û", "\\\"u" => "ü",
+              "\'y" => "ý", "\\\"y" => "ÿ");
+    return str_replace(array_keys($latex_conversion_table),
+                       array_values($latex_conversion_table),
+                       $latex);
+}
+
+
 ?>

@@ -72,15 +72,15 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 #content tr.colored {background-color:#ddd;}
 
 /**
- * Style for the table recording available databases
+ * Style for the table recording available databases (index.php)
  */
-#available_bibliographies {border-collapse:collapse;margin:auto;}
-#available_bibliographies th {border-bottom:3px solid black;margin:2px;}
+#available_bibliographies {border-collapse:collapse;margin:auto;border:solid 1px #aaa;}
+#available_bibliographies thead {border-bottom:3px solid #444;margin:2px;background-color:#ccc;}
 #available_bibliographies tr:hover {background-color:#ccc;}
-#available_bibliographies td {padding:0.5em;border-bottom:dashed 1px black;}
+#available_bibliographies td {padding:0.5em;border:dashed 1px #aaa;}
 #available_bibliographies a.download, a:visited.download {color:blue;text-decoration:none;text-align:center;display:block;}
 #available_bibliographies a.bibname, a:visited.bibname {text-decoration:none;color:navy;font-weight:bold;display:block;}
-#available_bibliographies .bib_description {font-style:italic;}
+#available_bibliographies .bib_description {font-style:italic;min-width:150px;display:block;}
 
 /**
  * Style for the form to choose a database

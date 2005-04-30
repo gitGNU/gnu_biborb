@@ -1166,3 +1166,12 @@ msgstr "Preferences"
 
 msgid "BIBINDEX_MENU_ADMIN_PREF_HELP"
 msgstr "Edit your preferences."
+
+msgid "Available BibTeX fields"
+msgstr ""
+
+msgid "TOOL_EXPORT_TITLE"
+msgstr "Export"
+
+msgid "TOOL_EXPORT_HELP"
+msgstr "Export the whole bibliography to a bibliographic format (BibTeX, RIS, DocBook)."

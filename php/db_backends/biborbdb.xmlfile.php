@@ -133,6 +133,17 @@ XSLT_END;
             fclose($fp);
         }
     }
+
+    function fullname()
+    {
+        if(file_exists($this->biblio_dir."/fullname.txt")){
+            return load_file($this->biblio_dir."/fullname.txt");
+        }
+        else{
+            return $this->biblio_name;
+        }
+    }
+    
     
     /**
         Set the sort method.
@@ -1030,8 +1041,10 @@ XSLT_END;
 
 
 /**
- Create a new bibliography.
-*/
+ * Create a new bibliography.
+ * @param $name The name of the bibliography.
+ * @param $description A short description of the bibliography.
+ */
 function create_database($name,$description){
     // array to store messages or errors
     $resArray = array('message' => null,
@@ -1039,16 +1052,16 @@ function create_database($name,$description){
     
     // get name of existing databases
     $databases_names = get_databases_names();
-    
+    $fullname = $name;
     // check it is not a pathname
     if(!ereg('^[^./][^/]*$', $name)){
         $resArray['error'] = msg("Invalid name for bibliography!");
     }
     else if($name != null){
         // Create the new bibliography if it doesn't exist.
-        if(!in_array($name,$databases_names)){
+        if(!in_array($name,array_values($databases_names))){
             $name = remove_accents($name);
-            $name = str_replace(' ','_',$name);
+            $name = str_replace(array(' ','\'','"','\\'),'_',$name);
             umask(DMASK);
             // create directory
             $res = mkdir("./bibs/$name");
@@ -1070,6 +1083,11 @@ function create_database($name,$description){
             $fp = fopen("./bibs/$name/description.txt","w");
             fwrite($fp,htmlentities($description));
             fclose($fp);
+
+            // full-name
+            $fp = fopen("./bibs/$name/fullname.txt","a+");
+            fwrite($fp,$fullname);
+            fclose($fp);
             
             // init xml file
             $xml = load_file("./bibs/$name/$name.xml");
@@ -1090,11 +1108,13 @@ function create_database($name,$description){
 }
 
 /**
-    Delete a bibliography
+ * Delete a bibliography
+ * @param $name The name of a bibliography.
  */
 function delete_database($name){
     //check if $name is a valid bibliography name
-    if(!in_array($name,get_databases_names())){
+    $dbnames = get_datbases_names();
+    if(!in_array($name,array_keys($dbnames))){
         trigger_error("Wrong database name: $name",ERROR);
     }
     // create .trash folder if it does not exit
@@ -1104,30 +1124,41 @@ function delete_database($name){
         mkdir("./bibs/.trash");
         umask($oldmask);
     }
+    $fullname = $dbnames[$name];
     // save the bibto .trash folder
-    rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or trigger_error("Error while moving $name to .trash folder",ERROR);
+    rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or trigger_error("Error while moving $fullname to .trash folder",ERROR);
     // result message
-    $res = sprintf(msg("Database %s moved to trash."),$name)."<br/>";
+    $res = sprintf(msg("Database %s moved to trash."),$fullname)."<br/>";
     $res .= sprintf(msg("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>");
     return $res;
 }
 
+
 /**
-    Get the name of recorded bibliographies.
+ * Get the name of recorded bibliographies.
+ * It returns an array which keys are the bibliography's file system name
+ * and values are the bibliography's real name.
+ * @return An array
  */
 function get_databases_names(){
     $dir = opendir("./bibs/");
     $databases_names = array();
     while($file = readdir($dir)){
-        if(is_dir("./bibs/".$file) && $file != '.' && $file != '..' && $file[0] != '.'){
-            array_push($databases_names,$file);
+        if(is_dir("./bibs/".$file) && $file != '.' && $file != '..' && $file[0] != '.') {
+            if(file_exists("./bibs/$file/fullname.txt")){
+                $name = load_file("./bibs/$file/fullname.txt");
+            }
+            else{
+                $name = $file;
+            }
+            $databases_names[$file] = $name;
         }
     }
     return $databases_names;
 }
 
 /**
-    Extract ids from the xml
+ * Extract ids from the xml
  */
 function extract_ids_from_xml($xmlstring) {
     preg_match_all("/id=['|\"](.*)['|\"]/U",$xmlstring,$matches);

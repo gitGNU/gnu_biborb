@@ -311,6 +311,7 @@ class Auth
                 $pref['display_txt'] = $row['display_txt'] == 'Y' ? "yes" : "no";
                 $pref['display_abstract'] = $row['display_abstract'] == 'Y' ? "yes" : "no";
                 $pref['warn_before_deleting'] = $row['warn_before_deleting'] == 'Y' ? "yes" : "no";
+                $pref['display_sort'] = $row['display_sort'] == 'Y' ? "yes" : "no";
                 $pref['default_sort'] = $row['default_sort'];
                 $pref['default_sort_order'] = $row['default_sort_order'];
                 $pref['max_ref_by_page'] =$row['max_ref_by_page'];
@@ -325,6 +326,7 @@ class Auth
                 $pref['display_txt'] = "no";
                 $pref['display_abstract'] = "no";
                 $pref['warn_before_deleting'] = "yes";
+                $pref['display_sort'] = "yes";
                 $pref['default_sort'] = "ID";
                 $pref['default_sort_order'] = "ascending";
                 $pref['max_ref_by_page'] = "10";
@@ -370,6 +372,7 @@ class Auth
             $query .= "display_txt='".(array_key_exists("display_txt",$pref) ? ($pref['display_txt'] == "yes" ? "Y" : "N") : "N")."',";
             $query .= "display_abstract='".(array_key_exists("display_abstract",$pref) ? ($pref['display_abstract'] == "yes" ? "Y" : "N") : "N")."',";
             $query .= "warn_before_deleting='".(array_key_exists("warn_before_deleting",$pref) ? ($pref['warn_before_deleting'] == "yes" ? "Y" : "N") : "Y")."',";
+            $query .= "display_sort='".(array_key_exists("display_sort",$pref) ? ($pref['display_sort'] == "yes" ? "Y" : "N") : "N")."',";
             $query .= "default_sort='".(array_key_exists("default_sort",$pref) ? addslashes($pref['default_sort']) : "ID")."',";
             $query .= "default_sort_order='".(array_key_exists("default_sort_order",$pref) ? addslashes($pref['default_sort_order']) : "ascending")."',";
             $query .= "max_ref_by_page='".(array_key_exists("max_ref_by_page",$pref) ? addslashes($pref['max_ref_by_page']) : "10")."',";

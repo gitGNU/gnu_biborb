@@ -31,7 +31,3 @@ Available actions (depending on the configuration):
 	</tbody>
 </table>
 
-<span style="color:red"><strong>Warning!</strong></span>
-<ul>
-    <li>BibORB will not detect errors nor duplicate BibTeX keys.</li>
-</ul>

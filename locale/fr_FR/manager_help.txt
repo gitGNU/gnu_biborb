@@ -32,8 +32,3 @@
 	</tbody>
 </table>
 <br/>
-<span style="color:red"><strong>Attention!</strong></span>
-<ul>
-    <li>Lors de l'importation, <acronym>BibORB</acronym> ne détecte pas les erreurs
-    <acronym>BibTeX</acronym> ni la présence de doublons.</li>
-</ul>

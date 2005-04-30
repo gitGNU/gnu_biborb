@@ -9,7 +9,7 @@ This menu gives access to the bibliography's entries.
       <td>Display all entries of the current bibliography.</td>
     </tr>
     <tr>
-       <th>Groups</th>
+       <th>By Group</th>
        <td>Display entries by groups.</td>
     </tr>
     <tr class='colored'>
@@ -33,16 +33,16 @@ Several actions may be available for each displayed entry:
 <table class='help'>
   <tbody>
     <tr class='colored'>
-       <th class='img'><img src="data/images/stock_book-16.png" alt="ps"/></th>
-       <td>Download a postscript release of the paper.</td>
+       <th class='img'><img src="data/images/stock_book-16.png" alt="ps"/>&nbsp;<img src="data/images/stock_book-16-link.png" alt="ps"/></th>
+       <td>Download a postscript release of the paper (local file or remote web address).</td>
    </tr>
    <tr>
-       <th  class='img'><img src="data/images/tar.png" alt="ps.gz"/></th>
-       <td>Download a compressed postscript release of the paper.</td>
+       <th  class='img'><img src="data/images/tar.png" alt="ps.gz"/>&nbsp;<img src="data/images/tar-link.png" alt="ps.gz"/></th>
+       <td>Download a compressed postscript release of the paper (local file or remote web address).</td>
     </tr>
     <tr class='colored'>
-        <th class='img'><img src="data/images/pdf-document.png" alt="pdf"/></th>
-        <td>Download a PDF release of the paper.</td>
+        <th class='img'><img src="data/images/pdf-document.png" alt="pdf"/>&nbsp;<img src="data/images/pdf-document-link.png" alt="pdf"/></th>
+        <td>Download a PDF release of the paper (local file or remote web address).</td>
     </tr>
     <tr>
         <th class='img'><img src="data/images/stock_about-16.png" alt="abstract"/></th>
