@@ -39,9 +39,6 @@
 	<!-- include generic parameters -->
 	<xsl:include href="xsl/parameters.xsl"/>
     
-    <!-- every parameter values to lower case -->
-    <xsl:variable name="lcletters">abcdefghijklmnopqrstuvwxyzYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy</xsl:variable>
-    <xsl:variable name="ucletters">ABCDEFGHIJKLMNOPQRSTUVWXYZ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ‗אבגדהוזחטיךכלםמןנסעףפץצרשתûü‎ÿ</xsl:variable>
     <xsl:param name="thesearch">
         <xsl:value-of select="translate($search,$ucletters,$lcletters)"/>
     </xsl:param>

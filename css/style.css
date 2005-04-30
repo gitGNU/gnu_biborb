@@ -135,8 +135,7 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 #search_tabs ul li.notselected a, #search_tabs ul li.notselected a:visited {text-decoration:none;border:1px solid gray;padding-left:1em;padding-right:1em;background-color:navy;font-weight:bold;color:white}
 #search_tabs ul li.selected {text-decoration:none;border:1px solid gray;padding-left:1em;padding-right:1em;background-color:navy;font-weight:bold;color:red}
 #search_tabs ul li a, #search_tabs ul li a:visited {text-decoration:none;color:black;}
-#search_tabs ul li a:hover {color:navy;text-decoration:underline;}
-
+#search_tabs ul li.notselected a:hover {color:red;}
 
 /**
  * Style for search container

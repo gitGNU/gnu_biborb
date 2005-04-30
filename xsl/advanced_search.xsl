@@ -58,8 +58,6 @@
 	<xsl:param name="search_longnotes"/>
     
     <!-- every parameter values to lower case -->
-    <xsl:variable name="lcletters">abcdefghijklmnopqrstuvwxyzYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy</xsl:variable>
-    <xsl:variable name="ucletters">ABCDEFGHIJKLMNOPQRSTUVWXYZ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ‗אבגדהוזחטיךכלםמןנסעףפץצרשתûü‎ÿ</xsl:variable>
   
     <xsl:template match="/bibtex:file">
         <xsl:element name="bibtex:file">
