@@ -219,5 +219,5 @@ define("DMASK",0000);
 /**
  *  List of file types that can be uploaded
  */
-$valid_upload_extensions = array('ps','pdf','gz','bz2','zip','html');
+$valid_upload_extensions = array('ps','pdf','gz','bz2','zip');
 ?>
