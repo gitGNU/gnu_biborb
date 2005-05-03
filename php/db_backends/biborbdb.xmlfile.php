@@ -38,7 +38,6 @@
  */
 
 require_once("php/xslt_processor.php"); //xslt processor
-require_once("php/third_party/PARSECREATORS.php"); // split Bibtex names
 require_once("php/bibtex.php"); //parse bibtex string
 
 // list of sort attributes
@@ -55,6 +54,9 @@ class BibORB_DataBase {
     
     // the biblio directory
     var $biblio_dir;
+
+    // list of BibTeX fields relevant for BibORB
+    var $biborb_fields;
     
     // the changelog file;
     var $changelog;
@@ -103,8 +105,7 @@ XSLT_END;
             
         $val = trim($xsltp->transform($xml_content,$xsl_content));
         $xsltp->free();
-        if($val != 1){
-                
+        if($val != "1.1"){            
             // * add the first author lastname in a separate field
             // to sort by author
             // * set date added and last modified to yesterday
@@ -121,8 +122,10 @@ XSLT_END;
                     $entries[$i]['lastName'] = $creatorArray[0][2];
                 }
                 // set dateAdded and lastDateModified attributes
-                $entries[$i]['dateAdded'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
-                $entries[$i]['lastDateModified'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
+                if(!array_key_exists('dateAdded',$entries[$i]))
+                    $entries[$i]['dateAdded'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
+                if(array_key_exists('lastDateModified',$entries[$i]))
+                    $entries[$i]['lastDateModified'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
             }
             // convert to XML
             $data = $bt->entries_array_to_xml($entries);
@@ -134,6 +137,11 @@ XSLT_END;
         }
     }
 
+    function set_BibORB_fields($tab)
+    {
+        $this->biborb_fields = $tab;
+    }
+    
     function fullname()
     {
         if(file_exists($this->biblio_dir."/fullname.txt")){
@@ -403,7 +411,7 @@ XSLT_END;
             $bt = new BibTeX_Tools();
             
             // extract real bibtex values from the array
-            $bibtex_val = extract_bibtex_data($dataArray);
+            $bibtex_val = $bt->extract_bibtex_data($dataArray,$this->biborb_fields);
             
             // get first lastname author
             if(array_key_exists('author',$bibtex_val)){
@@ -596,7 +604,7 @@ XSLT_END;
             
             $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $bt = new BibTeX_Tools();
-            $bibtex_val = extract_bibtex_data($dataArray);
+            $bibtex_val = $bt->extract_bibtex_data($dataArray,$this->biborb_fields);
             if(array_key_exists('author',$bibtex_val)){
                 $pc = new PARSECREATORS();
                 list($authors,$etal) = $pc->parse($bibtex_val['author']);
