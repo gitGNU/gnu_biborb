@@ -22,28 +22,34 @@
  */
 
 /**
-    File: bibtex.php
-    Author: Guillaume Gardey (ggardey@club-internet.fr)
-    Licence: GPL
-    
-    Description:
- 
-        This file defines the BibTeX_Tools class. It provides functions to
-    deal with bibtex data:
-            * parse a string/file (using PARSEENTRIES from bibliophile.sf.net)
-            * convert to xml
- 
+ * File: bibtex.php
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Licence: GPL
+ *
+ * Description:
+ *
+ *      This file defines the BibTeX_Tools class. It provides functions to
+ *   deal with bibtex data:
+ *          * parse a string/file (using PARSEENTRIES from bibliophile.sf.net)
+ *          * convert to xml
+ *          * convert to RIS
+ *          * convert to DocBook
  */
 
-require_once("php/third_party/PARSEENTRIES.php");
-require_once("php/third_party/PARSECREATORS.php");
+require_once("php/third_party/bibtexParse/PARSEENTRIES.php");
+require_once("php/third_party/bibtexParse/PARSECREATORS.php");
 require_once("php/utilities.php");
 
+/**
+ * A class to transform, parse BibTeX references.
+ *
+ * @author G. Gardey
+ */
 class BibTeX_Tools
 {
     /**
-        Return an array of entries.
-        $string is a BibTeX string
+     * Return an array of entries.
+     * $string is a BibTeX string
      */
     function get_array_from_string($string){
         $bibtex_parser = new PARSEENTRIES();
@@ -57,8 +63,8 @@ class BibTeX_Tools
     }
         
     /**
-        Return an array of entries
-        $filename is a BibTeX file
+     * Return an array of entries
+     * $filename is a BibTeX file
      */
     function get_array_from_file($filename){
         $bibtex_parser = new PARSEENTRIES();
@@ -72,7 +78,7 @@ class BibTeX_Tools
     }
     
     /**
-        Convert an array representation of an entry in XML.
+     * Convert an array representation of an entry in XML.
      */
     function entry_array_to_xml($tab){
         $xml = "<bibtex:entry id='".$tab['id']."'>";
@@ -100,8 +106,8 @@ class BibTeX_Tools
     }
     
     /**
-        Convert an array of entries to XML.
-        Return: array(number of entries, array of ids, xml string)
+     * Convert an array of entries to XML.
+     * Return: array(number of entries, array of ids, xml string)
      */
     function entries_array_to_xml($tab){
         $ids = array();
@@ -116,8 +122,8 @@ class BibTeX_Tools
     }
     
     /**
-        Convert a bibtex string to xml.
-        Return: array(number of entries, array of ids, xml string)
+     * Convert a bibtex string to xml.
+     * Return: array(number of entries, array of ids, xml string)
      */
     function bibtex_string_to_xml($string){
         $entries = $this->get_array_from_string($string);
@@ -125,8 +131,8 @@ class BibTeX_Tools
     }
     
     /**
-        Convert a bibtex file to xml.
-        Return: array(number of entries, array of ids, xml string)
+     * Convert a bibtex file to xml.
+     * Return: array(number of entries, array of ids, xml string)
      */
     function bibtex_file_to_xml($filename){
         $entries = $this->get_array_from_file($filename);
@@ -134,7 +140,7 @@ class BibTeX_Tools
     }
     
     /**
-        Convert a XML string to an array
+     * Convert a XML string to an array
      */
     function xml_to_bibtex_array($xmlstring){
         // result
@@ -416,6 +422,21 @@ class BibTeX_Tools
                 }
             }
         }
+    }
+
+    /**
+     * Extract some information from a reference.
+     * Remove from $tab all elements whose key is not in $extract.
+     */
+    function extract_bibtex_data($tab,$extract){
+        $result = array();
+        foreach($tab as $key => $value){
+            $val = trim($value);
+            if(in_array($key,$extract) && $val != ''){
+                $result[$key] = $val;
+            }
+        }
+        return $result;
     }
 }
 

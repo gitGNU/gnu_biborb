@@ -41,29 +41,18 @@ require_once("php/utilities.php");
 require_once("php/bibtex.php");
 
 
-/*
-    Extract bibtex fields from an array.
-    Valid bibtex fields are values contained in $GLOBALS['bibtex_entries']
- */
-function extract_bibtex_data($tab){
-    $result = array();
-    foreach($tab as $key => $value){
-        $val = trim($value);
-        if(in_array($key,$GLOBALS['bibtex_entries']) && $val != ''){
-            $result[$key] = $val;
-        }
-    }
-    return $result;   
-}
-
 /**
  * Upload a file.	
  * If successful, return the name of the file, otherwise null.
  * Overwrite if the file is already present.
  *
- * bibname -> name of the bibliography
- * type -> type of file to upload (url,urlzip,pdf)
- * id -> id of the paper
+ * @param $bibname The name of the bibliography
+ * @param $type The ID of the file uploaded.
+ * @param $id The BibTeX id of the paper.
+ *
+ * @return The name of the file uploaded on success. Null otherwise.
+ * 
+ * @author G. Gardey
  */
 function upload_file($bibname,$type,$id)
 {
@@ -79,15 +68,17 @@ function upload_file($bibname,$type,$id)
     // upload the file
     $is_uploaded = move_uploaded_file($_FILES[$type]["tmp_name"],$path);
     // change it to be readable/writable to the owner and readable for others
-    chmod($path,0644);
     if($is_uploaded){
-  	     $res = $file;
+        chmod($path, 0777 - UMASK );
+        $res = $file;
     }
     return $res;
 }
 
-/*
-    Create the main panel
+/**
+ * Create the main panel in the BibORB HTML interface.
+ *
+ * @author G. Gardey
  */
 function main($title,$content,$error = null,$message = null)
 {
@@ -101,8 +92,10 @@ function main($title,$content,$error = null,$message = null)
 }
 
 
-/*
-    Del a directory
+/**
+ * Recursively delete a directory.
+ * @param $dir The name of the directory.
+ * @author G. Gardey
  */
 function deldir($dir) {
     $current_dir = opendir($dir);
@@ -118,8 +111,8 @@ function deldir($dir) {
     rmdir($dir);
 }
 
-/*
-    Remove accents of a string.
+/**
+ * Remove accents of a string.
  */
 function remove_accents($string){
     return strtr($string,
@@ -127,13 +120,15 @@ function remove_accents($string){
                 "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy");
 }
 
-/*
-    Generate the add all to basket div section
+/**
+ * Generate the add all to basket div section for the BibORB html interface.
+ * @param $ids The ids to add in the basket.
+ * @param $mode The current display mode of BibORB.
+ * @param $extraparam Some extraparam.
+ * @author G. Gardey
  */
 
 function add_all_to_basket_div($ids,$mode,$extraparam=null){
-    // ensure localization is set up
-    load_i18n_config($_SESSION['language']);
     $title = msg("Add all entries to the basket.");
     $html = "<div class='addtobasket' title='$title'>";
     $addalllink = "bibindex.php?mode=$mode&amp;action=add_to_basket&amp;id=";
@@ -148,8 +143,12 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
     return $html;
 }
 
-/*
-    Generate a XHTML div containing sort functions
+/**
+ * Generate a XHTML div containing sort functions.
+ * @param $selected_sort The sort selected.
+ * @param $selected_order The sort order selected.
+ * @param $mode The Biborb current display mode.
+ * @param $misc An array containing additional values for the form.
  */
 function sort_div($selected_sort,$selected_order,$mode,$misc){
     // ensure the localization is set up
@@ -199,8 +198,10 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
     return $html;
 }
 
-/*
-    Analyze a .dot aux file and return an array of bibtex ids
+/**
+ * Analyze a .dot aux file and return an array of bibtex ids
+ * @param $auxfile A .aux LaTeX file.
+ * @return An array of BibTeX keys.
  */
 function bibtex_keys_from_aux($auxfile){
     $lines = load_file($auxfile);

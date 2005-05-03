@@ -21,14 +21,17 @@
  */
 
 /** 
-    File: error.php
-    Author: Guillaume Gardey (ggardey@club-internet.fr)
-    Licence: GPL
+ * File: error.php
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Licence: GPL
+ *
+ * Description:
+ *
+ *    Defines an error handler for biborb.
+ */
 
-    Error Handlers
 
-*/
-
+// Define constant for errors 
 define("FATAL", E_USER_ERROR);
 define("ERROR", E_USER_WARNING);
 define("WARNING", E_USER_NOTICE);
@@ -37,12 +40,11 @@ define("WARNING", E_USER_NOTICE);
 error_reporting(FATAL | ERROR | WARNING | E_ALL);
 
 /**
-    Handler for biborb errors.
-    Generate a verbose output.
-*/
+ * Handler for biborb errors.
+ * Generate a verbose output.
+ */
 function biborb_error_handler($errno, $errstr, $errfile, $errline){
-    switch ($errno) {
-            
+    switch ($errno) {         
         case ERROR:
         case FATAL:
         case E_ALL:
@@ -65,12 +67,6 @@ function biborb_error_handler($errno, $errstr, $errfile, $errline){
             echo $html;
             exit(1);
             break;
-     /*   case WARNING:
-            echo "<b>WARNING</b> [$errno] $errstr<br />\n";
-            break;
-        default:
-            echo "Unkown error type: [$errno] $errstr<br />\n";
-            break;*/
     }
 }
     

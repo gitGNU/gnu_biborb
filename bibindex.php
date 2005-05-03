@@ -136,10 +136,12 @@ if(!array_key_exists('update_authorizations',$_SESSION)){
 if(array_key_exists('bibname',$_GET)){
     if(!array_key_exists('bibdb',$_SESSION)){
         $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],GEN_BIBTEX);
+        $_SESSION['bibdb']->set_BibORB_fields($GLOBALS['bibtex_entries']);
         $_SESSION['basket']->reset();
     }
     else if($_SESSION['bibdb']->name()!=$_GET['bibname']){
         $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],GEN_BIBTEX);
+        $_SESSION['bibdb']->set_BibORB_fields($GLOBALS['bibtex_entries']);
         $_SESSION['basket']->reset();
     }
     $update_auth = TRUE;

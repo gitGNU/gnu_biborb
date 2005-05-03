@@ -20,14 +20,16 @@
  * 
  */
 
-/** 
-    File: auth.php
-    Author: Guillaume Gardey (ggardey@club-internet.fr)
-    Licence: GPL
-
+/**
+ * File: auth.php
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Licence: GPL
+ *
+ *    Redirect to the php source matching the authentication method
+ *    defined in the configuration file of BibORB.
  */
-require_once("config.php");
 
+require_once("config.php");
 if(!DISABLE_AUTHENTICATION){
     switch(AUTH_METHOD){
         // Use file authentication system

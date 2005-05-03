@@ -20,77 +20,79 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
- 
-/**
-    File: basket.php
-    Author: Guillaume Gardey (ggardey@club-internet.fr)
-    Licence: GPL
 
-    Description:
-        This file defines a Basket class. The basket stores distinct items. 
+/**
+ * File: basket.php
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Licence: GPL
+ *
+ * Description:
+ *      This file defines a Basket class. The basket stores distinct items. 
  */
 
+
+/**
+ * A basket to store distinct items.
+ * 
+ * @author G. Gardey
+ */
 class Basket {
     // an array of distinct items
 	var $items;
 	
-    /*
-        Contructor
+    /**
+     * Constructor.
      */
 	function Basket() {
 		$this->items = array();
 	}
-	
-    /*
-        Returns the number of items
+
+    /**
+     * Number of items in the basket.
      */
 	function count_items(){
 		return count($this->items);
 	}
-	
-    /*
-        Add an item. If present, not added.
+
+    /**
+     * Add an item.
+     * If the item is already present, it is not added.
      */
 	function add_item($item) {
-		if(!in_array($item,$this->items)){
+		if(!in_array($item,$this->items) && $item != ''){
 			array_push($this->items,$item);
 		}
 	}
-	
-    /*
-        Add items.
+
+    /**
+     * Add a set of items.
      */
 	function add_items($array){
 		foreach($array as $item){
 			$this->add_item($item);
 		}
 	}
-	
-    /*
-        Remove an item.
+
+    /**
+     * Remove an item.
      */
 	function remove_item($item) {
 		$key = array_search($item,$this->items);
-		if(!($key === FALSE)){
-			for($i=$key;$i<count($this->items)-1;$i++){
-				$this->items[$i] = $this->items[$i+1];
-			}
-		}
-		array_pop($this->items);
+        if($key !== FALSE){
+            unset($this->items[$key]);
+            $this->items = array_values($this->items);
+        }
 	}
 	
-    /*
-        Remove all items.
+    /**
+     * Remove all items.
      */
 	function reset(){
-		$length = count($this->items);
-		for($i=0;$i<$length;$i++){
-			array_pop($this->items);
-		}
+        $this->item = array();
 	}
 	
-    /*
-        Retun a string representing the list of items separated by a dot.
+    /**
+     * Retun a string representing the list of items separated by a dot.
      */
 	function items_to_string(){
 		$res = ".";
