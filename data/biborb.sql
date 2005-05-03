@@ -13,7 +13,7 @@
 # --------------------------------------------------------
 
 #
-# Structure de la table `biborb_auth`
+# Structure of table `biborb_auth`
 #
 
 CREATE TABLE `biborb_auth` (
@@ -25,7 +25,7 @@ CREATE TABLE `biborb_auth` (
 # --------------------------------------------------------
 
 #
-# Structure de la table `biborb_users`
+# Structure of table `biborb_users`
 #
 
 CREATE TABLE `biborb_users` (
@@ -53,6 +53,7 @@ CREATE TABLE `user_preferences` (
   `display_txt` char(1) NOT NULL default '',
   `display_abstract` char(1) NOT NULL default '',
   `warn_before_deleting` char(1) NOT NULL default '',
+  `display_sort` char(1) NOT NULL default '',
   `default_sort` char(255) NOT NULL default '',
   `default_sort_order` char(255) NOT NULL default '',
   `max_ref_by_page` int(11) NOT NULL default '0',
