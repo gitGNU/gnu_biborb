@@ -111,7 +111,7 @@
                     <!-- Shelf mode on -->
                     <xsl:if test="$shelf-mode">
                         <!-- Own = yes -->
-                        <xsl:if test=".//bibtex:own='yes'">
+                        <xsl:if test=".//bibtex:own='own'">
                             <xsl:if test="$display_images">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
@@ -167,7 +167,7 @@
                             <xsl:if test="$display_images">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=yes&amp;id={@id}&amp;{$extra_get_param}#{@id}">
+                                <a href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=own&amp;id={@id}&amp;{$extra_get_param}#{@id}">
                                     <img src="data/images/{$buy-image}" alt='BIBORB_OUTPUT_BUY_ALT' title='BIBORB_OUTPUT_BUY_TITLE'/></a>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -178,7 +178,7 @@
                             <xsl:if test="$display_text">
                             <xsl:choose>
                                 <xsl:when test="$can_modify">
-                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=yes&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_BUY_TITLE'>BIBORB_OUTPUT_BUY_ALT</a>
+                                <a class="bibtex_action" href="./bibindex.php?mode={$bibindex_mode}&amp;action=update_ownership&amp;ownership=own&amp;id={@id}&amp;{$extra_get_param}#{@id}" title='BIBORB_OUTPUT_BUY_TITLE'>BIBORB_OUTPUT_BUY_ALT</a>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <span class="shelf_text" title='BIBORB_OUTPUT_BUY_TITLE'>BIBORB_OUTPUT_BUY_ALT</span>

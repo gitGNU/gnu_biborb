@@ -202,7 +202,7 @@ define("GEN_BIBTEX",TRUE);
  *  and its reading status(read, read next, not read)
  * value: TRUE/FALSE
  */
-define("SHELF_MODE",FALSE);
+define("SHELF_MODE",TRUE);
 
 /**
  * umask - Set the mask to use when creating files.

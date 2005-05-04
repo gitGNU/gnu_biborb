@@ -118,7 +118,7 @@ XSLT_END;
             for($i=0;$i<count($entries);$i++){
                 // get the name of the first author
                 if(array_key_exists('author',$entries[$i])){
-                    list($creatorArray, $etAl) = $pc->parse($entries[$i]['author']);
+                    $creatorArray = $pc->parse($entries[$i]['author']);
                     $entries[$i]['lastName'] = $creatorArray[0][2];
                 }
                 // set dateAdded and lastDateModified attributes
@@ -126,6 +126,10 @@ XSLT_END;
                     $entries[$i]['dateAdded'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
                 if(array_key_exists('lastDateModified',$entries[$i]))
                     $entries[$i]['lastDateModified'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
+
+                // change own= {yes} to own = {own}
+                if(array_key_exists('own',$entries[$i]))
+                    $entries[$i]['own'] = ( $entries[$i]['own'] == "yes" ? "own" : $entries[$i]['own']);
             }
             // convert to XML
             $data = $bt->entries_array_to_xml($entries);
@@ -416,7 +420,7 @@ XSLT_END;
             // get first lastname author
             if(array_key_exists('author',$bibtex_val)){
                 $pc = new PARSECREATORS();
-                list($authors,$etal) = $pc->parse($bibtex_val['author']);
+                $authors = $pc->parse($bibtex_val['author']);
                 $bibtex_val['lastName'] = $authors[0][2];
             }
             // set its type
@@ -480,7 +484,7 @@ XSLT_END;
             if(array_search($entry['id'],$dbids) === FALSE){
                 if(array_key_exists('author',$entry)){
                     $pc = new PARSECREATORS();
-                    list($authors,$etal) = $pc->parse($entry['author']);
+                    $authors = $pc->parse($entry['author']);
                     $entry['lastName'] = $authors[0][2];
                 }
                 $entry['dateAdded'] = date("Y-m-d");
@@ -607,7 +611,7 @@ XSLT_END;
             $bibtex_val = $bt->extract_bibtex_data($dataArray,$this->biborb_fields);
             if(array_key_exists('author',$bibtex_val)){
                 $pc = new PARSECREATORS();
-                list($authors,$etal) = $pc->parse($bibtex_val['author']);
+                $authors  = $pc->parse($bibtex_val['author']);
                 $bibtex_val['lastName'] = $authors[0][2];
             }
             $bibtex_val['___type'] = $dataArray['type_ref'];
@@ -999,7 +1003,7 @@ XSLT_END;
             $pc = new PARSECREATORS();
             $author = array();
             foreach($authors as $eAuthors){
-                list($creators,$etal) = $pc->parse($eAuthors);
+                $creators = $pc->parse($eAuthors);
                 foreach($creators as $creator){
                     if(!in_array($creator[2],$author)){
                         $author[] = $creator[2];
@@ -1122,7 +1126,7 @@ function create_database($name,$description){
  */
 function delete_database($name){
     //check if $name is a valid bibliography name
-    $dbnames = get_datbases_names();
+    $dbnames = get_databases_names();
     if(!in_array($name,array_keys($dbnames))){
         trigger_error("Wrong database name: $name",ERROR);
     }

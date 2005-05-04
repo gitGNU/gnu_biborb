@@ -223,7 +223,7 @@ class BibTeX_Tools
             $export .= sprintf("TY  - %s\n",$ris_type_translate[$entry['___type']]);
             // authors
             if(array_key_exists('author',$entry)){
-                list($authors,$etal) = $pc->parse($entry['author']);
+                $authors = $pc->parse($entry['author']);
                 foreach($authors as $author){
                     $export .= sprintf("A1  - %s, %s\n",$author[2],$author[0]);
                 }
@@ -268,7 +268,7 @@ class BibTeX_Tools
             
             // editor
             if(array_key_exists('editor',$entry)){
-                list($editors,$etal) = $pc->parse($entry['editor']);
+                $editors = $pc->parse($entry['editor']);
                 foreach($editors as $editor){
                     $export .= sprintf("A3  - %s, %s\n",$editor[2],$editor[0]);
                 }
@@ -337,7 +337,7 @@ class BibTeX_Tools
             $export .= sprintf("\t\t<abbrev>%s</abvrev>\n",$entry['id']);
             // authors
             if(array_key_exists('author',$entry)){
-                list($authors,$etal) = $pc->parse($entry['author']);
+                $authors = $pc->parse($entry['author']);
                 $export .= "\t\t<authorgroup>\n";
                 foreach($authors as $author){
                     $export .= "\t\t\t<author>\n";
