@@ -7,166 +7,133 @@ A collection of PHP classes to manipulate bibtex files.
 
 If you make improvements, please consider contacting the administrators at bibliophile.sourceforge.net so that your improvements can be added to the release package.
 
-Mark Grimshaw 2004
+Mark Grimshaw 2004/2005
 http://bibliophile.sourceforge.net
-*/
 
+28/04/2005 - Mark Grimshaw.  Efficiency improvements.
+*/
 // For a quick command-line test (php -f PARSECREATORS.php) after installation, uncomment these lines:
 
 /***********************
-	$authors = "Mark N. Grimshaw and Bush III, G.W. & M. C. Hammer Jr. and von Frankenstein, Ferdinand Cecil, P.H. & Charles Louis 		Xavier Joseph de la Vallee Poussin and et. al";
+	$authors = "Mark N. Grimshaw and Bush III, G.W. & M. C. Hammer Jr. and von Frankenstein, Ferdinand Cecil, P.H. & Charles Louis Xavier Joseph de la Vallee Poussin";
 	$creator = new PARSECREATORS();
-	list($creatorArray, $etAl) = $creator->parse($authors);
+	$creatorArray = $creator->parse($authors);
 	print_r($creatorArray);
-	if($etAl)
-		print "\netAl";
+    print_r($etAl);
+
 ***********************/
 
 class PARSECREATORS
 {
 	function PARSECREATORS()
 	{
-		$this->roman = array('I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X');
 	}
-// Create writer arrays from bibtex input.
-// 'author field can be:
-//	Surname, Initials, Firstname and|& Surname, Initials, Firstname
-//	Firstname Initials Surname
-// 	Firstname Initials Surname, Jr.,|Sr.||jr.,sr.
-//	Surname, Jr., Initials, Firstname
+/* Create writer arrays from bibtex input.
+'author field can be (delimiters between authors are 'and' or '&'):
+1. <first-tokens> <von-tokens> <last-tokens>
+2. <von-tokens> <last-tokens>, <first-tokens>
+3. <von-tokens> <last-tokens>, <jr-tokens>, <first-tokens>
+*/
 	function parse($input)
 	{
 		$input = trim($input);
-		if(($input == 'Anon') || ($input == 'Anonymous') || ($input == 'anon') || ($input == 'anonymous'))
-			return array(FALSE, FALSE);
-		$etAl = FALSE;
-// split on space or &|and
+// split on ' and ' 
 		$authorArray = preg_split("/\s(and|&)\s/i", $input);
-// check if there's anything that looks like et. al
-		foreach($authorArray as $key => $value)
-		{
-			if((strtolower(trim($value) == 'et. al')) || (strtolower(trim($value)) == 'et. al.'))
-			{
-				$etAl = TRUE;
-				unset($authorArray[$key]);
-			}
-		}
 		foreach($authorArray as $value)
 		{
-			$apellation = $roman = '';
+			$appellation = $prefix = $surname = $firstname = $initials = '';
+			$this->prefix = array();
 			$author = explode(",", preg_replace("/\s{2,}/", ' ', trim($value)));
 			$size = sizeof($author);
-// At least one ',' in author string?
-			if($size > 1)
+// No commas therefore something like Mark Grimshaw, Mark Nicholas Grimshaw, M N Grimshaw, Mark N. Grimshaw
+			if($size == 1)
 			{
-				if($apellation = $this->grabApellation($author))
-						$value = $author[0];
+// Is complete surname enclosed in {...}
+				if(preg_match("/(.*){(.*)}/", $value, $matches))
+				{
+					$author = split(" ", $matches[1]);
+					$surname = $matches[2];
+				}
 				else
-					$size++;
+				{
+					$author = split(" ", $value);
+// last of array is surname (no prefix if entered correctly)
+					$surname = array_pop($author);
+				}
 			}
-// Handles Firstname Initials Surname
-			if($size <= 2)
+// Something like Grimshaw, Mark or Grimshaw, Mark Nicholas  or Grimshaw, M N or Grimshaw, Mark N.
+			else if($size == 2)
 			{
-				$author = explode(" ", trim($value));
-				if($size == 1)
-					$apellation = $this->grabApellation($author);
-				$item = trim(array_pop($author));
-				if(!$roman = $this->grabRoman($item))
-					array_push($author, $item);
-				$surname = $this->grabSurname($author, 'post');
+// first of array is surname (perhaps with prefix)
+				list($surname, $prefix) = $this->grabSurname(array_shift($author));
 			}
-// If $size is > 1, we're looking at something like Surname, Initials, Firstname
+// If $size is 3, we're looking at something like Bush, Jr. III, George W
 			else
 			{
-				$surname = $this->grabSurname($author, 'pre');
+// middle of array is 'Jr.', 'IV' etc.
+				$appellation = join(' ', array_splice($author, 1, 1));
+// first of array is surname (perhaps with prefix)
+				list($surname, $prefix) = $this->grabSurname(array_shift($author));
 			}
-			$initials = $this->grabInitials($author);
-			$surname = $surname . $apellation . $roman;
-// What is left of $author at this stage should be the firstname(s)
-			$firstname = trim(implode(' ', $author));
-			$creators[] = array($firstname, $initials, $surname);
+			$remainder = join(" ", $author);
+			list($firstname, $initials) = $this->grabFirstnameInitials($remainder);
+			if(!empty($this->prefix))
+				$prefix = join(' ', $this->prefix);
+			$surname = $surname . ' ' . $appellation;
+			$creators[] = array("$firstname", "$initials", "$surname", "$prefix");
 		}
-		return array($creators, $etAl);
-	}
-// Deal with Jr., Sr., etc
-	function grabApellation(&$author)
-	{
-		$apellation = FALSE;
-		foreach($author as $key => $value)
-		{
-			if(preg_match("/Sr\.|jr\./i", $value))
-			{
-				$apellation = trim($value);
-				$keys[] = $key;
-			}
-			else
-				$remainder[] = $value;
-		}
-		if($apellation)
-		{
-			if(isset($remainder))
-				$author = $remainder;
-			else
-				$author = array();
-			return ", " . $apellation;
-		}
-		else
-			return FALSE;
-	}
-// Check for silly names such as G.W. Bush III
-	function grabRoman($item)
-	{
-		if(array_key_exists($item, $this->roman))
-			return " " . trim($item);
+		if(isset($creators))
+			return $creators;
 		return FALSE;
 	}
-// grab initials which may be of form "A.B.C." or "A. B. C. " etc.
-	function grabInitials(&$author)
+// grab firstname and initials which may be of form "A.B.C." or "A. B. C. " or " A B C " etc.
+	function grabFirstnameInitials($remainder)
 	{
-		$initials = FALSE;
-		foreach($author as $key => $value)
-		{
-			if(preg_match("/\./", $value))
-			{
-				$initials .= implode(" ", explode(".", trim($value)));
-				$keys[] = $key;
-			}
-			else
-				$remainder[] = $value;
-		}
-		if($initials)
-		{
-			if(isset($remainder))
-				$author = $remainder;
-			else
-				$author = array();
-			return $initials;
-		}
-		else
-			return '';
-	}
-// surname may have title such as 'den', 'von', 'de la' etc. - characterised by first character lowercased
-	function grabSurname(&$author, $remove)
-	{
-		$index = 0;
-		$titleFound = FALSE;
-// check for title
-		foreach($author as $value)
+		$firstname = $initials = '';
+		$array = split(" ", $remainder);
+		foreach($array as $value)
 		{
 			$firstChar = substr($value, 0, 1);
 			if((ord($firstChar) >= 97) && (ord($firstChar) <= 122))
-			{
-				$titleFound = TRUE;
-				break;
-			}
-			$index++;
+				$this->prefix[] = $value;
+			else if(preg_match("/[a-zA-Z]{2,}/", trim($value)))
+				$firstnameArray[] = trim($value);
+			else
+				$initialsArray[] = str_replace(".", " ", trim($value));
 		}
-		if($titleFound && ($remove == 'post'))
-			return trim(implode(" ", $surname = array_splice($author, $index)));
-		else if(($remove == 'post'))
-			return trim(array_pop($author));
-		else
-			return trim(array_shift($author));
+		if(isset($initialsArray))
+		{
+			foreach($initialsArray as $initial)
+				$initials .= ' ' . trim($initial);
+		}
+		if(isset($firstnameArray))
+			$firstname = join(" ", $firstnameArray);
+		return array($firstname, $initials);
+	}
+// surname may have title such as 'den', 'von', 'de la' etc. - characterised by first character lowercased.  Any 
+// uppercased part means lowercased parts following are part of the surname (e.g. Van den Bussche)
+	function grabSurname($input)
+	{
+		$surnameArray = split(" ", $input);
+		$noPrefix = FALSE;
+		foreach($surnameArray as $value)
+		{
+			$firstChar = substr($value, 0, 1);
+			if(!$noPrefix && (ord($firstChar) >= 97) && (ord($firstChar) <= 122))
+				$prefix[] = $value;
+			else
+			{
+				$surname[] = $value;
+				$noPrefix = TRUE;
+			}
+		}
+		$surname = join(" ", $surname);
+		if(isset($prefix))
+		{
+			$prefix = join(" ", $prefix);
+			return array($surname, $prefix);
+		}
+		return array($surname, FALSE);
 	}
 }
 ?>
