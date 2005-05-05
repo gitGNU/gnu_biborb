@@ -38,7 +38,7 @@
  */
 define("BIBORB_XML_VERSION","1.1");
 define("BIBORB_VERSION","CVS");
-define("BIBORB_RELEASE_DATE","22 February 2005");
+define("BIBORB_RELEASE_DATE","5 May 2005");
 
 /**
  * Path where is install biborb

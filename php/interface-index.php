@@ -41,7 +41,7 @@ function index_login(){
     $title = msg("INDEX_MENU_LOGIN_TITLE");
     $content = "<form id='login_form' action='index.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")'>";
     $content .= "<fieldset>";
-    $content .= "<legend>Login</legend>";
+    $content .= "<legend>".msg("Login")."</legend>";
     $content .= "<label for='login'>".msg("LOGIN_USERNAME").":</label>";
     $content .= "<input type='text' name='login' id='login' /><br/>";
     $content .= "<label for='password'>".msg("LOGIN_PASSWORD").":</label>";

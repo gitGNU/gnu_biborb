@@ -209,3 +209,14 @@ function display_browse(str)
     document.getElementById('groups').style.display = (str != 'groups' ? 'none' : 'block');
     document.getElementById('tab_groups').className = (str != 'groups' ? '' : 'active');
 }
+
+function toggle_tab_edit(str)
+{
+    document.getElementById('required_ref').style.display = (str != 'required_ref' ? 'none' : 'block');
+    document.getElementById('tab_required_ref').className = (str != 'required_ref' ? '' : 'active');
+    document.getElementById('optional_ref').style.display = (str != 'optional_ref' ? 'none' : 'block');
+    document.getElementById('tab_optional_ref').className = (str != 'optional_ref' ? '' : 'active');
+    document.getElementById('additional_ref').style.display = (str != 'additional_ref' ? 'none' : 'block');
+    document.getElementById('tab_additional_ref').className = (str != 'additional_ref' ? '' : 'active');
+}
+

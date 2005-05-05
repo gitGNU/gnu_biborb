@@ -194,18 +194,18 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 /**
  * Style for the form to edit entry
  */
-#f_bibtex_entry {margin:0;padding:0;border:none;}
+#f_bibtex_entry {margin:0;padding:0;border:solid 1px navy;padding-bottom:1em;padding-top:1em;border-top:none;background-color:#ddf;}
 #f_bibtex_entry fieldset.clean {margin:0;padding:0;border:none;text-align:center;}
 #f_bibtex_entry .required {color:red;font-weight:bold;}
 #f_bibtex_entry fieldset.required {border:dotted 1px red;}
 #f_bibtex_entry .required label {color:red;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
 #f_bibtex_entry .required input {width:80%;border:1px solid black;margin:0.1em;}
 #f_bibtex_entry .optional {color:navy;font-weight:bold;}
-#f_bibtex_entry fieldset.optional {border:dotted 1px navy;}
+#f_bibtex_entry fieldset.optional {border:dotted 1px navy;display:none;}
 #f_bibtex_entry .optional label {color:navy;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
 #f_bibtex_entry .optional input {width:80%;border:1px solid black;margin:0.1em;}
 #f_bibtex_entry .additional {color:green;font-weight:bold;}
-#f_bibtex_entry fieldset.additional {border:dotted 1px green;}
+#f_bibtex_entry fieldset.additional {border:dotted 1px green;display:none;}
 #f_bibtex_entry .additional label {color:green;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
 #f_bibtex_entry .additional input {width:80%;border:1px solid black;margin:0.1em;}
 #f_bibtex_entry .additional textarea {height:165px;width:80%;border:1px solid black;margin:0.1em;}

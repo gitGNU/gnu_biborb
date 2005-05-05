@@ -1114,7 +1114,16 @@ function bibindex_add_entry($type){
     $html = bibheader("");
     $html .= bibindex_menu($_SESSION['bibdb']->fullname());
     $title = msg("BIBINDEX_ADD_ENTRY_TITLE");
-    $content = "<form method='post' action='bibindex.php' enctype='multipart/form-data' onsubmit='return validate_new_entry_form(\"".$_SESSION['language']."\")' id='f_bibtex_entry'>";
+// a tabbed interface
+    $content = "<div>";
+    $content .= "<ul id='tabnav'>";
+    $content .= "<li><a id='tab_required_ref' class='active' href='javascript:toggle_tab_edit(\"required_ref\")'>".msg("BIBORB_OUTPUT_REQUIRED_FIELDS")."</a></li>";
+    $content .= "<li><a id='tab_optional_ref' href='javascript:toggle_tab_edit(\"optional_ref\")'>".msg("BIBORB_OUTPUT_OPTIONAL_FIELDS")."</a></li>";
+    $content .= "<li><a id='tab_additional_ref' href='javascript:toggle_tab_edit(\"additional_ref\")'>".msg("BIBORB_OUTPUT_ADDITIONAL_FIELDS")."</a></li>";
+    $content .= "</ul>";
+    $content .= "</div>";
+    
+    $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' onsubmit='return validate_new_entry_form(\"".$_SESSION['language']."\")' id='f_bibtex_entry'>";
 	$content .= "<fieldset class='clean'>";
 	$content .= "<input name='___type' value='$type' type='hidden'/>";
     $content .= "</fieldset>";
@@ -1139,22 +1148,24 @@ function bibindex_add_entry($type){
 function bibindex_update_entry(){
     
 	// get the entry
-	$entry = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+	$entryxml = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+    $bt = new BibTeX_Tools();
+    $entry = $bt->xml_to_bibtex_array($entryxml);
+    $entry = $entry[0];
+    $thetype = $entry['___type'];
+    $theid = $_GET['id'];
+    
     // get existent types
 	$types = $_SESSION['bibdb']->entry_types();
     
 	// xslt transformation
 	$xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
 	$param = $GLOBALS['xslparam'];
-	$param['id'] = $_GET['id'];
+	$param['id'] = $theid;
 	$param['modelfile'] = "file://".realpath("./xsl/model.xml");
 	$param['update'] = "true";
-
-	$thetype = trim($xsltp->transform($entry,load_file("./xsl/get_bibtex_type.xsl")));
-
     $param['type'] = $thetype;
-    $fields = $xsltp->transform($entry,load_file("./xsl/xml2htmledit.xsl"),$param);
-    $currentRef = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+    $fields = $xsltp->transform($entryxml,load_file("./xsl/xml2htmledit.xsl"),$param);
 	$xsltp->free();
     
     // get existent groups
@@ -1165,17 +1176,13 @@ function bibindex_update_entry(){
 	$fields = str_replace("#XHTMLGROUPSLIST",$groups,$fields);
 
     // read status and ownership
-    $bt = new BibTeX_Tools();
-    $val = $bt->xml_to_bibtex_array($currentRef);
-    $val = $val[0];
-    $readstatus = read_status_html_select("read",(isset($val['read']) ? $val['read'] : 'notread'));
-    $ownership = ownership_html_select("own",(isset($val['own']) ? $val['own'] : 'notown'));
+    $readstatus = read_status_html_select("read",(isset($entry['read']) ? $entry['read'] : 'notread'));
+    $ownership = ownership_html_select("own",(isset($entry['own']) ? $entry['own'] : 'notown'));
     $fields = str_replace("#XHTMLREADSTATUS",$readstatus,$fields);
     $fields = str_replace("#XHTMLOWNERSHIP",$ownership,$fields);
     
 	$listtypes = xhtml_select('bibtex_type',1,$types,$thetype);
-	
-	$theid = $_GET['id'];
+    
     // form to update the type
 	$content = "<form method='get' action='bibindex.php' class='f_default_form'>";
     $content .= "<fieldset>";
@@ -1197,7 +1204,19 @@ function bibindex_update_entry(){
     $content .= "<input type='hidden' name='id' value='$theid'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
+    $content .= "<br/>";
     
+    // a tabbed interface
+    $content .= "<div>";
+    $content .= "<ul id='tabnav'>";
+    $content .= "<li><a id='tab_required_ref' class='active' href='javascript:toggle_tab_edit(\"required_ref\")'>".msg("BIBORB_OUTPUT_REQUIRED_FIELDS")."</a></li>";
+    $content .= "<li><a id='tab_optional_ref' href='javascript:toggle_tab_edit(\"optional_ref\")'>".msg("BIBORB_OUTPUT_OPTIONAL_FIELDS")."</a></li>";
+    $content .= "<li><a id='tab_additional_ref' href='javascript:toggle_tab_edit(\"additional_ref\")'>".msg("BIBORB_OUTPUT_ADDITIONAL_FIELDS")."</a></li>";
+    $content .= "</ul>";
+    $content .= "</div>";
+    
+    
+    // form to update the different fields
     $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields' id='f_bibtex_entry'>";
     $content .= eval_php($fields);
     $content .= "<fieldset class='clean'>";
@@ -1540,15 +1559,17 @@ function bibindex_browse(){
         }
     }
     $content .= "</div>";
-
+    if(!isset($_GET['type']))
+        $_GET['type'] = 'year';
+    
     // filters available
     $content .= "<div class='browse'>";
     $content .= "<ul id='tabnav'>";
-    $content .= "<li><a id='tab_years' href=\"javascript:display_browse('years');\">".msg("Years")."</a></li>";
-    $content .= "<li><a id='tab_authors' href=\"javascript:display_browse('authors');\">".msg("Authors")."</a></li>";
-    $content .= "<li><a id='tab_series' href=\"javascript:display_browse('series');\">".msg("Series")."</a></li>";
-    $content .= "<li><a id='tab_journals' href=\"javascript:display_browse('journals');\">".msg("Journals")."</a></li>";
-    $content .= "<li><a id='tab_groups' href=\"javascript:display_browse('groups');\">".msg("Groups")."</a></li>";
+    $content .= "<li><a id='tab_years' ".($_GET['type'] == 'year' ? "class='active'": "")." href=\"javascript:display_browse('years');\">".msg("Years")."</a></li>";
+    $content .= "<li><a id='tab_authors' ".($_GET['type'] == 'authors' ? "class='active'": "")." href=\"javascript:display_browse('authors');\">".msg("Authors")."</a></li>";
+    $content .= "<li><a id='tab_series' ".($_GET['type'] == 'series' ? "class='active'": "")." href=\"javascript:display_browse('series');\">".msg("Series")."</a></li>";
+    $content .= "<li><a id='tab_journals' ".($_GET['type'] == 'journals' ? "class='active'": "")." href=\"javascript:display_browse('journals');\">".msg("Journals")."</a></li>";
+    $content .= "<li><a id='tab_groups' ".($_GET['type'] == 'groups' ? "class='active'": "")." href=\"javascript:display_browse('groups');\">".msg("Groups")."</a></li>";
     $content .= "</ul>";
     $content .= "</div>";
     
@@ -1556,7 +1577,7 @@ function bibindex_browse(){
     
     // years
     // years are listed by decades
-    $content .= "<ul id='years'>".msg("Existing years:");
+    $content .= "<ul id='years' style='display:".($_GET['type'] != 'year' ? "none": "block").";'>".msg("Existing years:");
     for($i=0;$i<count($_SESSION['misc']['years']);$i++){
         $year = $_SESSION['misc']['years'][$i];
         if(!isset($oldyear)){
@@ -1582,7 +1603,7 @@ function bibindex_browse(){
     
     // authors are listed by alphabetic order
     // one list item by letter of the alphabet
-    $content .= "<ul id='authors'>".msg("Existing authors:");
+    $content .= "<ul id='authors' style='display:".($_GET['type'] != 'authors' ? "none": "block").";'>".msg("Existing authors:");
         
     for($i=0;$i<count($_SESSION['misc']['authors']);$i++){
         $author = remove_accents($_SESSION['misc']['authors'][$i]);
@@ -1608,21 +1629,21 @@ function bibindex_browse(){
     $content .= "</ul>";
     
     // series
-    $content .= "<ul id='series'>".msg("Existing series:");
+    $content .= "<ul id='series' style='display:".($_GET['type'] != 'series' ? "none": "block").";'>".msg("Existing series:");
     foreach($_SESSION['misc']['series'] as $serie){
         $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=series&value=$serie'>$serie</a></li>";
     }
     $content .= "</ul>";
     
     // journal
-    $content .= "<ul id='journals'>".msg("Existing journals:");
+    $content .= "<ul id='journals' style='display:".($_GET['type'] != 'journals' ? "none": "block").";'>".msg("Existing journals:");
     foreach($_SESSION['misc']['journals'] as $journal){
         $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=journal&value=$journal'>$journal</a></li>";
     }
     $content .= "</ul>";
     
     // groups
-    $content .= "<ul id='groups'>".msg("Existing groups:");
+    $content .= "<ul id='groups' style='display:".($_GET['type'] != 'groups' ? "none": "block")."';>".msg("Existing groups:");
     foreach($_SESSION['misc']['groups'] as $group){
         $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=group&value=$group'>$group</a></li>";
     }
