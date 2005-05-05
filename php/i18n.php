@@ -33,10 +33,10 @@ $available_locales = array('fr_FR' => 'Français',
                            'it_IT' => 'Italiano',
                            'de_DE' => 'Deutsch');
 
-/*
-    Load a localized strings for a lang.
-    Load it into $_SESSION['$language'] as an array $msgid => $msgstr
-    @param $language Language code
+/**
+ * Load a localized strings for a lang.
+ * Load it into $_SESSION['$language'] as an array $msgid => $msgstr
+ * @param $language Language code
  */
 function load_i18n_config($language = 'en_US') {
     /*
@@ -85,18 +85,18 @@ function load_i18n_config($language = 'en_US') {
     }
 }
 
-/*
-    Translate a localized string
-    If $string doesn't exists, $string is returned.
-    msg get the language configuration from $_SESSION
+/**
+ * Translate a localized string
+ * If $string doesn't exists, $string is returned.
+ *  msg get the language configuration from $_SESSION
  */
 function msg($string){
     // should return _($string) if gettext well supported
     return (array_key_exists($string, $_SESSION[$_SESSION['language']]) ? $_SESSION[$_SESSION['language']][$string] : $string);
 }
 
-/*
-    Load a localized text file. 
+/**
+ * Load a localized text file. 
  */
 function load_localized_file($filename)
 {
@@ -110,8 +110,8 @@ function load_localized_file($filename)
     }
 }
 
-/*
-    Parse a string and replace with localized data
+/**
+ * Parse a string and replace with localized data
  */
 function replace_localized_strings($string)
 {
@@ -128,9 +128,9 @@ function replace_localized_strings($string)
 }
 
 
-/*
-    Generate a HTML Select tag containing locales name.
-    On click call javascript to change the language
+/**
+ * Generate a HTML Select tag containing locales name.
+ * On click call javascript to change the language
  */
 function lang_html_select($lang,$name,$onchange = false)
 {
@@ -152,4 +152,19 @@ function lang_html_select($lang,$name,$onchange = false)
     return $res;
 }
 
+/**
+ * Get prefered language from HTTP request.
+ */
+function get_pref_lang()
+{
+    if(array_key_exists('HTTP_ACCEPT_LANGUAGE',$_SERVER)){
+        $preferedLanguages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        $tab = split(',',$preferedLanguages);
+        $tab1 = split('-',$tab[0]);
+        return $tab1[0]."_".strtoupper($tab1[1]);
+    }
+    return FALSE;
+}
+
+            
 ?>

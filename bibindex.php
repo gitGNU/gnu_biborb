@@ -73,9 +73,9 @@ require_once("php/basket.php"); // basket functions
 require_once("php/biborbdb.php"); // database
 require_once("php/xslt_processor.php"); // xslt processing
 require_once("php/interface-bibindex.php"); // generate interface
-require_once("php/auth.php");
-require_once("php/third_party/Tar.php");
-require_once("php/error.php");
+require_once("php/auth.php"); // authentication
+require_once("php/third_party/Tar.php"); // Create a tar.gz archive
+require_once("php/error.php"); // error handling
 require_once("php/i18n.php");       // load i18n functions
 
 /**
@@ -88,21 +88,26 @@ session_start();
 // Set the error_handler
 set_error_handler("biborb_error_handler");
 
-
+// remove slashes from variables
 if(get_magic_quotes_gpc()) {
     $_POST = array_map('stripslashes_deep', $_POST);
     $_GET = array_map('stripslashes_deep', $_GET);
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 }
 
-/*
-    i18n, choose default lang if not set up
+
+/**
+ * i18n, choose default lang if not set up
+ * Try to detect it from the session, browser or fallback to default.
  */
 if(!array_key_exists('language',$_SESSION)){
-    $_SESSION['language'] = DEFAULT_LANG;
+    if( ($prefLang = get_pref_lang()) !== FALSE){
+        if(!array_key_exists($prefLang,$available_locales))
+            $prefLang = DEFAULT_LANG;
+    }
+    $_SESSION['language'] = $prefLang;
     load_i18n_config($_SESSION['language']);
 }
-
 
 /*
     Global variables to store an error message or a standard message.

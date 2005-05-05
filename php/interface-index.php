@@ -32,11 +32,8 @@
  * 
  */
 
-/********************************** Interface for the index.php */
-
-/*
-    index_login()
-    Create the page to display for authentication
+/**
+ * Create the page for authentication
  */
 function index_login(){
     $html = html_header("Biborb",CSS_FILE);
@@ -44,7 +41,7 @@ function index_login(){
     $title = msg("INDEX_MENU_LOGIN_TITLE");
     $content = "<form id='login_form' action='index.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")'>";
     $content .= "<fieldset>";
-     $content .= "<legend>Login</legend>";
+    $content .= "<legend>Login</legend>";
     $content .= "<label for='login'>".msg("LOGIN_USERNAME").":</label>";
     $content .= "<input type='text' name='login' id='login' /><br/>";
     $content .= "<label for='password'>".msg("LOGIN_PASSWORD").":</label>";
@@ -61,7 +58,6 @@ function index_login(){
 }
 
 /**
- * index_welcome()
  * Display the welcome page
  * The text is loaded from ./data/index_welcome.txt
  */
@@ -79,7 +75,6 @@ function index_welcome(){
 }
 
 /**
- * index_add_database()
  * Create the page to add a new bibliography.
  */
 function index_add_database(){
@@ -94,8 +89,7 @@ function index_add_database(){
     $content .= "<label for='description'>".msg("INDEX_CREATE_DESCRIPTION").":</label>";
     $content .= "<input type='text' name='description' id='description'/><br/>";
     $content .= "<input type='hidden' name='action' value='create'/>";
-    $content .= "<input class='submit' type='submit' value='".
-        msg("Create")."'/>";
+    $content .= "<input class='submit' type='submit' value='".msg("Create")."'/>";
     $content .= "</fieldset>";
     $content .= "</form>";
     
@@ -107,7 +101,6 @@ function index_add_database(){
 }
 
 /**
- * index_delete_database()
  * Display the bibliographies in a combo box to select which one to delete.
  */
 function index_delete_database(){
@@ -141,7 +134,6 @@ function index_delete_database(){
 }
 
 /**
- * index_manager_help()
  * Display an help for the manager submenu. This help is loaded from a file.
  */
 function index_manager_help(){
@@ -156,7 +148,6 @@ function index_manager_help(){
 }
 
 /**
- * index_result()
  * Generic page to display the result of an operation.
  * Will only display information recorded into $error_or_message
  */
@@ -186,7 +177,6 @@ function index_select(){
     $content .= "<tr>";
     $content .= "<th>".msg("INDEX_AVAILABLE_BIBS_COL_BIBNAME")."</th>";
     $content .= "<th>".msg("INDEX_AVAILABLE_BIBS_COL_BIBDESCRIPTION")."</th>";
-//    $content .= "<th>".msg("INDEX_AVAILABLE_BIBS_COL_SOURCES")."</th>";
     $content .= "</tr>";
     $content .= "</thead>";
     $content .= "<tbody>";
@@ -198,7 +188,6 @@ function index_select(){
             $content .= "<tr>";
             $content .= "<td><a class='bibname' href='./bibindex.php?mode=welcome&amp;bibname=$name'>$fullname</a></td>";
             $content .= "<td><span class='bib_description'>$description</span></td>";
-//            $content .= "<td><a class='download' href='./bibs/$name/$name.bib'>".msg("Download")."</a></td>";
             $content .= "</tr>";
         }
     }
@@ -210,8 +199,7 @@ function index_select(){
 }
 
 /**
-    index_menu()
-    Create the menu for each page generated. It is placed into a <div> tag of ID 'menu'.
+ * Create the menu for each page generated. It is placed into a <div> tag of ID 'menu'.
  */
 function index_menu(){
     // start of the div tag
@@ -272,7 +260,9 @@ function index_menu(){
     
     return $html;  
 }
-
+/**
+ * Display preferences.
+ */
 function index_preferences(){
     $html = html_header("Biborb",CSS_FILE);
     $html .= index_menu();

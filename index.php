@@ -49,26 +49,19 @@ require_once("php/error.php");       // load biborb error handler
 //require_once("php/third_party/Cache/Lite/Output.php"); // cache system
 
 
-/*
-    Load the session
+/**
+ *   Load the session
  */
 // do not put web pages in browser cache
 session_cache_limiter('nocache');
 session_name("SID");
 session_start();
 
-//$_SESSION['time'] = microtime();
-//$_SESSION['cache'] = new Cache_Lite_Output(array('cacheDir' => '/tmp/',
-//                                                 'lifeTime' => 7200,
-//                                                  'pearErrorMode' => CACHE_LITE_ERROR_DIE));
-//$_SESSION['cache']->clean();
-
-
 // Set the error_handler for biborb
 set_error_handler("biborb_error_handler");
 
-/*
-    stripslashes
+/**
+ * stripslashes
  */
 if(get_magic_quotes_gpc()) {
     $_POST = array_map('stripslashes_deep', $_POST);
@@ -77,68 +70,63 @@ if(get_magic_quotes_gpc()) {
 }
 
 
-/*
-    i18n, choose default lang if not set up
+/**
+ * i18n, choose default lang if not set up
+ * Try to detect it from the session, browser or fallback to default.
  */
 if(!array_key_exists('language',$_SESSION)){
-    $_SESSION['language'] = DEFAULT_LANG;
+    if( ($prefLang = get_pref_lang()) !== FALSE){
+        if(!array_key_exists($prefLang,$available_locales))
+            $prefLang = DEFAULT_LANG;
+    }
+    $_SESSION['language'] = $prefLang;
     load_i18n_config($_SESSION['language']);
 }
 
 
-/*
-    To store an error or a message. (mode=result)
+/**
+ * To store an error or a message. (mode=result)
  */
 $error_or_message = array('error' => null,
                           'message' => null);
 
-/*
-    Get a value for 'mode' in the $_GET array.
-    If not in $_GET, receive null
-    The 'mode' variable sets which page to display
+/**
+ * Get a value for 'mode' in the $_GET array.
+ * If not in $_GET, receive null
+ * The 'mode' variable sets which page to display
  */
-if(array_key_exists('mode',$_GET)){
-	$mode = $_GET['mode'];
-}
-else{
-	$mode = null;
-}
+$mode = (array_key_exists('mode',$_GET) ? $_GET['mode'] : null);
 
-/*
-    Select the user's mode:
-    admin => may modify, create or delete
-    user => only for read purpose
+/**
+ * Set the access level
+ * If authentication activated delegate to the Auth class.
+ * Else set full power to any user.
  */
 if(!DISABLE_AUTHENTICATION){
     // create a new Auth object if needed
-    if(!array_key_exists('auth',$_SESSION)){
+    if(!array_key_exists('auth',$_SESSION))
         $_SESSION['auth'] = new Auth();
-    }
     
-    if(!array_key_exists('user',$_SESSION)){
+    if(!array_key_exists('user',$_SESSION))
         $_SESSION['user_is_admin'] = FALSE;
-    }
+
 }
 else{
     $_SESSION['user_is_admin'] = TRUE;
 }
 
-/*
-    Look in $_GET for an action to be performed
+/**
+ * Look in $_GET for an action to be performed
  */
 if(isset($_GET['action'])){
     switch($_GET['action']){
-        /*
-            Select the lang
-         */
+        /*  Select the lang   */
         case 'select_lang':
             $_SESSION['language'] = $_GET['lang'];
             load_i18n_config($_SESSION['language']);
             break;
             
-        /*
-            Create a database
-         */
+        /* Create a database  */
         case 'create':
             // check we have the authorization to modify
             if(!array_key_exists('user_is_admin',$_SESSION) || !$_SESSION['user_is_admin']){
@@ -149,9 +137,7 @@ if(isset($_GET['action'])){
                                                 $_GET['description']);
             break;
             
-        /*
-            Delete a database
-         */
+        /* Delete a database  */
         case 'delete':
             // check we have the authorization to modify
             if(!array_key_exists('user_is_admin',$_SESSION) || !$_SESSION['user_is_admin']){
@@ -160,9 +146,7 @@ if(isset($_GET['action'])){
             $error_or_message['message'] = delete_database($_GET['database_name']);
             break;
         
-        /*
-            Logout
-         */
+        /*  Logout  */
         case 'logout':
             $_SESSION['user_is_admin'] = FALSE;
             $_SESSION['user_can_add'] = FALSE;
@@ -179,15 +163,12 @@ if(isset($_GET['action'])){
     }
 }
 
-/*
-    Look in $_POST for an action to be performed
+/**
+ * Look in $_POST for an action to be performed
  */
 if(isset($_POST['action'])){
     switch($_POST['action']){
-        
-        /*
-            Login
-         */
+        /*  Login */
         case 'login':
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
@@ -219,9 +200,7 @@ if(isset($_POST['action'])){
             }
             break;
         
-        /*
-            Update user's preferences.
-         */
+        /* Update user's preferences. */
         case 'update_preferences':
             $_SESSION['auth']->set_preferences($_POST,$_SESSION['user']);
             $_SESSION['user_pref'] = $_SESSION['auth']->get_preferences($_SESSION['user']);
@@ -236,8 +215,6 @@ if(isset($_POST['action'])){
     }
 }
 
-
-
 /*********************************************** BEGINING OF THE HTML OUTPUT **/
 
 /**
@@ -246,22 +223,12 @@ if(isset($_POST['action'])){
 switch($mode){
 	// This is the welcome page.
     case 'welcome': 
-//        if(!$_SESSION['cache']->start('index.php?mode=welcome')){
-            echo index_welcome();
-//            $_SESSION['cache']->end();
-//        }
-//        $ctime = microtime()-$_SESSION['time'];
-//        echo "<div style='position:absolute;bottom:0;font-weight:bold;'>$ctime secs</div>";
+        echo index_welcome();
         break;
     
 	// List of available bibliograpies
     case 'select': 
-//        if(!$_SESSION['cache']->start('index.php?mode=select')){
-            echo index_select();
-//            $_SESSION['cache']->end();
-//        }
-//        $ctime = microtime()-$_SESSION['time'];
-//        echo "<div style='position:absolute;bottom:0;font-weight:bold;'>$ctime secs</div>";
+        echo index_select();
         break;
     
     // Add a new bibliography
@@ -272,12 +239,7 @@ switch($mode){
     
 	// Little help on what is available for the administrator mode
     case 'manager_help':
-//        if(!$_SESSION['cache']->start('index.php?mode=manager_help')){
-            echo index_manager_help(); 
-//            $_SESSION['cache']->end();
- //       }
- //       $ctime = microtime()-$_SESSION['time'];
- //       echo "<div style='position:absolute;bottom:0;font-weight:bold;'>$ctime secs</div>";
+        echo index_manager_help(); 
         break;
     
 	// Login form
