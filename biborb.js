@@ -196,3 +196,16 @@ function trim(str)
 }
 
 
+function display_browse(str)
+{
+    document.getElementById('years').style.display = (str != 'years' ? 'none' : 'block');
+    document.getElementById('tab_years').className = (str != 'years' ? '' : 'active');
+    document.getElementById('authors').style.display = (str != 'authors' ? 'none' : 'block');
+    document.getElementById('tab_authors').className = (str != 'authors' ? '' : 'active');
+    document.getElementById('series').style.display = (str != 'series' ? 'none' : 'block');
+    document.getElementById('tab_series').className = (str != 'series' ? '' : 'active');
+    document.getElementById('journals').style.display = (str != 'journals' ? 'none' : 'block');
+    document.getElementById('tab_journals').className = (str != 'journals' ? '' : 'active');
+    document.getElementById('groups').style.display = (str != 'groups' ? 'none' : 'block');
+    document.getElementById('tab_groups').className = (str != 'groups' ? '' : 'active');
+}

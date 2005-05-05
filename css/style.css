@@ -129,25 +129,23 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 /**
  * Style for the search tabs
  */
-#search_tabs {padding:0;margin:0;}
-#search_tabs ul {list-style-type:none;margin:0;padding:0;}
-#search_tabs ul li {display:inline;margin:0;padding:0}
-#search_tabs ul li.notselected a, #search_tabs ul li.notselected a:visited {text-decoration:none;border:1px solid gray;padding-left:1em;padding-right:1em;background-color:navy;font-weight:bold;color:white}
-#search_tabs ul li.selected {text-decoration:none;border:1px solid gray;padding-left:1em;padding-right:1em;background-color:navy;font-weight:bold;color:red}
-#search_tabs ul li a, #search_tabs ul li a:visited {text-decoration:none;color:black;}
-#search_tabs ul li.notselected a:hover {color:red;}
+#search_tabs {}
+#tabnav {height:20px;margin:0;padding-left:10px;background:url(tab_bottom.gif) repeat-x bottom;}
+#tabnav li {margin:0;padding:0;dsiplay:inline;list-style-type:none;}
+#tabnav a, #tabnav a:visited {float:left;background:#ddd;font-size:10px;line-height:14px;font-weight:bold;padding:2px 10px 2px 10px;margin-right:4px;border:solid 1px navy;text-decoration:none;color:#666;}
+#tabnav a.active, #tabnavavisited.active{border-bottom:solid 1px #ddf;background:#ddf;color:#000;}
+#tabnav a:hover {color:navy;}
 
 /**
  * Style for search container
  */
-.search_content {margin:auto;border:solid 1px navy;padding:1em;}
+.search_content {margin:auto;border:solid 1px navy;border-top:none;padding:1em;background-color:#ddf;}
 
 /**
  * Style for simple search
  */
 #simple_search_form fieldset {border:none;padding:1em 0 0 0;text-align:center;margin:auto;}
 #simple_search_form table {width:300px;padding:0;margin:auto;text-align:left;}
-#simple_search_form input {border:solid black 1px;}
 
 /**
  * Style for the advanced search form
@@ -155,8 +153,8 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 #search_form fieldset {border:none;margin:0;padding:0;text-align:center;}
 #search_form strong {text-align:left;float:left;}
 #search_form label {text-align:right;width:80px;float:left;margin:3px;}
-#search_form input {width:80%;margin-left:1em;border:1px solid black;margin:3px;}
-#search_form input.submit {margin-left:1em;border:1px solid black;width:auto;}
+#search_form input {width:80%;margin-left:1em;border:1px solid #999;margin:3px;}
+#search_form input.submit {margin-left:1em;border:1px solid #999;width:auto;}
 
 /**
  * Style for the form containing group to display
@@ -246,11 +244,7 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
  */
 .browse_history {font-size:x-small;color:black;margin:1em;font-weight:bold;color:#555;}
 .browse {margin:0;padding:0}
-.browse ul {margin:0;padding:0;list-style-type:none;}
-.browse ul li {display:inline;padding:0;margin:0;}
-.browse ul li a,.browse ul li a:visited {text-decoration:none;border:1px solid gray;padding-left:1em;padding-right:1em;background-color:navy;font-weight:bold;color:white}
-.browse ul li a:hover {color:red}
-.browse_items {padding:1em 1em 1em 3em;border:solid 1px navy;}
+.browse_items {padding:1em 1em 1em 3em;border:solid 1px navy;border-top:none;background-color:#ddf;}
 .browse_items ul:not(:target) {display:none;margin:0;padding:0;}
 .browse_items ul:target {display:block;margin:0;padding:0;font-weight:bold;}
 .browse_items ul li {font-weight:normal;margin-left:2em;}
@@ -263,15 +257,15 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 .f_default_form {}
 .f_default_form fieldset {margin:0;padding:0;border:none;}
 .f_default_form label {font-weight:bold;font-style:italic;min-width:100px;float:left;margin:3px;}
-.f_default_form input {width:150px;border:solid 1px black;}
-.f_default_form select {width:150px;border:solid 1px black;}
-.f_default_form input.submit {border:solid 1px black;width:auto;}
-.submit {border:1px solid black;}
+.f_default_form input {width:150px;border:solid 1px #999;}
+.f_default_form select {width:150px;border:solid 1px #999;}
+.f_default_form input.submit {border:solid 1px #999;width:auto;}
+.submit {border:1px solid #999;}
 .biborb {color:navy;}
 .emphit {font-weight:bold;font-style:italic;}
 a.cleanref, a:hover.cleanref, a:visited.cleanref {color:navy;text-decoration:none;}
 a.admin, a.admin:visited, a.admin:hover {color:red;text-decoration:none;}
 .fieldset-bordered {border: dotted 1px navy;text-align:center;margin:0;padding:1em;}
-input {border:solid 1px black;font-size:inherit;}
+input {border:solid 1px #999;font-size:inherit;}
 select {font-size:inherit;}
-textarea {border:solid 1px black;font-size:inherit;}
+textarea {border:solid 1px #999;font-size:inherit;}

@@ -575,10 +575,10 @@ function bibindex_display_search(){
     
     // search tabs
     $main_content = "<div id='search_tabs'>";
-    $main_content .= "<ul>";
-    $main_content .= "<li class='selected'>".msg("Simple Search")."</li>";
-    $main_content .= "<li class='notselected'><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
-    $main_content .= "<li class='notselected'><a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
+    $main_content .= "<ul id='tabnav'>";
+    $main_content .= "<li><a class='active' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
+    $main_content .= "<li><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
+    $main_content .= "<li><a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
     $main_content .= "</ul>";
     $main_content .= "</div>"; 
     
@@ -766,10 +766,10 @@ function bibindex_display_advanced_search(){
     
     // search tabs
     $content .= "<div id='search_tabs'>";
-    $content .= "<ul>";
-    $content .= "<li class='notselected'><a class='cleanref' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
-    $content .= "<li class='selected'>".msg("Advanced Search")."</li>";
-    $content .= "<li class='notselected'><a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
+    $content .= "<ul id='tabnav'>";
+    $content .= "<li><a href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
+    $content .= "<li><a class='active' href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
+    $content .= "<li><a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
     $content .= "</ul>";
     $content .= "</div>";
 
@@ -1396,10 +1396,10 @@ function bibindex_display_xpath_search()
     
     //tabs
     $content = "<div id='search_tabs'>";
-    $content .= "<ul>";
-    $content .= "<li class='notselected'><a class='cleanref' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
-    $content .= "<li class='notselected'><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
-    $content .= "<li class='selected'>".msg("XPath Search")."</li>";
+    $content .= "<ul id='tabnav'>";
+    $content .= "<li><a href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
+    $content .= "<li><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
+    $content .= "<li><a class='active' href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
     $content .= "</ul>";
     $content .= "</div>";
     $content .= "<div class='search_content'>";
@@ -1532,23 +1532,23 @@ function bibindex_browse(){
 
     // filter history
     $content = "<div class='browse_history'>";
-    $content .= "&gt;&gt;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=0'>Start</a>";
+    $content .= " &nbsp;&#187;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=0'>Start</a>";
     if(array_key_exists('browse_history',$_SESSION)){
         $cpt = 1;
         foreach($_SESSION['browse_history'] as $hist){
-            $content .= "&nbsp;&gt;&gt;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=$cpt'>".$hist['value']."</a>";
+            $content .= "&nbsp;&#187;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=$cpt'>".$hist['value']."</a>";
         }
     }
     $content .= "</div>";
 
     // filters available
     $content .= "<div class='browse'>";
-    $content .= "<ul>";
-    $content .= "<li><a href='#years'>".msg("Years")."</a></li>";
-    $content .= "<li><a href='#authors'>".msg("Authors")."</a></li>";
-    $content .= "<li><a href='#series'>".msg("Series")."</a></li>";
-    $content .= "<li><a href='#journals'>".msg("Journals")."</a></li>";
-    $content .= "<li><a href='#groups'>".msg("Groups")."</a></li>";
+    $content .= "<ul id='tabnav'>";
+    $content .= "<li><a id='tab_years' href=\"javascript:display_browse('years');\">".msg("Years")."</a></li>";
+    $content .= "<li><a id='tab_authors' href=\"javascript:display_browse('authors');\">".msg("Authors")."</a></li>";
+    $content .= "<li><a id='tab_series' href=\"javascript:display_browse('series');\">".msg("Series")."</a></li>";
+    $content .= "<li><a id='tab_journals' href=\"javascript:display_browse('journals');\">".msg("Journals")."</a></li>";
+    $content .= "<li><a id='tab_groups' href=\"javascript:display_browse('groups');\">".msg("Groups")."</a></li>";
     $content .= "</ul>";
     $content .= "</div>";
     
