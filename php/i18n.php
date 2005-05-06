@@ -161,7 +161,12 @@ function get_pref_lang()
         $preferedLanguages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
         $tab = split(',',$preferedLanguages);
         $tab1 = split('-',$tab[0]);
-        return $tab1[0]."_".strtoupper($tab1[1]);
+	if(count($tab1)==1){
+		return $tab1[0];
+	}
+	else{
+        	return $tab1[0]."_".strtoupper($tab1[1]);
+	}
     }
     return FALSE;
 }
