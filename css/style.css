@@ -127,13 +127,12 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 #f_bib_creation input.submit {margin:3px;padding:0;width:auto;}
 
 /**
- * Style for the search tabs
+ * Style for biborb tabs
  */
-#search_tabs {}
 #tabnav {height:20px;margin:0;padding-left:10px;background:url(tab_bottom.gif) repeat-x bottom;}
 #tabnav li {margin:0;padding:0;dsiplay:inline;list-style-type:none;}
 #tabnav a, #tabnav a:visited {float:left;background:#ddd;font-size:10px;line-height:14px;font-weight:bold;padding:2px 10px 2px 10px;margin-right:4px;border:solid 1px navy;text-decoration:none;color:#666;}
-#tabnav a.active, #tabnavavisited.active{border-bottom:solid 1px #ddf;background:#ddf;color:#000;}
+#tabnav a.active, #tabnavavisited.active{border-bottom:solid 1px #ddf;background:#ddf;color:navy;}
 #tabnav a:hover {color:navy;}
 
 /**
@@ -199,16 +198,16 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 #f_bibtex_entry .required {color:red;font-weight:bold;}
 #f_bibtex_entry fieldset.required {border:dotted 1px red;}
 #f_bibtex_entry .required label {color:red;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
-#f_bibtex_entry .required input {width:80%;border:1px solid black;margin:0.1em;}
+#f_bibtex_entry .required input {width:80%;margin:0.1em;}
 #f_bibtex_entry .optional {color:navy;font-weight:bold;}
 #f_bibtex_entry fieldset.optional {border:dotted 1px navy;display:none;}
 #f_bibtex_entry .optional label {color:navy;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
-#f_bibtex_entry .optional input {width:80%;border:1px solid black;margin:0.1em;}
+#f_bibtex_entry .optional input {width:80%;margin:0.1em;}
 #f_bibtex_entry .additional {color:green;font-weight:bold;}
 #f_bibtex_entry fieldset.additional {border:dotted 1px green;display:none;}
 #f_bibtex_entry .additional label {color:green;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
-#f_bibtex_entry .additional input {width:80%;border:1px solid black;margin:0.1em;}
-#f_bibtex_entry .additional textarea {height:165px;width:80%;border:1px solid black;margin:0.1em;}
+#f_bibtex_entry .additional input {width:80%;margin:0.1em;}
+#f_bibtex_entry .additional textarea {height:165px;width:80%;margin:0.1em;}
 
 
 /**
