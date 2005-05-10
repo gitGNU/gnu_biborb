@@ -8,8 +8,11 @@
 #</Files>
 
 #uncomment to forbid access to authentication files
-#<Files bib_*.txt >
+#<Files bib_*.txt>
 #   Deny from all
+#</Files>
+#<Files pref_*.txt>
+#  Deny from all
 #</Files>
 
 #Uncomment to restrict access using apache authentication
