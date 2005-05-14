@@ -25,7 +25,8 @@ http://bibliophile.sourceforge.net
 02/05/2005 G. Gardey - Add support for @string macro defined by curly brackets:
            @string{M12 = {December}}
                      - Don't expand macro for bibtexCitation and bibtexEntryType
-                     - Better support for fields like journal = {Journal of } # JRNL23
+                     - Better support for fields like journal = {Journal of } # JRNL2
+
 03/05/2005 G. Gardey - Fix wrong field value parsing when an entry ends by
                            someField = {value}}
 

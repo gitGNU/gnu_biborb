@@ -29,9 +29,65 @@
  * 
  * Description:
  *
- *      A simple class to encapsulate XSLT method.
+ *      A simple class to encapsulate XSLT method for PHP < 5
+ *      Call XSLT module functions if PHP >=5
  *    
  */
+
+
+
+if (PHP_VERSION >= 5) {
+    // Emulate the old xslt library functions
+    function xslt_create() {
+        return new XsltProcessor();
+    }
+
+    function xslt_process($xsltproc, 
+                          $xml_arg, 
+                          $xsl_arg, 
+                          $xslcontainer = null, 
+                          $args = null, 
+                          $params = null) {
+        // Start with preparing the arguments
+        $xml_arg = str_replace('arg:', '', $xml_arg);
+        $xsl_arg = str_replace('arg:', '', $xsl_arg);
+
+        // Create instances of the DomDocument class
+        $xml = new DomDocument;
+        $xsl = new DomDocument;
+
+        // Load the xml document and the xsl template
+        $xml->loadXML($args[$xml_arg]);
+        $xsl->loadXML($args[$xsl_arg]);
+
+        // Load the xsl template
+        $xsltproc->importStyleSheet($xsl);
+
+        // Set parameters when defined
+        if ($params) {
+            foreach ($params as $param => $value) {
+                $xsltproc->setParameter("", $param, $value);
+            }
+        }
+
+        // Start the transformation
+        $processed = $xsltproc->transformToXML($xml);
+        
+        // Put the result in a file when specified
+        if ($xslcontainer) {
+            return @file_put_contents($xslcontainer, $processed);
+        } else {
+            return $processed;
+        }
+        
+    }
+    
+    function xslt_free($xsltproc) {
+        unset($xsltproc);
+    }
+ }
+
+
 
 class XSLT_Processor {
 	
@@ -43,8 +99,10 @@ class XSLT_Processor {
 	
 	function XSLT_Processor($base,$encoding){
 		$this->xsltproc = xslt_create();
-		xslt_set_base($this->xsltproc,$base);
-		xslt_set_encoding($this->xsltproc,$encoding);
+        if(PHP_VERSION < 5){
+            xslt_set_base($this->xsltproc,$base);
+            xslt_set_encoding($this->xsltproc,$encoding);
+        }
 		$this->xsl_parameters = null;
 	}
 	
@@ -53,11 +111,15 @@ class XSLT_Processor {
 	}
 	
 	function set_xslt_encoding($encoding){
-		xslt_set_encoding($this->xsltproc,$encoding);
+        if(PHP_VERSION < 5){
+            xslt_set_encoding($this->xsltproc,$encoding);
+        }
 	}
 	
 	function set_xslt_base($base){
-		xslt_set_base($this->xsltproc,$base);
+        if(PHP_VERSION < 5){
+            xslt_set_base($this->xsltproc,$base);
+        }
 	}
 	
 	function set_xslt_parameters($param){
@@ -70,10 +132,11 @@ class XSLT_Processor {
 		$arguments = array('/_xml' => $xmlstring,
 						   '/_xsl' => $xslstring);
 		$result = xslt_process($this->xsltproc,'arg:/_xml','arg:/_xsl',NULL,$arguments,$xslparam);
-		if(!$result && xslt_errno($this->xsltproc)>0){
-			die(sprintf("Cannot process XSLT document [%d]: %s", xslt_errno($this->xsltproc), xslt_error($this->xsltproc)));
-		}
-		
+        if(PHP_VERSION < 5){
+            if(!$result && xslt_errno($this->xsltproc)>0){
+                die(sprintf("Cannot process XSLT document [%d]: %s", xslt_errno($this->xsltproc), xslt_error($this->xsltproc)));
+            }
+        }
 		return $result;
 	}	
 }
