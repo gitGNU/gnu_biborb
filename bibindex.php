@@ -157,7 +157,7 @@ if(array_key_exists('bibname',$_GET)){
  */
 if(!DISABLE_AUTHENTICATION){
     if(!array_key_exists('auth',$_SESSION)){
-        $_SESSION['auth'] = new Auth(AUTH_CRYPT);
+        $_SESSION['auth'] = new Auth();
     }
 
     if($update_auth){
