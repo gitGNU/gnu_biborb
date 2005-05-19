@@ -334,7 +334,7 @@ XSLT_END;
         $xsl_content = load_file("./xsl/entries_with_ids.xsl");
         //transform the array into an xml string
         $xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
-        $xml_content = "<listofids>";
+        $xml_content .= "<listofids>";
         foreach($anArray as $item){
             $xml_content .= "<id>$item</id>";
         }
