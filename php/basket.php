@@ -88,7 +88,7 @@ class Basket {
      * Remove all items.
      */
 	function reset(){
-        $this->item = array();
+        $this->items = array();
 	}
 	
     /**
