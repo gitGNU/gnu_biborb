@@ -130,7 +130,7 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
  * Style for biborb tabs
  */
 #tabnav {height:20px;margin:0;padding-left:10px;background:url(tab_bottom.gif) repeat-x bottom;}
-#tabnav li {margin:0;padding:0;dsiplay:inline;list-style-type:none;}
+#tabnav li {margin:0;padding:0;display:inline;list-style-type:none;}
 #tabnav a, #tabnav a:visited {float:left;background:#ddd;font-size:10px;line-height:14px;font-weight:bold;padding:2px 10px 2px 10px;margin-right:4px;border:solid 1px navy;text-decoration:none;color:#666;}
 #tabnav a.active, #tabnavavisited.active{border-bottom:solid 1px #ddf;background:#ddf;color:navy;}
 #tabnav a:hover {color:navy;}

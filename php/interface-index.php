@@ -235,7 +235,7 @@ function index_menu(){
     }
     if(array_key_exists('user',$_SESSION)){
         $html .= "<li>";
-        $html .= "<a href='index.php?mode=preferences' title='".msg("INDEX_MENPREFERENCES_HELP")."' >".msg("INDEX_MENU_PREFERENCES")."</a>";
+        $html .= "<a href='index.php?mode=preferences' title='".msg("INDEX_MENU_PREFERENCES_HELP")."' >".msg("INDEX_MENU_PREFERENCES")."</a>";
         $html .= "</li>";
     }
     if(!DISABLE_AUTHENTICATION && array_key_exists('user',$_SESSION)){

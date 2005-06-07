@@ -189,8 +189,11 @@ if(isset($_POST['action'])){
                     $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
                     load_i18n_config($_SESSION['language']);
                     // redirect to the default database
-                    if($_SESSION['user_pref']['default_database'] != ""){
+                    if(array_key_exists($_SESSION['user_pref']['default_database'],get_databases_names())){
                         header("Location:./bibindex.php?bibname=".$_SESSION['user_pref']['default_database']);
+                    }
+                    else{
+                        $mode = "welcome";
                     }
                 }
                 else {

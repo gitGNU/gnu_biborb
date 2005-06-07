@@ -684,7 +684,7 @@ XSLT_END;
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         // create an xml string containing id present in the basket
         $xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
-        $xml_content = "<listofids>";
+        $xml_content .= "<listofids>";
         foreach($idArray as $item){
             $xml_content .= "<id>$item</id>";
         }
@@ -714,7 +714,7 @@ XSLT_END;
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
         // create an xml string containing id present in the basket
         $xml_content = "<?xml version='1.0' encoding='iso-8859-1'?>";
-        $xml_content = "<listofids>";
+        $xml_content .= "<listofids>";
         foreach($idArray as $item){
             $xml_content .= "<id>$item</id>";
         }
