@@ -1,6 +1,6 @@
 <?php
 /**
-*
+ *
  * This file is part of BibORB
  * 
  * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
@@ -34,13 +34,16 @@
  *      Presently, only single XML file is supported.
  */
 
-// Use a single XML file as backend
-require_once("php/db_backends/biborbdb.xmlfile.php");
 
-// Use a mySQL backend
-//require_once("php/db_backends/biborbdb.mysql.php");
+require_once("config.php");
 
-// Use an XML database backend Exists
-//require_once("php/db_bakcends/biborbdb.exists.php");
+switch(DB_BACKEND){
+    case 'xml':
+        require_once("php/db_backends/biborbdb.xmlfile.php");
+        break;
+    case 'mysql':
+        require_once("php/db_backends/biborbdb.sql.php");
+        break;
+}
 
 ?>

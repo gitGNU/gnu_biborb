@@ -94,7 +94,9 @@ class Auth
     function is_valid_user($user,$pass){
         // connection to the users database
         $connect = @mysql_connect($this->host,$this->dbuser,$this->pass) or trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.",ERROR);
+
         $base = @mysql_select_db($this->dbname,$connect);
+        
         if(!$base){
             trigger_error("Unable to connect to the database!<br/>Check your MySQL configuration.",ERROR);
         }

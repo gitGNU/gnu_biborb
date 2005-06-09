@@ -71,6 +71,11 @@ define("DISABLE_AUTHENTICATION",TRUE);
 define("AUTH_METHOD",'files');
 
 /**
+ * Database backend (xml, mysql)
+ */
+define("DB_BACKEND","xml");
+
+/**
  *  Should a confirmation be displayed when deleting entries
  */
 define("WARN_BEFORE_DELETING",TRUE);

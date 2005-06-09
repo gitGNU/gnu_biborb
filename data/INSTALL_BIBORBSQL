@@ -1,0 +1,39 @@
+-- Requirements
+
+	* see INSTALL of biborb
+
+
+-- Installation
+	
+	* see INSTALL of biborb first
+	
+	* create biborb database and tables with biborb_sql.sql :
+		shell> mysql < biborb_sql.sql -u username -p
+	or if you are already in mysql client :
+		mysql> source biborb_sql.sql
+	you can also use phpmyadmin. For more information check the manual.
+
+	* from biborb root, copy biborbdb.sql.php in php/db_backends/
+	* from biborb root, modify php/biborbdb.php to obtain this :
+		// Use a single XML file as backend
+		//require_once("php/db_backends/biborbdb.xmlfile.php");
+
+		// Use a mySQL backend
+		require_once("php/db_backends/biborbdb.sql.php");
+
+	* from biborb root, modify php/db_backends/biborbdb.sql.php to connect to your
+	database server.
+		//! Database server name
+		$host = "localhost";
+		
+		//! Database user name
+		$user = "biborb";
+		
+		//! Database user password
+		$passwd = "biborb";
+		
+		//! SQL database name
+		$dbname = "biborb";
+		
+		//! SQL database type (MySQL, PostgreSQL, Oracle...)
+		$dbtype =  "mysql";
