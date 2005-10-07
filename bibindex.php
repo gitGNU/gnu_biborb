@@ -683,13 +683,22 @@ if(isset($_POST['action'])){
          */
         case 'export':
             if($_SESSION['basket']->count_items() != 0){
+                // Get which fields to export
+                $bibtex_fields = array();
+                foreach($GLOBALS['fields_to_export'] as $field){
+                    if(array_key_exists($field,$_POST)){
+                        $bibtex_fields[] = $field;
+                    }
+                }
+                
+                
                 // basket not empty -> processing
                 // get entries
                 $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
                 $bt = new BibTeX_Tools();
                 $tab = $bt->xml_to_bibtex_array($entries);
                 header("Content-Type: text/plain");
-                echo $bt->array_to_bibtex_string($tab,$GLOBALS['fields_to_export']);
+                echo $bt->array_to_bibtex_string($tab,$bibtex_fields);
                 exit();
             }
             else{
@@ -756,19 +765,15 @@ if(isset($_POST['action'])){
         case 'bibtex_from_aux':
             $bibtex_keys = bibtex_keys_from_aux($_FILES['aux_file']['tmp_name']);
             $xmldata = $_SESSION['bibdb']->entries_with_ids($bibtex_keys);
-            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
-            $param = $GLOBALS['xslparam'];
-            $param['fields_to_export'] = implode(".",$fields_to_export);
-            
+            $bt = new BibTeX_Tools();
             header("Content-disposition: attachment; filename=".$_FILES['aux_file']['name'].".bib"); 
             header("Content-Type: application/force-download");
-            echo $xsltp->transform($xmldata,load_file("./xsl/xml2bibtex_advanced.xsl"),$param);
-            $xsltp->free();
+            echo $bt->array_to_bibtex_string($bt->xml_to_bibtex_array($xmldata),$fields_to_export);
             die();
- 
-            /*
-                Create an archive of a given bibliography.
-             */
+
+       /*
+           Create an archive of a given bibliography.
+        */
         case 'get_archive':
             // move to bibs
             chdir("./bibs");
