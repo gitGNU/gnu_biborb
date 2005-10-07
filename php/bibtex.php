@@ -60,22 +60,23 @@ class BibTeX_Tools
     
     /**
      * Return an array of entries.
-     * $string is a BibTeX string
+     * @param $string is a BibTeX string
+     * @return an array of entries
      */
-    function get_array_from_string($string){
+    function get_array_from_string($string,$expand_macro = TRUE){
         $bibtex_parser = new PARSEENTRIES();
         $bibtex_parser->loadBibtexString($string);
-        $bibtex_parser->expandMacro = TRUE;
+        $bibtex_parser->expandMacro = FALSE;
         $bibtex_parser->extractEntries();
-        $res = $bibtex_parser->returnArrays();
-        $entries = $res[2];
+        list($preamble,$strings,$entries) = $bibtex_parser->returnArrays();
         $this->bibtex_import_post_traitment($entries);
         return $entries;
     }
         
     /**
      * Return an array of entries
-     * $filename is a BibTeX file
+     * @param $filename is a BibTeX file
+     * @return an array of entries
      */
     function get_array_from_file($filename){
         $bibtex_parser = new PARSEENTRIES();
@@ -203,7 +204,12 @@ class BibTeX_Tools
             foreach($fields_to_export as $field){
                 if(array_key_exists($field,$entry)){
                     $export .= ",\n";
-                    $export .= "\t".$field." = {".$entry[$field]."}";
+                    if($entry[$field][0] != "#"){
+                        $export .= "\t".$field." = {".$entry[$field]."}";
+                    }
+                    else{
+                        $export .= "\t".$field." = ".substr($entry[$field],1);
+                    }
                 }
             }
             $export .= "\n}\n";

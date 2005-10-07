@@ -82,7 +82,7 @@ http://bibliophile.sourceforge.net
 END;
 
 	$parse = NEW PARSEENTRIES();
-	$parse->expandMacro = TRUE;
+	$parse->expandMacro = FALSE;
 //	$parse->removeDelimit = FALSE;
 //	$parse->fieldExtract = FALSE;
 	$array = array("RMP" =>"Rev., Mod. Phys.");
@@ -330,13 +330,14 @@ class PARSEENTRIES
 	function removeDelimitersAndExpand($string, $preamble = FALSE)
 	{
 	   // 02/05/2005 G. Gardey
-		$string = $this->removeDelimiters($string);
+//		$string = $this->removeDelimiters($string);
 // expand the macro if defined
 // 23/08/2004 Mark - changed isset() to !empty() since $this->strings isset in constructor.
-		if($string && $this->expandMacro)
+		if($string && $this->expandMacro && $string[0]!='{'&& $string[strlen($string)-1] != "}")
 		{
             if(!empty($this->strings) && !$preamble)
 			{
+                
 // macro are case insensitive
                 foreach($this->strings as $key => $value)
 				{
@@ -364,8 +365,15 @@ class PARSEENTRIES
                     }
                 }
         	}
-            return $string;
+        if(!$this->expandMacro && (($string[0]!='{'&& $string[strlen($string)-1] != "}") &&
+           ($string[0]!='"'&& $string[strlen($string)-1] != "\""))){
+            $string = "#".$string;
         }
+        else{
+            $string = $this->removeDelimiters($string);
+        }
+        return $string;
+    }
 // This method starts the whole process
 	function extractEntries()
 	{
@@ -430,7 +438,7 @@ class PARSEENTRIES
 		            	     // 02/05/2005 G. Gardey don't expand macro for bibtexCitation 
 		            	     // and bibtexEntryType
 		            	     if($key != 'id' && $key != '___type'){
-    		                	$this->entries[$i][$key] = trim($this->removeDelimitersAndExpand($this->entries[$i][$key])); 
+    		                	$this->entries[$i][$key] = trim($this->removeDelimitersAndExpand($this->entries[$i][$key]));
     		              }
 		        }
 		}
