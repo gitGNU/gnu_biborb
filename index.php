@@ -40,6 +40,7 @@
  */
 
 require_once("config.php");          // load configuration variables
+require_once("config.misc.php");
 require_once("php/functions.php");   // load needed functions
 require_once("php/biborbdb.php");    // load biborb database
 require_once("php/interface-index.php");   // load function to generate the interface

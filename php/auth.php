@@ -30,6 +30,7 @@
  */
 
 require_once("config.php");
+require_once("config.misc.php");
 if(!DISABLE_AUTHENTICATION){
     switch(AUTH_METHOD){
         // Use file authentication system

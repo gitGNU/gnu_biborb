@@ -297,4 +297,19 @@ function ownership_html_select($name,$selected){
     return $html;
 }
 
+/**
+ * Return the major PHP version number
+ */
+function php_major_version_number() {
+	$tab = explode('.',phpversion());
+	return (int) $tab[0];
+}
+
+function is_php5() {
+	return php_major_version_number() == 5;
+}
+
+function is_php4() {
+	return php_major_version_number() == 4;
+}
 ?>

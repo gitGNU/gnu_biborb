@@ -3,7 +3,7 @@
  *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
+ * Copyright (C) 2007  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,28 +23,20 @@
 
 /**
  * 
- * File: biborbdb.php
+ * File: config.misc.php
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Licence: GPL
  * 
  * Description:
  *
- *      Select which backend to use for recording references.
- *
- *      Presently, only single XML file is supported.
  */
 
 
-require_once("config.php");
-require_once("config.misc.php");
-
-switch(DB_BACKEND){
-    case 'xml':
-        require_once("php/db_backends/biborbdb.xmlfile.php");
-        break;
-    case 'mysql':
-        require_once("php/db_backends/biborbdb.sql.php");
-        break;
+/*
+	Set the default time zone.
+	Only available to php >= 5.1.0
+*/
+if ( version_compare(phpversion(), "5.1.0", ">=") ) {
+	date_default_timezone_set(BIBORB_TZ);
 }
-
 ?>

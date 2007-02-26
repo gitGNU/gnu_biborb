@@ -68,6 +68,7 @@
  */
 
 require_once("config.php"); // globals definitions
+require_once("config.misc.php");
 require_once("php/functions.php"); // functions
 require_once("php/basket.php"); // basket functions
 require_once("php/biborbdb.php"); // database
@@ -690,7 +691,7 @@ if(isset($_POST['action'])){
                         $bibtex_fields[] = $field;
                     }
                 }
-                
+               
                 
                 // basket not empty -> processing
                 // get entries
