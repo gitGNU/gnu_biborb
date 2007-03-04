@@ -3,11 +3,11 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Serveur: localhost
--- Généré le : Mercredi 08 Juin 2005 à 16:05
+-- GÃ©nÃ©rÃ© le : Mercredi 08 Juin 2005 Ã  16:05
 -- Version du serveur: 4.0.24
 -- Version de PHP: 4.3.10-14
 -- 
--- Base de données: `biborb`
+-- Base de donnÃ©es: `biborb`
 -- 
 CREATE DATABASE `biborb`;
 USE biborb;

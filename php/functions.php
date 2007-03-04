@@ -2,34 +2,34 @@
 /**
  *
  * This file is part of BibORB
- * 
- * Copyright (C) 2003-2005  Guillaume Gardey
- * 
+ *
+ * Copyright (C) 2003-2007  Guillaume Gardey
+ *
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * BibORB is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
- 
+
 /**
- * 
+ *
  * File: functions.php
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Year: 2003
  * Licence: GPL
- * 
+ *
  * Description:
- *      
+ *
  *      Some generic functions
  */
 
@@ -43,7 +43,7 @@ require_once("php/bibtex.php");
 
 
 /**
- * Upload a file.	
+ * Upload a file.
  * If successful, return the name of the file, otherwise null.
  * Overwrite if the file is already present.
  *
@@ -52,7 +52,7 @@ require_once("php/bibtex.php");
  * @param $id The BibTeX id of the paper.
  *
  * @return The name of the file uploaded on success. Null otherwise.
- * 
+ *
  * @author G. Gardey
  */
 function upload_file($bibname,$type,$id)
@@ -89,7 +89,7 @@ function main($title,$content,$error = null,$message = null)
   if($message){$html .= "<div id='message'>$message</div>";}
   if($content != null) {$html .= "<div id='content'>$content</div>";}
   $html .= "</div>";
-  return $html;  
+  return $html;
 }
 
 
@@ -117,7 +117,7 @@ function deldir($dir) {
  */
 function remove_accents($string){
     return strtr($string,
-                "•µ¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—“”‘’÷ÿŸ⁄€‹›ﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ¯˘˙˚¸˝ˇ",
+                "¬•¬µ√Ä√Å√Ç√É√Ñ√Ö√Ü√á√à√â√ä√ã√å√ç√é√è√ê√ë√í√ì√î√ï√ñ√ò√ô√ö√õ√ú√ù√ü√†√°√¢√£√§√•√¶√ß√®√©√™√´√¨√≠√Æ√Ø√∞√±√≤√≥√¥√µ√∂√∏√π√∫√ª√º√Ω√ø",
                 "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy");
 }
 
@@ -152,15 +152,13 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
  * @param $misc An array containing additional values for the form.
  */
 function sort_div($selected_sort,$selected_order,$mode,$misc){
-    // ensure the localization is set up
-    load_i18n_config($_SESSION['language']);
 
     $html = "<div class='sort'>";
     $html .= msg("Sort by:");
     $html .= "&nbsp;<form method='get' action='bibindex.php'>";
     $html .= "<fieldset>";
     $html .= "<select name='sort' size='1'>";
-    
+
     foreach($_SESSION['bibdb']->sort_values as $sort_val){
         if($selected_sort == $sort_val){
             $html .= "<option value='$sort_val' selected='selected'>".msg("$sort_val")."</option>";
@@ -195,7 +193,7 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
     $html .= "</fieldset>";
     $html .= "</form>";
     $html .= "</div>";
-    
+
     return $html;
 }
 
@@ -205,7 +203,7 @@ function sort_div($selected_sort,$selected_order,$mode,$misc){
  * @return An array of BibTeX keys.
  */
 function bibtex_keys_from_aux($auxfile){
-    $lines = load_file($auxfile);
+    $lines = file_get_contents($auxfile);
     preg_match_all("/citation{(.*)}/i",$lines,$res);
     return $res[1];
 }
@@ -225,7 +223,7 @@ function create_nav_bar($current_page,$max_page,$mode,$extraparam=null){
             $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=0'><img src='data/images/stock_first-16.png' alt='First' title='First'/></a>";
             $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=".($current_page-1)."'><img src='data/images/stock_left-16.png' alt='Previous' title='Previous'/></a>";
         }
-        
+
         // computes which index to display
         $nb = 10;
         if($current_page-$nb<0){
@@ -237,12 +235,12 @@ function create_nav_bar($current_page,$max_page,$mode,$extraparam=null){
         else{
             $start_index = max($current_page - $nb-1,0);
         }
-        
+
         // if $start_index is not 0 display dots
         if($start_index != 0){
             $html .= "&nbsp;...&nbsp;";
         }
-        
+
         // output the numbered navigation bar
         for($i=$start_index;$i<$max_page && $i<$start_index+2*$nb ;$i++){
             if($current_page==$i){
@@ -252,12 +250,12 @@ function create_nav_bar($current_page,$max_page,$mode,$extraparam=null){
                 $html .= "<a class='num_page' href='bibindex.php?mode=$mode$extraparam&amp;page=$i'>".($i+1)."</a>";
             }
         }
-        
+
         // if the last page number is not displayed, output dots.
         if($i != $max_page){
             $html .= "&nbsp;...&nbsp;";
         }
-        
+
         // right arrows to display if this isn't the last page
         if($current_page != $max_page-1){
             $html .= "<a href='bibindex.php?mode=$mode$extraparam&amp;page=".($current_page+1)."'><img src='data/images/stock_right-16.png' alt='Next' title='Next'/></a>";

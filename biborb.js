@@ -15,7 +15,7 @@ function addGroup()
     var groupslist = document.forms['f_bibtex_entry'].elements['groupslist'];
     var groupArray = groups.value.split(",");
     var addGroup = groupslist.options[groupslist.selectedIndex].value;
-    
+
     found = false;
     for(i=0;i<groupArray.length && !found; i++){
         found = (groupArray[i] == addGroup);
@@ -33,10 +33,10 @@ function change_db(name){
     window.location="./bibindex.php?bibname="+name;
 }
 
-function change_lang(name){
+function changeLangForBibIndex(name){
     window.location="./bibindex.php?language="+name;
 }
-function change_lang_index(name){
+function changeLangForIndex(name){
     window.location="./index.php?action=select_lang&lang="+name;
 }
 
@@ -69,14 +69,14 @@ function validate_bib_creation(lang){
 function validate_add_group(lang){
     var msg;
     var group = document.forms['add_new_group'].elements['newgroupvalue'].value;
-    
+
     if(lang == 'fr_FR'){
 		msg = "Nom de groupe vide!";
 	}
 	else if(lang == 'en_US'){
 		msg = "Empty group name!";
 	}
-    
+
 	if(trim(group) == ""){
 		alert(msg);
 		return false;
@@ -90,14 +90,14 @@ function validate_add_group(lang){
 function validate_new_entry_form(lang){
     var msg;
     var id = document.forms['f_bibtex_entry'].elements['id'].value;
-    
+
     if(lang == 'fr_FR'){
-		msg = "Clé BibTeX vide! Vous devez définir une clé BibTeX!";
+		msg = "ClÃ© BibTeX vide! Vous devez dÃ©finir une clÃ© BibTeX!";
 	}
 	else if(lang == 'en_US'){
 		msg = "Empty ID! You must define a BibTeX ID.";
 	}
-    
+
 	if(trim(id) == ""){
 		alert(msg);
 		return false;
@@ -110,14 +110,14 @@ function validate_new_entry_form(lang){
 function validate_new_bibtex_key(lang){
     var msg;
     var group = document.forms['new_bibtex_key'].elements['bibtex_key'].value;
-    
+
     if(lang == 'fr_FR'){
-		msg = "Clé BibTeX vide! Vous devez définir une clé BibTeX!";
+		msg = "ClÃ© BibTeX vide! Vous devez dÃ©finir une clÃ© BibTeX!";
 	}
 	else if(lang == 'en_US'){
 		msg = "Empty ID! You must define a BibTeX ID.";
 	}
-    
+
 	if(trim(group) == ""){
 		alert(msg);
 		return false;
@@ -131,14 +131,14 @@ function validate_new_bibtex_key(lang){
 function validate_bibtex2aux_form(lang){
     var msg;
     var group = document.forms['bibtex2aux_form'].elements['aux_file'].value;
-    
+
     if(lang == 'fr_FR'){
-		msg = "Aucun fichier sélectionné!";
+		msg = "Aucun fichier sÃ©lectionnÃ©!";
 	}
 	else if(lang == 'en_US'){
 		msg = "No file selected!";
 	}
-    
+
 	if(trim(group) == ""){
 		alert(msg);
 		return false;
@@ -151,14 +151,14 @@ function validate_bibtex2aux_form(lang){
 function validate_xpath_form(lang){
     var msg;
     var group = document.forms['xpath_form'].elements['xpath_query'].value;
-    
+
     if(lang == 'fr_FR'){
-		msg = "Requète XPath vide!";
+		msg = "RequÃ¨te XPath vide!";
 	}
 	else if(lang == 'en_US'){
 		msg = "Empty XPath query!";
 	}
-    
+
 	if(trim(group) == ""){
 		alert(msg);
 		return false;
@@ -172,14 +172,14 @@ function validate_login_form(lang){
     var msg;
     var username = document.forms['login_form'].elements['login'].value;
     var pass = document.forms['login_form'].elements['mdp'].value;
-    
+
     if(lang == 'fr_FR'){
 		msg = "Utilisateur ou mot de passe vide!";
 	}
 	else if(lang == 'en_US'){
 		msg = "Empty username or password!";
 	}
-    
+
 	if(trim(username) == "" || trim(pass)==""){
 		alert(msg);
 		return false;

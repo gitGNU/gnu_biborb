@@ -1,33 +1,33 @@
 <p>
-    Ce menu donne accès aux fonctions d'administration. Selon la configuration
+    Ce menu donne accÃ¨s aux fonctions d'administration. Selon la configuration
     de <acronym class='biborb'>BibORB</acronym> vous pouvez ajouter, importer des
-    références ou mettre à jour la bibliographie.
+    rÃ©fÃ©rences ou mettre Ã  jour la bibliographie.
 </p>
 
 <table class='help'>
 	<tbody>
 		<tr class='colored'>
 			<th>S'Identifier</th>
-			<td>S'Identifier pour avoir accès aux fonctions d'ajout et d'importation.</td>
+			<td>S'Identifier pour avoir accÃ¨s aux fonctions d'ajout et d'importation.</td>
 		</tr>
 		<tr>
-			<th>Déconnexion</th>
-			<td>Déconnexion</td>
+			<th>DÃ©connexion</th>
+			<td>DÃ©connexion</td>
 		</tr>
 		<tr class='colored'>
-			<th>Ajouter une référence</th>
+			<th>Ajouter une rÃ©fÃ©rence</th>
 			<td/>
 		</tr>
 		<tr>
-			<th>Mettre à jour (BibTeX)</th>
-			<td>La bibliographie est mise à jour en fonction du fichier .bib 
-			présent dans le répertoire de la bibliographie. Utilisez-le si vous éditez votre bibliographie (avec un éditeur de texte ou un autre outil) pour mettre à jour les informations.</td>
+			<th>Mettre Ã  jour (BibTeX)</th>
+			<td>La bibliographie est mise Ã  jour en fonction du fichier .bib 
+			prÃ©sent dans le rÃ©pertoire de la bibliographie. Utilisez-le si vous Ã©ditez votre bibliographie (avec un Ã©diteur de texte ou un autre outil) pour mettre Ã  jour les informations.</td>
 		</tr>
 		<tr class='colored'>
 			<th>Importer BibTeX</th>
-			<td>Importer les références contenues dans une chaîne <acronym>BibTeX</acronym>
+			<td>Importer les rÃ©fÃ©rences contenues dans une chaÃ®ne <acronym>BibTeX</acronym>
 			ou dans un fichier <code>.bib</code>. Les macros <code>@string</code> seront
-			résolues et remplacées.</td>
+			rÃ©solues et remplacÃ©es.</td>
 		</tr>
 	</tbody>
 </table>

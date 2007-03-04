@@ -2,37 +2,37 @@
 /**
  *
  * This file is part of BibORB
- * 
- * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
- * 
+ *
+ * Copyright (C) 2003-2007  Guillaume Gardey (ggardey@club-internet.fr)
+ *
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * BibORB is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
- 
+
 /**
- * 
+ *
  * File: utilities.php
  * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Licence: GPL
- * 
+ *
  * Description:
- * 
- *      Some useful functions 
- * 
+ *
+ *      Some useful functions
+ *
  */
- 
+
 /**
     Use to change the base name of a file, keeping its extension
     returns the new file name
@@ -52,50 +52,44 @@ function get_new_name($filename,$newbasename) {
     Close an HTML page.
  */
 function html_close() {
-    return "</body></html>";  
+    return "</body></html>";
 }
 
 /**
-    Create an HTML header
+ * Create an HTML header
  */
-function html_header($title = NULL, $style = NULL, $bodyclass=NULL, $inbody=NULL) {
-    $html  = '<?xml version="1.0" encoding="ISO-8859-1"?>';
-    $html .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">';  
-    $html .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >';
-    $html .= "<head>";
-    // Charset, content type
-    $html .= "<meta http-equiv='content-type' content='text/html; charset=ISO-8859-1' />";
-    // how to handle robots
-    $html .= "<meta name='robots' content='noindex,nofollow'/>";
-    // define the CSS stylesheet
-    if($style){
-        $html .= "<link href='$style' rel='stylesheet' type='text/css'/>";
-    }  
-    // define the title
-    if($title){
-        $html .= "<title>$title</title>";
-    }
-    // define the javascript ressource
-    $html .= "<script type='text/javascript' src='./biborb.js'></script>";
-    
-    $html .= "</head>";
-    $html .= "<body";
-    if($bodyclass){    
-        $html .= " class='$bodyclass' ";
-    }
-    if($inbody){
-        $html .= " ".$inbody." ";
-    }
-    $html .= ">";
-    
-    return $html;  
-}
+function html_header($iTitle = NULL, $iStyle = NULL, $iBodyClass=NULL, $iInBody=NULL)
+{
+    $aHtml  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+    $aHtml .= "\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">";
+    $aHtml .= "\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" >";
+    $aHtml .= "\n<head>";
 
-/*
-    Load a text file
- */
-function load_file($filename) {
-  return implode('',file($filename));  
+    // Charset, content type
+    $aHtml .= "\n\t<meta http-equiv='content-type' content='text/html; charset=utf-8' />";
+
+    // how to handle robots
+    $aHtml .= "\n\t<meta name='robots' content='noindex,nofollow'/>";
+
+    // define the CSS stylesheet
+    if ($iStyle)
+    {
+        $aHtml .= "\n\t<link href='$iStyle' rel='stylesheet' type='text/css'/>";
+    }
+
+    // define the title
+    if($iTitle)
+    {
+        $aHtml .= "\n\t<title>$iTitle</title>\n";
+    }
+
+    // define the javascript ressource
+    $aHtml .= "\n\t<script type='text/javascript' src='./biborb.js'></script>";
+
+    $aHtml .= "\n</head>";
+    $aHtml .= sprintf("\n<body%s%s>",$iBodyClass,$iInBody);
+
+    return $aHtml;
 }
 
 /**
@@ -103,7 +97,7 @@ function load_file($filename) {
  */
 function myhtmlentities($str){
     $patterns = array('&','<','>');
-    $replace = array('&amp;','&lt;','&gt;');    
+    $replace = array('&amp;','&lt;','&gt;');
     return str_replace($patterns,$replace,$str);
 }
 
@@ -193,7 +187,7 @@ if (!function_exists('array_chunk')) {
 /**
     Evaluate a string has PHP code.
     PHP code should be defined between "<?php" and "?>".
- 
+
  Example:
     eval_php("<div class='aC'>Today is: <?php echo date("d/m/Y")?>. </div>")
  will return: "<div class='aC'>Today is: 01/01/2003. </div>"
@@ -312,4 +306,39 @@ function is_php5() {
 function is_php4() {
 	return php_major_version_number() == 4;
 }
+
+/**
+ * Tool kit class for files management
+ *
+ */
+class FileToolKit
+{
+	/**
+	 * Return the content of a file in a string. An error is thrown if an error
+	 * occured while loading the file.
+	 *
+	 * @param $iFilePath A file to load.
+	 */
+	function getContent($iFilePath)
+	{
+		$aRes = file_get_contents($iFilePath);
+		if ($aRes === FALSE)
+		{
+			trigger_error(msg("ERROR_GET_FILE"), E_USER_ERROR);
+		}
+
+		return $aRes;
+	}
+};
+
+/**
+ * Unset the variable and set it to false.
+ * We then can use if($ioData) ... without checking with isset
+ */
+function myUnset(&$ioData)
+{
+    unset($ioData);
+    $ioData = null;
+}
+
 ?>

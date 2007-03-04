@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="iso-8859-1" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
+ * Copyright (C) 2003-2007  Guillaume Gardey (ggardey@club-internet.fr)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@
     xmlns:bibtex="http://bibtexml.sf.net/"
     version="1.0">
   
-    <xsl:output method="text" encoding="iso-8859-1"/>
+    <xsl:output method="text" encoding="UTF-8"/>
 	
 	<!-- include generic parameters -->
 	<xsl:include href="xsl/parameters.xsl"/>

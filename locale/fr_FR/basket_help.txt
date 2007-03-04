@@ -1,20 +1,20 @@
 <p>
-Ce menu donne accès aux fonctions du panier. Vous pouvez sélectionner des références et appliquer une fonction sur ces réferences.
+Ce menu donne accÃ¨s aux fonctions du panier. Vous pouvez sÃ©lectionner des rÃ©fÃ©rences et appliquer une fonction sur ces rÃ©ferences.
 </p>
 
 <table class="help">
 	<tbody>
 		<tr class='colored'>
 			<th>Afficher Tout</th>
-			<td>Afficher toutes les références du panier.</td>
+			<td>Afficher toutes les rÃ©fÃ©rences du panier.</td>
 		</tr>
 		<tr>
 			<th>Modifier les groupes</th>
-			<td>Classer les références en utilisant des "groupes".</td>
+			<td>Classer les rÃ©fÃ©rences en utilisant des "groupes".</td>
 		</tr>
 		<tr class='colored'>
 			<th>Exporter...</th>
-			<td>Exporter la sélection au format <acronym>BibTeX</acronym>,<acronym>RIS</acronym> ou <acronym>DocBook</acronym>.</td>
+			<td>Exporter la sÃ©lection au format <acronym>BibTeX</acronym>,<acronym>RIS</acronym> ou <acronym>DocBook</acronym>.</td>
 		</tr>
         <tr>
 			<th>Vider</th>

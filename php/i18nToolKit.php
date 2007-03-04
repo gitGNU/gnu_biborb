@@ -32,16 +32,17 @@
 
 ini_set("default_charset","utf-8");
 /**
- * i18nToolKit: This class is used to group all i18n needed functions.
+ * i18nToolKit:
+ *      This class is used to group all i18n needed functions.
  *
  */
 class i18nToolKit
 {
-    // Table of translation indexed by locale
+    // Table of translation for the current locale
     var $_localizedStrings;
     // The current locale
     var $_locale;
-    // defined locales
+    // All availables locales
     var $_definedLocales;
 
     /**
@@ -54,8 +55,8 @@ class i18nToolKit
     function i18nToolKit($iLocale, $iDefaultLocale)
     {
         /*
-            Load locale and check the one asked exists.
-            Else fallback to en_US and load the data
+            Load locales and check that $iLocale exists.
+            Else fallback to $iDefaultLocale and load the data.
          */
         $aLocaleToLoad = $iLocale;
         $this->loadDefinedLocales();
@@ -96,6 +97,8 @@ class i18nToolKit
 
     /**
      * Get the set of available locales
+     *
+     * @return An array containing all available locales.
      */
     function getLocales()
     {
@@ -103,16 +106,19 @@ class i18nToolKit
     }
 
     /**
-     * Load localized strings for a given
+     * Load localized strings for the current locale.
      */
     function loadLocalizedData()
     {
+        myUnset($this->_localizedStrings);
+        $this->_localizedStrings = array();
+
         $aFile = file("./locale/{$this->_locale}/LC_MESSAGES/biborb.po");
         $aMsgId = null; // msgid
         $aMsgStr = "";  // msgstr
         foreach( $aFile as $aLine)
         {
-            if (preg_match("/\s*msgid \"(.*)\"/", $aLine, $aMatches))
+            if (preg_match("/\s*msgid \"(.*)\"/u", $aLine, $aMatches))
             {
                 if (isset($aMsgId))
                 {
@@ -121,14 +127,10 @@ class i18nToolKit
                 $aMsgId = $aMatches[1];
                 $aMsgStr = "";
             }
-            else if (preg_match("/(?:\s*msgstr)?\"(.*)\"/", $aLine,$aMatches))
+            else if (preg_match("/\s*[^#](?:msgstr)?\"(.*)\"/u", $aLine, $aMatches))
             {
                 $aMsgStr .= $aMatches[1];
             }
-            /*else if (preg_match("/\"(.*)\"/", $aLine, $aMatches))
-            {
-                $aMsgStr .= $aMatches[1];
-            }*/
         }
         if ($aMsgId)
         {
@@ -137,7 +139,9 @@ class i18nToolKit
     }
 
     /**
-     * Get the current locale
+     * Get the current locale.
+     *
+     * @return The locale.
      */
     function getLocale()
     {
@@ -145,7 +149,7 @@ class i18nToolKit
     }
 
     /**
-     * Get the traduction of a string for a given locale.
+     * Get the translation of a string for a given locale.
      *
      * @param $iString The string to localize
      * @param $iLocale The locale to use
@@ -154,7 +158,9 @@ class i18nToolKit
     {
         if (!isset($this->_localizedStrings[$iString]))
         {
-            trigger_error("ERROR_I18N_STRING_NOT_DEFINED", E_USER_NOTICE);
+            $aContext = array( 'locale' => $this->_locale,
+                               'string' => $iString);
+            $_SESSION['errorManager']->triggerWarning("ERROR_I18N_STRING_NOT_DEFINED", $aContext);
             return $iString;
         }
         else
@@ -164,8 +170,10 @@ class i18nToolKit
     }
 
     /**
-     * Get a localized version of a file
+     * Get a localized version of a file.
      *
+     * @param $iFileName File's name.
+     * @return The content of the file for the current locale.
      */
     function getFile($iFileName)
     {
@@ -174,6 +182,8 @@ class i18nToolKit
 
     /**
      * Try to detect the prefered language in $_SERVER
+     *
+     * @return If defined, the local sent by the browser else, FALSE.
      */
     /* static */ function getPreferedLanguage()
     {
@@ -194,40 +204,48 @@ class i18nToolKit
         }
         return FALSE;
     }
+
+    /**
+     * Parse a string and replace with localized data for BIBORB_OUTPUT_* elements
+     *
+     * @param $ioString A string to localize.
+     */
+    function localizeBiborbString(&$ioString)
+    {
+        // get all keys to translate
+        preg_match_all("/(BIBORB_OUTPUT\w+)/u", $ioString, $aMatches);
+        $aKeys = array_unique($aMatches[0]);
+        $aStrToReplace = array_map('msg', $aKeys);
+        $ioString = str_replace($aKeys, $aStrToReplace, $ioString);
+    }
+
+    /**
+     * Change the current locale
+     */
+    function loadLocale($iLocale)
+    {
+        $aLocaleToLoad = $iLocale;
+        if (!isset($this->_definedLocales[$iLocale]))
+        {
+            trigger_error("ERROR_I18N_LOCALE_NOT_DEFINED", E_USER_ERROR);
+            $aLocaleToLoad = $this->_defaultLocale;
+        }
+        $this->_locale = $aLocaleToLoad;
+        $this->loadLocalizedData();
+    }
+
 }
 
 
 /**
- * Translate a localized string
- * If $string doesn't exists, $string is returned.
- *  msg get the language configuration from $_SESSION
+ * Translate a localized string (shortcut to i18nToolKit)
  *
- * \param $iString A string to translate
- *\return The localized version of $iString
+ * @param $iString A string to translate
+ * @return The localized version of $iString
  */
 function msg($iString)
 {
     return $_SESSION['i18n']->msg($iString);
 }
-
-
-/**
- * Parse a string and replace with localized data
- */
-function replace_localized_strings($string)
-{
-    // ensure localisation is set up
-    load_i18n_config($_SESSION['language']);
-    // get all key to translate
-    preg_match_all("(BIBORB_OUTPUT\w+)",$string,$matches);
-    $keys = array_unique($matches[0]);
-    // get the localized value for each element and replace it
-    foreach($keys as $val){
-        $string = str_replace($val,msg("$val"),$string);
-    }
-    return $string;
-}
-
-
 
 ?>

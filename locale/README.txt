@@ -28,7 +28,7 @@ for a list)
             msgstr ""
         Localized File:
             msgid "Update"
-            msgstr "Mettre à jour"
+            msgstr "Mettre Ã  jour"
             
     4) Compile the biborb.po file.
         msgfmt -o biborb.mo biborb.po

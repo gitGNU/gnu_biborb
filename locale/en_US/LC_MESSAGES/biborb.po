@@ -1,5 +1,5 @@
 # English localization file for BibORB
-# Copyright (C) 2004, BibORB, released under the GPL licence.
+# Copyright (C) 2004-2007, BibORB, released under the GPL licence.
 # This file is distributed under the same license as the BibORB package.
 # Guillaume Gardey <ggardey@club-internet.fr>, 2004.
 #
@@ -7,15 +7,15 @@
 msgid ""
 msgstr ""
 
-"Project-Id-Version: BibORB 1.3.2\n"
-"Report-Msgid-Bugs-To: ggardey@club-internet.fr\n"
-"POT-Creation-Date: 2004-09-19 21:00+0200\n"
-"PO-Revision-Date: 2004-09-19 21:00+0200\n"
-"Last-Translator: Guillaume Gardey <ggardey@club-internet.fr>\n"
-"Language-Team:  <biborb-i18n@nongnu.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
-"Content-Transfer-Encoding: 8bit\n"
+#"Project-Id-Version: BibORB 1.3.3\n"
+#"Report-Msgid-Bugs-To: ggardey@club-internet.fr\n"
+#"POT-Creation-Date: 2004-09-19 21:00+0200\n"
+#"PO-Revision-Date: 2004-09-19 21:00+0200\n"
+#"Last-Translator: Guillaume Gardey <ggardey@club-internet.fr>\n"
+#"Language-Team:  <biborb-i18n@nongnu.org>\n"
+#"MIME-Version: 1.0\n"
+#"Content-Type: text/plain; charset=UTF-8\n"
+#"Content-Transfer-Encoding: 8bit\n"
 
 #: bibindex.php:269 bibindex.php:297 bibindex.php:354 bibindex.php:379
 msgid "Yes"
@@ -885,16 +885,16 @@ msgstr ""
 msgid "address"
 msgstr ""
 
-msgid "annote" 
+msgid "annote"
 msgstr ""
 
-msgid "author" 
+msgid "author"
 msgstr ""
 
-msgid "booktitle" 
+msgid "booktitle"
 msgstr ""
 
-msgid "chapter" 
+msgid "chapter"
 msgstr ""
 
 msgid "crossref"
@@ -921,7 +921,7 @@ msgstr ""
 msgid "month"
 msgstr ""
 
-msgid "note" 
+msgid "note"
 msgstr ""
 
 msgid "number"
@@ -939,22 +939,22 @@ msgstr ""
 msgid "school"
 msgstr ""
 
-msgid "series" 
+msgid "series"
 msgstr ""
 
-msgid "title" 
+msgid "title"
 msgstr ""
 
-msgid "type" 
+msgid "type"
 msgstr ""
 
-msgid "volume" 
+msgid "volume"
 msgstr ""
 
 msgid "year"
 msgstr ""
 
-msgid "abstract" 
+msgid "abstract"
 msgstr ""
 
 msgid "keywords"
@@ -979,6 +979,21 @@ msgid "longnotes"
 msgstr ""
 
 msgid "link"
+msgstr ""
+
+msgid "ad_url"
+msgstr ""
+
+msgid "ad_urlzip"
+msgstr ""
+
+msgid "ad_pdf"
+msgstr ""
+
+msgid "own"
+msgstr ""
+
+msgid "read"
 msgstr ""
 
 msgid "BIBORB_OUTPUT_OWN_ALT"
@@ -1175,3 +1190,6 @@ msgstr "Export"
 
 msgid "TOOL_EXPORT_HELP"
 msgstr "Export the whole bibliography to a bibliographic format (BibTeX, RIS, DocBook)."
+
+msgid "File"
+msgstr ""

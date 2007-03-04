@@ -1,21 +1,22 @@
 # French localization file for BibORB
-# Copyright (C) 2004, BibORB, released under the GPL licence.
+# Copyright (C) 2004-2007, BibORB, released under the GPL licence.
 # This file is distributed under the same license as the BibORB package.
 # Guillaume Gardey <ggardey@club-internet.fr>, 2004.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: BibORB\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-11-22 23:14+0100\n"
-"PO-Revision-Date: 2004-11-22 23:14+0100\n"
-"Last-Translator: Guillaume Gardey <ggardey@club-internet.fr>\n"
-"Language-Team: <biborb-i18n@nongnu.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: "
+
+#"Project-Id-Version: BibORB\n"
+#"Report-Msgid-Bugs-To: \n"
+#"POT-Creation-Date: 2004-11-22 23:14+0100\n"
+#"PO-Revision-Date: 2004-11-22 23:14+0100\n"
+#"Last-Translator: Guillaume Gardey <ggardey@club-internet.fr>\n"
+#"Language-Team: <biborb-i18n@nongnu.org>\n"
+#"MIME-Version: 1.0\n"
+#"Content-Type: text/plain; charset=UTF-8\n"
+#"Content-Transfer-Encoding: 8bit\n"
+#"Plural-Forms: "
 
 #: bibindex.php:204 bibindex.php:231 bibindex.php:283 bibindex.php:308
 msgid "Yes"
@@ -24,7 +25,7 @@ msgstr "Oui"
 #: bibindex.php:215
 #, php-format
 msgid "The following entry was deleted: <pre>%s</pre>"
-msgstr "La référence suivante a été effacée: <pre>%s</pre>"
+msgstr "La rÃ©fÃ©rence suivante a Ã©tÃ© effacÃ©e: <pre>%s</pre>"
 
 #: bibindex.php:220 bibindex.php:230 bibindex.php:297 bibindex.php:307
 msgid "No"
@@ -33,7 +34,7 @@ msgstr "Non"
 #: bibindex.php:225
 #, php-format
 msgid "Delete this entry? <pre>%s</pre>"
-msgstr "Supprimer cette référence? <pre>%s</pre>"
+msgstr "Supprimer cette rÃ©fÃ©rence? <pre>%s</pre>"
 
 #: bibindex.php:241 bibindex.php:327 interface.php:1066 interface.php:1074
 #: interface.php:1154
@@ -42,11 +43,11 @@ msgstr "Ajouter"
 
 #: bibindex.php:243
 msgid "No group specified!"
-msgstr "Aucun sélectionné!"
+msgstr "Aucun sÃ©lectionnÃ©!"
 
 #: bibindex.php:250 interface.php:1057
 msgid "Reset"
-msgstr "Réinitialiser"
+msgstr "RÃ©initialiser"
 
 #: bibindex.php:258 bibindex.php:419 interface.php:1113 interface.php:1153
 #: interface.php:1216
@@ -56,36 +57,36 @@ msgstr "Annuler"
 #: bibindex.php:275
 #, php-format
 msgid "BibTeX key <code>%s</code> already exists."
-msgstr "La clé BibTeX <code>%s</code> est déjà utilisée!"
+msgstr "La clÃ© BibTeX <code>%s</code> est dÃ©jÃ  utilisÃ©e!"
 
 #: bibindex.php:293
 #, php-format
 msgid "The following entries were deleted: <pre>%s</pre>"
-msgstr "Les références suivantes ont été supprimées: <pre>%s</pre>"
+msgstr "Les rÃ©fÃ©rences suivantes ont Ã©tÃ© supprimÃ©es: <pre>%s</pre>"
 
 #: bibindex.php:302
 msgid "Delete the following entries?"
-msgstr "Supprimer ces références?"
+msgstr "Supprimer ces rÃ©fÃ©rences?"
 
 #: bibindex.php:330
 msgid "ENTRY_ADDED_SUCCESS"
-msgstr "La référence suivante a été ajoutée:"
+msgstr "La rÃ©fÃ©rence suivante a Ã©tÃ© ajoutÃ©e:"
 
 #: bibindex.php:345 interface.php:1217
 msgid "Update"
-msgstr "Mettre à jour"
+msgstr "Mettre Ã  jour"
 
 #: bibindex.php:348
 msgid "The following entry was updated:"
-msgstr "La référence suivante a été mise à jour:"
+msgstr "La rÃ©fÃ©rence suivante a Ã©tÃ© mise Ã  jour:"
 
 #: bibindex.php:387
 msgid "The following entry was added to the database:"
-msgstr "La référence suivante a été ajoutée à la bibliographie."
+msgstr "La rÃ©fÃ©rence suivante a Ã©tÃ© ajoutÃ©e Ã  la bibliographie."
 
 #: bibindex.php:390
 msgid "The following entries were added to the database:"
-msgstr "Les références suivantes ont été ajoutées à la bibliographie:"
+msgstr "Les rÃ©fÃ©rences suivantes ont Ã©tÃ© ajoutÃ©es Ã  la bibliographie:"
 
 #: bibindex.php:400 index.php:132 interface.php:57 interface.php:366
 msgid "Login"
@@ -105,19 +106,19 @@ msgstr "Exporter"
 
 #: bibindex.php:521 interface.php:1114
 msgid "Select"
-msgstr "Sélectionner"
+msgstr "SÃ©lectionner"
 
 #: biborbdb.php:607
 msgid "BIB_CREATION_SUCCESS"
-msgstr "La bibliographie a été créée."
+msgstr "La bibliographie a Ã©tÃ© crÃ©Ã©e."
 
 #: biborbdb.php:610
 msgid "BIB_CREATION_ERROR"
-msgstr "Erreurs durant la création de la bibliographie."
+msgstr "Erreurs durant la crÃ©ation de la bibliographie."
 
 #: biborbdb.php:629
 msgid "BIB_EXISTS"
-msgstr "Cette bibliographie existe déjà!"
+msgstr "Cette bibliographie existe dÃ©jÃ !"
 
 #: biborbdb.php:633
 msgid "BIB_EMPTY_NAME"
@@ -126,16 +127,16 @@ msgstr "Vous devez saisir un nom pour la nouvelle bibliographie!"
 #: biborbdb.php:648
 #, php-format
 msgid "Database %s moved to trash."
-msgstr "La bibliographie %s a été déplacée dans la corbeille."
+msgstr "La bibliographie %s a Ã©tÃ© dÃ©placÃ©e dans la corbeille."
 
 #: biborbdb.php:649
 #, php-format
 msgid "Remove %s to definitively delete it."
-msgstr "Supprimer le répertoire %s pour l'effacer définitivement."
+msgstr "Supprimer le rÃ©pertoire %s pour l'effacer dÃ©finitivement."
 
 #: functions.php:354
 msgid "Add all entries to the basket."
-msgstr "Ajouter toutes les références au panier."
+msgstr "Ajouter toutes les rÃ©fÃ©rences au panier."
 
 #: functions.php:374 interface.php:707
 msgid "Sort by:"
@@ -147,7 +148,7 @@ msgstr "Titre"
 
 #: functions.php:394 functions.php:397 interface.php:704 interface.php:738
 msgid "Year"
-msgstr "Année"
+msgstr "AnnÃ©e"
 
 #: functions.php:404
 msgid "Sort"
@@ -155,7 +156,7 @@ msgstr "Trier"
 
 #: index.php:99 interface.php:110
 msgid "Create"
-msgstr "Créer"
+msgstr "CrÃ©er"
 
 #: index.php:107 interface.php:147
 msgid "Delete"
@@ -175,7 +176,7 @@ msgstr "Mot de passe"
 
 #: interface.php:93
 msgid "INDEX_CREATE_BIB_TITLE"
-msgstr "Créer une nouvelle bibliographie."
+msgstr "CrÃ©er une nouvelle bibliographie."
 
 #: interface.php:101
 msgid "INDEX_CREATE_BIBNAME"
@@ -215,7 +216,7 @@ msgstr "Sources (BibTeX)"
 
 #: interface.php:220
 msgid "Download"
-msgstr "Télécharger"
+msgstr "TÃ©lÃ©charger"
 
 #: interface.php:249
 msgid "INDEX_MENU_WELCOME_HELP"
@@ -251,7 +252,7 @@ msgstr "S'Identifier"
 
 #: interface.php:266
 msgid "INDEX_MENU_ADD_BIB_HELP"
-msgstr "Créer une nouvelle bibliographie"
+msgstr "CrÃ©er une nouvelle bibliographie"
 
 #: interface.php:266
 msgid "INDEX_MENU_ADD_BIB"
@@ -267,11 +268,11 @@ msgstr "Supprimer une bibliographie"
 
 #: interface.php:270
 msgid "INDEX_MENU_LOGOUT_HELP"
-msgstr "Déconnexion..."
+msgstr "DÃ©connexion..."
 
 #: interface.php:270
 msgid "INDEX_MENU_LOGOUT"
-msgstr "Déconnexion"
+msgstr "DÃ©connexion"
 
 #: interface.php:353
 msgid "INDEX_LOGIN_TITLE"
@@ -283,7 +284,7 @@ msgstr "Bibliographies"
 
 #: interface.php:408
 msgid "BIBINDEX_MENU_DISPLAY_HELP"
-msgstr "Afficher les références (Aide)"
+msgstr "Afficher les rÃ©fÃ©rences (Aide)"
 
 #: interface.php:408
 msgid "BIBINDEX_MENU_DISPLAY"
@@ -291,7 +292,7 @@ msgstr "Affichage"
 
 #: interface.php:410
 msgid "BIBINDEX_MENU_DISPLAY_ALL_HELP"
-msgstr "Afficher toutes les références"
+msgstr "Afficher toutes les rÃ©fÃ©rences"
 
 #: interface.php:410
 msgid "BIBINDEX_MENU_DISPLAY_ALL"
@@ -299,7 +300,7 @@ msgstr "Tout Afficher"
 
 #: interface.php:411
 msgid "BIBINDEX_MENU_DISPLAY_BY_GROUP_HELP"
-msgstr "Afficher les références par groupe"
+msgstr "Afficher les rÃ©fÃ©rences par groupe"
 
 #: interface.php:411
 msgid "BIBINDEX_MENU_DISPLAY_BY_GROUP"
@@ -307,7 +308,7 @@ msgstr "Par Groupe"
 
 #: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_SEARCH_HELP"
-msgstr "Rechercher des références"
+msgstr "Rechercher des rÃ©fÃ©rences"
 
 #: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_SEARCH"
@@ -323,11 +324,11 @@ msgstr "Recherche (Simple)"
 
 #: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH_HELP"
-msgstr "Un moteur de recherche plus précis"
+msgstr "Un moteur de recherche plus prÃ©cis"
 
 #: interface.php:413
 msgid "BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH"
-msgstr "Recherche (Avancée)"
+msgstr "Recherche (AvancÃ©e)"
 
 msgid "BIBINDEX_MENU_TOOLS"
 msgstr "Outils"
@@ -342,7 +343,7 @@ msgstr "Panier"
 
 #: interface.php:425
 msgid "BIBINDEX_MENU_BASKET_DISPLAY_HELP"
-msgstr "Afficher toutes les références présentes dans le panier"
+msgstr "Afficher toutes les rÃ©fÃ©rences prÃ©sentes dans le panier"
 
 #: interface.php:425
 msgid "BIBINDEX_MENU_BASKET_DISPLAY"
@@ -398,23 +399,23 @@ msgstr "S'Identifier"
 
 #: interface.php:467
 msgid "BIBINDEX_MENU_ADMIN_ADD_HELP"
-msgstr "Ajouter une nouvelle référence"
+msgstr "Ajouter une nouvelle rÃ©fÃ©rence"
 
 #: interface.php:467
 msgid "BIBINDEX_MENU_ADMIN_ADD"
-msgstr "Ajouter une référence"
+msgstr "Ajouter une rÃ©fÃ©rence"
 
 #: interface.php:468
 msgid "BIBINDEX_MENU_ADMIN_UPDATE_HELP"
-msgstr "Mettre à jour la bibliographie d'après le fichier BibTeX"
+msgstr "Mettre Ã  jour la bibliographie d'aprÃ¨s le fichier BibTeX"
 
 #: interface.php:468
 msgid "BIBINDEX_MENU_ADMIN_UPDATE"
-msgstr "Mettre à jour (BibTeX)"
+msgstr "Mettre Ã  jour (BibTeX)"
 
 #: interface.php:469
 msgid "BIBINDEX_MENU_ADMIN_IMPORT_HELP"
-msgstr "Importer des références BibTeX"
+msgstr "Importer des rÃ©fÃ©rences BibTeX"
 
 #: interface.php:469
 msgid "BIBINDEX_MENU_ADMIN_IMPORT"
@@ -422,11 +423,11 @@ msgstr "Importer BibTeX"
 
 #: interface.php:472
 msgid "BIBINDEX_MENU_ADMIN_LOGOUT_HELP"
-msgstr "Déconnexion..."
+msgstr "DÃ©connexion..."
 
 #: interface.php:472
 msgid "BIBINDEX_MENU_ADMIN_LOGOUT"
-msgstr "Déconnexion"
+msgstr "DÃ©connexion"
 
 #: interface.php:501
 msgid "This is the bibliography"
@@ -434,7 +435,7 @@ msgstr "Bibliographie"
 
 #: interface.php:504
 msgid "You are logged as"
-msgstr "Vous ête identifié en tant que"
+msgstr "Vous Ãªte identifiÃ© en tant que"
 
 #: interface.php:510
 msgid "Statistics"
@@ -458,11 +459,11 @@ msgstr "Affichage (Aide)"
 
 #: interface.php:563
 msgid "BIBINDEX_DISPLAY_ALL_TITLE"
-msgstr "Liste de toutes les références"
+msgstr "Liste de toutes les rÃ©fÃ©rences"
 
 #: interface.php:599
 msgid "BIBINDEX_DISPLAY_BY_GROUPS_TITLE"
-msgstr "Afficher les références par groupe"
+msgstr "Afficher les rÃ©fÃ©rences par groupe"
 
 #: interface.php:609
 msgid "Available groups"
@@ -475,17 +476,17 @@ msgstr "Afficher"
 #: interface.php:627
 #, php-format
 msgid "No entry for the group %s."
-msgstr "Pas de référence pour le groupe <strong>%s</strong>."
+msgstr "Pas de rÃ©fÃ©rence pour le groupe <strong>%s</strong>."
 
 #: interface.php:630
 #, php-format
 msgid "An entry for the group %s."
-msgstr "Une référence pour le groupe <strong>%s</strong>."
+msgstr "Une rÃ©fÃ©rence pour le groupe <strong>%s</strong>."
 
 #: interface.php:633
 #, php-format
 msgid "%d entries for the group %s."
-msgstr "%d références pour le groupe %s."
+msgstr "%d rÃ©fÃ©rences pour le groupe %s."
 
 #: interface.php:660
 msgid "BIBINDEX_SIMPLE_SEARCH_TITLE"
@@ -501,7 +502,7 @@ msgstr "Auteur"
 
 #: interface.php:687
 msgid "Keywords"
-msgstr "Mots clés"
+msgstr "Mots clÃ©s"
 
 #: interface.php:694
 msgid "Journal"
@@ -528,7 +529,7 @@ msgstr "Panier (Aide)"
 
 #: interface.php:1002
 msgid "BIBINDEX_BASKET_DISPLAY_TITLE"
-msgstr "Références du Panier"
+msgstr "RÃ©fÃ©rences du Panier"
 
 #: interface.php:1015
 msgid "No entry in the basket."
@@ -536,16 +537,16 @@ msgstr "Panier vide."
 
 #: interface.php:1020
 msgid "An entry in the basket."
-msgstr "Une référence dans le panier."
+msgstr "Une rÃ©fÃ©rence dans le panier."
 
 #: interface.php:1023
 #, php-format
 msgid "%d entries in the basket."
-msgstr "%d références dans le panier."
+msgstr "%d rÃ©fÃ©rences dans le panier."
 
 #: interface.php:1028
 msgid "Delete all from database"
-msgstr "Supprimer ces références de la bibliographie"
+msgstr "Supprimer ces rÃ©fÃ©rences de la bibliographie"
 
 #: interface.php:1047
 msgid "BIBINDEX_BASKET_GROUPS_MANAGE_TITLE"
@@ -553,11 +554,11 @@ msgstr "Gestion des Groupes"
 
 #: interface.php:1057
 msgid "Reset the groups field of each entry in the basket. "
-msgstr "Réinitialiser les groupes pour chaque référence du panier."
+msgstr "RÃ©initialiser les groupes pour chaque rÃ©fÃ©rence du panier."
 
 #: interface.php:1061
 msgid "Add all entries in the basket to a group:"
-msgstr "Ajouter toutes les références du panier au groupe: "
+msgstr "Ajouter toutes les rÃ©fÃ©rences du panier au groupe: "
 
 #: interface.php:1065
 msgid "New group:"
@@ -573,15 +574,15 @@ msgstr "Administration (Aide)"
 
 #: interface.php:1104
 msgid "BIBINDEX_SELECT_NEW_ENTRY_TITLE"
-msgstr "Ajouter une référence (sélection du type)"
+msgstr "Ajouter une rÃ©fÃ©rence (sÃ©lection du type)"
 
 #: interface.php:1110
 msgid "Select an entry type: "
-msgstr "Sélectionnez un type de référence : "
+msgstr "SÃ©lectionnez un type de rÃ©fÃ©rence : "
 
 #: interface.php:1145
 msgid "BIBINDEX_ADD_ENTRY_TITLE"
-msgstr "Ajouter une référence"
+msgstr "Ajouter une rÃ©fÃ©rence"
 
 #: interface.php:1198
 msgid "BibTeX type:"
@@ -589,27 +590,27 @@ msgstr "Type BibTeX :"
 
 #: interface.php:1203
 msgid "BibTeX Key:"
-msgstr "Clé BibTeX: "
+msgstr "ClÃ© BibTeX: "
 
 #: interface.php:1226
 msgid "BIBINDEX_UPDATE_ENTRY_TITLE"
-msgstr "Mettre à jour une référence"
+msgstr "Mettre Ã  jour une rÃ©fÃ©rence"
 
 #: interface.php:1239
 msgid "BIBINDEX_IMPORT_TITLE"
-msgstr "Importer des références BibTeX"
+msgstr "Importer des rÃ©fÃ©rences BibTeX"
 
 #: interface.php:1240
 msgid "BIBINDEX_IMPORT_HELP"
-msgstr "Sélectionnez un fichier BibTeX ou copiez les références dans la zone de texte. "
-"Les références seront ajoutées à la bibliographie."
+msgstr "SÃ©lectionnez un fichier BibTeX ou copiez les rÃ©fÃ©rences dans la zone de texte. "
+"Les rÃ©fÃ©rences seront ajoutÃ©es Ã  la bibliographie."
 
 
 msgid "BIBINDEX_IMPORT_FILE_DESC"
 msgstr "Fichier : "
 
 msgid "BIBINDEX_IMPORT_TXT_DESC"
-msgstr "Copier ou éditer des données BibTeX dans la zone de texte."
+msgstr "Copier ou Ã©diter des donnÃ©es BibTeX dans la zone de texte."
 
 #: interface.php:1241
 msgid "File"
@@ -621,10 +622,10 @@ msgstr "Exporter le panier vers BibTeX"
 
 #: interface.php:1280
 msgid "Select fields to include in the exported BibTeX:"
-msgstr "Sélectionnez les champs à inclure dans l'exportation BibTeX"
+msgstr "SÃ©lectionnez les champs Ã  inclure dans l'exportation BibTeX"
 
 msgid "BIBINDEX_ADVANCED_SEARCH_TITLE"
-msgstr "Recherche Avancée"
+msgstr "Recherche AvancÃ©e"
 
 msgid "BIBORB_OUTPUT_REQUIRED_FIELDS"
 msgstr "Champs Obligatoires"
@@ -645,10 +646,10 @@ msgid "BIBORB_OUTPUT_BIBTEX_TITLE"
 msgstr "Source BibTeX"
 
 msgid "BIBORB_OUTPUT_ABSTRACT_ALT"
-msgstr "Résumé"
+msgstr "RÃ©sumÃ©"
 
 msgid "BIBORB_OUTPUT_ABSTRACT_TITLE"
-msgstr "Afficher le résumé"
+msgstr "Afficher le rÃ©sumÃ©"
 
 msgid "BIBORB_OUTPUT_PS_ALT"
 msgstr "ps"
@@ -660,7 +661,7 @@ msgid "BIBORB_OUTPUT_PSGZ_ALT"
 msgstr "ps.gz"
 
 msgid "BIBORB_OUTPUT_PSGZ_TITLE"
-msgstr "Fichier compressé"
+msgstr "Fichier compressÃ©"
 
 msgid "BIBORB_OUTPUT_PDF_ALT"
 msgstr "pdf"
@@ -672,25 +673,25 @@ msgid "BIBORB_OUTPUT_EDIT_ALT"
 msgstr "editer"
 
 msgid "BIBORB_OUTPUT_EDIT_TITLE"
-msgstr "Editer cette référence"
+msgstr "Editer cette rÃ©fÃ©rence"
 
 msgid "BIBORB_OUTPUT_DELETE_ALT"
 msgstr "supprimer"
 
 msgid "BIBORB_OUTPUT_DELETE_TITLE"
-msgstr "Supprimer cette référence"
+msgstr "Supprimer cette rÃ©fÃ©rence"
 
 msgid "BIBORB_OUTPUT_ADD_BASKET_ALT"
 msgstr "+"
 
 msgid "BIBORB_OUTPUT_ADD_BASKET_TITLE"
-msgstr "Ajouter cette référence au panier"
+msgstr "Ajouter cette rÃ©fÃ©rence au panier"
 
 msgid "BIBORB_OUTPUT_REMOVE_BASKET_ALT"
 msgstr "-"
 
 msgid "BIBORB_OUTPUT_REMOVE_BASKET_TITLE"
-msgstr "Supprimer cette référence du panier"
+msgstr "Supprimer cette rÃ©fÃ©rence du panier"
 
 msgid "BIBORB_OUTPUT_CURRENT_FILE"
 msgstr "Fichier actuel"
@@ -702,7 +703,7 @@ msgid "BIBORB_OUTPUT_WEBSITE_ALT"
 msgstr "Site web"
 
 msgid "BIBORB_OUTPUT_WEBSITE_TITLE"
-msgstr "Lien vers une page web associée"
+msgstr "Lien vers une page web associÃ©e"
 
 msgid "BIBORB_OUTPUT_LINK_ALT"
 msgstr "Lien"
@@ -714,7 +715,7 @@ msgid "BIBORB_OUTPUT_LONGNOTES_ALT"
 msgstr "Remarques"
 
 msgid "BIBORB_OUTPUT_LONGNOTES_TITLE"
-msgstr "Afficher les remarques pour cette référence"
+msgstr "Afficher les remarques pour cette rÃ©fÃ©rence"
 
 msgid "Import"
 msgstr "Importer"
@@ -741,19 +742,19 @@ msgid "Display/ Hide search form"
 msgstr "Cacher/Afficher le formulaire de recherche"
 
 msgid "One match."
-msgstr "Une référence trouvée."
+msgstr "Une rÃ©fÃ©rence trouvÃ©e."
 
 msgid "%d matches."
-msgstr "%d références trouvées."
+msgstr "%d rÃ©fÃ©rences trouvÃ©es."
 
 msgid "No match."
-msgstr "Aucune référence ne vérifie la propriété."
+msgstr "Aucune rÃ©fÃ©rence ne vÃ©rifie la propriÃ©tÃ©."
 
 msgid "BibTeX ID already present, select a different one."
-msgstr "Clé BibTeX déjà présente, saisissez une clé différente."
+msgstr "ClÃ© BibTeX dÃ©jÃ  prÃ©sente, saisissez une clÃ© diffÃ©rente."
 
 msgid "Null BibTeX ID for an entry not allowed."
-msgstr "Une Clé BibTeX vide n'est pas autorisée!"
+msgstr "Une ClÃ© BibTeX vide n'est pas autorisÃ©e!"
 
 msgid "Back"
 msgstr "Retour"
@@ -762,61 +763,58 @@ msgid "Language:"
 msgstr "Langue :"
 
 msgid "Entries associated with no group:"
-msgstr "Références n'appartenant à aucun groupe :"
+msgstr "RÃ©fÃ©rences n'appartenant Ã  aucun groupe :"
 
 msgid "Orphans"
 msgstr "Orphelins"
 
-msgid "No orphan."
-msgstr "Pas de référence sans groupe."
-
 msgid "1 orphan."
-msgstr "Une référence sans groupe."
+msgstr "Une rÃ©fÃ©rence sans groupe."
 
 msgid "%d orphans."
-msgstr "%d références n'appartiennent à aucun groupe."
+msgstr "%d rÃ©fÃ©rences n'appartiennent Ã  aucun groupe."
 
 msgid "%d matches for %s."
 msgstr "%d concordances pour %s"
 
 msgid "TOOL_XPATH_TITLE"
-msgstr "Requète XPath"
+msgstr "RequÃ¨te XPath"
 
 msgid "TOOL_XPATH_HELP"
-msgstr "XPath (XML Path Language) est une syntaxe pour désigner une portion d'un "
-" document XML. Les références étant stockées au format XML, vous pouvez effectuer "
+msgstr "XPath (XML Path Language) est une syntaxe pour dÃ©signer une portion d'un "
+" document XML. Les rÃ©fÃ©rences Ã©tant stockÃ©es au format XML, vous pouvez effectuer "
 " des recherches dans votre bibliographie en utilisant XPath."
 " Par exemple:<ul>"
-" <li><code>bibtex:inproceedings</code> affichera toutes les références de type <code>"
+" <li><code>bibtex:inproceedings</code> affichera toutes les rÃ©fÃ©rences de type <code>"
 " inproceedings</code>.</li>"
 " <li><code>*/bibtex:year<=2004 and */bibtex:year>=2000</code> affichera toutes les "
-" références publiées entre les années 2000 et 2004</li></ul>"
+" rÃ©fÃ©rences publiÃ©es entre les annÃ©es 2000 et 2004</li></ul>"
 
 msgid "TOOL_AUX2BIBTEX_TITLE"
 msgstr ".aux vers BibTeX"
 
 msgid "TOOL_AUX2BIBTEX_HELP"
 msgstr "Lors de la compilation d'un fichier LaTeX (<code>article.tex</code>), "
-"les références citées sont enregistrées dans le fichier <code>article.aux</code>. "
+"les rÃ©fÃ©rences citÃ©es sont enregistrÃ©es dans le fichier <code>article.aux</code>. "
 "Vous pouvez utiliser le formulaire suivant pour soumettre ce dernier "
-" afin de télécharger le fichier BibTeX contenant les références de votre article."
+" afin de tÃ©lÃ©charger le fichier BibTeX contenant les rÃ©fÃ©rences de votre article."
 
 msgid "BIBINDEX_TOOLS_TITLE"
 msgstr "Outils"
 
 msgid "TOOL_GET_ARCHIVE_TITLE"
-msgstr "Télécharger la bibliographie"
+msgstr "TÃ©lÃ©charger la bibliographie"
 
 msgid "TOOL_GET_ARCHIVE_HELP"
-msgstr "Télécharger une archive (<code>tar.gz</code>) de la bibliographie courante. "
-" L'archive contiendra les données BibTeX ainsi que les données uploadées (fichiers "
+msgstr "TÃ©lÃ©charger une archive (<code>tar.gz</code>) de la bibliographie courante. "
+" L'archive contiendra les donnÃ©es BibTeX ainsi que les donnÃ©es uploadÃ©es (fichiers "
 " PS, PDF...). "
 
 msgid "Simple Search"
 msgstr "Recherche Simple"
 
 msgid "Advanced Search"
-msgstr "Recherche Avancée"
+msgstr "Recherche AvancÃ©e"
 
 msgid "XPath Search"
 msgstr "Recherche XPath"
@@ -831,14 +829,14 @@ msgid "ascending"
 msgstr "croissant"
 
 msgid "descending"
-msgstr "décroissant"
+msgstr "dÃ©croissant"
 
 msgid "No orphan."
-msgstr "Toutes les références appartiennent à un groupe."
+msgstr "Toutes les rÃ©fÃ©rences appartiennent Ã  un groupe."
 
 # Translation of BibTeX field names
 msgid "id"
-msgstr "Clé BibTeX"
+msgstr "ClÃ© BibTeX"
 
 msgid "address"
 msgstr "Adresse"
@@ -856,13 +854,13 @@ msgid "chapter"
 msgstr "Chapitre"
 
 msgid "crossref"
-msgstr "Référence croisée"
+msgstr "RÃ©fÃ©rence croisÃ©e"
 
 msgid "edition"
 msgstr "Edition"
 
 msgid "editor"
-msgstr "Rédacteur"
+msgstr "RÃ©dacteur"
 
 msgid "howpublished"
 msgstr ""
@@ -874,7 +872,7 @@ msgid "journal"
 msgstr "Revue"
 
 msgid "key"
-msgstr "Clé"
+msgstr "ClÃ©"
 
 msgid "month"
 msgstr "Mois"
@@ -883,7 +881,7 @@ msgid "note"
 msgstr "Note"
 
 msgid "number"
-msgstr "Numéro"
+msgstr "NumÃ©ro"
 
 msgid "organization"
 msgstr "Organisation"
@@ -898,7 +896,7 @@ msgid "school"
 msgstr "Ecole"
 
 msgid "series"
-msgstr "Séries"
+msgstr "SÃ©ries"
 
 msgid "title"
 msgstr "Titre"
@@ -910,13 +908,13 @@ msgid "volume"
 msgstr "Volume"
 
 msgid "year"
-msgstr "Année"
+msgstr "AnnÃ©e"
 
 msgid "abstract"
-msgstr "Résumé"
+msgstr "RÃ©sumÃ©"
 
 msgid "keywords"
-msgstr "Mots-clés"
+msgstr "Mots-clÃ©s"
 
 msgid "url"
 msgstr "Fichier ps"
@@ -943,49 +941,49 @@ msgid "BIBORB_OUTPUT_OWN_ALT"
 msgstr "Disponible"
 
 msgid "BIBORB_OUTPUT_OWN_TITLE"
-msgstr "Status actuel : Disponible. Status après clic : Non Disponible."
+msgstr "Status actuel : Disponible. Status aprÃ¨s clic : Non Disponible."
 
 msgid "BIBORB_OUTPUT_BORROW_ALT"
-msgstr "Emprunté"
+msgstr "EmpruntÃ©"
 
 msgid "BIBORB_OUTPUT_BORROW_TITLE"
-msgstr "Status actuel : Emprunté. Status après clic : A acheter."
+msgstr "Status actuel : EmpruntÃ©. Status aprÃ¨s clic : A acheter."
 
 msgid "BIBORB_OUTPUT_BUY_ALT"
 msgstr "A Acheter"
 
 msgid "BIBORB_OUTPUT_BUY_TITLE"
-msgstr "Status actuel : A Acheter. Status après clic : Disponible."
+msgstr "Status actuel : A Acheter. Status aprÃ¨s clic : Disponible."
 
 msgid "BIBORB_OUTPUT_NOTOWN_ALT"
 msgstr "Non Disponible"
 
 msgid "BIBORB_OUTPUT_NOTOWN_TITLE"
-msgstr "Status actuel : Non Disponible. Status après clic : Emprunté."
+msgstr "Status actuel : Non Disponible. Status aprÃ¨s clic : EmpruntÃ©."
 
 msgid "BIBORB_OUTPUT_READ_ALT"
 msgstr "Lu"
 
 msgid "BIBORB_OUTPUT_READ_TITLE"
-msgstr "Status actuel : Lu. Status après clic : Non Lu."
+msgstr "Status actuel : Lu. Status aprÃ¨s clic : Non Lu."
 
 msgid "BIBORB_OUTPUT_READNEXT_ALT"
 msgstr "A Lire"
 
 msgid "BIBORB_OUTPUT_READNEXT_TITLE"
-msgstr "Status actuel : A Lire. Status après clic : Lu."
+msgstr "Status actuel : A Lire. Status aprÃ¨s clic : Lu."
 
 msgid "BIBORB_OUTPUT_NOTREAD_ALT"
 msgstr "Non Lu"
 
 msgid "BIBORB_OUTPUT_NOTREAD_TITLE"
-msgstr "Status actuel : Non Lu. Status après clic : A Lire."
+msgstr "Status actuel : Non Lu. Status aprÃ¨s clic : A Lire."
 
 msgid "Read Status"
 msgstr "Etat de lecture"
 
 msgid "Ownership"
-msgstr "Disponibilité"
+msgstr "DisponibilitÃ©"
 
 msgid "Read"
 msgstr "Lu"
@@ -1003,7 +1001,7 @@ msgid "Own"
 msgstr "Disponible"
 
 msgid "Borrowed"
-msgstr "Emprunté"
+msgstr "EmpruntÃ©"
 
 msgid "Buy"
 msgstr "A Acheter"
@@ -1015,16 +1013,16 @@ msgid "Enter an url:"
 msgstr "Saisir une URL :"
 
 msgid "PREFERENCES_TITLE"
-msgstr "Préférences utilisateur"
+msgstr "PrÃ©fÃ©rences utilisateur"
 
 msgid "Preferences updated."
-msgstr "Préférences mises à jour."
+msgstr "PrÃ©fÃ©rences mises Ã  jour."
 
 msgid "Select your language."
-msgstr "Sélectionner la langue."
+msgstr "SÃ©lectionner la langue."
 
 msgid "Select the default database to open once logged in."
-msgstr "Sélectionner la bibliograpie à ouvrir par défaut."
+msgstr "SÃ©lectionner la bibliograpie Ã  ouvrir par dÃ©faut."
 
 msgid "Display icons commands."
 msgstr "Afficher les icones de commande."
@@ -1042,16 +1040,16 @@ msgid "Display sort functions."
 msgstr "Afficher les fonctions de tris."
 
 msgid "Default sort attribute."
-msgstr "Critère de tri."
+msgstr "CritÃ¨re de tri."
 
 msgid "Default sort order."
 msgstr "Ordre du tri."
 
 msgid "Number of references by page."
-msgstr "Nombre de références par page."
+msgstr "Nombre de rÃ©fÃ©rences par page."
 
 msgid "Display shelf actions."
-msgstr "Affichers les actions du mode 'Etagère'"
+msgstr "Affichers les actions du mode 'EtagÃ¨re'"
 
 msgid "ID"
 msgstr ""
@@ -1060,7 +1058,7 @@ msgid "dateAdded"
 msgstr "Date d'ajout"
 
 msgid "lastDateModified"
-msgstr "Date de dernière modification"
+msgstr "Date de derniÃ¨re modification"
 
 msgid "BIBINDEX_MENU_BROWSE"
 msgstr "Naviguer"
@@ -1072,13 +1070,13 @@ msgid "BIBINDEX_BROWSE_TITLE"
 msgstr "Explorer"
 
 msgid "Years"
-msgstr "Années"
+msgstr "AnnÃ©es"
 
 msgid "Authors"
 msgstr "Auteurs"
 
 msgid "Series"
-msgstr "Séries"
+msgstr "SÃ©ries"
 
 msgid "Journals"
 msgstr "Revues"
@@ -1087,25 +1085,25 @@ msgid "Groups"
 msgstr "Groupes"
 
 msgid "INDEX_MENU_PREFERENCES"
-msgstr "Préférences"
+msgstr "PrÃ©fÃ©rences"
 
 msgid "INDEX_MENU_PREFERENCES_HELP"
-msgstr "Définir les préférences utilisateur."
+msgstr "DÃ©finir les prÃ©fÃ©rences utilisateur."
 
 msgid "Existing years:"
-msgstr "Années présentes :"
+msgstr "AnnÃ©es prÃ©sentes :"
 
 msgid "Existing authors:"
-msgstr "Auteurs présents :"
+msgstr "Auteurs prÃ©sents :"
 
 msgid "Existing journals:"
-msgstr "Revues présentes :"
+msgstr "Revues prÃ©sentes :"
 
 msgid "Existing groups:"
-msgstr "Groupes présents :"
+msgstr "Groupes prÃ©sents :"
 
 msgid "Existing series:"
-msgstr "Séries présentes :"
+msgstr "SÃ©ries prÃ©sentes :"
 
 msgid "BIBINDEX_MENU_BASKET_EXPORT_HELP"
 msgstr "Exporter le panier vers un format bibliographique."
@@ -1114,16 +1112,16 @@ msgid "BIBINDEX_MENU_BASKET_EXPORT"
 msgstr "Exporter..."
 
 msgid "Select an export format:"
-msgstr "Sélection d'un format pour l'export :"
+msgstr "SÃ©lection d'un format pour l'export :"
 
 msgid "BIBINDEX_EXPORT_BASKET"
 msgstr "Export Basket"
 
 msgid "BIBINDEX_MENU_ADMIN_PREF"
-msgstr "Préférences"
+msgstr "PrÃ©fÃ©rences"
 
 msgid "BIBINDEX_MENU_ADMIN_PREF_HELP"
-msgstr "Editer vos préférences."
+msgstr "Editer vos prÃ©fÃ©rences."
 
 msgid "Available BibTeX fields"
 msgstr "Champs BibTeX"
@@ -1132,4 +1130,31 @@ msgid "TOOL_EXPORT_TITLE"
 msgstr "Exporter"
 
 msgid "TOOL_EXPORT_HELP"
-msgstr "Exporter toutes les références dans un format bibliographique (BibTeX, RIS, DocBook)."
+msgstr "Exporter toutes les rÃ©fÃ©rences dans un format bibliographique (BibTeX, RIS, DocBook)."
+
+msgid "ad_pdf"
+msgstr ""
+
+msgid "ad_url"
+msgstr ""
+
+msgid "ad_urlzip"
+msgstr ""
+
+msgid "BIBINDEX_IMPORT_FILE_TITLE"
+msgstr ""
+
+msgid "BIBINDEX_IMPORT_TXT_TITLE"
+msgstr ""
+
+msgid "No entries."
+msgstr ""
+
+msgid "own"
+msgstr ""
+
+msgid "read"
+msgstr ""
+
+msgid "%s not uploaded: invalid file type."
+msgstr ""

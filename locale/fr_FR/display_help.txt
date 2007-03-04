@@ -1,98 +1,98 @@
 <p>
-Ce menu donne accès aux différentes fonctions d'affichage.
+Ce menu donne accÃ¨s aux diffÃ©rentes fonctions d'affichage.
 </p>
 
 <table class='help'>
   <tbody>
     <tr class='colored'>
       <th>Tout Afficher</th>
-      <td>Afficher toutes les références.</td>
+      <td>Afficher toutes les rÃ©fÃ©rences.</td>
     </tr>
     <tr>
        <th>Par Groupe</th>
-       <td>Afficher les références appartenant à un groupe donné.</td>
+       <td>Afficher les rÃ©fÃ©rences appartenant Ã  un groupe donnÃ©.</td>
     </tr>
     
     <tr class='colored'>
         <th>Naviguer</th>
-        <td>Naviguer et filtrer les références.</th>
+        <td>Naviguer et filtrer les rÃ©fÃ©rences.</th>
     </tr>
     <tr>
       <th>Recherche</th>
-      <td>Effectuer une recherche dans la bibliographie (simple, détaillée, XPath).</td>
+      <td>Effectuer une recherche dans la bibliographie (simple, dÃ©taillÃ©e, XPath).</td>
     </tr>
   </tbody>
 </table>
 
 <p>
-Les références peuvent être triées suivant plusieurs critères (id, année, titre). Regardez le fichier <code>config.php</code> pour activer le tri ou sélectionner le tri par défaut.
+Les rÃ©fÃ©rences peuvent Ãªtre triÃ©es suivant plusieurs critÃ¨res (id, annÃ©e, titre). Regardez le fichier <code>config.php</code> pour activer le tri ou sÃ©lectionner le tri par dÃ©faut.
 </p>
 
 <p>
-Pour chaque référence affichée et selon votre configuration de <acronym class='biborb'>BibORB</acronym> (<code>config.php</code>), plusieurs actions sont disponibles:
+Pour chaque rÃ©fÃ©rence affichÃ©e et selon votre configuration de <acronym class='biborb'>BibORB</acronym> (<code>config.php</code>), plusieurs actions sont disponibles:
 </p>
 
 <table class='help'>
   <tbody>
     <tr class='colored'>
        <th class='img'><img src="data/images/stock_book-16.png" alt="ps"/>&nbsp;<img src="data/images/stock_book-16-link.png" alt="ps"/></th>
-       <td>Télécharger la version PS du papier.</td>
+       <td>TÃ©lÃ©charger la version PS du papier.</td>
    </tr>
    <tr>
        <th  class='img'><img src="data/images/tar.png" alt="ps.gz"/>&nbsp;<img src="data/images/tar-link.png" alt="ps.gz"/></th>
-       <td>Télécharger la version PS compressée du papier.</td>
+       <td>TÃ©lÃ©charger la version PS compressÃ©e du papier.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/pdf-document.png" alt="pdf"/>&nbsp;<img src="data/images/pdf-document-link.png" alt="pdf"/></th>
-        <td>Télécharger la version PDF du papier.</td>
+        <td>TÃ©lÃ©charger la version PDF du papier.</td>
     </tr>
     <tr>
         <th class='img'><img src="data/images/stock_about-16.png" alt="abstract"/></th>
-        <td>Afficher le résumé.</td>
+        <td>Afficher le rÃ©sumÃ©.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/stock_convert-16.png" alt="BibTeX"/></th>
-        <td>Générer le code <acronym>BibTeX</acronym></td>
+        <td>GÃ©nÃ©rer le code <acronym>BibTeX</acronym></td>
     </tr>
     <tr>
         <th class='img'><img src="data/images/link-url-16.png" alt="webpage"/></th>
-        <td>Aller vers une page web liée à l'article.</td>
+        <td>Aller vers une page web liÃ©e Ã  l'article.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/stock_jump-to-16.png" alt="Local link"/></th>
-        <td>Aller vers une page web liée à l'article (page "local", ie. situé sur le même serveur que <acronym class='biborb'>BibORB</acronym>).</td>
+        <td>Aller vers une page web liÃ©e Ã  l'article (page "local", ie. situÃ© sur le mÃªme serveur que <acronym class='biborb'>BibORB</acronym>).</td>
     </tr>
     <tr>
         <th class='img'><img src="data/images/stock_edit-16.png" alt="edit"/></th>
-        <td>Editer la référence.</td>
+        <td>Editer la rÃ©fÃ©rence.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/stock_delete-16.png" alt="delete"/></th>
-        <td>Supprimer la référence.</td>
+        <td>Supprimer la rÃ©fÃ©rence.</td>
     </tr>
     <tr>
         <th class='img'><img src="data/images/cvs-add-16.png" alt="add"/></th>
-        <td>Ajouter la référence au panier.</td>
+        <td>Ajouter la rÃ©fÃ©rence au panier.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/cvs-remove-16.png" alt="add"/></th>
-        <td>Supprimer la référence du panier.</td>
+        <td>Supprimer la rÃ©fÃ©rence du panier.</td>
     </tr>
     <tr>
         <th class='img'><img src="data/images/add.png" alt="add"/></th>
-        <td>Ajouter toutes les références au panier.</td>
+        <td>Ajouter toutes les rÃ©fÃ©rences au panier.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/dialog_info.png" alt="Remarques"></th>
-        <td>Afficher les données du champ BibTeX <code>longnotes</code>.</td>
+        <td>Afficher les donnÃ©es du champ BibTeX <code>longnotes</code>.</td>
     </tr>
     <tr>
         <th class='img'><img src="data/images/stock_readnext.png" alt="A lire"/><img src="data/images/stock_read.png" alt="Lu"/><img src="data/images/stock_notread.png" alt="Non lu"/></th>
-        <td>Etat de lecture de la référence.</td>
+        <td>Etat de lecture de la rÃ©fÃ©rence.</td>
     </tr>
     <tr class='colored'>
-        <th class='img'><img src="data/images/stock_notown.png" alt="Non disponible"/><img src="data/images/stock_borrow.png" alt="Emprunté"/><img src="data/images/stock_buy.png" alt="A acheter"/><img src="data/images/stock_own.png" alt="Disponible"/></th>
-        <td>Disponibilité de la référence.</td>
+        <th class='img'><img src="data/images/stock_notown.png" alt="Non disponible"/><img src="data/images/stock_borrow.png" alt="EmpruntÃ©"/><img src="data/images/stock_buy.png" alt="A acheter"/><img src="data/images/stock_own.png" alt="Disponible"/></th>
+        <td>DisponibilitÃ© de la rÃ©fÃ©rence.</td>
     </tr>
     </tbody>
 </table>

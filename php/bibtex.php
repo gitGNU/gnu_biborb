@@ -3,7 +3,7 @@
  *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2005  Guillaume Gardey
+ * Copyright (C) 2003-2007  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -125,7 +125,7 @@ class BibTeX_Tools
      */
     function entries_array_to_xml($tab){
         $ids = array();
-        $xml_content = "<?xml version='1.0' encoding='ISO-8859-1'?>";
+        $xml_content = "<?xml version='1.0' encoding='UTF-8'?>";
         $xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' version='".BIBORB_XML_VERSION."' >";
         foreach($tab as $entry){
             $xml_content .= $this->entry_array_to_xml($entry);
@@ -824,14 +824,14 @@ class BibTeX_Tools
 function latex_macro_to_html($latex)
 {
     $latex_conversion_table =
-        array("\'a" => "á", "\`a" => "à", "\^a" => "â", "\~a" => "ã", "\\\"a" => "ä", "\aa" => "å", "\ae" => "æ",
-              "\c{c}" => "ç",
-              "\'e" => "é", "\^e" => "ê", "\`e" => "è", "\\\"e" => "ë",
-              "\'i" => "í", "\`i" => "ì", "\^i" => "î", "\\\"i" => "ï",
-              "\~n" => "ñ",
-              "\'o" => "ó", "\^o" => "ô", "\`o" => "ò", "\\\"o" => "ö", "\~o" => "õ",
-              "\'u" => "ú", "\`u" => "ù", "\^u" => "û", "\\\"u" => "ü",
-              "\'y" => "ý", "\\\"y" => "ÿ");
+        array("\'a" => "Ã¡", "\`a" => "Ã ", "\^a" => "Ã¢", "\~a" => "Ã£", "\\\"a" => "Ã¤", "\aa" => "Ã¥", "\ae" => "Ã¦",
+              "\c{c}" => "Ã§",
+              "\'e" => "Ã©", "\^e" => "Ãª", "\`e" => "Ã¨", "\\\"e" => "Ã«",
+              "\'i" => "Ã­", "\`i" => "Ã¬", "\^i" => "Ã®", "\\\"i" => "Ã¯",
+              "\~n" => "Ã±",
+              "\'o" => "Ã³", "\^o" => "Ã´", "\`o" => "Ã²", "\\\"o" => "Ã¶", "\~o" => "Ãµ",
+              "\'u" => "Ãº", "\`u" => "Ã¹", "\^u" => "Ã»", "\\\"u" => "Ã¼",
+              "\'y" => "Ã½", "\\\"y" => "Ã¿");
     return str_replace(array_keys($latex_conversion_table),
                        array_values($latex_conversion_table),
                        $latex);

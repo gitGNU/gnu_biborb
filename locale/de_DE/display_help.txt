@@ -1,48 +1,48 @@
 <p>
-Dieses Menü erlaubt den Zugriff auf die Bibliographien-Einträge.
+Dieses MenÃ¼ erlaubt den Zugriff auf die Bibliographien-EintrÃ¤ge.
 </p>
 
 <table class='help'>
   <tbody>
     <tr class='colored'>
       <th>All</th>
-      <td>Zeige alle Einträge in der gegenwärtigen Bibliographien an.</td>
+      <td>Zeige alle EintrÃ¤ge in der gegenwÃ¤rtigen Bibliographien an.</td>
     </tr>
     <tr>
        <th>Gruppen</th>
-       <td>Zeige Einträge nach Gruppen an.</td>
+       <td>Zeige EintrÃ¤ge nach Gruppen an.</td>
     </tr>
     <tr class='colored'>
       <th>Einfache Suche</th>
-      <td>Durchsuche die Bibliographie nach Einträgen.</td>
+      <td>Durchsuche die Bibliographie nach EintrÃ¤gen.</td>
     </tr>
     <tr>
       <th>Fortgeschrittene Suche</th>
-      <td> Durchsuche die Bibliographie nach Einträgen. And/Or Verbinder erlauben die Durchsuchung nach mehr als nur einem Feld.</td>
+      <td> Durchsuche die Bibliographie nach EintrÃ¤gen. And/Or Verbinder erlauben die Durchsuchung nach mehr als nur einem Feld.</td>
     </tr>
   </tbody>
 </table>
 <p>
-Editiere die <code>config.php</code> Datei um die Standardsuche zu verändern (ID, Jahr, Titel).
+Editiere die <code>config.php</code> Datei um die Standardsuche zu verÃ¤ndern (ID, Jahr, Titel).
 </p>
 
 <p>
-Verschieden Möglichkeiten stehen für jeden Eintrag zur Verfügung:
+Verschieden MÃ¶glichkeiten stehen fÃ¼r jeden Eintrag zur VerfÃ¼gung:
 </p>
 
 <table class='help'>
   <tbody>
     <tr class='colored'>
        <th class='img'><img src="data/images/stock_book-16.png" alt="ps"/></th>
-       <td>Downloade eine postscript-Version von der Veröffentlichungen.</td>
+       <td>Downloade eine postscript-Version von der VerÃ¶ffentlichungen.</td>
    </tr>
    <tr>
        <th  class='img'><img src="data/images/tar.png" alt="ps.gz"/></th>
-       <td> Downloade eine komprimierte postscript-Version von der Veröffentlichungen.</td>
+       <td> Downloade eine komprimierte postscript-Version von der VerÃ¶ffentlichungen.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/pdf-document.png" alt="pdf"/></th>
-        <td> Downloade eine PDF-Version von der Veröffentlichungen.</td>
+        <td> Downloade eine PDF-Version von der VerÃ¶ffentlichungen.</td>
     </tr>
     <tr>
         <th class='img'><img src="data/images/stock_about-16.png" alt="abstract"/></th>
@@ -62,7 +62,7 @@ Verschieden Möglichkeiten stehen für jeden Eintrag zur Verfügung:
     </tr>
     <tr>
         <th class='img'><img src="data/images/stock_edit-16.png" alt="edit"/></th>
-        <td>Editiere den Eintrag um Veränderungen vorzunehmen.</td>
+        <td>Editiere den Eintrag um VerÃ¤nderungen vorzunehmen.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/stock_delete-16.png" alt="delete"/></th>
@@ -70,7 +70,7 @@ Verschieden Möglichkeiten stehen für jeden Eintrag zur Verfügung:
     </tr>
     <tr>
         <th class='img'><img src="data/images/cvs-add-16.png" alt="add"/></th>
-        <td>Hinzufügen des Eintrages zum Warenkorb.</td>
+        <td>HinzufÃ¼gen des Eintrages zum Warenkorb.</td>
     </tr>
     <tr class='colored'>
         <th class='img'><img src="data/images/cvs-remove-16.png" alt="add"/></th>
@@ -78,7 +78,7 @@ Verschieden Möglichkeiten stehen für jeden Eintrag zur Verfügung:
     </tr>
     <tr>
         <th class='img'><img src="data/images/add.png" alt="add"/></th>
-        <td>Hinzufügen aller Einträge zum Warenkorb.</td>
+        <td>HinzufÃ¼gen aller EintrÃ¤ge zum Warenkorb.</td>
     </tr>
     </tbody>
 </table>

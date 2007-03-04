@@ -1,6 +1,10 @@
 <?php
 /**
  *
+ * This file is part of BibORB
+ *
+ * Copyright (C) 2003-2007  Guillaume Gardey (ggardey@club-internet.fr)
+ *  
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -237,9 +241,9 @@ class BibORB_DataBase {
     */
     function update_bibtex_file(){
 	// Load all the database and transform it into a bibtex string
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
         $xml_content = $this->all_entries();
-        $xsl_content = load_file("./xsl/xml2bibtex.xsl");
+        $xsl_content = file_get_contents("./xsl/xml2bibtex.xsl");
         $bibtex = $xsltp->transform($xml_content,$xsl_content);
         $xsltp->free();
         
@@ -354,7 +358,7 @@ class BibORB_DataBase {
     */
     function entries_with_ids($anArray){
     
-    	$xml = '<?xml version="1.0" encoding="iso-8859-1"?><bibtex:file xmlns:bibtex="http://bibtexml.sf.net/">';
+    	$xml = '<?xml version="1.0" encoding="UTF-8"?><bibtex:file xmlns:bibtex="http://bibtexml.sf.net/">';
 	foreach($anArray as $item){
 		$connect = sql_connexion(); 	
 		$item = $connect->escapeSimple($item);
@@ -873,9 +877,9 @@ class BibORB_DataBase {
 	
      */
     function xpath_search($xpath_query){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
         $xml_content = $this->all_entries();
-        $xsl_content = load_file("./xsl/xpath_query.xsl");
+        $xsl_content = file_get_contents("./xsl/xpath_query.xsl");
         $xsl_content = str_replace("XPATH_QUERY",$xpath_query,$xsl_content);
         $param = array( 'bibname' => $this->xml_file());
         $result = $xsltp->transform($xml_content,$xsl_content,$param); 
@@ -892,9 +896,9 @@ class BibORB_DataBase {
     */
     
     function ids_for_xpath_search($xpath_query){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
         $xml_content = $this->all_entries();    
-        $xsl_content = load_file("./xsl/extract_ids.xsl");
+        $xsl_content = file_get_contents("./xsl/extract_ids.xsl");
         $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry[$xpath_query]",$xsl_content);
         $param = array('sort' => $this->sort,
                        'sort_order' => $this->sort_order);
@@ -937,9 +941,9 @@ class BibORB_DataBase {
 	\return \c array an Array of available types of papers
     */
     function entry_types(){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
-        $xml_content = load_file("./xsl/model.xml");
-        $xsl_content = load_file("./xsl/get_all_bibtex_types.xsl");        
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
+        $xml_content = file_get_contents("./xsl/model.xml");
+        $xsl_content = file_get_contents("./xsl/get_all_bibtex_types.xsl");        
         $result = $xsltp->transform($xml_content,$xsl_content); 
         $xsltp->free();
 	
@@ -1123,9 +1127,9 @@ class BibORB_DataBase {
 	\return \c array an Array with different possible values for the \b $field
     */
     function get_values_for($field){
-            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
             $xml_content = $this->all_entries();
-            $xsl_content = load_file("./xsl/extract_field_values.xsl");
+            $xsl_content = file_get_contents("./xsl/extract_field_values.xsl");
             $param = array('sort' => $this->sort,
                            'sort_order' => $this->sort_order,
                            'field' => $field);
@@ -1145,7 +1149,7 @@ class BibORB_DataBase {
 	\return \c array an Array of bibitex id
      */
     function filter($ids, $field, $value){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
         $xml_content = $this->entries_with_ids($ids);
         if($field == 'author'){
             $xpath_query = "contains(.//bibtex:$field,'$value')";
@@ -1153,7 +1157,7 @@ class BibORB_DataBase {
         else{
             $xpath_query = ".//bibtex:$field='$value'";
         }
-        $xsl_content = load_file("./xsl/extract_ids.xsl");
+        $xsl_content = file_get_contents("./xsl/extract_ids.xsl");
         $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry[$xpath_query]",$xsl_content);
         $param = array('sort' => $this->sort,
                        'sort_order' => $this->sort_order);

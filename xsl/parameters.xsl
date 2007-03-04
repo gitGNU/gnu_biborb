@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="iso-8859-1" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2005  Guillaume Gardey
+ * Copyright (C) 2003-2007  Guillaume Gardey
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -141,5 +141,5 @@
 
 
     <xsl:variable name="lcletters">abcdefghijklmnopqrstuvwxyzYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy</xsl:variable>
-    <xsl:variable name="ucletters">ABCDEFGHIJKLMNOPQRSTUVWXYZ��������������������������������������������������������������</xsl:variable>    
+    <xsl:variable name="ucletters">ABCDEFGHIJKLMNOPQRSTUVWXYZÃÂ¥ÃÂµÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ ÃÂ¡ÃÂ¢ÃÂ£ÃÂ¤ÃÂ¥ÃÂ¦ÃÂ§ÃÂ¨ÃÂ©ÃÂªÃÂ«ÃÂ¬ÃÂ­ÃÂ®ÃÂ¯ÃÂ°ÃÂ±ÃÂ²ÃÂ³ÃÂ´ÃÂµÃÂ¶ÃÂ¸ÃÂ¹ÃÂºÃÂ»ÃÂ¼ÃÂ½ÃÂ¿</xsl:variable>    
 </xsl:stylesheet>

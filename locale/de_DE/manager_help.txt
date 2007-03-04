@@ -1,22 +1,22 @@
 <p>
-Dieses Menü erlaubt den Zugriff auf Managementfunktionen. Entsprechend der <acronym class='biborb'>BibORB</acronym> Konfiguration können Einträge hinzugefügt, editiert oder gelöscht werden.
+Dieses MenÃ¼ erlaubt den Zugriff auf Managementfunktionen. Entsprechend der <acronym class='biborb'>BibORB</acronym> Konfiguration kÃ¶nnen EintrÃ¤ge hinzugefÃ¼gt, editiert oder gelÃ¶scht werden.
 </p>
 
 <p>
-Verfügbare Möglichkeiten (abhängig von der Konfiguration):
+VerfÃ¼gbare MÃ¶glichkeiten (abhÃ¤ngig von der Konfiguration):
 </p>
 <table class='help'>
        <tbody>
 		<tr class='colored'>
 			<th>Einloggen</th>
-			<td> Erlaubt das hinzufügen, editieren und löschen von Einträgen.</td>
+			<td> Erlaubt das hinzufÃ¼gen, editieren und lÃ¶schen von EintrÃ¤gen.</td>
 		</tr>
 		<tr>
 			<th>Ausloggen</th>
 			<td>Ausloggen</td>
 		</tr>
 		<tr class='colored'>
-			<th>Hinzugefügen eines Eintrages</th>
+			<th>HinzugefÃ¼gen eines Eintrages</th>
 			<td/>
 		</tr>
 		<tr>
@@ -25,12 +25,12 @@ Verfügbare Möglichkeiten (abhängig von der Konfiguration):
 		</tr>
 		<tr class='colored'>
 			<th>Import von BibTeX</th>
-			<td>Die BibTeX Einträge können über kopieren/einfügen in einem Textfeld oder über eine BibTeX Datei hinzugefügt werden. <code>@string</code> <acronym>BibTeX</acronym> Makros werden aufgelöst und bearbeitet.</td>
+			<td>Die BibTeX EintrÃ¤ge kÃ¶nnen Ã¼ber kopieren/einfÃ¼gen in einem Textfeld oder Ã¼ber eine BibTeX Datei hinzugefÃ¼gt werden. <code>@string</code> <acronym>BibTeX</acronym> Makros werden aufgelÃ¶st und bearbeitet.</td>
 		</tr>
 	</tbody>
 </table>
 
 <span style="color:red"><strong>Warnung!</strong></span>
 <ul>
-    <li>BibORB kann weder Fehler noch Duplikate von BibTeX Schlüsselwörtern erkennen.</li>
+    <li>BibORB kann weder Fehler noch Duplikate von BibTeX SchlÃ¼sselwÃ¶rtern erkennen.</li>
 </ul>

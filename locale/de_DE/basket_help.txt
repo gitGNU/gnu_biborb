@@ -1,16 +1,16 @@
 <p>
-Dieses Menü gibt Zugriff auf die Warenkorbfunktion. Selektiere einige Einträge und führe folgende Aktionen aus:
+Dieses MenÃ¼ gibt Zugriff auf die Warenkorbfunktion. Selektiere einige EintrÃ¤ge und fÃ¼hre folgende Aktionen aus:
 </p>
 
 <table class="help">
 	<tbody>
 		<tr class='colored'>
 			<th>Zeige alles</th>
-			<td>Zeige alle Einträge im Warenkorb.</td>
+			<td>Zeige alle EintrÃ¤ge im Warenkorb.</td>
 		</tr>
 		<tr>
 			<th>Gruppenmodifikation</th>
-			<td>Füge Einträge zu Gruppen hinzu.</td>
+			<td>FÃ¼ge EintrÃ¤ge zu Gruppen hinzu.</td>
 		</tr>
 		<tr class='colored'>
 			<th>Exportiere nach BibTeX</th>
@@ -21,8 +21,8 @@ Dieses Menü gibt Zugriff auf die Warenkorbfunktion. Selektiere einige Einträge u
 			<td>Exportiere die Auswahl nach HTML.</td>
 		</tr>
         <tr class='colored'>
-			<th>Zurücksetzen des Warenkorbes</th>
-			<td>Lösche den Warenkorb.</td>
+			<th>ZurÃ¼cksetzen des Warenkorbes</th>
+			<td>LÃ¶sche den Warenkorb.</td>
 		</tr>
 	</tbody>
 </table>
