@@ -43,18 +43,24 @@ function index_login()
 
     $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
     $aHtml .= index_menu();
-    $aTitle = msg("INDEX_MENU_LOGIN_TITLE");
-    $aContent = "<form id='login_form' action='index.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")'>";
-    $aContent .= "<fieldset>";
-    $aContent .= "<legend>".msg("Login")."</legend>";
-    $aContent .= "<label for='login'>".msg("LOGIN_USERNAME").":</label>";
-    $aContent .= "<input type='text' name='login' id='login' /><br/>";
-    $aContent .= "<label for='password'>".msg("LOGIN_PASSWORD").":</label>";
-    $aContent .= "<input type='password' id='password' name='mdp' /><br/>";
-    $aContent .= "<input type='hidden' name='action' value='login'/>";
-    $aContent .= "<input type='submit' value=\"".msg("Login")."\" class='submit'/>";
-    $aContent .= "</fieldset>";
-    $aContent .= "</form>";
+    $aTitle = msg('INDEX_MENU_LOGIN_TITLE');
+    $aFormData = array('id' => 'login_form',
+                       'action' => 'index.php',
+                       'method' => 'post',
+                       'onsubmit' => 'return validate_login_form(\"'.$_SESSION['i18n']->getLocale().'\")');
+    $aContent = HtmlToolKit::startTag('form',$aFormData);
+    $aContent .= HtmlToolKit::startTag('fieldset');
+    $aContent .= HtmlToolKit::tag('legend',msg('Login'));
+    $aContent .= HtmlToolKit::tag('label',msg('LOGIN_USERNAME'), array('for'=>'login'));
+    $aContent .= HtmlToolKit::tagNoData('input', array('type' => 'text', 'name' => 'login', 'id' => 'login'));
+    $aContent .= HtmlToolKit::tagNoData('br');
+    $aContent .= HtmlToolKit::tag('label', msg('LOGIN_PASSWORD').':', array('label' => 'password'));
+    $aContent .= HtmlToolKit::tagNoData('input', array('type' => 'password', 'id'=>'password', 'name'=>'mdp'));
+    $aContent .= HtmlToolKit::tagNoData('br');    
+    $aContent .= HtmlToolKit::tagNoData('input', array('type'=>'hidden', 'name'=>'action', 'value'=>'login'));    
+    $aContent .= HtmlToolKit::tagNoData('input', array('type'=>'submit', 'value'=> msg("Login"), 'class'=>'submit'));        
+    $aContent .= HtmlToolKit::closeTag('fieldset');
+    $aContent .= HtmlToolKit::closeTag('form');
 
     $aHtml .= main($aTitle,$aContent,$GLOBALS['error_or_message']['error']);
     $aHtml .= HtmlToolKit::htmlClose();

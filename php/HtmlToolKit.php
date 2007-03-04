@@ -48,19 +48,12 @@ class HtmlToolKit
      */
     /* static */ function selectTag($iAttributes, $iOptions, $iSelectedOptionValue = null)
     {
-        $aHtml = "<select";
-
-        foreach ($iAttributes as $aAttName => $aAttValue)
-        {
-            $aHtml .= " {$aAttName}='{$aAttValue}'";
-        }
-        $aHtml .= ">";
+        $aHtml = HtmlToolKit::startTag('select',$iAttributes);        
         array_walk($iOptions,
                    array( 'HtmlToolKit', 'optionTag'),
                    array( 'selectedOptionValue' => $iSelectedOptionValue,
                           'outputString' => &$aHtml));
-        $aHtml .= "</select>";
-
+        $aHtml .= HtmlToolKit::closeTag('select');
         return $aHtml;
 
     }
@@ -125,29 +118,78 @@ EOT;
         }
         if (isset($iData['title']))
         {
-            $aHtml .= "\n\t\t<title>{$iData['title']}</title>";
+            $aHtml .= HtmlToolKit::tag('title', $iData['title']);            
         }
         if (isset($iData['javascript']))
         {
             $aHtml .= "\n\t\t<script type='text/javascript' src='{$iData['javascript']}'></script>";
         }
-        $aHtml .= "\n\t</head>";
-        $aHtml .= "\n<body";
-        if (isset($iData['body']))
-        {
-            array_walk($iData['body'], 'HtmlToolKit::->htmlParameterToString', $aHtml);
-        }
-        $aHtml .= ">";
+        $aHtml .= HtmlToolKit::closeTag('head');
+        $aHtml .= HtmlToolKit::startTag('body', isset($iData['body']) ? $iData['body'] : null);
         return $aHtml;
     }
 
     /**
      *
      */
-    /* static */ function htmlParameterToString($iParamValue, $iParamName, &$ioHtmlString)
+    /* static */ function attributeToString($iParamValue, $iParamName, &$ioHtmlString)
     {
-        $ioHtmlString .= " $iParamValue='$iParamName'";
+        $ioHtmlString .= " $iParamName='$iParamValue'";
     }
 
+    /**
+     * Open an HTML tag.
+     */
+    /* static */ function startTag($iTagName, $iAttributes = null)
+    {
+        $aHtml = '<'.$iTagName;
+        if (isset($iAttributes))
+        {           
+            array_walk($iAttributes,
+                       array('HtmlToolKit','attributeToString'),
+                       &$aHtml);
+        }        
+        $aHtml .= '>';
+        
+        return $aHtml;        
+    }
+
+    /**
+     * Close an HTML tag.
+     */
+    /* static */ function closeTag($iTagName)
+    {
+        return '</'.$iTagName.'>';        
+    }
+
+    /**
+     *
+     */
+    /* static */ function tag($iTagName, $iData, $iAttributes = null)
+    {
+        $aHtml = HtmlToolKit::startTag($iTagName, $iAttributes);
+        $aHtml .= $iData;
+        $aHtml .= HtmlToolKit::closeTag($iTagName);
+        
+        return $aHtml;
+    }
+    /**
+     *
+     */
+    /* static */ function tagNoData($iTagName, $iAttributes = null)
+    {
+        $aHtml = '<'.$iTagName;
+        if (isset($iAttributes))
+        {
+            array_walk($iAttributes,
+                       array('HtmlToolKit','attributeToString'),
+                       &$aHtml);
+        }        
+        $aHtml .= '/>';
+        
+        return $aHtml;
+    }
+    
+            
 }
 ?>
