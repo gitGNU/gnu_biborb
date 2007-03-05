@@ -341,4 +341,10 @@ function myUnset(&$ioData)
     $ioData = null;
 }
 
+function myUnsetArray(&$ioArray, $iKey)
+{
+    unset($ioArray[$iKey]);
+}
+
+
 ?>

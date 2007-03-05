@@ -38,12 +38,23 @@
 require_once("config.php");
 require_once("config.misc.php");
 
-switch(DB_BACKEND){
+switch(DB_BACKEND)
+{
     case 'xml':
         require_once("php/db_backends/biborbdb.xmlfile.php");
         break;
     case 'mysql':
         require_once("php/db_backends/biborbdb.sql.php");
+        break;
+    default:
+        if (isset($_SESSION['errorManager']))
+        {
+            $_SESSION['errorManager']->triggerError("ERROR_INVALID_DB_BACKEND",array( 'db_backend' => DB_BACKEND));
+        }
+        else
+        {
+            trigger_error("ERROR_INVALID_DB_BACKEND", E_USER_ERROR);
+        }
         break;
 }
 

@@ -119,13 +119,24 @@ class ErrorManager
     }
 
     /**
-     * Trigger a new error
+     * Trigger a new warning
      *
      */
     function triggerWarning($iString, $iContext)
     {
         $this->_warningStack[] = array($iString, $iContext, E_USER_NOTICE);
         trigger_error($iString, E_USER_NOTICE);
+    }
+
+    
+    /**
+     * Trigger a new error
+     *
+     */
+    function triggerError($iString, $iContext)
+    {
+        $this->_errorStack[] = array($iString, $iContext, E_USER_ERROR);
+        trigger_error($iString, E_USER_ERROR);
     }
 }
 

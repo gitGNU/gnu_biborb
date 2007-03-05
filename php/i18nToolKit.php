@@ -155,7 +155,7 @@ class i18nToolKit
      * @param $iLocale The locale to use
      */
     function msg($iString)
-    {
+    {        
         if (!isset($this->_localizedStrings[$iString]))
         {
             $aContext = array( 'locale' => $this->_locale,

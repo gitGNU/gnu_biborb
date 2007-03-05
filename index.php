@@ -42,7 +42,7 @@
 require_once("config.php");          // load configuration variables
 require_once("config.misc.php");
 require_once("php/functions.php");   // load needed functions
-require_once("php/biborbdb.php");    // load biborb database
+require_once("php/proxyDbManager.php");    // load the db manager
 require_once("php/interface-index.php");   // load function to generate the interface
 require_once("php/auth.php");        // load authentication class
 require_once("php/i18nToolKit.php");        // load i18n functions
@@ -71,6 +71,14 @@ if(get_magic_quotes_gpc()) {
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 }
 
+/**
+ *
+ */
+if ( !isset($_SESSION['DbManager']) ||
+     !is_object($_SESSION['DbManager']))
+{
+    $_SESSION['DbManager'] = new DbManager();
+}
 
 /**
  * i18n, choose default lang if not set up
@@ -139,8 +147,8 @@ if(isset($_GET['action'])){
                 trigger_error("You are not authorized to create bibliographies!",ERROR);
             }
 
-            $error_or_message = create_database($_GET['database_name'],
-                                                $_GET['description']);
+            $error_or_message = $_SESSION['DbManager']->createDb($_GET['database_name'],
+                                                                 $_GET['description']);
             break;
 
         /* Delete a database  */
@@ -149,7 +157,7 @@ if(isset($_GET['action'])){
             if(!array_key_exists('user_is_admin',$_SESSION) || !$_SESSION['user_is_admin']){
                 trigger_error("You are not authorized to delete bibliographies!",ERROR);
             }
-            $error_or_message['message'] = delete_database($_GET['database_name']);
+            $error_or_message['message'] = $_SESSION['DbManager']->deleteDb($_GET['database_name']);
             break;
 
         /*  Logout  */

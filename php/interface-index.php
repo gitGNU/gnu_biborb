@@ -132,7 +132,7 @@ function index_delete_database()
     $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
     $aTitle = msg("INDEX_DELETE_BIB_TITLE");
     // get all bibliographies and create a form to select which one to delete
-    $aDatabases = get_databases_names();
+    $aDatabases = $_SESSION['DbManager']->getDbNames();
 
     $aContent = "<form method='get' action='index.php' id='f_delete_database'>";
     $aContent .= "<fieldset>";
@@ -201,7 +201,7 @@ function index_select()
     $aHtml .= index_menu();
 
     // get all bibliographies and create an array
-    $aDatabaseNames = get_databases_names();
+    $aDatabaseNames = $_SESSION['DbManager']->getDbNames();
     $aContent = "<table id='available_bibliographies'>";
     $aContent .= "<thead>";
     $aContent .= "<tr>";
