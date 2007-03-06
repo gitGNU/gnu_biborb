@@ -189,7 +189,24 @@ EOT;
         
         return $aHtml;
     }
-    
+
+    /**
+     *
+     */
+    /* static */ function main($iTitle, $iContent, $iError = null, $iMessage = null)
+    {
+        $aHtml = '<div id="main">';
+        if (isset($iTitle))
+            $aHtml .= '<h2 id="main_title">'.$iTitle.'</h2>';
+        if (isset($iError))
+            $aHtml .= '<div id="error">'.$iError.'</div>';
+        if (isset($iMessage))
+            $aHtml .= '<div id="message">'.$iMessage.'</div>';
+        if (isset($iContent))
+            $aHtml .= '<div id="content">'.$iContent.'</div>';
+        $aHtml .= '</div>';            
+        return $aHtml;
+    }
             
 }
 ?>

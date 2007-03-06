@@ -141,7 +141,7 @@ function bibindex_menu($bibname)
     $html .= "<li><a href='index.php?mode=select'>".msg("BIBINDEX_MENU_SELECT_BIB")."</a>";
     $html .= "<ul>";
     // jump to a given bibliography
-    $avbibs = get_databases_names();
+    $avbibs = $_SESSION['DbManager']->getDbNames();
     $html .= "<li>";
     $html .= "<form id='choose_bib' action='bibindex.php'>";
     $html .= "<fieldset>";

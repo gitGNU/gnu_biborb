@@ -62,7 +62,7 @@ function index_login()
     $aContent .= HtmlToolKit::closeTag('fieldset');
     $aContent .= HtmlToolKit::closeTag('form');
 
-    $aHtml .= main($aTitle,$aContent,$GLOBALS['error_or_message']['error']);
+    $aHtml .= HtmlToolKit::main($aTitle,$aContent,$GLOBALS['error_or_message']['error']);
     $aHtml .= HtmlToolKit::htmlClose();
 
     return $aHtml;
@@ -84,7 +84,7 @@ function index_welcome()
                             '$date_release' => BIBORB_RELEASE_DATE);
     $aContent = strtr($aContent, $aStrToReplace);
     $aHtml .= index_menu();
-    $aHtml .= main('BibORB: BibTeX On-line References Browser',$aContent);
+    $aHtml .= HtmlToolKit::main('BibORB: BibTeX On-line References Browser',$aContent);
     $aHtml .= HtmlToolKit::htmlClose();
 
     return $aHtml;
@@ -115,7 +115,7 @@ function index_add_database()
     $aContent .= "</form>";
 
     $aHtml .= index_menu();
-    $aHtml .= main($aTitle,$aContent);
+    $aHtml .= HtmlToolKit::main($aTitle,$aContent);
     $aHtml .= HtmlToolKit::htmlClose();
 
     return $aHtml;
@@ -145,7 +145,7 @@ function index_delete_database()
     $aContent .= "</form>";
 
     $aHtml .= index_menu();
-    $aHtml .= main($aTitle,$aContent);
+    $aHtml .= HtmlToolKit::main($aTitle,$aContent);
     $aHtml .= HtmlToolKit::htmlClose();
 
     return $aHtml;
@@ -163,7 +163,7 @@ function index_manager_help()
     $aTitle = msg("INDEX_MANAGER_HELP_TITLE");
     $aContent = $_SESSION['i18n']->getFile("index_manager_help.txt");
     $aHtml .= index_menu();
-    $aHtml .= main($aTitle,$aContent);
+    $aHtml .= HtmlToolKit::main($aTitle,$aContent);
     $aHtml .= HtmlToolKit::htmlClose();
 
     return $aHtml;
@@ -180,7 +180,7 @@ function index_result()
                               'javascript' => './biborb.js');
     $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
     $aHtml .= index_menu();
-    $aHtml .= main(msg("INDEX_RESULTS_TITLE"),null,
+    $aHtml .= HtmlToolKit::main(msg("INDEX_RESULTS_TITLE"),null,
                   $GLOBALS['error_or_message']['error'],
                   $GLOBALS['error_or_message']['message']);
     $aHtml .= HtmlToolKit::htmlClose();
@@ -202,26 +202,32 @@ function index_select()
 
     // get all bibliographies and create an array
     $aDatabaseNames = $_SESSION['DbManager']->getDbNames();
-    $aContent = "<table id='available_bibliographies'>";
-    $aContent .= "<thead>";
-    $aContent .= "<tr>";
-    $aContent .= "<th>".msg("INDEX_AVAILABLE_BIBS_COL_BIBNAME")."</th>";
-    $aContent .= "<th>".msg("INDEX_AVAILABLE_BIBS_COL_BIBDESCRIPTION")."</th>";
-    $aContent .= "</tr>";
-    $aContent .= "</thead>";
-    $aContent .= "<tbody>";
+    $aContent = HtmlToolKit::startTag('table',array('id' => 'available_bibliographies'));
+    $aContent .= HtmlToolKit::startTag('thead');
+    $aContent .= HtmlToolKit::startTag('tr');
+    $aContent .= HtmlToolKit::tag('th',msg("INDEX_AVAILABLE_BIBS_COL_BIBNAME"));
+    $aContent .= HtmlToolKit::tag('th',msg("INDEX_AVAILABLE_BIBS_COL_BIBDESCRIPTION"));
+    $aContent .= HtmlToolKit::closeTag('tr');
+    $aContent .= HtmlToolKit::closeTag('thead');
+    $aContent .= HtmlToolKit::startTag('tbody');
 
     foreach($aDatabaseNames as $aName => $aFullName)
     {
         $aDescription = FileToolKit::getContent("./bibs/{$aName}/description.txt");
-        $aContent .= "<tr>";
-        $aContent .= "<td><a class='bibname' href='./bibindex.php?mode=welcome&amp;bibname={$aName}'>{$aFullName}</a></td>";
-        $aContent .= "<td><span class='bib_description'>{$aDescription}</span></td>";
-        $aContent .= "</tr>";
+        $aContent .= HtmlToolKit::startTag('tr');
+        $aContent .= HtmlToolKit::startTag('td');
+        $aContent .= HtmlToolKit::tag('a',$aFullName,array('class'=>'bibname',
+                                                           'href' => './bibindex.php?mode=welcome&amp;bibname='.$aName));
+        $aContent .= HtmlToolKit::closeTag('a');
+        $aContent .= HtmlToolKit::closeTag('td');
+        $aContent .= HtmlToolKit::startTag('td');
+        $aContent .= HtmlToolKit::tag('span',$aDescription,array('class'=>'bib_description'));
+        $aContent .= HtmlToolKit::closeTag('td');
+        $aContent .= HtmlToolKit::closeTag('tr');
     }
-    $aContent .= "</tbody></table>";
-
-    $aHtml .= main($aTitle,$aContent);
+    $aContent .= HtmlToolKit::closeTag('tbody');
+    $aContent .= HtmlToolKit::closeTag('table');
+    $aHtml .= HtmlToolKit::main($aTitle,$aContent);
     $aHtml .= HtmlToolKit::htmlClose();
     return $aHtml;
 }
@@ -303,11 +309,11 @@ function index_preferences()
     $aHtml .= index_menu();
     if (isset($GLOBALS['message']))
     {
-        $aHtml .= main(msg("PREFERENCES_TITLE"),pref_content(),null,$GLOBALS['message']);
+        $aHtml .= HtmlToolKit::main(msg("PREFERENCES_TITLE"),pref_content(),null,$GLOBALS['message']);
     }
     else
     {
-        $aHtml .= main(msg("PREFERENCES_TITLE"),pref_content());
+        $aHtml .= HtmlToolKit::main(msg("PREFERENCES_TITLE"),pref_content());
     }
     $aHtml .= HtmlToolKit::htmlClose();
 

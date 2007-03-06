@@ -41,13 +41,15 @@
 
 require_once("config.php");          // load configuration variables
 require_once("config.misc.php");
-require_once("php/functions.php");   // load needed functions
+require_once("php/utilities.php");
 require_once("php/proxyDbManager.php");    // load the db manager
 require_once("php/interface-index.php");   // load function to generate the interface
 require_once("php/auth.php");        // load authentication class
 require_once("php/i18nToolKit.php");        // load i18n functions
 require_once("php/error.php");       // load biborb error handler
 require_once("php/HtmlToolKit.php");
+require_once("php/FileToolKit.php");
+
 //require_once("php/third_party/Cache/Lite/Output.php"); // cache system
 
 
@@ -60,19 +62,20 @@ session_name("SID");
 session_start();
 
 // Set the error_handler for biborb
-set_error_handler("biborb_error_handler");
+//set_error_handler("biborb_error_handler");
 
 /**
  * stripslashes
  */
-if(get_magic_quotes_gpc()) {
+if(get_magic_quotes_gpc())
+{
     $_POST = array_map('stripslashes_deep', $_POST);
     $_GET = array_map('stripslashes_deep', $_GET);
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 }
 
 /**
- *
+ * Set the DbManager object.
  */
 if ( !isset($_SESSION['DbManager']) ||
      !is_object($_SESSION['DbManager']))
@@ -91,12 +94,13 @@ if ( !isset($_SESSION['i18n']) ||
     $_SESSION['i18n'] = new i18nToolKit($aPrefLang, DEFAULT_LANG);
 }
 
-if (isset($_GET['language'])
-     && $_GET['language'] != $_SESSION['i18n']->getLocale())
+/**
+ * Change the local if asked to.
+ */
+if (isset($_GET['language']))
 {
     $_SESSION['i18n']->loadLocale($_GET['language']);
 }
-
 
 /**
  * To store an error or a message. (mode=result)
@@ -109,127 +113,129 @@ $error_or_message = array('error' => null,
  * If not in $_GET, receive null
  * The 'mode' variable sets which page to display
  */
-$mode = (array_key_exists('mode',$_GET) ? $_GET['mode'] : null);
+$mode = isset($_GET['mode']) ? $_GET['mode'] : null;
 
 /**
  * Set the access level
  * If authentication activated delegate to the Auth class.
  * Else set full power to any user.
  */
-if(!DISABLE_AUTHENTICATION){
+if (!DISABLE_AUTHENTICATION)
+{
     // create a new Auth object if needed
-    if(!array_key_exists('auth',$_SESSION))
+    if (!isset($_SESSION['auth']) ||
+        !isobject($_SESSION['auth']))
         $_SESSION['auth'] = new Auth();
 
-    if(!array_key_exists('user',$_SESSION))
+    if (!isset($_SESSION['user']))
         $_SESSION['user_is_admin'] = FALSE;
 
 }
-else{
+else
+{
     $_SESSION['user_is_admin'] = TRUE;
 }
 
 /**
  * Look in $_GET for an action to be performed
  */
-if(isset($_GET['action'])){
-    switch($_GET['action']){
-        /*  Select the lang   */
-        case 'select_lang':
-            myUnset($_SESSON['i18n']);
-            $_SESSION['i18n'] = new i18nToolKit($_GET['lang'],DEFAULT_LANG);
-            break;
+$aAction = isset($_GET['action']) ? $_GET['action'] : (isset($_POST['action']) ? $_POST['action'] : null);
+switch ($aAction)
+{
+    /*  Select the lang   */
+    case 'select_lang':
+        $_SESSION['i18n']->loadLocale($_GET['lang']);
+        break;
 
         /* Create a database  */
-        case 'create':
-            // check we have the authorization to modify
-            if(!array_key_exists('user_is_admin',$_SESSION) || !$_SESSION['user_is_admin']){
-                trigger_error("You are not authorized to create bibliographies!",ERROR);
-            }
-
-            $error_or_message = $_SESSION['DbManager']->createDb($_GET['database_name'],
-                                                                 $_GET['description']);
-            break;
-
+    case 'create':
+        // check we have the authorization to modify
+        if (!array_key_exists('user_is_admin',$_SESSION) ||
+            !$_SESSION['user_is_admin'])
+        {
+            trigger_error("You are not authorized to create bibliographies!",ERROR);
+        }
+        
+        $error_or_message = $_SESSION['DbManager']->createDb($_GET['database_name'],
+                                                             $_GET['description']);
+        break;
+        
         /* Delete a database  */
-        case 'delete':
-            // check we have the authorization to modify
-            if(!array_key_exists('user_is_admin',$_SESSION) || !$_SESSION['user_is_admin']){
-                trigger_error("You are not authorized to delete bibliographies!",ERROR);
-            }
-            $error_or_message['message'] = $_SESSION['DbManager']->deleteDb($_GET['database_name']);
-            break;
-
+    case 'delete':
+        // check we have the authorization to modify
+        if (!array_key_exists('user_is_admin',$_SESSION) ||
+           !$_SESSION['user_is_admin'])
+        {
+            trigger_error("You are not authorized to delete bibliographies!",ERROR);
+        }
+        $error_or_message['message'] = $_SESSION['DbManager']->deleteDb($_GET['database_name']);
+        break;
+        
         /*  Logout  */
-        case 'logout':
-            $_SESSION['user_is_admin'] = FALSE;
-            $_SESSION['user_can_add'] = FALSE;
-            $_SESSION['user_can_modidy'] = FALSE;
-            $_SESSION['user_can_delete'] = FALSE;
-            unset($_SESSION['user']);
-            unset($_SESSION['user_pref']);
-            $_SESSION['language'] = DEFAULT_LANG;
-            load_i18n_config($_SESSION['language']);
-            break;
-
-        default:
-            break;
-    }
-}
-
-/**
- * Look in $_POST for an action to be performed
- */
-if(isset($_POST['action'])){
-    switch($_POST['action']){
+    case 'logout':
+        $_SESSION['user_is_admin'] = FALSE;
+        $_SESSION['user_can_add'] = FALSE;
+        $_SESSION['user_can_modidy'] = FALSE;
+        $_SESSION['user_can_delete'] = FALSE;
+        unset($_SESSION['user']);
+        unset($_SESSION['user_pref']);
+        $_SESSION['language'] = DEFAULT_LANG;
+        load_i18n_config($_SESSION['language']);
+        break;
+        
         /*  Login */
-        case 'login':
-            $login = $_POST['login'];
-            $mdp = $_POST['mdp'];
-            // check missing values
-            if($login=="" || $mdp==""){
-                $error_or_message['error'] = msg("LOGIN_MISSING_VALUES");
+    case 'login':
+        $login = $_POST['login'];
+        $mdp = $_POST['mdp'];
+        // check missing values
+        if ($login=="" || $mdp=="")
+        {
+            $error_or_message['error'] = msg("LOGIN_MISSING_VALUES");
+            $mode = "login";
+        }
+        else
+        {
+            // check the user name
+            $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
+            if ($loggedin)
+            {
+                // set user privileges
+                $_SESSION['user'] = $login;
+                $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($login);
+                $_SESSION['user_pref'] = $_SESSION['auth']->get_preferences($login);
+                // select language
+                $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
+                load_i18n_config($_SESSION['language']);
+                // redirect to the default database
+                if (array_key_exists($_SESSION['user_pref']['default_database'],get_databases_names()))
+                {
+                    header("Location:./bibindex.php?bibname=".$_SESSION['user_pref']['default_database']);
+                }
+                else
+                {
+                    $mode = "welcome";
+                }
+            }
+            else
+            {
+                $error_or_message['error'] = msg("LOGIN_WRONG_USERNAME_PASSWORD");
                 $mode = "login";
             }
-            else{
-                // check the user name
-                $loggedin = $_SESSION['auth']->is_valid_user($login,$mdp);
-                if($loggedin){
-                    // set user privileges
-                    $_SESSION['user'] = $login;
-                    $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($login);
-                    $_SESSION['user_pref'] = $_SESSION['auth']->get_preferences($login);
-                    // select language
-                    $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
-                    load_i18n_config($_SESSION['language']);
-                    // redirect to the default database
-                    if(array_key_exists($_SESSION['user_pref']['default_database'],get_databases_names())){
-                        header("Location:./bibindex.php?bibname=".$_SESSION['user_pref']['default_database']);
-                    }
-                    else{
-                        $mode = "welcome";
-                    }
-                }
-                else {
-                    $error_or_message['error'] = msg("LOGIN_WRONG_USERNAME_PASSWORD");
-                    $mode = "login";
-                }
-            }
-            break;
-
+        }
+        break;
+        
         /* Update user's preferences. */
-        case 'update_preferences':
-            $_SESSION['auth']->set_preferences($_POST,$_SESSION['user']);
-            $_SESSION['user_pref'] = $_SESSION['auth']->get_preferences($_SESSION['user']);
-            $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
-            load_i18n_config($_SESSION['language']);
-            $mode = "preferences";
-            $message = msg("Preferences updated.");
-            break;
-
-        default:
-            break;
-    }
+    case 'update_preferences':
+        $_SESSION['auth']->set_preferences($_POST,$_SESSION['user']);
+        $_SESSION['user_pref'] = $_SESSION['auth']->get_preferences($_SESSION['user']);
+        $_SESSION['language'] = $_SESSION['user_pref']['default_language'];
+        load_i18n_config($_SESSION['language']);
+        $mode = "preferences";
+        $message = msg("Preferences updated.");
+        break;
+        
+    default:
+        break;
 }
 
 /*********************************************** BEGINING OF THE HTML OUTPUT **/
@@ -237,16 +243,13 @@ if(isset($_POST['action'])){
 /**
  * Select what to do according the value of 'mode'
  */
-switch($mode){
+switch($mode)
+{    
 	// This is the welcome page.
-    case 'welcome':
-        echo index_welcome();
-        break;
+    case 'welcome': echo index_welcome(); break;
 
 	// List of available bibliograpies
-    case 'select':
-        echo index_select();
-        break;
+    case 'select': echo index_select(); break;
 
     // Add a new bibliography
     case 'add_database': echo index_add_database(); break;
@@ -255,9 +258,7 @@ switch($mode){
     case 'delete_database': echo index_delete_database(); break;
 
 	// Little help on what is available for the administrator mode
-    case 'manager_help':
-        echo index_manager_help();
-        break;
+    case 'manager_help': echo index_manager_help(); break;
 
 	// Login form
     case 'login': echo index_login(); break;

@@ -432,10 +432,16 @@ XSLT_END;
             $bibtex_val['lastDateModified'] = date("Y-m-d");
             // convert to xml
             $data = $bt->entries_array_to_xml(array($bibtex_val));
+            echo '<pre>';
+            
+            print_r($data);
+            
             $xml = $data[2];
             $xsl = file_get_contents("./xsl/add_entries.xsl");
             $param = array('bibname' => $this->xml_file(),
                            'biborb_xml_version' => BIBORB_XML_VERSION);
+
+            
             $result = $xsltp->transform($xml,$xsl,$param);
             $xsltp->free();
 
@@ -890,21 +896,21 @@ XSLT_END;
         preg_match("/\<bibtex:url\>(.*)\<\/bibtex:url\>/",$xml_content,$matches);
         if(count($matches)>0){
             $oldname = $matches[1];
-            $newname = get_new_name($oldname,$newid);
+            $newname = $newid.'.'.FileToolKit::getAllExt($oldname);
             rename($path.$oldname,$path.$newname);
             $xml_content = str_replace("<bibtex:url>$oldname</bibtex:url>","<bibtex:url>$newname</bibtex:url>",$xml_content);
         }
         preg_match("/\<bibtex:urlzip\>(.*)\<\/bibtex:urlzip\>/",$xml_content,$matches);
         if(count($matches)>0){
             $oldname = $matches[1];
-            $newname = get_new_name($oldname,$newid);
+            $newname = $newid.'.'.FileToolKit::getAllExt($oldname);
             rename($path.$oldname,$path.$newname);
             $xml_content = str_replace("<bibtex:urlzip>$oldname</bibtex:urlzip>","<bibtex:urlzip>$newname</bibtex:urlzip>",$xml_content);
         }
         preg_match("/\<bibtex:pdf\>(.*)\<\/bibtex:pdf\>/",$xml_content,$matches);
         if(count($matches)>0){
             $oldname = $matches[1];
-            $newname = get_new_name($oldname,$newid);
+            $newname = $newid.'.'.FileToolKit::getAllExt($oldname);
             rename($path.$oldname,$path.$newname);
             $xml_content = str_replace("<bibtex:pdf>$oldname</bibtex:pdf>","<bibtex:pdf>$newname</bibtex:pdf>",$xml_content);
         }

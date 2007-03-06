@@ -38,7 +38,6 @@
  */
 require_once("config.php");
 require_once("config.misc.php");
-require_once("php/utilities.php");
 require_once("php/bibtex.php");
 
 
@@ -60,7 +59,7 @@ function upload_file($bibname,$type,$id)
     $res = null;
     $infofile = pathinfo($_FILES[$type]['name']);
     $extension = $infofile['extension'];
-    $file = get_new_name($infofile['basename'],$id);
+    $file = $id.'.'.FileToolKit::getAllExtensions($infofile['basename']);
     $path = "./bibs/".$bibname."/papers/".$file;
     // If file already exists, delete it
     if(file_exists($path)){

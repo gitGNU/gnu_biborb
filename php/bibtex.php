@@ -100,7 +100,7 @@ class BibTeX_Tools
         foreach($tab as $key => $value){
             if($key != 'groups' && $key!= '___type' && $key != 'id'){
                 $xml .= "<bibtex:".$key.">";
-                $xml .= trim(myhtmlentities($value));
+                $xml .= trim(specialFiveToHtml($value));
                 $xml .= "</bibtex:".$key.">";
             }
             else if($key == 'groups') {
@@ -108,7 +108,7 @@ class BibTeX_Tools
                 $groupvalues = split(',',$value);
                 foreach($groupvalues as $gr){
                     $xml .= "<bibtex:group>";
-                    $xml .= trim(myhtmlentities($gr));
+                    $xml .= trim(specialFiveToHtml($gr));
                     $xml .= "</bibtex:group>";
                 }
                 $xml .= "</bibtex:groups>";
@@ -156,38 +156,48 @@ class BibTeX_Tools
     /**
      * Convert a XML string to an array
      */
-    function xml_to_bibtex_array($xmlstring){
+    function xml_to_bibtex_array($iXmlString)
+    {
         // result
-        $res = array();
-        $xml = str_replace("\n","",$xmlstring);
-        // match all entries
-        preg_match_all("/<bibtex:entry id=['|\"](.*)['|\"]>(.*)<\/bibtex:entry>/U",$xml,$entries,PREG_PATTERN_ORDER);
-        for($i=0;$i<count($entries[1]);$i++){
-            $entry = $entries[2][$i];
-
-            $ref_tab = array('id'=> $entries[1][$i]);
+        $aRes = array();
+        // convert the string in a one line string
+        $aXml = str_replace('\n','',$iXmlString);
+        // match all bibtex entries
+        preg_match_all("/<bibtex:entry id=['|\"](.*)['|\"]>(.*)<\/bibtex:entry>/U", $aXml, $aEntries, PREG_PATTERN_ORDER);
+        
+        for ($i=0; $i<count($aEntries[1]); $i++)
+        {
+            // xml data of the current entry
+            $aEntry = $aEntries[2][$i];
+            
+            // the array of bibtex data that will be filled
+            $aBibtexData = array( 'id'=> $aEntries[1][$i] );
+            
             // get the bibtex type
-            preg_match("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/",$entry,$matches);
-            $ref_tab['___type'] = $matches[1];
+            preg_match("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/", $aEntry, $aMatches);
+            $aBibtexData['___type'] = $aMatches[1];
 
             // get groups value
-            $bibtex_fields = $matches[2];
-            preg_match("/<bibtex:groups>(.*)<\/bibtex:groups>/U",$bibtex_fields,$groups);
-            if(isset($groups[1])){
-                preg_match_all("/<bibtex:group>(.*)<\/bibtex:group>/U",$groups[1],$group);
-                $ref_tab['groups'] = implode(',',$group[1]);
-                $bibtex_fields = str_replace($groups[0],"",$bibtex_fields);
+            $aBibtexFields = $aMatches[2];
+            preg_match("/<bibtex:groups>(.*)<\/bibtex:groups>/U", $aBibtexFields, $aGroups);
+            if (isset($aGroups[1]))
+            {
+                preg_match_all("/<bibtex:group>(.*)<\/bibtex:group>/U", $aGroups[1], $aGroup);
+                $aBibtexData['groups'] = implode(',',$aGroup[1]);
+                $aBibtexFields = str_replace($aGroups[0],'',$aBibtexFields);
                 
             }
-            preg_match_all("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/U",$bibtex_fields,$fields);
+            // analyse all remaining fields
+            preg_match_all("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/U", $aBibtexFields, $aFields);
             // analyse each fields
-            for($j=0;$j<count($fields[1]);$j++){
-                $ref_tab[$fields[1][$j]]=trim($fields[2][$j]);
+            for ($j=0; $j<count($aFields[1]); $j++)
+            {
+                $aBibtexData[$aFields[1][$j]] = specialFiveToText(trim($aFields[2][$j]));
             }
-            $res[] = $ref_tab;
+            $aRes[] = $aBibtexData;
         }
         
-        return $res;
+        return $aRes;
     }
     
     /**

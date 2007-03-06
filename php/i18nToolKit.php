@@ -30,6 +30,8 @@
     Change the default charset to utf-8
  */
 
+require_once('php/FileToolKit.php');
+
 ini_set("default_charset","utf-8");
 /**
  * i18nToolKit:
@@ -224,14 +226,18 @@ class i18nToolKit
      */
     function loadLocale($iLocale)
     {
-        $aLocaleToLoad = $iLocale;
-        if (!isset($this->_definedLocales[$iLocale]))
+        if ($iLocale != $this->_locale)
         {
-            trigger_error("ERROR_I18N_LOCALE_NOT_DEFINED", E_USER_ERROR);
-            $aLocaleToLoad = $this->_defaultLocale;
-        }
-        $this->_locale = $aLocaleToLoad;
-        $this->loadLocalizedData();
+            
+            $aLocaleToLoad = $iLocale;
+            if (!isset($this->_definedLocales[$iLocale]))
+            {
+                trigger_error("ERROR_I18N_LOCALE_NOT_DEFINED", E_USER_ERROR);
+                $aLocaleToLoad = $this->_defaultLocale;
+            }
+            $this->_locale = $aLocaleToLoad;
+            $this->loadLocalizedData();
+        }        
     }
 
 }

@@ -33,20 +33,6 @@
  *
  */
 
-/**
-    Use to change the base name of a file, keeping its extension
-    returns the new file name
- */
-function get_new_name($filename,$newbasename) {
-    $elem = explode('.',$filename);
-    // change the basename
-    $newfilename = $newbasename;
-    // copy the extensions (many possible eg: .ps.gz)
-    for($i=1;$i<count($elem);$i++){
-        $newfilename .= ".".$elem[$i];
-    }
-    return $newfilename;
-}
 
 /**
     Close an HTML page.
@@ -95,12 +81,29 @@ function html_header($iTitle = NULL, $iStyle = NULL, $iBodyClass=NULL, $iInBody=
 /**
     Replace special chars into their HTML representation.
  */
-function myhtmlentities($str){
-    $patterns = array('&','<','>');
-    $replace = array('&amp;','&lt;','&gt;');
-    return str_replace($patterns,$replace,$str);
+function myhtmlentities($str)
+{
+    $patterns = array('&','<','>','\'','"');
+    $replace = array('&amp;','&lt;','&gt;','&apos;','&quot');
+    return str_replace($patterns, $replace, $str);
 }
 
+function specialFiveToHtml($iString)
+{
+    $patterns = array('&','<','>','\'','\"');
+    $replace = array('&amp;','&lt;','&gt;','&apos;','&quot');
+    return str_replace($patterns, $replace, $iString);
+}
+
+
+function specialFiveToText($iString)
+{
+    $replace = array('&','<','>','\'','\"');
+    $patterns = array('&amp;','&lt;','&gt;','&apos;','&quot');
+    return str_replace($patterns, $replace, $iString);
+}
+
+    
 function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$class=null)
 {
     $result = "<select name='$name' id='$name'";
@@ -128,9 +131,8 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
 
 
 /**
-    Apply stripslashes to a variable or an array and returns the result.
-    If $value is an array, stripslashes is recursively called for each element
- of the array.
+ * Apply stripslashes to a variable or an array and returns the result. If $value is an
+ * array, stripslashes is recursively called for each element of the array.
  */
 function stripslashes_deep($value){
     $value = is_array($value) ? array_map('stripslashes_deep', $value) : stripslashes($value);
@@ -308,31 +310,8 @@ function is_php4() {
 }
 
 /**
- * Tool kit class for files management
- *
- */
-class FileToolKit
-{
-	/**
-	 * Return the content of a file in a string. An error is thrown if an error
-	 * occured while loading the file.
-	 *
-	 * @param $iFilePath A file to load.
-	 */
-	function getContent($iFilePath)
-	{
-		$aRes = file_get_contents($iFilePath);
-		if ($aRes === FALSE)
-		{
-			trigger_error(msg("ERROR_GET_FILE"), E_USER_ERROR);
-		}
-
-		return $aRes;
-	}
-};
-
-/**
  * Unset the variable and set it to false.
+ * 
  * We then can use if($ioData) ... without checking with isset
  */
 function myUnset(&$ioData)

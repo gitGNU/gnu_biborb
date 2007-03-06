@@ -71,6 +71,7 @@ require_once("config.php"); // globals definitions
 require_once("config.misc.php");
 require_once("php/functions.php"); // functions
 require_once("php/basket.php"); // basket functions
+require_once("php/proxyDbManager.php");
 require_once("php/biborbdb.php"); // database
 require_once("php/xslt_processor.php"); // xslt processing
 require_once("php/interface-bibindex.php"); // generate interface
@@ -88,13 +89,22 @@ session_name("SID");
 session_start();
 
 // Set the error_handler
-set_error_handler("biborb_error_handler");
+//set_error_handler("biborb_error_handler");
 
 // remove slashes from variables
 if(get_magic_quotes_gpc()) {
     $_POST = array_map('stripslashes_deep', $_POST);
     $_GET = array_map('stripslashes_deep', $_GET);
     $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
+}
+
+/**
+ * Set the DbManager object.
+ */
+if ( !isset($_SESSION['DbManager']) ||
+     !is_object($_SESSION['DbManager']))
+{
+    $_SESSION['DbManager'] = new DbManager();
 }
 
 /**

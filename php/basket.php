@@ -36,7 +36,8 @@
  * 
  * @author G. Gardey
  */
-class Basket {
+class Basket
+{
     // an array of distinct items
 	var $items;
 	
