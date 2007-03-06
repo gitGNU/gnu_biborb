@@ -432,15 +432,11 @@ XSLT_END;
             $bibtex_val['lastDateModified'] = date("Y-m-d");
             // convert to xml
             $data = $bt->entries_array_to_xml(array($bibtex_val));
-            echo '<pre>';
-            
-            print_r($data);
             
             $xml = $data[2];
             $xsl = file_get_contents("./xsl/add_entries.xsl");
             $param = array('bibname' => $this->xml_file(),
                            'biborb_xml_version' => BIBORB_XML_VERSION);
-
             
             $result = $xsltp->transform($xml,$xsl,$param);
             $xsltp->free();
