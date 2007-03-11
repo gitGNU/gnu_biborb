@@ -30,9 +30,9 @@
     Change the default charset to utf-8
  */
 
-require_once('php/FileToolKit.php');
+class_exists('FileToolKit') || include('./php/FileToolKit.php');
 
-ini_set("default_charset","utf-8");
+ini_set('default_charset','utf-8');
 /**
  * i18nToolKit:
  *      This class is used to group all i18n needed functions.
@@ -64,10 +64,10 @@ class i18nToolKit
         $this->loadDefinedLocales();
         if (!isset($this->_definedLocales[$iLocale]))
         {
-            trigger_error("ERROR_I18N_LOCALE_NOT_DEFINED", E_USER_NOTICE);
+            trigger_error('ERROR_I18N_LOCALE_NOT_DEFINED', E_USER_NOTICE);
             if (!isset($this->_definedLocales[$iDefaultLocale]))
             {
-                trigger_error("ERROR_I18N_DEFAULT_LOCALE_NOT_DEFINED", E_USER_ERROR);
+                trigger_error('ERROR_I18N_DEFAULT_LOCALE_NOT_DEFINED', E_USER_ERROR);
             }
             $aLocaleToLoad = $iDefaultLocale;
         }
@@ -85,11 +85,11 @@ class i18nToolKit
             Assume this is a real locale directory if LC_MESSAGES/biborb.po exists
          */
         $this->_definedLocales = array();
-        $aLocalesDir = dir("locale");
+        $aLocalesDir = dir('locale');
         while ( ($aFile = $aLocalesDir->read()) !== false)
         {
-            if (is_dir($aLocalesDir->path."/".$aFile) &&
-                file_exists($aLocalesDir->path."/$aFile/LC_MESSAGES/biborb.po"))
+            if (is_dir($aLocalesDir->path.'/'.$aFile) &&
+                file_exists($aLocalesDir->path.'/'.$aFile.'/LC_MESSAGES/biborb.po'))
             {
                 $this->_definedLocales[$aFile] = FileToolKit::getContent($aLocalesDir->path."/$aFile/$aFile.txt");
             }
@@ -115,9 +115,9 @@ class i18nToolKit
         myUnset($this->_localizedStrings);
         $this->_localizedStrings = array();
 
-        $aFile = file("./locale/{$this->_locale}/LC_MESSAGES/biborb.po");
+        $aFile = file('./locale/'.$this->_locale.'/LC_MESSAGES/biborb.po');
         $aMsgId = null; // msgid
-        $aMsgStr = "";  // msgstr
+        $aMsgStr = '';  // msgstr
         foreach( $aFile as $aLine)
         {
             if (preg_match("/\s*msgid \"(.*)\"/u", $aLine, $aMatches))
@@ -127,7 +127,7 @@ class i18nToolKit
                     $this->_localizedStrings[$aMsgId] = (trim($aMsgStr) == "" ? $aMsgId : $aMsgStr);
                 }
                 $aMsgId = $aMatches[1];
-                $aMsgStr = "";
+                $aMsgStr = '';
             }
             else if (preg_match("/\s*[^#](?:msgstr)?\"(.*)\"/u", $aLine, $aMatches))
             {
@@ -157,12 +157,12 @@ class i18nToolKit
      * @param $iLocale The locale to use
      */
     function msg($iString)
-    {        
+    {
         if (!isset($this->_localizedStrings[$iString]))
         {
             $aContext = array( 'locale' => $this->_locale,
                                'string' => $iString);
-            $_SESSION['errorManager']->triggerWarning("ERROR_I18N_STRING_NOT_DEFINED", $aContext);
+            $_SESSION['errorManager']->triggerWarning('ERROR_I18N_STRING_NOT_DEFINED:'.$iString, $aContext);
             return $iString;
         }
         else
@@ -179,7 +179,7 @@ class i18nToolKit
      */
     function getFile($iFileName)
     {
-        return FileToolKit::getContent("./locale/{$this->_locale}/{$iFileName}");
+        return FileToolKit::getContent('./locale/'.$this->_locale.'/'.$iFileName);
     }
 
     /**
@@ -201,7 +201,7 @@ class i18nToolKit
             }
             else
             {
-                return $aLocale[0]."_".strtoupper($aLocale[1]);
+                return $aLocale[0].'_'.strtoupper($aLocale[1]);
             }
         }
         return FALSE;
@@ -218,7 +218,7 @@ class i18nToolKit
         preg_match_all("/(BIBORB_OUTPUT\w+)/u", $ioString, $aMatches);
         $aKeys = array_unique($aMatches[0]);
         $aStrToReplace = array_map('msg', $aKeys);
-        $ioString = str_replace($aKeys, $aStrToReplace, $ioString);
+        $ioString = strtr($ioString, array_combine($aKeys, $aStrToReplace));
     }
 
     /**
@@ -228,16 +228,16 @@ class i18nToolKit
     {
         if ($iLocale != $this->_locale)
         {
-            
+
             $aLocaleToLoad = $iLocale;
             if (!isset($this->_definedLocales[$iLocale]))
             {
-                trigger_error("ERROR_I18N_LOCALE_NOT_DEFINED", E_USER_ERROR);
+                trigger_error('ERROR_I18N_LOCALE_NOT_DEFINED', E_USER_ERROR);
                 $aLocaleToLoad = $this->_defaultLocale;
             }
             $this->_locale = $aLocaleToLoad;
             $this->loadLocalizedData();
-        }        
+        }
     }
 
 }

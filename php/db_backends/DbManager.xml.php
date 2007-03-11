@@ -31,9 +31,13 @@
  *
  */
 
+class_exists('XSLT_Processor') || include('./php/xslt_processor.php');
+class_exists('FileToolKit')    || include('./php/FileToolKit.php');
+
 class DbManager
 {
     var $_databases;
+    var $_entryTypes;
 
     /**
      * Constructor
@@ -41,6 +45,13 @@ class DbManager
     function DbManager()
     {
         $this->loadDbNames();
+
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml = FileToolKit::getContent('./xsl/model.xml');
+        $aXsl = FileToolKit::getContent('./xsl/get_all_bibtex_types.xsl');
+        $aResult = $aXsltp->transform($aXml, $aXsl);
+        $aXsltp->free();
+        $this->_entryTypes = explode(" ",trim($aResult));
     }
 
     function getDbNames()
@@ -167,6 +178,14 @@ class DbManager
         $res .= sprintf(msg("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>");
         unset($this->_databases[$name]);
         return $res;
+    }
+
+    /**
+     * Return a list of available types of references
+     */
+    function getEntryTypes()
+    {
+        return $this->_entryTypes;
     }
 }
 ?>

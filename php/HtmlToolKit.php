@@ -80,13 +80,13 @@ class HtmlToolKit
         {
             $aHtml = &$iMixedData['outputString'];
         }
-        $aHtml .= "<option";
+        $aHtml .= "\n".'<option';
         if ( isset($iMixedData['selectedOptionValue']) &&
              $iMixedData['selectedOptionValue'] == $iOptionValue)
         {
             $aHtml .= " selected='selected'";
         }
-        $aHtml .= " value='{$iOptionValue}'>{$iOptionName}</option>";
+        $aHtml .= " value='$iOptionValue'>".$iOptionName.'</option>';
         return $aHtml;
     }
 
@@ -96,7 +96,7 @@ class HtmlToolKit
      */
     /* static */ function htmlClose()
     {
-        return "</body></html>";
+        return '</body></html>';
     }
 
     /**
@@ -134,7 +134,7 @@ EOT;
      */
     /* static */ function attributeToString($iParamValue, $iParamName, &$ioHtmlString)
     {
-        $ioHtmlString .= " $iParamName='$iParamValue'";
+        $ioHtmlString .= ' '.$iParamName."='".$iParamValue."'";
     }
 
     /**
@@ -142,7 +142,7 @@ EOT;
      */
     /* static */ function startTag($iTagName, $iAttributes = null)
     {
-        $aHtml = '<'.$iTagName;
+        $aHtml = "\n<".$iTagName;
         if (isset($iAttributes))
         {           
             array_walk($iAttributes,
@@ -178,7 +178,7 @@ EOT;
      */
     /* static */ function tagNoData($iTagName, $iAttributes = null)
     {
-        $aHtml = '<'.$iTagName;
+        $aHtml = "\n<".$iTagName;
         if (isset($iAttributes))
         {
             array_walk($iAttributes,
@@ -195,16 +195,16 @@ EOT;
      */
     /* static */ function main($iTitle, $iContent, $iError = null, $iMessage = null)
     {
-        $aHtml = '<div id="main">';
+        $aHtml = "\n<div id='main'>";
         if (isset($iTitle))
-            $aHtml .= '<h2 id="main_title">'.$iTitle.'</h2>';
+            $aHtml .= "\n<h2 id='main_title'>{$iTitle}</h2>";
         if (isset($iError))
-            $aHtml .= '<div id="error">'.$iError.'</div>';
+            $aHtml .= "\n<div id='error'>{$iError}</div>";
         if (isset($iMessage))
-            $aHtml .= '<div id="message">'.$iMessage.'</div>';
+            $aHtml .= "\n<div id='message'>{$iMessage}</div>";
         if (isset($iContent))
-            $aHtml .= '<div id="content">'.$iContent.'</div>';
-        $aHtml .= '</div>';            
+            $aHtml .= "\n<div id='content'>{$iContent}</div>";
+        $aHtml .= "\n</div>";            
         return $aHtml;
     }
             

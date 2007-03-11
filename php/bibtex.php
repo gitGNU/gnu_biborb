@@ -2,23 +2,23 @@
 /**
  *
  * This file is part of BibORB
- * 
+ *
  * Copyright (C) 2003-2007  Guillaume Gardey
- * 
+ *
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * BibORB is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 
 /**
@@ -36,9 +36,8 @@
  *          * convert to DocBook
  */
 
-require_once("php/third_party/bibtexParse/PARSEENTRIES.php");
-require_once("php/third_party/bibtexParse/PARSECREATORS.php");
-require_once("php/utilities.php");
+class_exists('PARSEENTRIES')   || include('./php/third_party/bibtexParse/PARSEENTRIES.php');
+class_exists('PARSECREATORS')  || include('./php/third_party/bibtexParse/PARSECREATORS.php');
 
 /**
  * A class to transform, parse BibTeX references.
@@ -55,24 +54,7 @@ class BibTeX_Tools
     var $currentAuthor;
     var $currentTag;
     var $currentTitle;
-    
 
-    
-    /**
-     * Return an array of entries.
-     * @param $string is a BibTeX string
-     * @return an array of entries
-     */
-    function get_array_from_string($string,$expand_macro = TRUE){
-        $bibtex_parser = new PARSEENTRIES();
-        $bibtex_parser->loadBibtexString($string);
-        $bibtex_parser->expandMacro = FALSE;
-        $bibtex_parser->extractEntries();
-        list($preamble,$strings,$entries) = $bibtex_parser->returnArrays();
-        $this->bibtex_import_post_traitment($entries);
-        return $entries;
-    }
-        
     /**
      * Return an array of entries
      * @param $filename is a BibTeX file
@@ -88,7 +70,7 @@ class BibTeX_Tools
         $this->bibtex_import_post_traitment($entries);
         return $res[2];
     }
-    
+
     /**
      * Convert an array representation of an entry in XML.
      * @param $tab An array (field => value).
@@ -118,7 +100,7 @@ class BibTeX_Tools
         $xml .= "</bibtex:entry>";
         return $xml;
     }
-    
+
     /**
      * Convert an array of entries to XML.
      * Return: array(number of entries, array of ids, xml string)
@@ -134,7 +116,7 @@ class BibTeX_Tools
         $xml_content .= "</bibtex:file>";
         return array(count($tab),$ids,$xml_content);
     }
-    
+
     /**
      * Convert a bibtex string to xml.
      * Return: array(number of entries, array of ids, xml string)
@@ -143,7 +125,7 @@ class BibTeX_Tools
         $entries = $this->get_array_from_string($string);
         return $this->entries_array_to_xml($entries);
     }
-    
+
     /**
      * Convert a bibtex file to xml.
      * Return: array(number of entries, array of ids, xml string)
@@ -152,7 +134,7 @@ class BibTeX_Tools
         $entries = $this->get_array_from_file($filename);
         return $this->entries_array_to_xml($entries);
     }
-    
+
     /**
      * Convert a XML string to an array
      */
@@ -164,15 +146,15 @@ class BibTeX_Tools
         $aXml = str_replace('\n','',$iXmlString);
         // match all bibtex entries
         preg_match_all("/<bibtex:entry id=['|\"](.*)['|\"]>(.*)<\/bibtex:entry>/U", $aXml, $aEntries, PREG_PATTERN_ORDER);
-        
+
         for ($i=0; $i<count($aEntries[1]); $i++)
         {
             // xml data of the current entry
             $aEntry = $aEntries[2][$i];
-            
+
             // the array of bibtex data that will be filled
             $aBibtexData = array( 'id'=> $aEntries[1][$i] );
-            
+
             // get the bibtex type
             preg_match("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/", $aEntry, $aMatches);
             $aBibtexData['___type'] = $aMatches[1];
@@ -185,7 +167,7 @@ class BibTeX_Tools
                 preg_match_all("/<bibtex:group>(.*)<\/bibtex:group>/U", $aGroups[1], $aGroup);
                 $aBibtexData['groups'] = implode(',',$aGroup[1]);
                 $aBibtexFields = str_replace($aGroups[0],'',$aBibtexFields);
-                
+
             }
             // analyse all remaining fields
             preg_match_all("/<bibtex:(.[^>]*)>(.*)<\/bibtex:(.[^>]*)>/U", $aBibtexFields, $aFields);
@@ -196,10 +178,10 @@ class BibTeX_Tools
             }
             $aRes[] = $aBibtexData;
         }
-        
+
         return $aRes;
     }
-    
+
     /**
      * Convert an array to bibtex
      * @param $tab An array of references
@@ -226,7 +208,7 @@ class BibTeX_Tools
         }
         return $export;
     }
-    
+
     /**
      * Export an array of references to a RIS formated string.
      * @param $tab An array of references.
@@ -257,27 +239,27 @@ class BibTeX_Tools
                     $export .= sprintf("A1  - %s, %s\n",$author[2],$author[0]);
                 }
             }
-               
+
             // title
             if(array_key_exists('title',$entry)){
                 $export .= sprintf("T1  - %s\n",$entry['title']);
             }
-            
+
             // journal
             if(array_key_exists('journal',$entry)){
                 $export .= sprintf("JO  - %s\n",$entry['journal']);
             }
-            
+
             // volume
             if(array_key_exists('volume',$entry)){
                 $export .= sprintf("VL  - %s\n",$entry['volume']);
             }
-            
+
             // number
             if(array_key_exists('number',$entry)){
                 $export .= sprintf("IS  - %s\n",$entry['number']);
             }
-            
+
             // start/end page
             if(array_key_exists('pages',$entry)){
                 $pages = split('-',$entry['pages']);
@@ -289,12 +271,12 @@ class BibTeX_Tools
                     $export .= sprintf("EP  - %s\n",$pages[1]);
                 }
             }
-            
+
             // series
             if(array_key_exists('series',$entry)){
                 $export .= sprintf("T3  - %s\n",$entry['series']);
             }
-            
+
             // editor
             if(array_key_exists('editor',$entry)){
                 $editors = $pc->parse($entry['editor']);
@@ -302,32 +284,32 @@ class BibTeX_Tools
                     $export .= sprintf("A3  - %s, %s\n",$editor[2],$editor[0]);
                 }
             }
-            
+
             // year
             if(array_key_exists('year',$entry)){
                 $export .= sprintf("Y1  - %s\n",$entry['year']);
             }
-            
+
             // pusblisher
             if(array_key_exists('publisher',$entry)){
                 $export .= sprintf("PB  - %s\n",$entry['publisher']);
             }
-            
+
             // address
             if(array_key_exists('address',$entry)){
                 $export .= sprintf("AD  - %s\n",$entry['address']);
             }
-            
+
             // note
             if(array_key_exists('note',$entry)){
                 $export .= sprintf("N1  - %s\n",$entry['note']);
             }
-            
+
             // abstract
             if(array_key_exists('abstract',$entry)){
                 $export .= sprintf("N2 - %s\n",$entry['abstract']);
             }
-            
+
             // keywords
             if(array_key_exists('keywords',$entry)){
                 $keywords = split(',',$entry['keywords']);
@@ -335,17 +317,17 @@ class BibTeX_Tools
                     $export .= sprintf("KW  - %s\n",$keyword);
                 }
             }
-            
+
             // url
             if(array_key_exists('url',$entry)){
                 $export .= sprintf("UR  - %s\n",$entry['url']);
             }
-            
+
             // pdf
             if(array_key_exists('pdf',$entry)){
                 $export .= sprintf("L1  - %s\n",$entry['pdf']);
             }
-            
+
             $export .= "ER  - \n";
             $export .= "\n";
         }
@@ -370,7 +352,7 @@ class BibTeX_Tools
                                     'UNPB' => 'unpublished');
         foreach($ris as $line){
             echo $line;
-            
+
             // type
             if(preg_match('/TY\s*-\s*(.*)\s*/',$line,$matches)){
                 $entry = array();
@@ -401,7 +383,7 @@ class BibTeX_Tools
             }
             // number
             if(preg_match('/IS\s*-\s*(.*)\s*/',$line,$matches)){
-                $entry['number'] = $matches[1];  
+                $entry['number'] = $matches[1];
             }
             // pages
             if(preg_match('/(SP|EP)\s*-\s*(.*)\s*/',$line,$matches)){
@@ -477,13 +459,13 @@ class BibTeX_Tools
                     unset($entry['EP']);
                 }
                 $entries[] = $entry;
-            }            
-        }    
+            }
+        }
 
         return $entries;
     }
 
-    
+
     /**
      * Export an array of references to DocBook.
      * @param $tab An array of entries.
@@ -575,7 +557,7 @@ class BibTeX_Tools
         if( !xml_parse($this->xp,$docbook,true)){
             trigger_error("XML Parsing error:\n".xml_error_string(xml_get_error_code($this->xp))."\nError at line: ".xml_get_current_line_number($this->xp),ERROR);
         }
-        
+
 
         for($i=0;$i<count($this->entries);$i++){
             // set title and journal fields
@@ -600,7 +582,7 @@ class BibTeX_Tools
             }
         }
         xml_parser_free($this->xp);
-        
+
         return $this->entries;
     }
 
@@ -628,7 +610,7 @@ class BibTeX_Tools
                 // waiting for an author
                 $this->currentAuthor = array();
                 break;
-                
+
             case 'author':
                 // an author
                 // if it isn't the first author, add an 'and' to the string
@@ -687,8 +669,8 @@ class BibTeX_Tools
      * CDATA values for DocBook parsing.
      */
     function docbook_cdata($parser,$data)
-    {   
-        switch($this->currentTag){           
+    {
+        switch($this->currentTag){
             case 'firstname':
                 if(isset($this->currentAuthor[0])){
                     $this->currentAuthor[0] .= $data;
@@ -775,47 +757,14 @@ class BibTeX_Tools
         }
     }
 
-    
-    /**
-     * Some transformations to perform after importing BibTeX entries.
-     * @param &$entries A reference to an array of imported entries.
-     */
-    function bibtex_import_post_traitment(&$entries){
-        for($i=0;$i<count($entries);$i++){
-            if(isset($entries[$i]['pdf'])){
-                if(strpos($entries[$i]['pdf'],"http://") !== FALSE ||
-                   strpos($entries[$i]['pdf'],"https://") !== FALSE ||
-                   strpos($entries[$i]['pdf'],"ftp://") !== FALSE){
-                    $entries[$i]['ad_pdf'] = $entries[$i]['pdf'];
-                    unset($entries[$i]['pdf']);
-                }
-            }
-            if(isset($entries[$i]['url'])){
-                if(strpos($entries[$i]['url'],"http://") !== FALSE ||
-                   strpos($entries[$i]['url'],"https://") !== FALSE ||
-                   strpos($entries[$i]['url'],"ftp://") !== FALSE){
-                    $entries[$i]['ad_url'] = $entries[$i]['url'];
-                    unset($entries[$i]['url']);
-                }
-            }
-            if(isset($entries[$i]['urlzip'])){
-                if(strpos($entries[$i]['urlzip'],"http://") !== FALSE ||
-                   strpos($entries[$i]['urlzip'],"https://") !== FALSE ||
-                   strpos($entries[$i]['urlzip'],"ftp://") !== FALSE){
-                    $entries[$i]['ad_urlzip'] = $entries[$i]['urlzip'];
-                    unset($entries[$i]['urlzip']);
-                }
-            }
-        }
-    }
-
     /**
      * Extract some information from a reference.
      * Remove from $tab all elements whose key is not in $extract.
-     * @param $tab The array from which to extract values.
-     * @param $extract The fields to extract.
+     * @param $iTab The array from which to extract values.
+     * @param $iExtract The fields to extract.
      */
-    function extract_bibtex_data($tab,$extract){
+    function extract_bibtex_data($tab,$extract)
+    {
         $result = array();
         foreach($tab as $key => $value){
             $val = trim($value);

@@ -67,7 +67,7 @@ session_start();
 /**
  * stripslashes
  */
-if(get_magic_quotes_gpc())
+if (get_magic_quotes_gpc())
 {
     $_POST = array_map('stripslashes_deep', $_POST);
     $_GET = array_map('stripslashes_deep', $_GET);
@@ -146,7 +146,7 @@ switch ($aAction)
     case 'select_lang':
         $_SESSION['i18n']->loadLocale($_GET['lang']);
         break;
-
+        
         /* Create a database  */
     case 'create':
         // check we have the authorization to modify

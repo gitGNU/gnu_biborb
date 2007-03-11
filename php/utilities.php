@@ -79,15 +79,8 @@ function html_header($iTitle = NULL, $iStyle = NULL, $iBodyClass=NULL, $iInBody=
 }
 
 /**
-    Replace special chars into their HTML representation.
+ * Replace > < & ' " with their html representation.
  */
-function myhtmlentities($str)
-{
-    $patterns = array('&','<','>','\'','"');
-    $replace = array('&amp;','&lt;','&gt;','&apos;','&quot');
-    return str_replace($patterns, $replace, $str);
-}
-
 function specialFiveToHtml($iString)
 {
     $patterns = array('&','<','>','\'','\"');
@@ -95,7 +88,9 @@ function specialFiveToHtml($iString)
     return str_replace($patterns, $replace, $iString);
 }
 
-
+/**
+ * Replace html version of > < & ' " with their caracter version.
+ */
 function specialFiveToText($iString)
 {
     $replace = array('&','<','>','\'','\"');
@@ -226,71 +221,27 @@ function remove_null_values($anArray){
 
 /**
  */
-function read_status_html_select($name,$selected){
-    $html = "<select size='1' name='$name'>";
-    if($selected == 'any'){
-        $html .= "<option value='any' selected='selected'></option>";
-    }
-    else{
-        $html .= "<option value='any'></option>";
-    }
-    if($selected == 'read'){
-        $html .= "<option value='read' selected='selected'>".msg("Read")."</option>";
-    }
-    else{
-        $html .= "<option value='read'>".msg("Read")."</option>";
-    }
-    if($selected == 'readnext'){
-        $html .= "<option value='readnext' selected='selected'>".msg("Read Next")."</option>";
-    }
-    else{
-        $html .= "<option value='readnext'>".msg("Read Next")."</option>";
-    }
-    if($selected == 'notread'){
-        $html .= "<option value='notread' selected='selected'>".msg("Not Read")."</option>";
-    }
-    else{
-        $html .= "<option value='notread'>".msg("Not Read")."</option>";
-    }
-    $html .= "</select>";
-    return $html;
+function read_status_html_select($iName, $iSelected)
+{
+    $aStatusValues =  $_SESSION['bibdb']->getReadStatusValues();
+    $aStatusValues = array_combine($aStatusValues, $aStatusValues);
+    array_walk($aStatusValues, 'msg');
+    return  HtmlToolKit::selectTag(array('size' => 1, 'name' => $iName),
+                                   $aStatusValues,
+                                   $iSelected ? $iSelected : 'any');
 }
+
+
 /**
  */
-function ownership_html_select($name,$selected){
-    $html = "<select size='1' name='$name'>";
-    if($selected == 'any'){
-        $html .= "<option value='any' selected='selected'></option>";
-    }
-    else{
-        $html .= "<option value='any'></option>";
-    }
-    if($selected == 'notown'){
-        $html .= "<option value='notown' selected='selected'>".msg("Not Own")."</option>";
-    }
-    else{
-        $html .= "<option value='notown'>".msg("Not Own")."</option>";
-    }
-    if($selected == 'borrowed'){
-        $html .= "<option value='borrowed' selected='selected'>".msg("Borrowed")."</option>";
-    }
-    else{
-        $html .= "<option value='borrowed'>".msg("Borrowed")."</option>";
-    }
-    if($selected == 'buy'){
-        $html .= "<option value='buy' selected='selected'>".msg("Buy")."</option>";
-    }
-    else{
-        $html .= "<option value='buy'>".msg("Buy")."</option>";
-    }
-    if($selected == 'own'){
-        $html .= "<option value='own' selected='selected'>".msg("Own")."</option>";
-    }
-    else{
-        $html .= "<option value='own'>".msg("Own")."</option>";
-    }
-    $html .= "</select>";
-    return $html;
+function ownership_html_select($iName, $iSelected)
+{
+    $aOwnershipValues =  $_SESSION['bibdb']->getOwnershipValues();
+    $aOwnershipValues = array_combine($aOwnershipValues, $aOwnershipValues);
+    array_walk($aOwnershipValues, 'msg');
+    return HtmlToolKit::selectTag(array('size' => 1, 'name' => $iName),
+                                  $aOwnershipValues,
+                                  $iSelected ? $iSelected : 'any');
 }
 
 /**
@@ -325,5 +276,20 @@ function myUnsetArray(&$ioArray, $iKey)
     unset($ioArray[$iKey]);
 }
 
+if (version_compare(phpversion(), "5.0.0", "<") )
+{
+    function array_combine($keys,$vals)
+    {
+        $keys = array_values( (array) $keys );
+        $vals = array_values( (array) $vals );
+        $n = max( count( $keys ), count( $vals ) );
+        $r = array();
+        for( $i=0; $i<$n; $i++ )
+        {
+            $r[ $keys[ $i ] ] = $vals[ $i ];
+        }
+        return $r;
+    }    
+}
 
 ?>

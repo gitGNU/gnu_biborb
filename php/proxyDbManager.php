@@ -31,14 +31,10 @@
  *
  */
 
-
-require_once("config.php");
-require_once("config.misc.php");
-
 switch(DB_BACKEND)
 {
     case 'xml':
-        require_once("php/db_backends/DbManager.xml.php");
+        include('./php/db_backends/DbManager.xml.php');
         break;
     default:
         if (isset($_SESSION['errorManager']))

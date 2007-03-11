@@ -37,8 +37,12 @@
  *
  */
 
-require_once("php/xslt_processor.php"); //xslt processor
-require_once("php/bibtex.php"); //parse bibtex string
+class_exists('XSLT_Processor')  || include('./php/xslt_processor.php'); //xslt processor
+class_exists('Reference')       || include('./php/reference/Reference.php');
+class_exists('XmlConverter')    || include('./php/reference/XmlConverter.php');
+class_exists('BibtexConverter') || include('./php/reference/BibtexConverter.php');
+class_exists('FileToolKit')     || include('./php/FileToolKit.php');
+
 
 // list of sort attributes
 $sort_values = array('author','title','ID','year','dateAdded','lastDateModified');
@@ -48,54 +52,76 @@ class BibORB_DataBase
 {
 
     // Should a BibTeX file be generated.
-    var $generate_bibtex;
+    var $_genBibtex;
 
     // name of the bibliography
-    var $biblio_name;
+    var $_bibName;
 
     // the biblio directory
-    var $biblio_dir;
+    var $_bibDir;
 
     // list of BibTeX fields relevant for BibORB
-    var $biborb_fields;
+    var $_fields;
 
     // the changelog file;
-    var $changelog;
+    var $_changelog;
 
     // Sort method used to sort entries
-    var $sort;
-    var $sort_values = array('author','title','ID','year','dateAdded','lastDateModified');
+    var $_sortMethod;
+    var $_sortMethodValues = array('author','title','ID','year','dateAdded','lastDateModified');
 
     // Sort order method (ascending/descending)
-    var $sort_order;
-    var $sort_order_values = array('ascending','descending');
+    var $_sortOrder;
+    var $_sortOrderValues = array('ascending','descending');
 
     // Read status
-    var $read_status;
-    var $read_status_values = array('any','notread','readnext','read');
+    var $_readStatus;
+    var $_readStatusValues = array('any','notread','readnext','read');
 
     // Ownership
-    var $ownership;
-    var $ownership_values = array('any','notown','borrowed','buy','own');
+    var $_ownership;
+    var $_ownershipValues = array('any','notown','borrowed','buy','own');
 
+
+    // number of references in the database
+    var $_entryCount;
+    var $_papersCount;
+
+    // List of all ids of references in the database
+    var $_ids;
+
+
+    var $_sortUpdated;
+    var $_browseCacheNeedUpdate;
+    var $_browseCache;
+    
+    
     /**
-        Constructor.
-        $bibname -> name of the bibliography
-        $genBibtex -> keep an up-to-date BibTeX file. Save in the $bibname
-                      directory with name $bibname.tex.
+     * Constructor.
+     * $bibname -> name of the bibliography
+     *  $genBibtex -> keep an up-to-date BibTeX file. Save in the $bibname
+     *                directory with name $bibname.tex.
      */
-    function BibORB_DataBase($bibname,$genBibtex = true){
-        $this->biblio_name = $bibname;
-        $this->biblio_dir = "./bibs/$bibname/";
-        $this->changelog = "./bibs/$bibname/changelog.txt";
-        $this->generate_bibtex = $genBibtex;
-        $this->read_status = 'any';
-        $this->ownership = 'any';
+    function BibORB_DataBase($iBibname, $iGenBibtex = true)
+    {
+        $this->_bibName = $iBibname;
+        $this->_bibDir = './bibs/'.$iBibname;
+        $this->_changelog = './bibs/'.$iBibname.'/changelog.txt';
+        $this->_genBibtex = $iGenBibtex;
+        $this->_readStatus = 'any';
+        $this->_ownership = 'any';
+        $this->_sortMethod = 'ID';
+        $this->_sortOrder = 'ascending';
+        $this->_sortUpdated = TRUE;        
+        $this->getEntryCount();
+        $this->getAllIds();
+        $this->browseNeedUpdate = TRUE;
+        
 
         // check the version of biborb files
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->all_entries();
-        $xsl_content = <<< XSLT_END
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXmlContent = $this->getAllEntries();
+        $aXslContent = <<< XSLT_END
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:bibtex="http://bibtexml.sf.net/" version="1.0">
     <xsl:output method="text" encoding="UTF-8"/>
     <xsl:template match="/bibtex:file">
@@ -104,262 +130,312 @@ class BibORB_DataBase
 </xsl:stylesheet>
 XSLT_END;
 
-        $val = trim($xsltp->transform($xml_content,$xsl_content));
-        $xsltp->free();
-        if($val != "1.1"){
+        $aVersion = trim($aXsltp->transform($aXmlContent, $aXslContent));
+        $aXsltp->free();
+
+        if ($aVersion != '1.1')
+        {
             // * add the first author lastname in a separate field
             // to sort by author
             // * set date added and last modified to yesterday
-            $xml = $this->all_entries();
             // load all data in an array form
-            $bt = new BibTeX_Tools();
-            $pc = new PARSECREATORS();
-            $entries = $bt->xml_to_bibtex_array($xml);
-
-            for($i=0;$i<count($entries);$i++){
+            $aEntries = XmlConverter::import($aXmlContent);
+            foreach ($aEntries as $aKey => $aRef)
+            {
                 // get the name of the first author
-                if(array_key_exists('author',$entries[$i])){
-                    $creatorArray = $pc->parse($entries[$i]['author']);
-                    $entries[$i]['lastName'] = $creatorArray[0][2];
+                if ($aRef->getData('author'))
+                {
+                    $aPC = new PARSECREATORS();
+                    $creatorArray = $pc->parse($aRef->getData('author'));
+                    $aEntries[$aKey]->setData('lastName', $creatorArray[0][2]);
                 }
                 // set dateAdded and lastDateModified attributes
-                if(!array_key_exists('dateAdded',$entries[$i]))
-                    $entries[$i]['dateAdded'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
-                if(array_key_exists('lastDateModified',$entries[$i]))
-                    $entries[$i]['lastDateModified'] = date("Y-m-d",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")));
+                $aDate = date("Y-m-d",
+                              mktime(0, 0, 0, date("m"), date("d")-1, date("Y")));
+                if (!$aRef->getData('dateAdded'))
+                {
+                    $aEntries[$aKey]->setData('dateAdded', $aDate);
+                }
+                $aEntries[$aKey]->setData('lastDateModified', $aDate);
 
                 // change own= {yes} to own = {own}
-                if(array_key_exists('own',$entries[$i]))
-                    $entries[$i]['own'] = ( $entries[$i]['own'] == "yes" ? "own" : $entries[$i]['own']);
+                if ($aRef->getData['own'])
+                {
+                    $aEntries[$aKey]->setData('own', $aRef->getData['own'] == 'yes' ? 'own' : $aRef->getData('own'));
+                }
             }
-            // convert to XML
-            $data = $bt->entries_array_to_xml($entries);
-            // save the new xml file
-            rename($this->xml_file(),$this->xml_file().".save");
-            $fp = fopen($this->xml_file(),"w");
-            fwrite($fp,$data[2]);
-            fclose($fp);
+            // convert to XML and save
+            $aFileName = $this->getXmlFileName();
+            rename($aFileName, $aFileName.'.save');
+            FileToolKit::putContent($aFileName, XmlConverter::export($aEntries));
         }
     }
 
+    /**
+     *
+     */
     function set_BibORB_fields($tab)
     {
-        $this->biborb_fields = $tab;
+        $this->_fields = $tab;
     }
 
-    function fullname()
+    /**
+     *
+     */
+    function getFullName()
     {
-        if(file_exists($this->biblio_dir."/fullname.txt")){
-            return file_get_contents($this->biblio_dir."/fullname.txt");
-        }
-        else{
-            return $this->biblio_name;
-        }
+        return FileToolKit::getContent($this->_bibDir.'/'.'fullname.txt');
     }
 
 
     /**
-        Set the sort method.
+     * Set the sort method.
      */
-    function set_sort($sort){
-        if(array_search($sort,$this->sort_values) === FALSE){
-            $sort = 'ID';
-        }
-        $this->sort = $sort;
+    function setSortMethod($aSort)
+    {
+        $this->_sortMethod = array_search($aSort, $this->_sortMethodValues) === FALSE ? 'ID' : $aSort;
+        $this->_sortUpdated = TRUE;
     }
 
+    function getSortMethod()
+    {
+        return $this->_sortMethod;
+    }
+    
+
     /**
-        Set the sort order. (ascending/descending)
+     * Set the sort order. (ascending/descending)
      */
-    function set_sort_order($sort_order){
-        if(array_search($sort_order,$this->sort_order_values) === FALSE){
-            $sort_order = 'ascending';
-        }
-        $this->sort_order = $sort_order;
+    function setSortOrder($aSortOrder)
+    {
+        $this->_sortOrder = array_search($aSortOrder,$this->_sortOrderValues) === FALSE ? 'ascending' : $aSortOrder;
+        $this->_sortUpdated = TRUE;
+
+    }
+
+    function getSortOrder()
+    {
+        return $this->_sortOrder;
+    }
+    
+    function getSortMethodValues()
+    {
+        return $this->_sortMethodValues;
+    }
+
+    function getSortOrderValues()
+    {
+        return $this->_sortOrderValues;
+    }
+
+    function getReadStatusValues()
+    {
+        return $this->_readStatusValues;
+    }
+
+    function getOwnershipValues()
+    {
+        return $this->_ownershipValues;
     }
 
     /**
-        Set the read status.
-        When querying the database, only references of the given $read_status
-        will be output.
+     * Set the read status.
+     * When querying the database, only references of the given $read_status
+     * will be output.
      */
-    function set_read_status($status){
-        if(array_search($status,$this->read_status_values) === FALSE){
-            $status = 'notread';
-        }
-        $this->read_status = $status;
+    function setReadStatus($aStatus)
+    {
+        $this->_readStatus = array_search($aStatus, $this->_readStatusValues) === FALSE ? 'notread' : $aStatus;
     }
 
     /**
-        Set the ownership
-        When querying the database, only references of the given $ownership
-        will be output.
+     * Set the ownership
+     * When querying the database, only references of the given $ownership
+     * will be output.
      */
-    function set_ownership($val){
-        if(array_search($val,$this->ownership_values) === FALSE){
-            $status = 'notown';
-        }
-        $this->ownership = $val;
+    function setOwnership($aOwnership)
+    {
+        $this->_ownerShip = array_search($aOwnership,$this->_ownershipValues) === FALSE ? 'notown' : $aOwnership;
     }
 
     /**
-        Generate the path of the xml file.
-    */
-    function xml_file(){
-        return $this->biblio_dir.$this->biblio_name.".xml";
+     * Generate the path of the xml file.
+     */
+    function getXmlFileName()
+    {
+        return $this->_bibDir.'/'.$this->_bibName.'.xml';
     }
 
     /**
-        Generate the path of the bib file.
-    */
-    function bibtex_file(){
-        return $this->biblio_dir.$this->biblio_name.".bib";
+     * Generate the path of the bib file.
+     */
+    function getBibtexFileName()
+    {
+        return $this->_bibDir.'/'.$this->_bibName.'.bib';
     }
 
     /**
-        Return the name of the bibliography.
-    */
-    function name(){
-        return $this->biblio_name;
+     * Return the name of the bibliography.
+     */
+    function getName()
+    {
+        return $this->_bibName;
     }
 
     /**
-        Return the directory containing uploaded papers/data.
-    */
-    function papers_dir(){
-        return $this->biblio_dir."papers/";
+     *   Return the directory containing uploaded papers/data.
+     */
+    function getPapersDir()
+    {
+        return $this->_bibDir.'/papers/';
     }
 
     /**
-        Update the .bib file wrt the .xml file.
-        Only used in this class.
-    */
-    function update_bibtex_file(){
+     * Update the .bib file wrt the .xml file.
+     * Only used in this class.
+     */
+    function updateBibtexFile()
+    {
         // Load all the database and transform it into a bibtex string
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->all_entries();
-        $xsl_content = file_get_contents("./xsl/xml2bibtex.xsl");
-        $bibtex = $xsltp->transform($xml_content,$xsl_content);
-        $xsltp->free();
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml = $this->getAllEntries();
+        $aXsl = FileToolKit::getContent('./xsl/xml2bibtex.xsl');
+        $aBibtex = $aXsltp->transform($aXml, $aXsl);
+        $aXsltp->free();
 
         // write the bibtex file
-        $fp = fopen($this->bibtex_file(),"w");
-        fwrite($fp,$bibtex);
-        fclose($fp);
+        FileToolKit::putContent($this->getBibtexFileName(), $aBibtex);
     }
 
     /**
-        Reload the database according the bibtex file.
+     * Reload the database according the bibtex file.
      */
-    function reload_from_bibtex(){
+    function reloadFromBibtex()
+    {
         // load the bibtex file and transform it to XML
-        $bt = new BibTeX_Tools();
-        $data = $bt->bibtex_file_to_xml($this->bibtex_file());
-        $fp = fopen($this->xml_file(),"w");
-        fwrite($fp,$data[2]);
-        fclose($fp);
+        XmlConverter::export(BibtexConverter::import($this->getBibtexFileName()));
     }
 
     /**
-        Return an array of all BibTeX ids.
-        The entries are sorted using $this->sort and $this->sort_order
+     * Return an array of all BibTeX ids.
+     * The entries are sorted using $this->_sort and $this->_sortOrder
      */
-    function all_bibtex_ids(){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->all_entries();
-        $xsl_content = file_get_contents("./xsl/extract_ids.xsl");
-        $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry",$xsl_content);
-        $param = array('sort' => $this->sort,
-                       'sort_order' => $this->sort_order);
-        $res = $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return remove_null_values(explode('|',$res));
+    function getAllIds()
+    {
+        if (!isset($this->_ids) || $this->_sortUpdated)
+        {
+            $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+            $aXml = $this->getAllEntries();
+            
+            $aXsl = FileToolKit::getContent('./xsl/extract_ids.xsl');
+            $aXsl = str_replace('XPATH_QUERY','//bibtex:entry',$aXsl);                        
+            $aParam = array('sort' => $this->_sortMethod,
+                            'sort_order' => $this->_sortOrder);
+            $aRes = $aXsltp->transform($aXml, $aXsl, $aParam);
+            $aXsltp->free();
+            $this->_ids = remove_null_values(explode('|',$aRes));
+            $this->_sortUpdated = FALSE;
+        }
+        return $this->_ids;
     }
 
     /**
-        Return a sorted array of BibTex ids of entries belonging to the group $groupname.
-        If $groupname is null, it returns a sorted array of entries that aren't
-        associated with a group.
-    */
-    function ids_for_group($groupname){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->all_entries();
-        $xsl_content = file_get_contents("./xsl/extract_ids.xsl");
+     * Return a sorted array of BibTex ids of entries belonging to the group $groupname.
+     * If $groupname is null, it returns a sorted array of entries that aren't
+     * associated with a group.
+     */
+    function getIdsForGroup($aGroup)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml = $this->getAllEntries();
+        $aXsl = FileToolKit::getContent('./xsl/extract_ids.xsl');
         // generate the apropriate XSLT request
-        if($groupname){
+        if (isset($aGroup) ||
+            $aGroup != '')
+        {
             // return entries associated to a given group
-            $xpath = '//bibtex:entry[(.//bibtex:group)=$group';
-            if($this->read_status != 'any'){
-                $xpath .= ' and (.//bibtex:read)=\''.$this->read_status.'\'';
+            $aXpath = '//bibtex:entry[(.//bibtex:group)=$group';
+            if ($this->_readStatus != 'any')
+            {
+                $aXpath .= ' and (.//bibtex:read)=\''.$this->_readStatus.'\'';
             }
-            if($this->ownership != 'any'){
-                $xpath .= ' and (.//bibtex:own)=\''.$this->ownership.'\'';
+            if ($this->_ownership != 'any')
+            {
+                $aXpath .= ' and (.//bibtex:own)=\''.$this->_ownership.'\'';
             }
-            $xpath .= ']';
+            $aXpath .= ']';
         }
-        else{
+        else
+        {
             // return 'orphan' entries
-            $xpath = '//bibtex:entry[not(.//bibtex:group)';
-            if($this->read_status != 'any'){
-                $xpath .= ' and (.//bibtex:read)=\''.$this->read_status.'\'';
+            $aXpath = '//bibtex:entry[not(.//bibtex:group)';
+            if ($this->_readStatus != 'any')
+            {
+                $aXpath .= ' and (.//bibtex:read)=\''.$this->_readStatus.'\'';
             }
-            if($this->ownership != 'any'){
-                $xpath .= ' and (.//bibtex:own)=\''.$this->ownership.'\'';
+            if ($this->_ownership != 'any')
+            {
+                $aXpath .= ' and (.//bibtex:own)=\''.$this->_ownership.'\'';
             }
-            $xpath .= ']';
+            $aXpath .= ']';
         }
-        $xsl_content = str_replace("XPATH_QUERY",$xpath,$xsl_content);
+        $aXsl = str_replace('XPATH_QUERY',$aXpath,$aXsl);
         // do the transformation
-        $param = array('group'=>$groupname,
-                       'sort' => $this->sort,
-                       'sort_order' => $this->sort_order,
-                       'biborb_xml_version' => BIBORB_XML_VERSION);
-        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return remove_null_values(explode('|',$res));
+        $aParam = array('group'=> $aGroup,
+                        'sort' => $this->_sortMethod,
+                        'sort_order' => $this->_sortOrder,
+                        'biborb_xml_version' => BIBORB_XML_VERSION);
+        $aRes =  $aXsltp->transform($aXml, $aXsl, $aParam);
+        $aXsltp->free();
+        return remove_null_values(explode('|',$aRes));
     }
 
 
     /**
-        Get all entries in the database
-    */
-    function all_entries(){
-        return file_get_contents($this->xml_file());
+     * Get all entries in the database
+     */
+    function getAllEntries()
+    {
+        return FileToolKit::getContent($this->getXmlFileName());
     }
 
     /**
-        Get a set of entries.
-    */
-    function entries_with_ids($anArray){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xsl_content = file_get_contents("./xsl/entries_with_ids.xsl");
+     * Get a set of entries.
+     */
+    function getEntriesWithIds($anArray)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXsl = FileToolKit::getContent('./xsl/entries_with_ids.xsl');
         //transform the array into an xml string
-        $xml_content = "<?xml version='1.0' encoding='UTF-8'?>";
-        $xml_content .= "<listofids>";
-        foreach($anArray as $item){
-            $xml_content .= "<id>$item</id>";
+        $aXml = '<?xml version="1.0" encoding="UTF-8"?>';
+        $aXml .= '<listofids>';
+        foreach ($anArray as $item)
+        {
+            $aXml .= '<id>'.$item.'</id>';
         }
-        $xml_content .= "</listofids>";
-        $param = array('bibnameurl' => $this->xml_file());
-        $res = $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return $res;
+        $aXml .= '</listofids>';
+        $aParam = array('bibnameurl' => $this->getXmlFileName());
+        $aRes = $aXsltp->transform($aXml, $aXsl, $aParam);
+        $aXsltp->free();
+        return $aRes;
     }
 
     /**
-        Get an entry
-    */
-    function entry_with_id($anID){
-        return $this->entries_with_ids(array($anID));
+     * Get an entry
+     */
+    function getEntryWithId($anID)
+    {
+        return $this->getEntriesWithIds(array($anID));
     }
 
     /**
-        Add a new entry to the database
-        $dataArray contains bibtex values
-    */
-    function add_new_entry($dataArray){
-        $res = array(   'added'=>false,
-                        'message'=>"");
+     * Add a new entry to the database
+     *  $dataArray contains bibtex values
+     */
+    function addNewEntry($dataArray)
+    {
+        $res = array('added'=>false,
+                     'message'=>"");
 
         $bibid = trim($dataArray['id']);
         // check if the entry is already present
@@ -381,7 +457,7 @@ XSLT_END;
             if(array_key_exists('up_url',$_FILES) && file_exists($_FILES['up_url']['tmp_name'])){
                 $fileInfo = pathinfo($_FILES['up_url']['name']);
                 if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
-                    $dataArray['url'] = upload_file($this->biblio_name,'up_url',$dataArray['id']);
+                    $dataArray['url'] = upload_file($this->_bibName,'up_url',$dataArray['id']);
                 }
                 else{
                     $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_url']['name']);
@@ -392,7 +468,7 @@ XSLT_END;
             if(array_key_exists('up_urlzip',$_FILES) && file_exists($_FILES['up_urlzip']['tmp_name'])){
                 $fileInfo = pathinfo($_FILES['up_urlzip']['name']);
                 if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
-                    $dataArray['urlzip'] = upload_file($this->biblio_name,'up_urlzip',$dataArray['id']);
+                    $dataArray['urlzip'] = upload_file($this->_bibName,'up_urlzip',$dataArray['id']);
                 }
                 else{
                     $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_urlzip']['name']);
@@ -403,7 +479,7 @@ XSLT_END;
             if(array_key_exists('up_pdf',$_FILES) && file_exists($_FILES['up_pdf']['tmp_name'])){
                 $fileInfo = pathinfo($_FILES['up_pdf']['name']);
                 if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
-                    $dataArray['pdf'] = upload_file($this->biblio_name,'up_pdf',$dataArray['id']);
+                    $dataArray['pdf'] = upload_file($this->_bibName,'up_pdf',$dataArray['id']);
                 }
                 else{
                     $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_pdf']['name']);
@@ -416,7 +492,7 @@ XSLT_END;
             $bt = new BibTeX_Tools();
 
             // extract real bibtex values from the array
-            $bibtex_val = $bt->extract_bibtex_data($dataArray,$this->biborb_fields);
+            $bibtex_val = $bt->extract_bibtex_data($dataArray,$this->_fields);
 
             // get first lastname author
             if(array_key_exists('author',$bibtex_val)){
@@ -432,22 +508,22 @@ XSLT_END;
             $bibtex_val['lastDateModified'] = date("Y-m-d");
             // convert to xml
             $data = $bt->entries_array_to_xml(array($bibtex_val));
-            
+
             $xml = $data[2];
-            $xsl = file_get_contents("./xsl/add_entries.xsl");
-            $param = array('bibname' => $this->xml_file(),
+            $xsl = FileToolKit::getContent("./xsl/add_entries.xsl");
+            $param = array('bibname' => $this->getXmlFileName(),
                            'biborb_xml_version' => BIBORB_XML_VERSION);
-            
+
             $result = $xsltp->transform($xml,$xsl,$param);
             $xsltp->free();
 
             // save xml
-            $fp = fopen($this->xml_file(),"w");
+            $fp = fopen($this->getXmlFileName(),"w");
             fwrite($fp,$result);
             fclose($fp);
 
             // update bibtex file
-            if($this->generate_bibtex){$this->update_bibtex_file();}
+            if($this->genBibtex){$this->update_bibtex_file();}
 
             $res['added'] = true;
             $res['message'] .= "";
@@ -464,94 +540,95 @@ XSLT_END;
                    'notadded' => array of references notadded due to bibtex key conflicts
                 )
     */
-    function add_bibtex_entries($bibtex){
+    function addBibtexEntries($iBibtex)
+    {
         // the array to return
-        $res = array('added' => array(),
-                     'notadded' => array());
+        $aRes = array('added' => array(),
+                      'notadded' => array());
         //open the database file in append mode
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $bt = new BibTeX_Tools();
-        $xsl = file_get_contents("./xsl/add_entries.xsl");
-        $param = array('bibname' => $this->xml_file(),
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXsl = FileToolKit::getContent('./xsl/add_entries.xsl');
+        $aParam = array('bibname' => $this->getXmlFileName(),
                        'biborb_xml_version' => BIBORB_XML_VERSION);
 
         // entries to add
-        $entries_to_add = $bt->get_array_from_string($bibtex);
+        $aEntriesToAdd = BibtexConverter::import($iBibtex);
 
         // bibtex key present in database
-        $dbids = $this->all_bibtex_ids();
-        $xml_to_add = "";
+        $aDbIds = $this->getAllIds();
 
         // iterate and add ref which id is not present in the database
-        foreach($entries_to_add as $entry){
-            if(array_search($entry['id'],$dbids) === FALSE){
-                if(array_key_exists('author',$entry)){
-                    $pc = new PARSECREATORS();
-                    $authors = $pc->parse($entry['author']);
-                    $entry['lastName'] = $authors[0][2];
+        foreach ($aEntriesToAdd as $aKey=>$aEntry)
+        {
+            if (array_search($aEntry->getId(),$aDbIds) === FALSE)
+            {
+                if ($aEntry->getData('author'))
+                {
+                    $aPC = new PARSECREATORS();
+                    $authors = $aPC->parse($aEntry->getData('author'));
+                    $aEntriesToAdd[$aKey]->setData('lastName',$authors[0][2]);
                 }
-                $entry['dateAdded'] = date("Y-m-d");
-                $entry['lastDateModified'] = date("Y-m-d");
-                $xml_to_add .= $bt->entry_array_to_xml($entry);
-                $res['added'][] = $entry['id'];
+                $aEntriesToAdd[$aKey]->setData('dateAdded',date('Y-m-d'));
+                $aEntriesToAdd[$aKey]->setData('lastDateModified',date('Y-m-d'));
+                $aRes['added'][] = $aEntry->getID();
             }
-            else{
-                $res['notadded'][] = $entry['id'];
+            else
+            {
+                $aRes['notadded'][] = $aEntry->getID();
             }
         }
-
-
-        $xml_content = "<?xml version='1.0' encoding='UTF-8'?>";
-        $xml_content .= "<bibtex:file xmlns:bibtex='http://bibtexml.sf.net/' version='".BIBORB_XML_VERSION."' >";
-        $xml_content .= $xml_to_add;
-        $xml_content .= "</bibtex:file>";
-        $result = $xsltp->transform($xml_content,$xsl,$param);
-        $fp = fopen($this->xml_file(),"w");
-        fwrite($fp,$result);
-        fclose($fp);
-        $xsltp->free();
+        $aResult = $aXsltp->transform(XmlConverter::export($aEntriesToAdd),$aXsl,$aParam);
+        FileToolKit::putContent($this->getXmlFileName(), $aResult);
+        $aXsltp->free();
 
 
         // update bibtex file
-        if($this->generate_bibtex){$this->update_bibtex_file();}
+        if($this->_genBibtex)
+        {
+            $this->updateBibtexFile();
+        }
 
-        return $res;
+        return $aRes;
     }
 
     /**
-        Delete an entry from the database
-    */
-    function delete_entry($bibtex_id){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->all_entries();
-        $xsl_content = file_get_contents("./xsl/delete_entries.xsl");
-        $param = array('id'=>$bibtex_id,
+     * Delete an entry from the database
+     */
+    function deleteEntry($iId)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aRefToDel = XmlConverter::import($this->getEntryWithId($iId));
+        $aXml = $this->getAllEntries();
+        $aXsl = FileToolKit::getContent('./xsl/delete_entries.xsl');
+        $aParam = array('id' => $iId,
                        'biborb_xml_version' => BIBORB_XML_VERSION);
-        $newxml = $xsltp->transform($xml_content,$xsl_content,$param);
+        $aXml = $aXsltp->transform($aXml,$aXsl,$aParam);
 
         // detect all file corresponding to this id.
-        $ar = opendir($this->papers_dir());
-        $tab = array();
-        while($file = readdir($ar)) {
-            $inf = pathinfo($file);
-            if(strcmp(substr($inf['basename'],0,strlen($bibtex_id)+1),$bibtex_id.".")==0){
-                array_push($tab,$file);
-            }
-        }
-
-        foreach($tab as $file){
-            if(file_exists($this->papers_dir().$file)){
-                unlink($this->papers_dir().$file);
+        $aPapersDir = dir($this->getPapersDir());
+        $aPaperTypes = array('url', 'urlzip', 'pdf');
+        while (($aFile = $aPapersDir->read()) !== false)
+        {
+            foreach ($aPaperTypes as $aPaperType)
+            {
+                if ($aFile == $aRefToDel->getData($aPaperType))
+                {
+                    unlink($aPapersDir->path.'/'.$aFile);
+                    $this->_papersCount--;
+                }
             }
         }
 
         // update the xml file.
-        $fp = fopen($this->xml_file(),"w");
-        fwrite($fp,$newxml);
-        fclose($fp);
+        FileToolKit::putContent($this->getXmlFileName(), $aXml);
 
         //update the bibtex file.
-        if($this->generate_bibtex){$this->update_bibtex_file();}
+        if ($this->_genBibtex)
+        {
+            $this->updateBibtexFile();
+        }
+        $this->_entryCount--;
+        $this->_browseCacheNeedUpdate = TRUE;
     }
 
     /**
@@ -564,81 +641,74 @@ XSLT_END;
     }
 
     /**
-        Update an entry.
-    */
-    function update_entry($dataArray){
-        $res = array('updated'=>false,
-                     'message'=>"");
+     * Update an entry.
+     */
+    function updateEntry($dataArray)
+    {
+        $aRes = array('updated'=>false,
+                      'message'=>'');
 
         // check if the id value is null
-        if($dataArray['id'] == null){
-            $res['updated'] = false;
-            $res['message'] = msg("Null BibTeX ID for an entry not allowed.");
+        if ($dataArray['id'] == null)
+        {
+            $aRes['updated'] = false;
+            $aRes['message'] = msg('Null BibTeX ID for an entry not allowed.');
         }
-        else{
-            if(array_key_exists('up_url',$_FILES) && file_exists($_FILES['up_url']['tmp_name'])){
-                $fileInfo = pathinfo($_FILES['up_url']['name']);
-                if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
-                    $dataArray['url'] = upload_file($this->biblio_name,'up_url',$dataArray['id']);
-                }
-                else{
-                    $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_url']['name']);
-                    $res['message'] .= "<br/>";
-                }
-            }
-
-            if(array_key_exists('up_urlzip',$_FILES) && file_exists($_FILES['up_urlzip']['tmp_name'])){
-                $fileInfo = pathinfo($_FILES['up_urlzip']['name']);
-                if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
-                    $dataArray['urlzip'] = upload_file($this->biblio_name,'up_urlzip',$dataArray['id']);
-                }
-                else{
-                    $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_urlzip']['name']);
-                    $res['message'] .= "<br/>";
-                }
-            }
-
-            if(array_key_exists('up_pdf',$_FILES) && file_exists($_FILES['up_pdf']['tmp_name'])){
-                $fileInfo = pathinfo($_FILES['up_pdf']['name']);
-                if(in_array($fileInfo['extension'],$GLOBALS['valid_upload_extensions'])){
-                    $dataArray['pdf'] = upload_file($this->biblio_name,'up_pdf',$dataArray['id']);
-                }
-                else{
-                    $res['message'] .= sprintf(msg("%s not uploaded: invalid file type."),$_FILES['up_pdf']['name']);
-                    $res['message'] .= "<br/>";
-                }
-            }
-
-            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-            $bt = new BibTeX_Tools();
-            $bibtex_val = $bt->extract_bibtex_data($dataArray,$this->biborb_fields);
-            if(array_key_exists('author',$bibtex_val)){
+        else
+        {
+            // Load the reference            
+            $aRef = new Reference($dataArray['id'], $dataArray['type_ref']);
+            $aRef->setData($dataArray, $this->_fields);
+            if ($aRef->getData('author'))
+            {
                 $pc = new PARSECREATORS();
-                $authors  = $pc->parse($bibtex_val['author']);
-                $bibtex_val['lastName'] = $authors[0][2];
+                $authors  = $pc->parse($aRef->getData('author'));
+                $aRef->setData('lastName',$authors[0][2]);
             }
-            $bibtex_val['___type'] = $dataArray['type_ref'];
-            $bibtex_val['lastDateModified'] = date("Y-m-d");
-            $data = $bt->entries_array_to_xml(array($bibtex_val));
-            $xml = $data[2];
+            $aRef->setData('lastDateModified', date('Y-m-d'));
 
-            $xsl = file_get_contents("./xsl/update_xml.xsl");
-            $param = array('bibname' => $this->xml_file(),
-                           'biborb_xml_version' => BIBORB_XML_VERSION);
-            $result = $xsltp->transform($xml,$xsl,$param);
-            $xsltp->free();
+            // look for new uploaded papers
+            $aUpTypes = array('up_url', 'up_urlzip', 'up_pdf');
+            foreach ($aUpTypes as $aUpType)
+            {
+                $aFileType = substr($aUpType,3);
+                if (array_key_exists($aUpType,$_FILES) && file_exists($_FILES[$aUpType]['tmp_name']))
+                {
+                    $aFileInfo = pathinfo($_FILES[$aUpType]['name']);
+                    if (in_array($aFileInfo['extension'],$GLOBALS['valid_upload_extensions']))
+                    {
+                        $aDataArray[$aFileType] = upload_file($this->_bibName,$aUpType,$aDataArray['id']);
+                        if (!$aRef->getValue($aFileType))
+                            $this->_papersCount++;
+                    }
+                    else
+                    {
+                        $aRes['message'] .= sprintf(msg('%s not uploaded: invalid file type.'),$_FILES[$aUpType]['name']);
+                        $aRes['message'] .= '<br/>';
+                    }
+                }
+            }
+            // Convert and write it to xml
+            $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+            $aXsl = FileToolKit::getContent('./xsl/update_xml.xsl');
+            $aParam = array('bibname' => $this->getXmlFileName(),
+                            'biborb_xml_version' => BIBORB_XML_VERSION);
+            $aResult = $aXsltp->transform(XmlConverter::export($aRef),$aXsl,$aParam);
+            $aXsltp->free();
 
-            $fp = fopen($this->xml_file(),"w");
-            fwrite($fp,$result);
-            fclose($fp);
+            FileToolKit::putContent($this->getXmlFileName(), $aResult);
             // update bibtex file
-            if($this->generate_bibtex){$this->update_bibtex_file();}
+            if($this->_genBibtex)
+            {
+                $this->updateBibtexFile();
+            }
 
-            $res['updated'] = true;
-            $res['message'] .= "";
-            $res['id'] = $dataArray['id'];
+            $aRes['updated'] = true;
+            $aRes['message'] .= '';
+            $aRes['id'] = $aRef->getId();
+            $this->_browseCacheNeedUpdate = TRUE;
         }
-        return $res;
+        return $aRes;
     }
 
     /**
@@ -646,38 +716,42 @@ XSLT_END;
     */
     function is_bibtex_key_present($bibtex_key){
         $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $content = file_get_contents($this->xml_file());
-        $xsl = file_get_contents("./xsl/search_entry.xsl");
+        $content = FileToolKit::getContent($this->getXmlFileName());
+        $xsl = FileToolKit::getContent("./xsl/search_entry.xsl");
         $param = array('id' => $bibtex_key);
         $result = $xsltp->transform($content,$xsl,$param);
         return (substr_count($result,"true") > 0);
     }
 
     /**
-        Return an array containing groups present in the bibliography.
-    */
-    function groups(){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
+     * Return an array containing groups present in the bibliography.
+     */
+    function getGroups()
+    {
+        $aXsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
         // Get groups from the xml bibtex file
-        $xml_content = file_get_contents($this->xml_file());
-        $xsl_content = file_get_contents("./xsl/group_list.xsl");
-        $group_list = $xsltp->transform($xml_content,$xsl_content);
-        $xsltp->free();
+        $aXml = FileToolKit::getContent($this->getXmlFileName());
+        $aXsl = FileToolKit::getContent("./xsl/group_list.xsl");
+        $aGroups = $aXsltp->transform($aXml,$aXsl);
+        $aXsltp->free();
 
         // Remove doublons
-        $group_list = split("[,~]",$group_list);
-        foreach($group_list as $key=>$value){
-            if(trim($value) == ""){
-                unset($group_list[$key]);
+        $aGroups = split("[,~]", $aGroups);
+        foreach ($aGroups as $aKey=>$aValue)
+        {
+            $aValue = trim($aValue);
+            if ( $aValue == "")
+            {
+                unset($aGroups[$aKey]);
             }
-            else{
-                $group_list[$key] = trim($value);
+            else
+            {
+                $aGroups[$aKey] = $aValue;
             }
         }
-        $list = array_unique($group_list);
-        sort($list);
-
-        return $list;
+        $aGroups = array_unique($aGroups);
+        sort($aGroups);
+        return $aGroups;
     }
 
     /**
@@ -692,20 +766,20 @@ XSLT_END;
             $xml_content .= "<id>$item</id>";
         }
         $xml_content .= "</listofids>";
-        $xsl_content = file_get_contents("./xsl/addgroup.xsl");
+        $xsl_content = FileToolKit::getContent("./xsl/addgroup.xsl");
 
-        $param = array( 'bibname' => $this->xml_file(),
+        $param = array( 'bibname' => $this->getXmlFileName(),
                         'group' => $group,
                         'biborb_xml_version' => BIBORB_XML_VERSION);
         // new xml file
         $result = $xsltp->transform($xml_content,$xsl_content,$param);
 
         // update the xml file
-        $xsl_content = file_get_contents("./xsl/update_xml.xsl");
+        $xsl_content = FileToolKit::getContent("./xsl/update_xml.xsl");
         $result = $xsltp->transform($result,$xsl_content,$param);
         $xsltp->free();
 
-        $fp = fopen($this->xml_file(),"w");
+        $fp = fopen($this->getXmlFileName(),"w");
         fwrite($fp,$result);
         fclose($fp);
     }
@@ -722,17 +796,17 @@ XSLT_END;
             $xml_content .= "<id>$item</id>";
         }
         $xml_content .= "</listofids>";
-        $xsl_content = file_get_contents("./xsl/resetgroup.xsl");
-        $param = array( 'bibname' => $this->xml_file(),
+        $xsl_content = FileToolKit::getContent("./xsl/resetgroup.xsl");
+        $param = array( 'bibname' => $this->getXmlFileName(),
                         'biborb_xml_version' => BIBORB_XML_VERSION);
         $result = $xsltp->transform($xml_content,$xsl_content,$param);
 
         // update the xml file
-        $xsl_content = file_get_contents("./xsl/update_xml.xsl");
+        $xsl_content = FileToolKit::getContent("./xsl/update_xml.xsl");
         $result = $xsltp->transform($result,$xsl_content,$param);
         $xsltp->free();
 
-        $fp = fopen($this->xml_file(),"w");
+        $fp = fopen($this->getXmlFileName(),"w");
         fwrite($fp,$result);
         fclose($fp);
     }
@@ -740,319 +814,355 @@ XSLT_END;
     /**
      Search in given fields, a given value
     */
-    function search_entries($value,$fields){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content =$this->all_entries();
-        $xsl_content = file_get_contents("./xsl/search.xsl");
-        $param = array( 'bibname' => $this->xml_file());
-        foreach($fields as $val){
-            $param[$val] = "1";
+    function searchEntries($iValue,$iFields)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml =$this->getAllEntries();
+        $aXsl = FileToolKit::getContent('./xsl/search.xsl');
+        $aParam = array( 'bibname' => $this->getXmlFileName());
+        foreach($iFields as $aVal)
+        {
+            $aParam[$aVal] = '1';
         }
-        $param['search'] = $value;
-        $result = $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return $result;
+        $aParam['search'] = $iValue;
+        $aResult = $aXsltp->transform($aXml,$aXsl,$aParam);
+        $aXsltp->free();
+        return $aResult;
     }
 
-    function ids_for_search($value,$fields){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->search_entries($value,$fields);
-        $xsl_content = file_get_contents("./xsl/extract_ids.xsl");
-        $xsl_content = str_replace("XPATH_QUERY",'//bibtex:entry',$xsl_content);
-        $param = array('sort' => $this->sort,
-                       'sort_order' => $this->sort_order);
-        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return remove_null_values(explode('|',$res));
+    function getIdsForSearch($iValue, $iFields)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml = $this->searchEntries($iValue,$iFields);
+        $aXsl = FileToolKit::getContent('./xsl/extract_ids.xsl');
+        $aXsl = str_replace('XPATH_QUERY','//bibtex:entry',$aXsl);
+        $aParam = array('sort' => $this->_sortMethod,
+                        'sort_order' => $this->_sortOrder);
+        $aRes =  $aXsltp->transform($aXml,$aXsl,$aParam);
+        $aXsltp->free();
+        return remove_null_values(explode('|',$aRes));
     }
 
     /**
         Advanced search function
     */
-    function advanced_search_entries($searchArray){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content =$this->all_entries();
-        $xsl_content = file_get_contents("./xsl/advanced_search.xsl");
-        $param = array( 'bibname' => $this->xml_file());
-        foreach($searchArray as $key => $val){
-            $param[$key] = $val;
+    function advancedSearchEntries($iSearchArray)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml =$this->getAllEntries();
+        $aXsl = FileToolKit::getContent('./xsl/advanced_search.xsl');
+        $aParam = array( 'bibname' => $this->getXmlFileName());
+        foreach ($iSearchArray as $aKey => $aVal)
+        {
+            $aParam[$aKey] = $aVal;
         }
-
-        $result = $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return $result;
+        $aResult = $aXsltp->transform($aXml,$aXsl,$aParam);
+        $aXsltp->free();
+        return $aResult;
     }
 
-    function ids_for_advanced_search($searchArray){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->advanced_search_entries($searchArray);
-        $xsl_content = file_get_contents("./xsl/extract_ids.xsl");
-        $xsl_content = str_replace("XPATH_QUERY",'//bibtex:entry',$xsl_content);
-        $param = array('sort' => $this->sort,
-                       'sort_order' => $this->sort_order);
-        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return remove_null_values(explode('|',$res));
+    function getIdsForAdvancedSearch($iSearchArray)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml = $this->advancedSearchEntries($iSearchArray);
+        $aXsl = FileToolKit::getContent("./xsl/extract_ids.xsl");
+        $aXsl = str_replace('XPATH_QUERY','//bibtex:entry',$aXsl);
+        $aParam = array('sort' => $this->_sortMethod,
+                        'sort_order' => $this->_sortOrder);
+        $aRes =  $aXsltp->transform($aXml,$aXsl,$aParam);
+        $aXsltp->free();
+        return remove_null_values(explode('|',$aRes));
     }
 
     /**
         XPath search
      */
-    function xpath_search($xpath_query){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->all_entries();
-        $xsl_content = file_get_contents("./xsl/xpath_query.xsl");
-        $xsl_content = str_replace("XPATH_QUERY",$xpath_query,$xsl_content);
-        $param = array( 'bibname' => $this->xml_file());
-        $result = $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return $result;
+    function xpathSearch($iXPath)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml = $this->getAllEntries();
+        $aXsl = FileToolKit::getContent('./xsl/xpath_query.xsl');
+        $aXsl = str_replace('XPATH_QUERY',$iXPath,$aXsl);
+        $aParam = array( 'bibname' => $this->getXmlFileName());
+        $aResult = $aXsltp->transform($aXml, $aXsl, $aParam);
+        $aXsltp->free();
+        return $aResult;
     }
 
-    function ids_for_xpath_search($xpath_query){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->all_entries();
-        $xsl_content = file_get_contents("./xsl/extract_ids.xsl");
-        $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry[$xpath_query]",$xsl_content);
-        $param = array('sort' => $this->sort,
-                       'sort_order' => $this->sort_order);
-        $res =  $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return remove_null_values(explode('|',$res));
+    function getIdsForXpathSearch($iXPath)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml = $this->getAllEntries();
+        $aXsl = FileToolKit::getContent('./xsl/extract_ids.xsl');
+        $aXsl = str_replace('XPATH_QUERY',"//bibtex:entry[{$iXPath}]",$aXsl);
+        $aParam = array('sort' => $this->_sortMethod,
+                        'sort_order' => $this->_sortOrder);
+        $aRes = $aXsltp->transform($aXml, $aXsl, $aParam);
+        $aXsltp->free();
+        return remove_null_values(explode('|',$aRes));
     }
 
     /**
         Total number of entries
     */
-    function count_entries(){
-        $allentries = $this->all_entries();
-        return substr_count($allentries,"<bibtex:entry ");
+    function getEntryCount()
+    {
+        if (!isset($this->_updated))
+        {
+            $allentries = $this->getAllEntries();
+            $this->_entryCount = substr_count($allentries,"<bibtex:entry ");
+        }
+        return $this->_entryCount;
     }
 
     /**
         Count on-line available papers.
     */
-    function count_epapers(){
-        $allentries = $this->all_entries();
-        $pdf = substr_count($allentries,"<bibtex:pdf>");
-        $urlzip = substr_count($allentries,"<bibtex:urlzip>");
-        $url = substr_count($allentries,"<bibtex:url>");
+    function getPapersCount()
+    {
+        if (!isset($this->_papersCount))
+        {
 
-        return $url+$urlzip+$pdf;
+            $allentries = $this->getAllentries();
+            $pdf = substr_count($allentries,"<bibtex:pdf>");
+            $urlzip = substr_count($allentries,"<bibtex:urlzip>");
+            $url = substr_count($allentries,"<bibtex:url>");
+
+            $this->_papersCount = $url+$urlzip+$pdf;
+        }
+
+        return $this->_papersCount;
     }
 
     /**
-        Return a list of available types of papers
-    */
-    function entry_types(){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = file_get_contents("./xsl/model.xml");
-        $xsl_content = file_get_contents("./xsl/get_all_bibtex_types.xsl");
-        $result = $xsltp->transform($xml_content,$xsl_content);
-        $xsltp->free();
-
-        return explode(" ",trim($result));
-    }
-
-    /**
-        Change the type of a given entry
-    */
-    function change_type($id,$newtype){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
+     * Change the type of a given entry
+     */
+    function changeType($iId,$iNewType)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
         // get the entry
-        $xml_content = $this->entry_with_id($id);
-        // get its type
-        $oldtype = trim($xsltp->transform($xml_content,FileToolKit::getFileContents("./xsl/get_bibtex_type.xsl")));
-        // replace it
-        $xml_content = str_replace("bibtex:$oldtype","bibtex:$newtype",$xml_content);
+        $aXml = $this->getEntryWithId($iId);
+        $aOldType = $aXsltp->transform($aXml, FileToolKit::getContent('./xsl/get_bibtex_type.xsl'));
+        $aXml = str_replace('bibtex:'.$aOldType,'bibtex:'.$iNewType, $aXml);
         // update the xml
-        $xsl = file_get_contents("./xsl/update_xml.xsl");
-        $param = array('bibname' => $this->xml_file(),
-                       'biborb_xml_version' => BIBORB_XML_VERSION);
-        $result = $xsltp->transform($xml_content,$xsl,$param);
-        $xsltp->free();
+        $aXsl = FileToolKit::getContent('./xsl/update_xml.xsl');
+        $aParam = array('bibname' => $this->getXmlFileName(),
+                        'biborb_xml_version' => BIBORB_XML_VERSION);
+        $aResult = $aXsltp->transform($aXml,$aXsl,$aParam);
+        $aXsltp->free();
         // save it
-        $fp = fopen($this->xml_file(),"w");
-        fwrite($fp,$result);
-        fclose($fp);
-        // update bibtex file
-        if($this->generate_bibtex){$this->update_bibtex_file();}
+        FileToolKit::putContent($this->getXmlFileName(),$aResult);
+        if ($this->_genBibtex)
+        {
+            $this->updateBibtexFile();
+        }
     }
 
     /**
-        Change the bibtex key
-    */
-    function change_id($id,$newid){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
+     * Change the bibtex key
+     */
+    function changeId($iId, $iNewId)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
         // get the entry
-        $xml_content = $this->entry_with_id($id);
+        $aXml = $this->getEntryWithId($iId);
 
-        $path = $this->papers_dir();
-        // change the name of recorded files if necessary
-        preg_match("/\<bibtex:url\>(.*)\<\/bibtex:url\>/",$xml_content,$matches);
-        if(count($matches)>0){
-            $oldname = $matches[1];
-            $newname = $newid.'.'.FileToolKit::getAllExt($oldname);
-            rename($path.$oldname,$path.$newname);
-            $xml_content = str_replace("<bibtex:url>$oldname</bibtex:url>","<bibtex:url>$newname</bibtex:url>",$xml_content);
-        }
-        preg_match("/\<bibtex:urlzip\>(.*)\<\/bibtex:urlzip\>/",$xml_content,$matches);
-        if(count($matches)>0){
-            $oldname = $matches[1];
-            $newname = $newid.'.'.FileToolKit::getAllExt($oldname);
-            rename($path.$oldname,$path.$newname);
-            $xml_content = str_replace("<bibtex:urlzip>$oldname</bibtex:urlzip>","<bibtex:urlzip>$newname</bibtex:urlzip>",$xml_content);
-        }
-        preg_match("/\<bibtex:pdf\>(.*)\<\/bibtex:pdf\>/",$xml_content,$matches);
-        if(count($matches)>0){
-            $oldname = $matches[1];
-            $newname = $newid.'.'.FileToolKit::getAllExt($oldname);
-            rename($path.$oldname,$path.$newname);
-            $xml_content = str_replace("<bibtex:pdf>$oldname</bibtex:pdf>","<bibtex:pdf>$newname</bibtex:pdf>",$xml_content);
+        $aPath = $this->getPapersDir();
+        $aPaperTypes = array('url', 'urlzip', 'pdf');
+        foreach ($aPaperTypes as $aPaperType)
+        {
+            // change the name of recorded files if necessary
+            preg_match("/\<bibtex:{$aPaperType}\>(.*)\<\/bibtex:{$aPaperType}\>/",$aXml,$aMatches);
+            if (count($aMatches)>0)
+            {
+                $aOldName = $aMatches[1];
+                $aNewName = str_replace($iId, $iNewId, $aOldName);
+                if (file_exists($aNewName))
+                {
+                    rename($aPath.'/'.$aOldName, $aPath.'/'.$aNewName);
+                }
+                $aXml = str_replace("<bibtex:{$aPaperType}>{$aOldName}</bibtex:{$aPaperType}>",
+                                    "<bibtex:{$aPaperType}>{$aNewName}</bibtex:{$aPaperType}>",
+                                    $aXml);
+            }
         }
         // update the xml
-        $xsl = file_get_contents("./xsl/update_xml.xsl");
-        $param = array('bibname' => $this->xml_file(),
-                       'biborb_xml_version' => BIBORB_XML_VERSION);
-        $result = $xsltp->transform($xml_content,$xsl,$param);
-        $xsltp->free();
-         // save it
-        $fp = fopen($this->xml_file(),"w");
-        fwrite($fp,$result);
-        fclose($fp);
-
+        $aXsl = FileToolKit::getContent('./xsl/update_xml.xsl');
+        $aParam = array('bibname' => $this->getXmlFileName(),
+                        'biborb_xml_version' => BIBORB_XML_VERSION);
+        $aResult = $aXsltp->transform($aXml,$aXsl,$aParam);
+        $aXsltp->free();
         // replace by the new id in the xml file
-        $xml_content = str_replace("id=\"$id\"","id=\"$newid\"",FileToolKit::getFileContents($this->xml_file()));
+        $aResult = str_replace("id=\"{$iId}\"","id=\"{$iNewId}\"",$aResult);
         // save it
-        $fp = fopen($this->xml_file(),"w");
-        fwrite($fp,$xml_content);
-        fclose($fp);
-
+        FileToolKit::putContent($this->getXmlFileName(), $aResult);
         // update bibtex file
-        if($this->generate_bibtex){$this->update_bibtex_file();}
+        if ($this->_genBibtex)
+        {
+            $this->updateBibtexFile();
+        }
     }
 
 
     /**
-        Change the ownership of a given entry
-        Shelf mode
+     * Change the ownership of a given entry
+     * Shelf mode
      */
-    function change_ownership($id,$newownership){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
+    function changeOwnership($iId, $iNewOwnership)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
                                           // get the entry
-        $xml_content = $this->entry_with_id($id);
+        $aXml = $this->getEntryWithId($iId);
         //$oldownership = trim($xsltp->transform($xml_content,FileToolKit::getFileContents("./xsl/get_bibtex_ownership.xsl")));
         // replace it
-        if (strpos($xml_content, "<bibtex:own>") === false){
-            $xml_content = str_replace("</bibtex:title>","</bibtex:title><bibtex:own>$newownership</bibtex:own>",$xml_content);
-        }else{
-            $xml_content = preg_replace("/\<bibtex\:own>.*\<\/bibtex\:own\>/", "<bibtex:own>$newownership</bibtex:own>", $xml_content);
+        if (strpos($aXml, '<bibtex:own>') === false)
+        {
+            $aXml = str_replace('</bibtex:title>',
+                                '</bibtex:title><bibtex:own>'.$iNewOwnership.'</bibtex:own>',
+                                $aXml);
+        }
+        else
+        {
+            $aXml = preg_replace('/\<bibtex\:own>.*\<\/bibtex\:own\>/',
+                                 '<bibtex:own>'.$iNewOwnership.'</bibtex:own>',
+                                 $aXml);
         }
         // update the xml
-        $xsl = file_get_contents("./xsl/update_xml.xsl");
-        $param = array('bibname' => $this->xml_file(),
+        $aXsl = FileToolKit::getContent('./xsl/update_xml.xsl');
+        $aParam = array('bibname' => $this->getXmlFileName(),
                        'biborb_xml_version' => BIBORB_XML_VERSION);
-        $result = $xsltp->transform($xml_content,$xsl,$param);
-        $xsltp->free();
+        $aResult = $aXsltp->transform($aXml, $aXsl, $aParam);
+        $aXsltp->free();
         // save it
-        $fp = fopen($this->xml_file(),"w");
-        fwrite($fp,$result);
-        fclose($fp);
+        FileToolKit::putContent($this->getXmlFileName(), $aResult);
         // update bibtex file
-        if($this->generate_bibtex){$this->update_bibtex_file();}
+        if ($this->_genBibtex)
+        {
+            $this->updateBibtexFile();
+        }
     }
 
     /**
-        Change the read status of a given entry
-        Shelf mode
+     * Change the read status of a given entry
+     * Shelf mode
      */
-    function change_readstatus($id,$newreadstatus){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
+    function changeReadStatus($iId,$iNewReadStatus){
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
                                           // get the entry
-        $xml_content = $this->entry_with_id($id);
-        //$oldownership = trim($xsltp->transform($xml_content,FileToolKit::getFileContents("./xsl/get_bibtex_ownership.xsl")));
+        $aXml = $this->getEntryWithId($iId);
         // replace it
-        if (strpos($xml_content, "<bibtex:read>") === false){
-            $xml_content = str_replace("</bibtex:title>","</bibtex:title><bibtex:read>$newreadstatus</bibtex:read>",$xml_content);
-        }else{
-            $xml_content = preg_replace("/\<bibtex\:read>.*\<\/bibtex\:read\>/", "<bibtex:read>$newreadstatus</bibtex:read>", $xml_content);
+        if (strpos($aXml, '<bibtex:read>') === false)
+        {
+            $aXml = str_replace('</bibtex:title>',
+                                '</bibtex:title><bibtex:read>'.$iNewReadStatus.'</bibtex:read>',
+                                $aXml);
+        }
+        else
+        {
+            $aXml = preg_replace('/\<bibtex\:read>.*\<\/bibtex\:read\>/',
+                                 '<bibtex:read>'.$iNewReadStatus.'</bibtex:read>',
+                                 $aXml);
         }
         // update the xml
-        $xsl = file_get_contents("./xsl/update_xml.xsl");
-        $param = array('bibname' => $this->xml_file(),
+        $aXsl = FileToolKit::getContent('./xsl/update_xml.xsl');
+        $aParam = array('bibname' => $this->getXmlFileName(),
                        'biborb_xml_version' => BIBORB_XML_VERSION);
-        $result = $xsltp->transform($xml_content,$xsl,$param);
-        $xsltp->free();
+        $aResult = $aXsltp->transform($aXml, $aXsl, $aParam);
+        $aXsltp->free();
         // save it
-        $fp = fopen($this->xml_file(),"w");
-        fwrite($fp,$result);
-        fclose($fp);
+        FileToolKit::putContent($this->getXmlFileName(), $aResult);
         // update bibtex file
-        if($this->generate_bibtex){$this->update_bibtex_file();}
+        if ($this->_genBibtex)
+        {
+            $this->updateBibtexFile();
+        }
     }
 
     /**
      * Get all different values for a specific field in the database
      */
-    function get_values_for($field){
-        if($field == 'author'){
-            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-            $xml_content = $this->all_entries();
-            $xsl_content = file_get_contents("./xsl/extract_field_values.xsl");
-            $param = array('field' => 'author');
-            $res = $xsltp->transform($xml_content,$xsl_content,$param);
-            $authors = remove_null_values(explode('|',$res));
-            $xsltp->free();
-            $pc = new PARSECREATORS();
-            $author = array();
-            foreach($authors as $eAuthors){
-                $creators = $pc->parse($eAuthors);
-                foreach($creators as $creator){
-                    if(!in_array($creator[2],$author)){
-                        $author[] = $creator[2];
+    function getAllValuesFor($iField)
+    {
+        if ($this->_browseCacheNeedUpdate)
+        {
+            myUnset($this->_browseCache);
+            $this->_browseCacheNeedUpdate = FALSE;
+        }
+   
+        if ($iField == 'author')
+        {
+            if (!isset($this->_browseCache['author']))
+            {
+                $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+                $aXml = $this->getAllEntries();
+                $aXsl = FileToolKit::getContent('./xsl/extract_field_values.xsl');
+                $aParam = array('field' => 'author');
+                $aRes = $aXsltp->transform($aXml,$aXsl,$aParam);
+                $aAuthors = remove_null_values(explode('|',$aRes));
+                $aXsltp->free();
+                $aPC = new PARSECREATORS();
+                $this->_browseCache['author'] = array();
+                foreach ($aAuthors as $aAuthor)
+                {
+                    $aCreators = $aPC->parse($aAuthor);
+                    foreach ($aCreators as $aCreator)
+                    {
+                        $aC = trim($aCreator[2]);
+                        if (!in_array($aC, $this->_browseCache['author']))
+                        {
+                            $this->_browseCache['author'][] = $aC;
+                        }
                     }
                 }
+                sort($this->_browseCache['author']);
             }
-            sort($author);
-            return $author;
+            
+            return $this->_browseCache['author'];
         }
-        else{
-            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-            $xml_content = $this->all_entries();
-            $xsl_content = file_get_contents("./xsl/extract_field_values.xsl");
-            $param = array('sort' => $this->sort,
-                           'sort_order' => $this->sort_order,
-                           'field' => $field);
-            $res = $xsltp->transform($xml_content,$xsl_content,$param);
-            $xsltp->free();
-            $tab = array_values(remove_null_values(explode('|',$res)));
-            natcasesort($tab);
-
-            return $tab;
+        else
+        {            
+            if (!isset($this->_browseCache[$iField]))
+            {
+                $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+                $aXml = $this->getAllEntries();
+                $aXsl = FileToolKit::getContent('./xsl/extract_field_values.xsl');
+                $aParam = array('sort' => $this->_sortMethod,
+                                'sort_order' => $this->_sortOrder,
+                                'field' => $iField);
+                $aRes = $aXsltp->transform($aXml,$aXsl,$aParam);
+                $aXsltp->free();
+                $this->_browseCache[$iField] = array_values(remove_null_values(explode('|',$aRes)));
+                natcasesort($this->_browseCache[$iField]);
+            }
+            
+            return $this->_browseCache[$iField];
         }
     }
 
     /**
-        Select among ids, entries that match $fied=$value
+     * Select among ids, entries that match $fied=$value
      */
-    function filter($ids, $field, $value){
-        $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-        $xml_content = $this->entries_with_ids($ids);
-        if($field == 'author'){
-            $xpath_query = "contains(translate(.//bibtex:$field,\$ucletters,\$lcletters),translate('$value',\$ucletters,\$lcletters))";
+    function filter($iIds, $iField, $iValue)
+    {
+        $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        $aXml = $this->getEntriesWithIds($iIds);
+        if ($iField == 'author')
+        {
+            $aXpath = 'contains(translate(.//bibtex:'.$iField.",\$ucletters,\$lcletters),translate('".$iValue."',\$ucletters,\$lcletters))";
         }
-        else{
-            $xpath_query = ".//bibtex:$field='$value'";
+        else
+        {
+            $aXpath = './/bibtex:'.$iField."='".$iValue."'";
         }
-        $xsl_content = file_get_contents("./xsl/extract_ids.xsl");
-        $xsl_content = str_replace("XPATH_QUERY","//bibtex:entry[$xpath_query]",$xsl_content);
-        $param = array('sort' => $this->sort,
-                       'sort_order' => $this->sort_order);
-        $res = $xsltp->transform($xml_content,$xsl_content,$param);
-        $xsltp->free();
-        return remove_null_values(explode('|',$res));
+        $aXsl = FileToolKit::getContent('./xsl/extract_ids.xsl');
+        $aXsl = str_replace('XPATH_QUERY',"//bibtex:entry[$aXpath]",$aXsl);
+        $aParam = array('sort' => $this->_sortMethod,
+                       'sort_order' => $this->_sortOrder);
+        $aRes = $aXsltp->transform($aXml, $aXsl, $aParam);
+        $aXsltp->free();
+        return remove_null_values(explode('|',$aRes));
     }
-    
+
 }
  /**
  * Extract ids from the xml

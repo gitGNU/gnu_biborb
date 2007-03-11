@@ -40,7 +40,7 @@ class FileToolKit
 	 *
 	 * @param $iFilePath A file to load.
 	 */
-	function getContent($iFilePath)
+	/* static */ function getContent($iFilePath)
 	{
 		$aRes = file_get_contents($iFilePath);
 		if ($aRes === FALSE)
@@ -55,12 +55,23 @@ class FileToolKit
      * Return all extensions of a file.
      * getAllExtension('qsdf.ps.gz') will return ps.gz
      */
-    function getAllExt($iString)
+    /* static */ function getAllExt($iString)
     {
         return substr($iString,strpos($iString,'.'));
     }
-    
-    
+
+    /**
+     *
+     */
+    /* static */ function putContent($iFileName, $iString)
+    {
+        $aFp = fopen($iFileName, 'w');
+        fwrite($aFp, $iString);
+        fclose($aFp);
+    }
+
+
+
 }
 
 ?>

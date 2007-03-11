@@ -32,16 +32,24 @@
  *
  */
 
+
+/**
+ * Create the HTML header
+ */
+function indexHeader()
+{
+    $aHtmlHeaderData = array( 'title' => 'Biborb',
+                              'stylesheet' => CSS_FILE,
+                              'javascript' => './biborb.js');
+    return HtmlToolKit::htmlHeader($aHtmlHeaderData);
+}
+
 /**
  * Create the page for authentication
  */
 function index_login()
 {
-    $aHtmlHeaderData = array( 'title' => 'Biborb',
-                              'stylesheet' => CSS_FILE,
-                              'javascript' => './biborb.js');
-
-    $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
+    $aHtml = indexHeader();
     $aHtml .= index_menu();
     $aTitle = msg('INDEX_MENU_LOGIN_TITLE');
     $aFormData = array('id' => 'login_form',
@@ -62,7 +70,7 @@ function index_login()
     $aContent .= HtmlToolKit::closeTag('fieldset');
     $aContent .= HtmlToolKit::closeTag('form');
 
-    $aHtml .= HtmlToolKit::main($aTitle,$aContent,$GLOBALS['error_or_message']['error']);
+    $aHtml .= HtmlToolKit::main($aTitle, $aContent, $GLOBALS['error_or_message']['error']);
     $aHtml .= HtmlToolKit::htmlClose();
 
     return $aHtml;
@@ -74,10 +82,7 @@ function index_login()
  */
 function index_welcome()
 {
-    $aHtmlHeaderData = array( 'title' => 'Biborb',
-                              'stylesheet' => CSS_FILE,
-                              'javascript' => './biborb.js');
-    $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
+    $aHtml = indexHeader();
     $aContent = $_SESSION['i18n']->getFile("index_welcome.txt");
     // get the version and the date
     $aStrToReplace = array( '$biborb_version' => BIBORB_VERSION,
@@ -95,10 +100,7 @@ function index_welcome()
  */
 function index_add_database()
 {
-    $aHtmlHeaderData = array( 'title' => 'Biborb',
-                              'stylesheet' => CSS_FILE,
-                              'javascript' => './biborb.js');
-    $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
+    $aHtml = indexHeader();
     $aTitle = msg("INDEX_CREATE_BIB_TITLE");
     // create the form to create a new bibliography
     $aLocale = $_SESSION['i18n']->getLocale();
@@ -126,10 +128,7 @@ function index_add_database()
  */
 function index_delete_database()
 {
-    $aHtmlHeaderData = array( 'title' => 'Biborb',
-                              'stylesheet' => CSS_FILE,
-                              'javascript' => './biborb.js');
-    $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
+    $aHtml = indexHeader();
     $aTitle = msg("INDEX_DELETE_BIB_TITLE");
     // get all bibliographies and create a form to select which one to delete
     $aDatabases = $_SESSION['DbManager']->getDbNames();
@@ -156,10 +155,7 @@ function index_delete_database()
  */
 function index_manager_help()
 {
-    $aHtmlHeaderData = array( 'title' => 'Biborb',
-                              'stylesheet' => CSS_FILE,
-                              'javascript' => './biborb.js');
-    $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
+    $aHtml = indexHeader();
     $aTitle = msg("INDEX_MANAGER_HELP_TITLE");
     $aContent = $_SESSION['i18n']->getFile("index_manager_help.txt");
     $aHtml .= index_menu();
@@ -175,10 +171,7 @@ function index_manager_help()
  */
 function index_result()
 {
-    $aHtmlHeaderData = array( 'title' => 'Biborb',
-                              'stylesheet' => CSS_FILE,
-                              'javascript' => './biborb.js');
-    $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
+    $aHtml = indexHeader();
     $aHtml .= index_menu();
     $aHtml .= HtmlToolKit::main(msg("INDEX_RESULTS_TITLE"),null,
                   $GLOBALS['error_or_message']['error'],
@@ -193,10 +186,7 @@ function index_result()
  */
 function index_select()
 {
-    $aHtmlHeaderData = array( 'title' => 'Biborb',
-                              'stylesheet' => CSS_FILE,
-                              'javascript' => './biborb.js');
-    $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
+    $aHtml = indexHeader();
     $aTitle = msg("INDEX_AVAILABLE_BIBS_TITLE");
     $aHtml .= index_menu();
 
@@ -302,10 +292,7 @@ function index_menu()
  */
 function index_preferences()
 {
-    $aHtmlHeaderData = array( 'title' => 'Biborb',
-                              'stylesheet' => CSS_FILE,
-                              'javascript' => './biborb.js');
-    $aHtml = HtmlToolKit::htmlHeader($aHtmlHeaderData);
+    $aHtml = indexHeader();
     $aHtml .= index_menu();
     if (isset($GLOBALS['message']))
     {
@@ -407,8 +394,8 @@ function pref_content()
     $content .= "<td>";
     $sortMethods = array_flip(array_map("msg",array_flip($GLOBALS['sort_values'])));
     $content .= HtmlToolKit::selectTag(array( 'name' => 'default_sort'),
-                            $sortMethods,
-                            $pref['default_sort']);
+                                       array_combine($sortMethods, $sortMethods),
+                                       $pref['default_sort']);
     $content .= "</td>";
     $content .= "</tr>";
 

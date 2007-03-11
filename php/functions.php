@@ -36,9 +36,6 @@
 /**
  * load variables and functions
  */
-require_once("config.php");
-require_once("config.misc.php");
-require_once("php/bibtex.php");
 
 
 /**
@@ -150,50 +147,39 @@ function add_all_to_basket_div($ids,$mode,$extraparam=null){
  * @param $mode The Biborb current display mode.
  * @param $misc An array containing additional values for the form.
  */
-function sort_div($selected_sort,$selected_order,$mode,$misc){
-
-    $html = "<div class='sort'>";
-    $html .= msg("Sort by:");
-    $html .= "&nbsp;<form method='get' action='bibindex.php'>";
-    $html .= "<fieldset>";
-    $html .= "<select name='sort' size='1'>";
-
-    foreach($_SESSION['bibdb']->sort_values as $sort_val){
-        if($selected_sort == $sort_val){
-            $html .= "<option value='$sort_val' selected='selected'>".msg("$sort_val")."</option>";
+function sort_div($iSelectedSort, $iSelectedOrder, $iMode, $iMisc)
+{    
+    $aHtml = HtmlToolKit::startTag('div', array('class'=>'sort'));
+    $aHtml .= msg('Sort by:').'&nbsp;';
+    $aHtml .= HtmlToolKit::startTag('form', array('method' => 'get',
+                                                 'action' => 'bibindex.php'));
+    $aHtml .= HtmlToolKit::startTag('fieldset');
+    $aHtml .= HtmlToolKit::selectTag(array('name'=>'sort','size' => 1),
+                                     array_combine($_SESSION['bibdb']->getSortMethodValues(),
+                                                   $_SESSION['bibdb']->getSortMethodValues()),
+                                     $iSelectedSort);
+    $aHtml .= HtmlToolKit::tagNoData('input', array('type' => 'hidden',
+                                                    'name' => 'mode',
+                                                    'value' => $iMode));
+    if ($iMisc)
+    {
+        foreach ($iMisc as $aKey => $aVal)
+        {
+            $aHtml .= HtmlToolKit::tagNoData('input', array('type' => 'hidden',
+                                                            'name' => $aKey,
+                                                            'value'=> $aVal));
         }
-        else {
-            $html .= "<option value='$sort_val'>".msg("$sort_val")."</option>";
-        }
     }
-
-    $html .= "</select>&nbsp;";
-    $html .= "<input type='hidden' name='mode' value='$mode'/>";
-    if($misc){
-        foreach($misc as $key=>$val){
-            $html .= "<input type='hidden' name='$key' value='$val'/>";
-        }
-    }
-    $html .= "<select name='sort_order'>";
-    if($selected_order=='ascending'){
-        $html .= "<option value='ascending' selected='selected'>".msg("ascending")."</option>";
-    }
-    else{
-        $html .= "<option value='ascending'>".msg("ascending")."</option>";
-    }
-    if($selected_order=='descending'){
-        $html .= "<option value='descending' selected='selected'>".msg("descending")."</option>";
-    }
-    else{
-        $html .= "<option value='descending'>".msg("descending")."</option>";
-    }
-    $html .= "</select>&nbsp;";
-    $html .= "<input type='submit' value='".msg("Sort")."'/>";
-    $html .= "</fieldset>";
-    $html .= "</form>";
-    $html .= "</div>";
-
-    return $html;
+    $aHtml .= HtmlToolKit::selectTag( array('name' => 'sort_order'),
+                                      array_combine($_SESSION['bibdb']->getSortOrderValues(),
+                                                    $_SESSION['bibdb']->getSortOrderValues()),
+                                      $iSelectedOrder);
+    $aHtml .= HtmlToolKit::tagNoData('input', array('type' => 'submit',
+                                                    'value' => msg('Sort')));
+    $aHtml .= HtmlToolKit::closeTag('fieldset');
+    $aHtml .= HtmlToolKit::closeTag('form');
+    $aHtml .= HtmlToolKit::closeTag('div');
+    return $aHtml;
 }
 
 /**

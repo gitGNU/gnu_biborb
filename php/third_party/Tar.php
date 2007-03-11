@@ -16,9 +16,9 @@
 // | Author: Vincent Blavet <vincent@blavet.net>                          |
 // +----------------------------------------------------------------------+
 //
-// $Id: Tar.php,v 1.1 2004/09/18 18:57:46 ggardey Exp $
+// $Id: Tar.php,v 1.2 2007/03/11 20:13:48 ggardey Exp $
 
-require_once 'PEAR.php';
+include 'PEAR.php';
 
 
 define ('ARCHIVE_TAR_ATT_SEPARATOR', 90001);
@@ -27,7 +27,7 @@ define ('ARCHIVE_TAR_ATT_SEPARATOR', 90001);
 * Creates a (compressed) Tar archive
 *
 * @author   Vincent Blavet <vincent@blavet.net>
-* @version  $Revision: 1.1 $
+* @version  $Revision: 1.2 $
 * @package  Archive
 */
 class Archive_Tar extends PEAR

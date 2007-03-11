@@ -34,17 +34,13 @@
  *      Presently, only single XML file is supported.
  */
 
-
-require_once("config.php");
-require_once("config.misc.php");
-
 switch(DB_BACKEND)
 {
     case 'xml':
-        require_once("php/db_backends/biborbdb.xmlfile.php");
+        include('php/db_backends/biborbdb.xmlfile.php');
         break;
     case 'mysql':
-        require_once("php/db_backends/biborbdb.sql.php");
+        include('php/db_backends/biborbdb.sql.php');
         break;
     default:
         if (isset($_SESSION['errorManager']))

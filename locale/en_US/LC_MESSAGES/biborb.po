@@ -1038,6 +1038,18 @@ msgstr "Not Read"
 msgid "BIBORB_OUTPUT_NOTREAD_TITLE"
 msgstr "Current Status: Not Read. Click to set to Read Next."
 
+msgid "any"
+msgstr "Any"
+
+msgid "notread"
+msgstr "Not Read"
+
+msgid "readnext"
+msgstr "Read Next"
+
+msgid "read"
+msgstr "Read"
+
 msgid "Read Status"
 msgstr ""
 
@@ -1064,6 +1076,19 @@ msgstr ""
 
 msgid "Buy"
 msgstr ""
+
+msgid "notown"
+msgstr "Not Own"
+
+msgid "borrowed"
+msgstr "Borrowed"
+
+msgid "buy"
+msgstr "Buy"
+
+msgid "own"
+msgstr "Own"
+
 
 msgid "Choose a file:"
 msgstr ""

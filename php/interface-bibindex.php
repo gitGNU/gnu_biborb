@@ -32,12 +32,14 @@
  *
  */
 
+class_exists('HtmlToolKit') || include('./php/HtmlToolKit.php');
+
 /********************************** BIBINDEX */
 
 /**
  * bibindex_details()
  * Called when a given entry has to be displayed
- 'bibindex.php?mode=details&abstract=1&menu=0&bibname=example&id=idA
+ * 'bibindex.php?mode=details&abstract=1&menu=0&bibname=example&id=idA
  */
 function bibindex_details()
 {
@@ -66,7 +68,7 @@ function bibindex_details()
     if(array_key_exists('bibids',$_GET)){
         // get the entries
         $bibids = explode(',',$_GET['bibids']);
-		$xml_content = $bibdb->entries_with_ids($bibids);
+		$xml_content = $bibdb->getEntriesWithIds($bibids);
 		$content = $xsltp->transform($xml_content,$xsl_content,$param);
 	}
 	else if(array_key_exists('id',$_GET)){
@@ -77,50 +79,52 @@ function bibindex_details()
 	// display the menu or not
     if(array_key_exists('menu',$_GET)){
         if($_GET['menu'] == 1){
-            $html .= bibindex_menu($_GET['bibname']);
-            $html .= main(null,$content);
+            $aHtml.= bibindex_menu($_GET['bibname']);
+            $aHtml.= main(null,$content);
         }
         else{
-            $html .= $content;
+            $aHtml.= $content;
         }
     }
     else{
-        $html .= $content;
+        $aHtml.= $content;
     }
-    $html .= html_close();
+    $aHtml.= html_close();
 
-    return $html;
+    return $aHtml;
 }
 
 /**
  * bibindex_login()
  * Display the login page
  */
-function bibindex_login(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
-    $title = msg("INDEX_LOGIN_TITLE");
-    $content = "<form id='login_form' action='bibindex.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")' >";
-    $content .= "<fieldset>";
-    $content .= "<legend>Login</legend>";
-    $content .= "<label for='login'>".msg("LOGIN_USERNAME").":</label>";
-    $content .= "<input type='text' name='login' id='login' /><br/>";
-    $content .= "<label for='password'>".msg("LOGIN_PASSWORD").":</label>";
-    $content .= "<input type='password' id='password' name='mdp'/><br/>";
-    $content .= "<input type='hidden' name='action' value='login'/>";
-    $content .= "<input type='submit' value=\"".msg("Login")."\" class='submit'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
-    $html .= main($title,$content,$GLOBALS['error']);
-    $html .= html_close();
-    return $html;
+function bibindex_login()
+{
+    $aHtml= bibheader();
+    $aHtml.= bibindex_menu($_SESSION['bibdb']->getFullName());
+    $aTitle = msg("INDEX_LOGIN_TITLE");
+    $aContent = "<form id='login_form' action='bibindex.php' method='post' onsubmit='return validate_login_form(\"".$_SESSION['language']."\")' >";
+    $aContent .= "<fieldset>";
+    $aContent .= "<legend>Login</legend>";
+    $aContent .= "<label for='login'>".msg("LOGIN_USERNAME").":</label>";
+    $aContent .= "<input type='text' name='login' id='login' /><br/>";
+    $aContent .= "<label for='password'>".msg("LOGIN_PASSWORD").":</label>";
+    $aContent .= "<input type='password' id='password' name='mdp'/><br/>";
+    $aContent .= "<input type='hidden' name='action' value='login'/>";
+    $aContent .= "<input type='submit' value=\"".msg("Login")."\" class='submit'/>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
+    $aHtml .= main($aTitle,$aContent,$GLOBALS['error']);
+    $aHtml .= html_close();
+    return $aHtml;
 }
 
 /**
  * bibindex_logout()
  * Change admin mode to user and redirect to welcome page
  */
-function bibindex_logout(){
+function bibindex_logout()
+{
     unset($_SESSION['user']);
     bibindex_welcome();
 }
@@ -131,35 +135,35 @@ function bibindex_logout(){
  */
 function bibindex_menu($bibname)
 {
-    $html = "<div id='menu'>";
+    $aHtml = "<div id='menu'>";
     // title
-    $html .= "<span id='title'>BibORB</span>";
+    $aHtml .= "<span id='title'>BibORB</span>";
     // name of the current bibliography
-    $html .= "<span id='bibname'>".$bibname."</span>";
-    $html .= "<ul>";
+    $aHtml .= "<span id='bibname'>".$bibname."</span>";
+    $aHtml .= "<ul>";
     // first menu item => Select a bibliography
-    $html .= "<li><a href='index.php?mode=select'>".msg("BIBINDEX_MENU_SELECT_BIB")."</a>";
-    $html .= "<ul>";
+    $aHtml .= "<li><a href='index.php?mode=select'>".msg("BIBINDEX_MENU_SELECT_BIB")."</a>";
+    $aHtml .= "<ul>";
     // jump to a given bibliography
     $avbibs = $_SESSION['DbManager']->getDbNames();
-    $html .= "<li>";
-    $html .= "<form id='choose_bib' action='bibindex.php'>";
-    $html .= "<fieldset>";
-    $html .= "<select onchange='javascript:change_db(this.value)'>";
+    $aHtml .= "<li>";
+    $aHtml .= "<form id='choose_bib' action='bibindex.php'>";
+    $aHtml .= "<fieldset>";
+    $aHtml .= "<select onchange='javascript:change_db(this.value)'>";
     foreach($avbibs as $key=>$bib){
         if($key == $bibname){
-            $html .= "<option selected='selected' value='$key'>$bib</option>";
+            $aHtml .= "<option selected='selected' value='$key'>$bib</option>";
         }
         else{
-            $html .= "<option value='$key'>$bib</option>";
+            $aHtml .= "<option value='$key'>$bib</option>";
         }
     }
-    $html .= "</select><br/>";
-    $html .= "<noscript><div><input class='submit' type='submit' value='Go'/></div></noscript>";
-    $html .= "</fieldset>";
-    $html .= "</form>";
-    $html .= "</li>";
-    $html .= "</ul></li>";
+    $aHtml .= "</select><br/>";
+    $aHtml .= "<noscript><div><input class='submit' type='submit' value='Go'/></div></noscript>";
+    $aHtml .= "</fieldset>";
+    $aHtml .= "</form>";
+    $aHtml .= "</li>";
+    $aHtml .= "</ul></li>";
 
     // second item
     // -> Display
@@ -167,16 +171,16 @@ function bibindex_menu($bibname)
     //      | -> by group
     //      | -> browse
     //      | -> search
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_HELP")."' href='bibindex.php?mode=display'>".msg("BIBINDEX_MENU_DISPLAY")."</a>";
-    $html .= "<ul>";
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_ALL_HELP")."' href='bibindex.php?mode=displayall'>".msg("BIBINDEX_MENU_DISPLAY_ALL")."</a></li>";
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_BY_GROUP_HELP")."'href='bibindex.php?mode=displaybygroup'>".msg("BIBINDEX_MENU_DISPLAY_BY_GROUP")."</a></li>";
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_BROWSE_HELP")."'href='bibindex.php?mode=browse&amp;start=0'>".msg("BIBINDEX_MENU_BROWSE")."</a></li>";
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_SEARCH_HELP")."' href='bibindex.php?mode=displaysearch'>".msg("BIBINDEX_MENU_DISPLAY_SEARCH")."</a></li>";
-//    $html .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH_HELP")."' href='bibindex.php?mode=displayadvancedsearch'>".msg("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH")."</a></li>";
-    $html .= "</ul>";
-    $html .= "</li>";
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_TOOLS_HELP")."' href='bibindex.php?mode=displaytools'>".msg("BIBINDEX_MENU_TOOLS")."</a><ul><li/></ul></li>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_HELP")."' href='bibindex.php?mode=display'>".msg("BIBINDEX_MENU_DISPLAY")."</a>";
+    $aHtml .= "<ul>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_ALL_HELP")."' href='bibindex.php?mode=displayall'>".msg("BIBINDEX_MENU_DISPLAY_ALL")."</a></li>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_BY_GROUP_HELP")."'href='bibindex.php?mode=displaybygroup'>".msg("BIBINDEX_MENU_DISPLAY_BY_GROUP")."</a></li>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_BROWSE_HELP")."'href='bibindex.php?mode=browse&amp;start=0'>".msg("BIBINDEX_MENU_BROWSE")."</a></li>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_SEARCH_HELP")."' href='bibindex.php?mode=displaysearch'>".msg("BIBINDEX_MENU_DISPLAY_SEARCH")."</a></li>";
+//    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH_HELP")."' href='bibindex.php?mode=displayadvancedsearch'>".msg("BIBINDEX_MENU_DISPLAY_ADVANCED_SEARCH")."</a></li>";
+    $aHtml .= "</ul>";
+    $aHtml .= "</li>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_TOOLS_HELP")."' href='bibindex.php?mode=displaytools'>".msg("BIBINDEX_MENU_TOOLS")."</a><ul><li/></ul></li>";
     // third menu item
     // -> Basket
     //      | -> Display basket
@@ -184,38 +188,38 @@ function bibindex_menu($bibname)
     //      | -> Export to bibtex
     //      | -> Export to XML
     //      | -> Reset basket
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_HELP")."' href='bibindex.php?mode=basket'>".msg("BIBINDEX_MENU_BASKET")."</a>";
-    $html .= "<ul>";
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_DISPLAY_HELP")."' href='bibindex.php?mode=displaybasket'>".msg("BIBINDEX_MENU_BASKET_DISPLAY")."</a></li>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_HELP")."' href='bibindex.php?mode=basket'>".msg("BIBINDEX_MENU_BASKET")."</a>";
+    $aHtml .= "<ul>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_DISPLAY_HELP")."' href='bibindex.php?mode=displaybasket'>".msg("BIBINDEX_MENU_BASKET_DISPLAY")."</a></li>";
     if($_SESSION['user_can_modify'] || DISABLE_AUTHENTICATION){
-        $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_GROUP_HELP")."' class='admin' href='bibindex.php?mode=groupmodif'>".msg("BIBINDEX_MENU_BASKET_GROUP")."</a></li>";
+        $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_GROUP_HELP")."' class='admin' href='bibindex.php?mode=groupmodif'>".msg("BIBINDEX_MENU_BASKET_GROUP")."</a></li>";
     }
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_EXPORT_HELP")."' href='bibindex.php?mode=exportbasket'>".msg("BIBINDEX_MENU_BASKET_EXPORT")."</a></li>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_EXPORT_HELP")."' href='bibindex.php?mode=exportbasket'>".msg("BIBINDEX_MENU_BASKET_EXPORT")."</a></li>";
     /*
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_BIBTEX_HELP")."' href='bibindex.php?mode=exportbaskettobibtex'>".msg("BIBINDEX_MENU_BASKET_BIBTEX")."</a></li>";
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_HTML_HELP")."' href='bibindex.php?mode=exportbaskettohtml'>".msg("BIBINDEX_MENU_BASKET_HTML")."</a></li>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_BIBTEX_HELP")."' href='bibindex.php?mode=exportbaskettobibtex'>".msg("BIBINDEX_MENU_BASKET_BIBTEX")."</a></li>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_HTML_HELP")."' href='bibindex.php?mode=exportbaskettohtml'>".msg("BIBINDEX_MENU_BASKET_HTML")."</a></li>";
      */
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_RESET_HELP")."' href='bibindex.php?mode=".$GLOBALS['mode']."&amp;action=resetbasket";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_BASKET_RESET_HELP")."' href='bibindex.php?mode=".$GLOBALS['mode']."&amp;action=resetbasket";
 	if($GLOBALS['mode'] == "displaybygroup" && array_key_exists('group',$_GET)){
-		$html  .= "&amp;group=".$_GET['group'];
+		$aHtml  .= "&amp;group=".$_GET['group'];
 	}
 	if($GLOBALS['mode'] == "displaysearch"){
 		if(array_key_exists('search',$_GET)){
-			$html .= "&amp;search=".$_GET['search'];
+			$aHtml .= "&amp;search=".$_GET['search'];
 		}
 		if(array_key_exists('author',$_GET)){
-			$html .= "&amp;author=".$_GET['author'];
+			$aHtml .= "&amp;author=".$_GET['author'];
 		}
 		if(array_key_exists('title',$_GET)){
-			$html .= "&amp;title=".$_GET['title'];
+			$aHtml .= "&amp;title=".$_GET['title'];
 		}
 		if(array_key_exists('keywords',$_GET)){
-			$html .= "&amp;search=".$_GET['keywords'];
+			$aHtml .= "&amp;search=".$_GET['keywords'];
 		}
 	}
-	$html .= "'>".msg("BIBINDEX_MENU_BASKET_RESET")."</a></li>";
-    $html .= "</ul>";
-    $html .= "</li>";
+	$aHtml .= "'>".msg("BIBINDEX_MENU_BASKET_RESET")."</a></li>";
+    $aHtml .= "</ul>";
+    $aHtml .= "</li>";
 
     // fourth menu item
     // -> Manager
@@ -225,57 +229,61 @@ function bibindex_menu($bibname)
     //      | -> Import a bibtex file (if admin)
     //      | -> Preferences
     //      | -> Logout (if admin and authentication disabled
-    $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_HELP")."' href='bibindex.php?mode=manager'>".msg("BIBINDEX_MENU_ADMIN")."</a>";
-    $html .= "<ul>";
+    $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_HELP")."' href='bibindex.php?mode=manager'>".msg("BIBINDEX_MENU_ADMIN")."</a>";
+    $aHtml .= "<ul>";
     if(!array_key_exists('user',$_SESSION) && !DISABLE_AUTHENTICATION){
-        $html .= "<li><a title=\"".msg("BIBINDEX_MENU_ADMIN_LOGIN_HELP")."\" href='bibindex.php?mode=login'>".msg("BIBINDEX_MENU_ADMIN_LOGIN")."</a></li>";
+        $aHtml .= "<li><a title=\"".msg("BIBINDEX_MENU_ADMIN_LOGIN_HELP")."\" href='bibindex.php?mode=login'>".msg("BIBINDEX_MENU_ADMIN_LOGIN")."</a></li>";
     }
     if($_SESSION['user_can_add']){
-        $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_ADD_HELP")."' class='admin' href='bibindex.php?mode=addentry'>".msg("BIBINDEX_MENU_ADMIN_ADD")."</a></li>";
+        $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_ADD_HELP")."' class='admin' href='bibindex.php?mode=addentry'>".msg("BIBINDEX_MENU_ADMIN_ADD")."</a></li>";
     }
     if($_SESSION['user_is_admin'] && GEN_BIBTEX){
-        $html .= "<li><a title=\"".msg("BIBINDEX_MENU_ADMIN_UPDATE_HELP")."\" class='admin' href='bibindex.php?mode=update_xml_from_bibtex'>".msg("BIBINDEX_MENU_ADMIN_UPDATE")."</a></li>";
+        $aHtml .= "<li><a title=\"".msg("BIBINDEX_MENU_ADMIN_UPDATE_HELP")."\" class='admin' href='bibindex.php?mode=update_xml_from_bibtex'>".msg("BIBINDEX_MENU_ADMIN_UPDATE")."</a></li>";
     }
     if($_SESSION['user_can_add']){
-        $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_IMPORT_HELP")."' class='admin' href='bibindex.php?mode=import'>".msg("BIBINDEX_MENU_ADMIN_IMPORT")."</a></li>";
+        $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_IMPORT_HELP")."' class='admin' href='bibindex.php?mode=import'>".msg("BIBINDEX_MENU_ADMIN_IMPORT")."</a></li>";
     }
     if(array_key_exists('user',$_SESSION)){
-        $html .= "<li>";
-        $html .= "<a href='index.php?mode=preferences' title='".msg("BIBINDEX_MENU_ADMIN_PREF_HELP")."'>".msg("BIBINDEX_MENU_ADMIN_PREF")."</a>";
-        $html .= "</li>";
+        $aHtml .= "<li>";
+        $aHtml .= "<a href='index.php?mode=preferences' title='".msg("BIBINDEX_MENU_ADMIN_PREF_HELP")."'>".msg("BIBINDEX_MENU_ADMIN_PREF")."</a>";
+        $aHtml .= "</li>";
     }
     if(array_key_exists('user',$_SESSION) && !DISABLE_AUTHENTICATION){
-        $html .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_LOGOUT_HELP")."' href='bibindex.php?mode=welcome&amp;action=logout'>".msg("BIBINDEX_MENU_ADMIN_LOGOUT")."</a></li>";
+        $aHtml .= "<li><a title='".msg("BIBINDEX_MENU_ADMIN_LOGOUT_HELP")."' href='bibindex.php?mode=welcome&amp;action=logout'>".msg("BIBINDEX_MENU_ADMIN_LOGOUT")."</a></li>";
     }
-    $html .= "</ul>";
-    $html .= "</li>";
-    $html .= "</ul>";
+    $aHtml .= "</ul>";
+    $aHtml .= "</li>";
+    $aHtml .= "</ul>";
 
     if(DISPLAY_LANG_SELECTION && !array_key_exists("user",$_SESSION)){
         $aSelectAttribute = array( 'name' => 'lang',
                                    'onchange' => 'javascript:changeLangForBibIndex(this.value)');
-        $html .= "<form id='language_form' action='bibindex.php' method='get'>";
-        $html .= "<fieldset>";
-        $html .= "<label for='lang'>".msg("Language:")."</label>";
-        $html .= HtmlToolKit::selectTag($aSelectAttribute, $_SESSION['i18n']->getLocales(), $_SESSION['i18n']->getLocale());
-        $html .= "<input type='hidden' name='action' value='select_lang'/>";
-        $html .= "<noscript><div><input class='submit' type='submit' value='".msg("Select")."'/></div></noscript>";
-        $html .= "</fieldset>";
-        $html .= "</form>";
+        $aHtml .= "<form id='language_form' action='bibindex.php' method='get'>";
+        $aHtml .= "<fieldset>";
+        $aHtml .= "<label for='lang'>".msg("Language:")."</label>";
+        $aHtml .= HtmlToolKit::selectTag($aSelectAttribute, $_SESSION['i18n']->getLocales(), $_SESSION['i18n']->getLocale());
+        $aHtml .= "<input type='hidden' name='action' value='select_lang'/>";
+        $aHtml .= "<noscript><div><input class='submit' type='submit' value='".msg("Select")."'/></div></noscript>";
+        $aHtml .= "</fieldset>";
+        $aHtml .= "</form>";
     }
-    $html .= "</div>";
+    $aHtml .= "</div>";
 
-  return $html;
+  return $aHtml;
 }
 
 /**
  * bibheader()
  * Create the HTML header
  */
-function bibheader($inbody = NULL)
+function bibheader($iInBody = NULL)
 {
-  $html = html_header("BibORB - ".$_SESSION['bibdb']->fullname(),CSS_FILE,NULL,$inbody);
-  return $html;
+    $aHtmlHeaderData = array( 'title' => 'BibORB'.$_SESSION['bibdb']->getFullName(),
+                              'stylesheet' => CSS_FILE,
+                              'javascript' => './biborb.js',
+                              'body' => $iInBody);
+
+    return HtmlToolKit::htmlHeader($aHtmlHeaderData);
 }
 
 
@@ -284,42 +292,43 @@ function bibheader($inbody = NULL)
  */
 function bibindex_welcome()
 {
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
-    $title = "BibORB: ". $_SESSION['bibdb']->fullname();
-    $content = "";
-    //$content = msg("This is the bibliography").": <strong>".$_SESSION['bibdb']->name()."</strong>.<br/>";
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
+    $aTitle = 'BibORB: '. $_SESSION['bibdb']->getFullName();
+    $aContent = '';
+    //$content = msg('This is the bibliography').': <strong>'.$_SESSION['bibdb']->name().'</strong>.<br/>';
     if(array_key_exists('user',$_SESSION) && !DISABLE_AUTHENTICATION){
-        $content .= msg("You are logged as").": <em>".$_SESSION['user']."</em>.";
+        $content .= msg('You are logged as').': <em>'.$_SESSION['user'].'</em>.';
 /*
-        $content .= "<br/>";
-        $content .= "Allowed to add entry: ".($_SESSION['user_can_add'] ? "YES" : "NO");
-        $content .= "<br/>";
-        $content .= "Allowed to modify entry: ".($_SESSION['user_can_modify'] ? "YES" : "NO");
-        $content .= "<br/>";
-        $content .= "Allowed to delete entry: ".($_SESSION['user_can_delete'] ? "YES" : "NO");
+        $content .= '<br/>';
+        $content .= 'Allowed to add entry: '.($_SESSION['user_can_add'] ? 'YES' : 'NO');
+        $content .= '<br/>';
+        $content .= 'Allowed to modify entry: '.($_SESSION['user_can_modify'] ? 'YES' : 'NO');
+        $content .= '<br/>';
+        $content .= 'Allowed to delete entry: '.($_SESSION['user_can_delete'] ? 'YES' : 'NO');
 */
     }
-	$nb = $_SESSION['bibdb']->count_entries();
-	$nbpapers = $_SESSION['bibdb']->count_epapers();
+	$aNbRef = $_SESSION['bibdb']->getEntryCount();
+	$aNbRefPapers = $_SESSION['bibdb']->getPapersCount();
 
-	$content  .= "<h3>".msg("Statistics")."</h3>";
-    $content  .= "<table>";
-	$content  .= "<tbody>";
-	$content  .= "<tr>";
-	$content  .= "<td>".msg("Number of recorded articles").":</td>";
-	$content  .= "<td><strong>$nb</strong></td>";
-	$content  .= "</tr>";
-	$content  .= "<tr>";
-	$content  .= "<td>".msg("On-line available publications").":</td>";
-	$content  .= "<td><strong>$nbpapers</strong></td>";
-	$content  .= "</tr>";
-	$content  .= "</tbody>";
-    $content  .= "</table>";
+	$aContent  .= HtmlToolKit::tag('h3',msg('Statistics'));
+    $aContent  .= HtmlToolKit::startTag('table');
+	$aContent  .= HtmlToolKit::startTag('tbody');
+	$aContent  .= HtmlToolKit::startTag('tr');
+	$aContent  .= HtmlToolKit::tag('td',msg('Number of recorded articles').':');
+	$aContent  .= HtmlToolKit::tag('td','<strong>'.$aNbRef.'</strong>');
+	$aContent  .= HtmlToolKit::closeTag('tr');    
+    $aContent  .= HtmlToolKit::startTag('tr');
+	$aContent  .= HtmlToolKit::tag('td',msg('On-line available publications').':');
+    $aContent  .= HtmlToolKit::tag('td','<strong>'.$aNbRefPapers.'</strong>');
+	$aContent  .= HtmlToolKit::closeTag('tr');
+    $aContent  .= HtmlToolKit::closeTag('tbody');
+    $aContent  .= HtmlToolKit::closeTag('table');    
 
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
+    $aHtml .= main($aTitle,$aContent);
+    $aHtml .= HtmlToolKit::htmlClose();
+    
+    return $aHtml;
 }
 
 
@@ -328,12 +337,12 @@ function bibindex_welcome()
  * Display error or message
  */
 function bibindex_operation_result(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BibORB message");
-    $html .= main($title,null,$GLOBALS['error'],$GLOBALS['message']);
-    $html .= html_close();
-    return $html;
+    $aHtml .= main($title,null,$GLOBALS['error'],$GLOBALS['message']);
+    $aHtml .= html_close();
+    return $aHtml;
 }
 
 /**
@@ -341,14 +350,15 @@ function bibindex_operation_result(){
  * Display a small help on items present in the 'display' menu
  */
 
-function bibindex_display_help(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
-    $title = msg("BIBINDEX_DISPLAY_HELP_TITLE");
-    $content = $_SESSION['i18n']->getFile("display_help.txt");
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
+function bibindex_display_help()
+{
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
+    $aTitle = msg('BIBINDEX_DISPLAY_HELP_TITLE');
+    $aContent = $_SESSION['i18n']->getFile('display_help.txt');
+    $aHtml .= main($aTitle,$aContent);
+    $aHtml .= HtmlToolKit::htmlClose();
+    return $aHtml;
 }
 
 /**
@@ -356,53 +366,54 @@ function bibindex_display_help(){
  */
 function bibindex_display_all()
 {
-    $title = msg("BIBINDEX_DISPLAY_ALL_TITLE");
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aTitle = msg('BIBINDEX_DISPLAY_ALL_TITLE');
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
 
     // store the ids in session if we come from an other page.
     // the bibtex keys are retreived from the database the first time that display_all is called
-    if(!isset($_GET['page'])){
+    if (!isset($_GET['page']))
+    {
     	// split the array so that we display only $GLOBALS['max_ref']
-        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->all_bibtex_ids(),$GLOBALS['max_ref']);
+        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->getAllIds(),$GLOBALS['max_ref']);
         // go to the first page
         $_GET['page'] = 0;
     }
 
-    $flatids = flatten_array($_SESSION['ids']);
-
-    if(count($flatids)>0){
+    if ($_SESSION['bibdb']->getEntryCount())
+    {
     	// get the data of the references to display
-        $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
-
-
+        $aEntries = $_SESSION['bibdb']->getEntriesWithIds($_SESSION['ids'][$_GET['page']]);
+        
         // set up XSLT parameters
-        $param = $GLOBALS['xslparam'];
-        $param['bibindex_mode'] = $_GET['mode'];
-        $param['basketids'] = $_SESSION['basket']->items_to_string();
-        $param['extra_get_param'] = "page=".$_GET['page'];
+        $aParam = $GLOBALS['xslparam'];
+        $aParam['bibindex_mode'] = $_GET['mode'];
+        $aParam['basketids'] = $_SESSION['basket']->items_to_string();
+        $aParam['extra_get_param'] = 'page='.$_GET['page'];
         // generate HTML render of references
-        $content = biborb_html_render($entries,$param);
+        $aContent = biborb_html_render($aEntries,$aParam);
 
         // create the header: sort function + add all to basket
-        $start = "<div class='result_header'>";
+        $aStart = HtmlToolKit::startTag('div', array('class'=>'result_header'));
         // display sort if needed
-        if($GLOBALS['display_sort'] == "yes"){
-            $start = sort_div($GLOBALS['sort'],$GLOBALS['sort_order'],$_GET['mode'],null).$start;
+        if ($GLOBALS['display_sort'] == 'yes')
+        {
+            $aStart = sort_div($_SESSION['bibdb']->getSortMethod(),$_SESSION['bibdb']->getSortOrder(),$_GET['mode'],null).$aStart;
         }
-        $start .= add_all_to_basket_div($flatids,$_GET['mode'],"sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."&amp;page=".$_GET['page']);
-        $start .= "</div>";
+        $aStart .= add_all_to_basket_div($_SESSION['bibdb']->getAllIds(),$_GET['mode'],"sort=".$GLOBALS['sort'].'&amp;sort_order='.$GLOBALS['sort_order'].'&amp;page='.$_GET['page']);
+        $aStart .= HtmlToolKit::closeTag('div');
 
         // create a nav bar to display entries
-        $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),"displayall","sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."page=".$_GET['page']);
-        $content = $start.$content;
+        $aStart .= create_nav_bar($_GET['page'],count($_SESSION['ids']),'displayall','sort='.$GLOBALS['sort'].'&amp;sort_order='.$GLOBALS['sort_order'].'page='.$_GET['page']);
+        $aContent = $aStart.$aContent;
     }
-    else{
-        $content = msg("No entries.");
+    else
+    {
+        $aContent = msg("No entries.");
     }
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
+    $aHtml .= main($aTitle,$aContent);
+    $aHtml .= html_close();
+    return $aHtml;
 } // end bibindex_display_all
 
 
@@ -410,160 +421,224 @@ function bibindex_display_all()
  * bibindex_display_by_group()
  * Display entries by group
  */
-function bibindex_display_by_group(){
+function bibindex_display_by_group()
+{    
+	$aGroup = isset($_GET['group']) ? $_GET['group'] : null;
+    
+    if (isset($_GET['orphan']))
+        $aGroup = null;
 
-	$group = array_key_exists('group',$_GET) ? $_GET['group'] : null;
-    if(isset($_GET['orphan'])){$group=null;}
-
-    $title = msg("BIBINDEX_DISPLAY_BY_GROUPS_TITLE");
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aTitle = msg('BIBINDEX_DISPLAY_BY_GROUPS_TITLE');
+    
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
 
     // create a form with all groups present in the bibliography
 
-    $main_content = "<form id='display_by_group_form' method='get' action='bibindex.php'>";
-    $main_content .="<fieldset>";
-    $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibdb']->name()."'/>";
-    $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
-    $main_content .= "<label for='group'>".msg("Available groups").":</label> ";
-    $main_content .= xhtml_select('group',1,$_SESSION['bibdb']->groups(),$group);
+    $aContent = HtmlToolKit::startTag('form', array( 'id' => 'display_by_group_form',
+                                                     'method' => 'get',
+                                                     'action' => 'bibindex.php'));
+    $aContent .= HtmlToolKit::startTag('fieldset');
+    $aContent .= HtmlToolKit::tagNoData('input', array( 'type'=> 'hidden',
+                                                        'name' => 'bibname',
+                                                        'value' => $_SESSION['bibdb']->getName()));
+    $aContent .= HtmlToolKit::tagNoData('input', array( 'type'=> 'hidden',
+                                                        'name' => 'mode',
+                                                        'value' => 'display_by_group'));
+    $aContent .= HtmlToolKit::tag('label', msg('Available groups').':', array( 'for' => 'group',
+                                                                              'method' => 'get',
+                                                                              'action' => 'bibindex.php'));
+    $aGroups = $_SESSION['bibdb']->getGroups();    
+    $aContent .= HtmlToolKit::selectTag(array('name' => 'group', 'size' => '1'),
+                                        array_combine($aGroups,$aGroups),
+                                        $aGroup);
     // if shelf_mode on, create a popup to display which references to display
-    if($GLOBALS['display_shelf_actions'] == "yes"){
-        $main_content .= read_status_html_select("read_status_grp",(isset($_GET['read_status_grp']) ? $_GET['read_status_grp'] : 'any'));
-        $main_content .= ownership_html_select("ownership_grp",(isset($_GET['ownership_grp']) ? $_GET['ownership_grp'] : 'any'));
+    if ($GLOBALS['display_shelf_actions'] == "yes")
+    {
+        $aContent .= read_status_html_select('read_status_group',
+                                             isset($_GET['read_status_grp']) ? $_GET['read_status_grp'] : 'any');
+        $aContent .= ownership_html_select('ownership_grp',
+                                             isset($_GET['ownership_grp']) ? $_GET['ownership_grp'] : 'any');
+
     }
-    $main_content .= "&nbsp;<input class='submit' type='submit' value='".msg("Display")."'/>";
-    $main_content .= "</fieldset>";
-    $main_content .= "</form>";
+    $aContent .= '&nbsp;';
+    $aContent .= HtmlToolKit::tagNoData('input', array('class'=> 'submit',
+                                                       'type' => 'submit',
+                                                       'value'=> msg('Display')));
+    $aContent .= HtmlToolKit::closeTag('fieldset');
+    $aContent .= HtmlToolKit::closeTag('form');
 
     // create a form to display orphans references
     // if shelf_mode on, create a popup to display which references to display
-    $main_content .= "<form id='group_orphan_form' method='get' action='bibindex.php'>";
-    $main_content .= "<fieldset>";
-    $main_content .= "<input type='hidden' name='bibname' value='".$_SESSION['bibdb']->name()."'/>";
-    $main_content .= "<input type='hidden' name='mode' value='displaybygroup'/>";
-    $main_content .= "<input type='hidden' name='orphan' value='1'/>";
-    $main_content .= "<label>".msg("Entries associated with no group:")."</label>";
+    $aContent .= HtmlToolKit::startTag('form', array( 'id'     => 'group_orphan_form',
+                                                      'method' => 'get',
+                                                      'action' => 'bibindex.php'));
+    $aContent .= HtmlToolKit::startTag('fieldset');
+    $aContent .= HtmlToolKit::tagNoData('input', array( 'type' => 'hidden',
+                                                        'name' => 'bibname',
+                                                       'value' => $_SESSION['bibdb']->getName()));
+    $aContent .= HtmlToolKit::tagNoData('input', array( 'type' => 'hidden',
+                                                        'name' => 'mode',
+                                                       'value' => 'displaybygroup'));
+    $aContent .= HtmlToolKit::tagNoData('input', array( 'type' => 'hidden',
+                                                        'name' => 'orphan',
+                                                       'value' => 1));
+    
+    $aContent .= HtmlToolKit::tag('label', msg("Entries associated with no group:"));
     // if shelf_mode on, create a popup to display which references to display
-    if($GLOBALS['display_shelf_actions'] == "yes"){
-        $main_content .= read_status_html_select("read_status_orphans",(isset($_GET['read_status_orphans']) ? $_GET['read_status_orphans'] : 'any'));
-        $main_content .= ownership_html_select("ownership_orphans",(isset($_GET['ownership_orphans']) ? $_GET['ownership_orphans'] : 'any'));
+    if ($GLOBALS['display_shelf_actions'] == "yes")
+    {
+        $aContent .= read_status_html_select('read_status_group',
+                                             isset($_GET['read_status_orphans']) ? $_GET['read_status_orphans'] : 'any');
+        $aContent .= ownership_html_select('ownership_grp',
+                                             isset($_GET['ownership_orphans']) ? $_GET['read_status_orphans'] : 'any');
     }
-    $main_content .= "&nbsp;<input type='submit' class='submit' value='".msg("Orphans")."'/>";
-    $main_content .= "</fieldset>";
-    $main_content .= "</form>";
+    $aContent .= '&nbsp;';
+    $aContent .= HtmlToolKit::tagNoData('input', array( 'type'  => 'submit',
+                                                        'class' => 'submit',
+                                                        'value' => msg('Orphans')));
+    $aContent .= HtmlToolKit::closeTag('fieldset');
+    $aContent .= HtmlToolKit::closeTag('form');
 
-    if($GLOBALS['display_shelf_actions'] == "yes"){
-        if(isset($_GET['read_status_orphans'])){
-            $_SESSION['bibdb']->set_read_status($_GET['read_status_orphans']);
+
+    if ($GLOBALS['display_shelf_actions'] == "yes")
+    {
+        if (isset($_GET['read_status_orphans']))
+        {
+            $_SESSION['bibdb']->setReadStatus($_GET['read_status_orphans']);
         }
-        if(isset($_GET['ownership_orphans'])){
-            $_SESSION['bibdb']->set_ownership($_GET['ownership_orphans']);
+        if (isset($_GET['ownership_orphans']))
+        {
+            $_SESSION['bibdb']->setOwnership($_GET['ownership_orphans']);
         }
-        if(isset($_GET['read_status_grp'])){
-            $_SESSION['bibdb']->set_read_status($_GET['read_status_grp']);
+        if (isset($_GET['read_status_grp']))
+        {
+            $_SESSION['bibdb']->setReadStatus($_GET['read_status_grp']);
         }
-        if(isset($_GET['ownership_grp'])){
-            $_SESSION['bibdb']->set_ownership($_GET['ownership_grp']);
+        if (isset($_GET['ownership_grp']))
+        {
+            $_SESSION['bibdb']->setOwnership($_GET['ownership_grp']);
         }
     }
+    
     // store the ids in session if we come from an other page.
-    if(!isset($_GET['page'])){
-        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_group($group),$GLOBALS['max_ref']);
+    if (!isset($_GET['page']))
+    {
+        $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->getIdsForGroup($aGroup),$GLOBALS['max_ref']);
         $_GET['page'] = 0;
     }
 
-    $flatids = flatten_array($_SESSION['ids']);
-    $nb = count($flatids);
+    $aFlatIds = flatten_array($_SESSION['ids']);
+    $aNb = count($aFlatIds);
 
     // if the group is defined, display the entries matching it
-    if(($group || isset($_GET['orphan'])) && $nb>0){
-        $param = $GLOBALS['xslparam'];
-        $param['group'] = $group;
-        $param['basketids'] = $_SESSION['basket']->items_to_string();
-        $param['bibindex_mode'] = "displaybygroup";
+    if ( ($aGroup || isset($_GET['orphan'])) && $aNb>0)
+    {
+        $aParam = $GLOBALS['xslparam'];
+        $aParam['group'] = $aGroup;
+        $aParam['basketids'] = $_SESSION['basket']->items_to_string();
+        $aParam['bibindex_mode'] = 'displaybygroup';
 
         // display orphans
-        if(isset($_GET['orphan'])){
-            if(isset($_GET['read_status_orphans'])){
-                $param['extra_get_param'] = "read_status_orphans=".$_GET['read_status_orphans']."&amp;";
+        if (isset($_GET['orphan']))
+        {
+            if (isset($_GET['read_status_orphans']))
+            {
+                $aParam['extra_get_param'] = 'read_status_orphans='.$_GET['read_status_orphans'].'&amp;';
             }
-            if(isset($_GET['ownership_orphans'])){
-                $param['extra_get_param'] = "ownership=".$_GET['ownership_orphans']."&amp;";
+            if (isset($_GET['ownership_orphans']))
+            {
+                $aParam['extra_get_param'] = 'ownership='.$_GET['ownership_orphans'].'&amp;';
             }
-            $param['extra_get_param'] = "orphan=1&page=".$_GET['page'];
-            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+            $aParam['extra_get_param'] = 'orphan=1&page='.$_GET['page'];
+            $aEntries = $_SESSION['bibdb']->getEntriesWithIds($_SESSION['ids'][$_GET['page']]);
         }
-        else{
-            if(isset($_GET['read_status_grp'])){
-                $param['extra_get_param'] = "read_status_orphans=".$_GET['read_status_grp']."&amp;";
+        else
+        {
+            if (isset($_GET['read_status_grp']))
+            {
+                $aParam['extra_get_param'] = 'read_status_orphans='.$_GET['read_status_grp'].'&amp;';
             }
-            if(isset($_GET['ownership_grp'])){
-                $param['extra_get_param'] = "ownership=".$_GET['ownership_grp']."&amp;";
+            if (isset($_GET['ownership_grp']))
+            {
+                $aParam['extra_get_param'] = 'ownership='.$_GET['ownership_grp'].'&amp;';
             }
-            $param['extra_get_param'] = "group=$group&page=".$_GET['page'];
-            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
-        }
-
-        if($nb == 1){
-            if(!isset($_GET['orphan'])){
-                $main_content .= sprintf(msg("An entry for the group %s."),$group);
-            }
-            else{
-                $main_content .= sprintf(msg("1 orphan."));
-            }
-        }
-        else{
-            if(!isset($_GET['orphan'])){
-                $main_content .= sprintf(msg("%d entries for the group %s."),$nb,$group);
-            }
-            else{
-                $main_content .= sprintf(msg("%d orphans."),$nb);
-            }
+            $aParam['extra_get_param'] = 'group=$group&page='.$_GET['page'];
+            $aEntries = $_SESSION['bibdb']->getEntriesWithIds($_SESSION['ids'][$_GET['page']]);
         }
 
-        if(isset($_GET['orphan'])){
-            $extraparam = "orphan=1&amp;sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."&amp;page=".$_GET['page'];
+        if ($aNb == 1)
+        {
+            if (!isset($_GET['orphan']))
+            {
+                $aContent .= sprintf(msg("An entry for the group %s."),$aGroup);
+            }
+            else
+            {
+                $aContent .= msg("1 orphan.");
+            }
         }
-        else{
-            $extraparam = "group=$group&amp;sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."&amp;page=".$_GET['page'];
+        else
+        {
+            if(!isset($_GET['orphan'])){
+                $aContent .= sprintf(msg("%d entries for the group %s."),$aNb,$aGroup);
+            }
+            else{
+                $aContent .= sprintf(msg("%d orphans."),$aNb);
+            }
+        }
+
+        if (isset($_GET['orphan']))
+        {
+            $aExtraParam = 'orphan=1&amp;sort='.$GLOBALS['sort'].'&amp;sort_order='.$GLOBALS['sort_order'].'&amp;page='.$_GET['page'];
+        }
+        else
+        {
+            $aExtraParam = 'group=$group&amp;sort='.$GLOBALS['sort'].'&amp;sort_order='.$GLOBALS['sort_order'].'&amp;page='.$_GET['page'];
         }
 
         // create the header
-        $start = "<div style='result_header'>";
-        if(isset($_GET['orphan'])){
-            $extra['orphan'] = 1;
+        $aStart = HtmlToolKit::startTag('div', array('style' => 'result_header'));
+        if (isset($_GET['orphan']))
+        {
+            $aExtra['orphan'] = 1;
         }
-        else{
-            $extra['group'] = $group;
+        else
+        {
+            $aExtra['group'] = $aGroup;
         }
 
-        if($GLOBALS['display_sort'] == "yes"){
-            $start = sort_div($GLOBALS['sort'],$GLOBALS['sort_order'],$_GET['mode'],$extra).$start;
+        if($GLOBALS['display_sort'] == "yes")
+        {
+            $aStart = sort_div($GLOBALS['sort'],$GLOBALS['sort_order'],$_GET['mode'],$aExtra).$aStart;
         }
-        $start .= add_all_to_basket_div($flatids,$_GET['mode'],$extraparam);
-        $start .= "</div>";
+        $aStart .= add_all_to_basket_div($aFlatIds,$_GET['mode'],$aExtraParam);
+        $aStart .= HtmlToolKit::closeTag('div');
 
         // create a nav bar to display entries
-        $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),$_GET['mode'],$extraparam);
+        $aStart .= create_nav_bar($_GET['page'],count($_SESSION['ids']),$_GET['mode'],$aExtraParam);
 
-        $main_content .= "<br/><br/>".$start;
-        $main_content .= biborb_html_render($entries,$param);
+        $aContent .= "<br/><br/>".$aStart;
+        $aContent .= biborb_html_render($aEntries,$aParam);
     }
-    else{
-        if(!isset($_GET['orphan'])){
-            if(isset($group)){
-                $main_content .= sprintf(msg("No entry for the group %s."),$group);
+    else
+    {
+        if (!isset($_GET['orphan']))
+        {
+            if (isset($aGroup))
+            {
+                $aContent .= sprintf(msg("No entry for the group %s."),$aGroup);
             }
         }
-        else{
-            $main_content .= sprintf(msg("No orphan."));
+        else
+        {
+            $aContent .= msg("No orphan.");
         }
     }
-    $html .= main($title,$main_content);
-    $html .= html_close();
+    $aHtml .= main($aTitle,$aContent);
+    $aHtml .= html_close();
 
-    return $html;
+    return $aHtml;
 }
 
 /**
@@ -575,96 +650,96 @@ function bibindex_display_search(){
     $searchvalue = array_key_exists('search',$_GET) ? trim(htmlentities(remove_accents($_GET['search']))) :"";
 
     $title = msg("BIBINDEX_SIMPLE_SEARCH_TITLE");
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
 
     // search tabs
-    $main_content = "<div id='search_tabs'>";
-    $main_content .= "<ul id='tabnav'>";
-    $main_content .= "<li><a class='active' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
-    $main_content .= "<li><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
-    $main_content .= "<li><a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
-    $main_content .= "</ul>";
-    $main_content .= "</div>";
+    $aContent = "<div id='search_tabs'>";
+    $aContent .= "<ul id='tabnav'>";
+    $aContent .= "<li><a class='active' href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
+    $aContent .= "<li><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
+    $aContent .= "<li><a href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
+    $aContent .= "</ul>";
+    $aContent .= "</div>";
 
-    $main_content .= "<form id='simple_search_form' class='search_content' action='bibindex.php' method='get' style='text-align:center'>";
-    $main_content .= "<fieldset>";
-    $main_content .= "<input type='hidden' name='mode' value='displaysearch' />";
-    $main_content .= "<input name='search' value='".$searchvalue."' />&nbsp;";
-    $main_content .= msg("Sort by:")."&nbsp;<select name='sort'>";
+    $aContent .= "<form id='simple_search_form' class='search_content' action='bibindex.php' method='get' style='text-align:center'>";
+    $aContent .= "<fieldset>";
+    $aContent .= "<input type='hidden' name='mode' value='displaysearch' />";
+    $aContent .= "<input name='search' value='".$searchvalue."' />&nbsp;";
+    $aContent .= msg("Sort by:")."&nbsp;<select name='sort'>";
 
-    $main_content .= "<option value='ID' ";
+    $aContent .= "<option value='ID' ";
     $sort = null;
     if(array_key_exists('sort',$_GET)){
         $sort = $_GET['sort'];
     }
     if($sort == 'ID'){
-        $main_content .="selected='selected'";
+        $aContent .="selected='selected'";
     }
-    $main_content .= ">ID</option>";
+    $aContent .= ">ID</option>";
 
-    $main_content .= "<option value='title' ";
+    $aContent .= "<option value='title' ";
     $sort = null;
     if(array_key_exists('sort',$_GET)){
         $sort = $_GET['sort'];
     }
     if($sort == 'title'){
-        $main_content .="selected='selected'";
+        $aContent .="selected='selected'";
     }
-    $main_content .= ">".msg("Title")."</option>";
+    $aContent .= ">".msg("Title")."</option>";
 
-    $main_content .= "<option value='year' ";
+    $aContent .= "<option value='year' ";
     $sort = null;
     if(array_key_exists('sort',$_GET)){
         $sort = $_GET['sort'];
     }
     if($sort == 'year'){
-        $main_content .="selected='selected'";
+        $aContent .="selected='selected'";
     }
-    $main_content .= ">".msg("Year")."</option>";
-    $main_content .= "</select>&nbsp;";
-    $main_content .= "&nbsp;<input class='submit' type='submit' value='".msg("Search")."' /><br/>";
-    $main_content .= "<table>";
-    $main_content .= "<tbody>";
-    $main_content .= "<tr>";
-    $main_content .= "<td><input type='checkbox' name='author' value='1'";
+    $aContent .= ">".msg("Year")."</option>";
+    $aContent .= "</select>&nbsp;";
+    $aContent .= "&nbsp;<input class='submit' type='submit' value='".msg("Search")."' /><br/>";
+    $aContent .= "<table>";
+    $aContent .= "<tbody>";
+    $aContent .= "<tr>";
+    $aContent .= "<td><input type='checkbox' name='author' value='1'";
     if(array_key_exists('author',$_GET)){
-        $main_content .= "checked='checked'";
+        $aContent .= "checked='checked'";
     }
-    $main_content .= " />".msg("Author")."</td>";
-    $main_content .= "<td><input type='checkbox' name='title' value='1' ";
+    $aContent .= " />".msg("Author")."</td>";
+    $aContent .= "<td><input type='checkbox' name='title' value='1' ";
     if(array_key_exists('title',$_GET)){
-        $main_content .= "checked='checked'";
+        $aContent .= "checked='checked'";
     }
-    $main_content .= "/>".msg("Title")."</td>";
-    $main_content .= "<td><input type='checkbox' name='keywords' value='1' ";
+    $aContent .= "/>".msg("Title")."</td>";
+    $aContent .= "<td><input type='checkbox' name='keywords' value='1' ";
     if(array_key_exists('keywords',$_GET)){
-        $main_content .= "checked='checked'";
+        $aContent .= "checked='checked'";
     }
-    $main_content .= "/>".msg("Keywords")."</td>";
-    $main_content .= "</tr><tr>";
-    $main_content .= "<td><input type='checkbox' name='journal' value='1'";
+    $aContent .= "/>".msg("Keywords")."</td>";
+    $aContent .= "</tr><tr>";
+    $aContent .= "<td><input type='checkbox' name='journal' value='1'";
     if(array_key_exists('journal',$_GET)){
-        $main_content .= "checked='checked'";
+        $aContent .= "checked='checked'";
     }
-    $main_content .= " />".msg("Journal")."</td>";
-    $main_content .= "<td><input type='checkbox' name='editor' value='1'";
+    $aContent .= " />".msg("Journal")."</td>";
+    $aContent .= "<td><input type='checkbox' name='editor' value='1'";
     if(array_key_exists('editor',$_GET)){
-        $main_content .= "checked='checked'";
+        $aContent .= "checked='checked'";
     }
-    $main_content .= " />".msg("Editor")."</td>";
-    $main_content .= "<td><input type='checkbox' name='year' value='1'";
+    $aContent .= " />".msg("Editor")."</td>";
+    $aContent .= "<td><input type='checkbox' name='year' value='1'";
     if(array_key_exists('year',$_GET)){
-        $main_content .= "checked='checked'";
+        $aContent .= "checked='checked'";
     }
-    $main_content .= " />".msg("Year")."</td>";
-    $main_content .= "</tr></tbody></table>";
+    $aContent .= " />".msg("Year")."</td>";
+    $aContent .= "</tr></tbody></table>";
 
-    $main_content .= "<br/>";
+    $aContent .= "<br/>";
 
 
-    $main_content .= "</fieldset>";
-    $main_content .= "</form>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
 
     if($searchvalue){
         $fields =array();
@@ -703,20 +778,21 @@ function bibindex_display_search(){
         }
 
         // store the ids in session if we come from an other page.
-        if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_search($searchvalue,$fields),$GLOBALS['max_ref']);
+        if(!isset($_GET['page']))
+        {
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->getIdsForSearch($searchvalue,$fields),$GLOBALS['max_ref']);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);
         if(count($flatids)>0){
-            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+            $entries = $_SESSION['bibdb']->getEntriesWithIds($_SESSION['ids'][$_GET['page']]);
 
             $nb = count($flatids);
-            $param = $GLOBALS['xslparam'];
-            $param['bibindex_mode'] = $_GET['mode'];
-            $param['basketids'] = $_SESSION['basket']->items_to_string();
+            $aParam = $GLOBALS['xslparam'];
+            $aParam['bibindex_mode'] = $_GET['mode'];
+            $aParam['basketids'] = $_SESSION['basket']->items_to_string();
             $extra_param .= "&page=".$_GET['page'];
-            $param['extra_get_param'] = $extra_param;
+            $aParam['extra_get_param'] = $extra_param;
 
             // add all
             $start = "<div class='result_header'>";
@@ -727,22 +803,22 @@ function bibindex_display_search(){
             $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),$_GET['mode'],$extra_param);
 
             if($nb==1){
-                $main_content .= sprintf(msg("One match for %s"),$searchvalue).$start;
-                $main_content .= biborb_html_render($entries,$param);
+                $aContent .= sprintf(msg("One match for %s"),$searchvalue).$start;
+                $aContent .= biborb_html_render($entries,$aParam);
             }
             else if($nb>1) {
-                $main_content .= sprintf(msg("%d matches for %s."),$nb,$searchvalue).$start;
-                $main_content .= biborb_html_render($entries,$param);
+                $aContent .= sprintf(msg("%d matches for %s."),$nb,$searchvalue).$start;
+                $aContent .= biborb_html_render($entries,$aParam);
             }
         }
         else{
-            $main_content .= sprintf(msg("No match for %s."),$searchvalue);
+            $aContent .= sprintf(msg("No match for %s."),$searchvalue);
         }
     }
-    $html .= main($title,$main_content);
-    $html .= html_close();
+    $aHtml .= main($title,$aContent);
+    $aHtml .= html_close();
 
-    return $html;
+    return $aHtml;
 }
 
 /**
@@ -880,22 +956,23 @@ function bibindex_display_advanced_search(){
     if(array_key_exists('connector',$_GET)){
         $searchArray['search_connector'] = $_GET['connector'];
     }
-    $main_content = "";
+    $aContent = "";
     if(count($searchArray) > 1){
         // store the ids in session if we come from an other page.
-        if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_advanced_search($searchArray),$GLOBALS['max_ref']);
+        if(!isset($_GET['page']))
+        {
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->getIdsForAdvancedSearch($searchArray),$GLOBALS['max_ref']);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);
         if(count($flatids)>0){
-            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+            $entries = $_SESSION['bibdb']->getEntriesWithIds($_SESSION['ids'][$_GET['page']]);
             $nb = count($flatids);
-            $param = $GLOBALS['xslparam'];
-            $param['bibindex_mode'] = 'displayadvancedsearch';
-            $param['basketids'] = $_SESSION['basket']->items_to_string();
+            $aParam = $GLOBALS['xslparam'];
+            $aParam['bibindex_mode'] = 'displayadvancedsearch';
+            $aParam['basketids'] = $_SESSION['basket']->items_to_string();
             $extraparam .= "page=".$_GET['page'];
-            $param['extra_get_param'] = $extraparam;
+            $aParam['extra_get_param'] = $extraparam;
 
             // add all
             $start = "<div class='result_header'>";
@@ -905,32 +982,33 @@ function bibindex_display_advanced_search(){
             $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),$_GET['mode'],$extraparam);
 
             if($nb==1){
-                $main_content = msg("One match.").$start;
-                $main_content .= biborb_html_render($entries,$param);
+                $aContent = msg("One match.").$start;
+                $aContent .= biborb_html_render($entries,$aParam);
             }
             else if($nb>1) {
-                $main_content = sprintf(msg("%d matches."),$nb).$start;
-                $main_content .= biborb_html_render($entries,$param);
+                $aContent = sprintf(msg("%d matches."),$nb).$start;
+                $aContent .= biborb_html_render($entries,$aParam);
             }
         }
         else{
-            $main_content = msg("No match.");
+            $aContent = msg("No match.");
         }
     }
 
     $title = msg("BIBINDEX_ADVANCED_SEARCH_TITLE");
 
     // hide the search form if some results are being displayed
-    if(array_key_exists('searched',$_GET)){
-        $html = bibheader("onload='javascript:toggle_element(\"search_form\")'");
+    if(array_key_exists('searched',$_GET))
+    {
+        $aHtml = bibheader(array('onload'=>"javascript:toggle_element(\"search_form\")"));
     }
     else{
-        $html = bibheader();
+        $aHtml = bibheader();
     }
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
-    $html .= main($title,$content.$main_content);
-    $html .= html_close();
-    return $html;
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
+    $aHtml .= main($title,$content.$aContent);
+    $aHtml .= html_close();
+    return $aHtml;
 }
 
 /**
@@ -939,13 +1017,13 @@ function bibindex_display_advanced_search(){
  */
 
 function bibindex_basket_help(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_BASKET_HELP_TITLE");
     $content = $_SESSION['i18n']->getFile("basket_help.txt");
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
+    $aHtml .= main($title,$content);
+    $aHtml .= html_close();
+    return $aHtml;
 }
 
 /**
@@ -954,16 +1032,16 @@ function bibindex_basket_help(){
  */
 function bibindex_display_basket(){
     $title = msg("BIBINDEX_BASKET_DISPLAY_TITLE");
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $content = null;
     $error = null;
     $message = null;
 
 
-    $param = $GLOBALS['xslparam'];
-    $param['bibindex_mode'] = $_GET['mode'];
-    $param['basketids'] = $_SESSION['basket']->items_to_string();
+    $aParam = $GLOBALS['xslparam'];
+    $aParam['bibindex_mode'] = $_GET['mode'];
+    $aParam['basketids'] = $_SESSION['basket']->items_to_string();
 
     // store the ids in session if we come from an other page.
     if(!isset($_GET['page'])){
@@ -972,11 +1050,11 @@ function bibindex_display_basket(){
     }
     $nb = $_SESSION['basket']->count_items();
     if($nb>0){
-        $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+        $entries = $_SESSION['bibdb']->getEntriesWithIds($_SESSION['ids'][$_GET['page']]);
         // create a nav bar to display entries
         $start = create_nav_bar($_GET['page'],count($_SESSION['ids']),"displaybasket","page=".$_GET['page']);
-        $param['extra_get_param'] = "page=".$_GET['page'];
-        $main_content = biborb_html_render($entries,$param);
+        $aParam['extra_get_param'] = "page=".$_GET['page'];
+        $aContent = biborb_html_render($entries,$aParam);
         $content = "<div>";
         if($nb == 1){
             $content = msg("An entry in the basket.");
@@ -992,15 +1070,15 @@ function bibindex_display_basket(){
             $content .= "</div>";
         }
         $content .= "</div>".$start;
-        $content .= $main_content;
+        $content .= $aContent;
     }
     else{
         $message = msg("No entry in the basket.");
     }
 
-    $html .= main($title,$content,$error,$message);
-    $html .= html_close();
-    return $html;
+    $aHtml .= main($title,$content,$error,$message);
+    $aHtml .= html_close();
+    return $aHtml;
 }
 
 /**
@@ -1009,50 +1087,50 @@ function bibindex_display_basket(){
  */
 function bibindex_basket_modify_group(){
     $title = msg("BIBINDEX_BASKET_GROUPS_MANAGE_TITLE");
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
 
     // reset groups
-    $main_content = "<form id='reset_groups' action='bibindex.php' method='get'>";
-    $main_content .= "<fieldset>";
-	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-    $main_content .= "<input type='hidden' name='action' value='reset'/>";
-	$main_content .= "<input class='submit' type='submit' value='".msg("Reset")."'/> &nbsp;".msg("Reset the groups field of each entry in the basket. ");
-	$main_content .= "</fieldset>";
-	$main_content .= "</form>";
-	$main_content .= "<br/>";
-	$main_content .= msg("Add all entries in the basket to a group:");
-    $main_content .= "<br/>";
-    $main_content .= "<br/>";
+    $aContent = "<form id='reset_groups' action='bibindex.php' method='get'>";
+    $aContent .= "<fieldset>";
+	$aContent .= "<input type='hidden' name='mode' value='groupmodif'/>";
+    $aContent .= "<input type='hidden' name='action' value='reset'/>";
+	$aContent .= "<input class='submit' type='submit' value='".msg("Reset")."'/> &nbsp;".msg("Reset the groups field of each entry in the basket. ");
+	$aContent .= "</fieldset>";
+	$aContent .= "</form>";
+	$aContent .= "<br/>";
+	$aContent .= msg("Add all entries in the basket to a group:");
+    $aContent .= "<br/>";
+    $aContent .= "<br/>";
 
     //  create a new group
     $aLocale = $_SESSION['i18n']->getLocale();
-	$main_content .= "<form id='add_new_group' action='bibindex.php' method='get' onsubmit='return validate_add_group(\"{$aLocale}\")'>";
-	$main_content .= "<fieldset>";
-	$main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-	$main_content .= "<label for='newgroupvalue'>".msg("New group:")."</label> <input name='newgroupvalue' id='newgroupvalue' class='longtextfield'/>";
-    $main_content .= "<input type='hidden' name='action' value='add'/>";
-	$main_content .= "&nbsp;<input class='submit' type='submit' value='".msg("Add")."'/>";
-	$main_content .= "</fieldset>";
-	$main_content .= "</form><br/>";
-    $groups = $_SESSION['bibdb']->groups();
+	$aContent .= "<form id='add_new_group' action='bibindex.php' method='get' onsubmit='return validate_add_group(\"{$aLocale}\")'>";
+	$aContent .= "<fieldset>";
+	$aContent .= "<input type='hidden' name='mode' value='groupmodif'/>";
+	$aContent .= "<label for='newgroupvalue'>".msg("New group:")."</label> <input name='newgroupvalue' id='newgroupvalue' class='longtextfield'/>";
+    $aContent .= "<input type='hidden' name='action' value='add'/>";
+	$aContent .= "&nbsp;<input class='submit' type='submit' value='".msg("Add")."'/>";
+	$aContent .= "</fieldset>";
+	$aContent .= "</form><br/>";
+    $groups = $_SESSION['bibdb']->getGroups();
 
     // display available groups if at least one exists
     if(count($groups)>0){
-        $main_content .= "<form id='add_group' action='bibindex.php' method='get'>";
-        $main_content .= "<fieldset>";
-        $main_content .= "<input type='hidden' name='mode' value='groupmodif'/>";
-        $main_content .= "<label for='groupvalue'>".msg("Existing group:")."</label>";
-        $main_content .= xhtml_select('groupvalue',1,$groups,"",null,null,"longtextfield");
-        $main_content .= "<input type='hidden' name='action' value='add'/>";
-        $main_content .= "&nbsp;<input class='submit' type='submit' value='".msg("Add")."'/>";
-        $main_content .= "</fieldset>";
-        $main_content .= "</form>";
+        $aContent .= "<form id='add_group' action='bibindex.php' method='get'>";
+        $aContent .= "<fieldset>";
+        $aContent .= "<input type='hidden' name='mode' value='groupmodif'/>";
+        $aContent .= "<label for='groupvalue'>".msg("Existing group:")."</label>";
+        $aContent .= xhtml_select('groupvalue',1,$groups,"",null,null,"longtextfield");
+        $aContent .= "<input type='hidden' name='action' value='add'/>";
+        $aContent .= "&nbsp;<input class='submit' type='submit' value='".msg("Add")."'/>";
+        $aContent .= "</fieldset>";
+        $aContent .= "</form>";
     }
 
-    $html .= main($title,$main_content);
-    $html .= html_close();
-    return $html;
+    $aHtml .= main($title,$aContent);
+    $aHtml .= html_close();
+    return $aHtml;
 }
 
 /**
@@ -1060,13 +1138,13 @@ function bibindex_basket_modify_group(){
  * Display a small help on items present in the 'manager' menu
  */
 function bibindex_manager_help(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_ADMIN_HELP_TITLE");
     $content = $_SESSION['i18n']->getFile("manager_help.txt");
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
+    $aHtml .= main($title,$content);
+    $aHtml .= html_close();
+    return $aHtml;
 }
 
 /**
@@ -1074,8 +1152,8 @@ function bibindex_manager_help(){
  * display the page to select which type of entry to add
  */
 function bibindex_entry_to_add(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_SELECT_NEW_ENTRY_TITLE");
     $types = xhtml_select('type',1,$_SESSION['bibdb']->entry_types(),"");
 	$content = "<form id='select_entry_type' method='get' action='bibindex.php'>";
@@ -1085,9 +1163,9 @@ function bibindex_entry_to_add(){
     $content .= "</fieldset>";
     $content .= "</form>";
 
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
+    $aHtml .= main($title,$content);
+    $aHtml .= html_close();
+    return $aHtml;
 }
 
 /**
@@ -1099,11 +1177,11 @@ function bibindex_add_entry($type)
 
     // xslt transformation
     $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-    $param = $GLOBALS['xslparam'];
+    $aParam = $GLOBALS['xslparam'];
     $xml_content = file_get_contents("./xsl/model.xml");
     $xsl_content = file_get_contents("./xsl/model.xsl");
-    $param = array("typeentry"=>$type);
-    $fields = $xsltp->transform($xml_content,$xsl_content,$param);
+    $aParam = array("typeentry"=>$type);
+    $fields = $xsltp->transform($xml_content,$xsl_content,$aParam);
     $xsltp->free();
 
     // get the list of available groups
@@ -1118,8 +1196,8 @@ function bibindex_add_entry($type)
     $fields = str_replace("#XHTMLREADSTATUS",$readstatus,$fields);
     $fields = str_replace("#XHTMLOWNERSHIP",$ownership,$fields);
 
-    $html = bibheader("");
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader("");
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_ADD_ENTRY_TITLE");
 // a tabbed interface
     $content = "<div>";
@@ -1143,104 +1221,154 @@ function bibindex_add_entry($type)
 	$content .= "</fieldset>";
 	$content .= "</form>";
 
-    $html .= main($title,$content);
-    $html .= html_close();
-    return $html;
+    $aHtml .= main($title,$content);
+    $aHtml .= html_close();
+    return $aHtml;
 }
 
 /**
  * bibindex_update_entry
  * Display a form to modify fields of an entry
  */
-function bibindex_update_entry(){
+function bibindex_update_entry()
+{
 
 	// get the entry
-	$entryxml = $_SESSION['bibdb']->entry_with_id($_GET['id']);
-    $bt = new BibTeX_Tools();
-    $entry = $bt->xml_to_bibtex_array($entryxml);
-    $entry = $entry[0];
-    $thetype = $entry['___type'];
-    $theid = $_GET['id'];
+	$aEntryXml = $_SESSION['bibdb']->getEntryWithId($_GET['id']);
+    $aRef = XmlConverter::import($aEntryXml);
+    $aType = $aRef->getType();
+    $aId = $aRef->getId();
 
     // get existent types
-	$types = $_SESSION['bibdb']->entry_types();
-
+	$aTypes = $_SESSION['DbManager']->getEntryTypes();
+    
 	// xslt transformation
-	$xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-	$param = $GLOBALS['xslparam'];
-	$param['id'] = $theid;
-	$param['modelfile'] = "file://".realpath("./xsl/model.xml");
-	$param['update'] = "true";
-    $param['type'] = $thetype;
-    $fields = $xsltp->transform($entryxml,load_file("./xsl/xml2htmledit.xsl"),$param);
-	$xsltp->free();
+	$aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+
+	$aParam = $GLOBALS['xslparam'];
+	$aParam['id'] = $aId;
+
+	$aParam['modelfile'] = 'file://'.realpath('./xsl/model.xml');
+	$aParam['update'] = 'true';
+    $aParam['type'] = $aType;
+    $aFields = $aXsltp->transform($aEntryXml,FileToolKit::getContent('./xsl/xml2htmledit.xsl'),$aParam);
+	$aXsltp->free();
 
     // get existent groups
-	$glist = $_SESSION['bibdb']->groups();
+	$aGroups = $_SESSION['bibdb']->getGroups();
+
     // put the groups HTML select in the form
-	array_push($glist,"");
-	$groups = xhtml_select("groupslist",1,$glist,"","addGroup()");
-	$fields = str_replace("#XHTMLGROUPSLIST",$groups,$fields);
+	array_push($aGroups,"");
+    $groups = HtmlToolKit::selectTag(array('name' => 'groupslist', 'size' => 1, 'onchange' => 'addGroup()'),
+                           array_combine($aGroups, $aGroups));
+
+	$aFields = str_replace("#XHTMLGROUPSLIST",$groups,$aFields);
 
     // read status and ownership
-    $readstatus = read_status_html_select("read",(isset($entry['read']) ? $entry['read'] : 'notread'));
-    $ownership = ownership_html_select("own",(isset($entry['own']) ? $entry['own'] : 'notown'));
-    $fields = str_replace("#XHTMLREADSTATUS",$readstatus,$fields);
-    $fields = str_replace("#XHTMLOWNERSHIP",$ownership,$fields);
+    $readstatus = read_status_html_select('read',$aRef->getData('read') ? $aRef->getData('read') : 'notread');
+    $ownership = ownership_html_select('own',$aRef->getData('own') ? $aRef->getData('own') : 'notown');
+    $aFields = str_replace("#XHTMLREADSTATUS",$readstatus,$aFields);
+    $aFields = str_replace("#XHTMLOWNERSHIP",$ownership,$aFields);
 
-	$listtypes = xhtml_select('bibtex_type',1,$types,$thetype);
+	$listtypes = xhtml_select('bibtex_type',1,$aTypes,$aType);
 
     // form to update the type
-	$content = "<form method='get' action='bibindex.php' class='f_default_form'>";
-    $content .= "<fieldset>";
-    $content .= "<label>".msg("BibTeX type:")."</label>&nbsp;";
-    $content .= $listtypes;
-    $content .= "<input type='hidden' name='action' value='update_type'/>";
-    $content .= "&nbsp;<input class='submit' type='submit' value='".msg("Update")."'/>";
-    $content .= "<input type='hidden' name='id' value='$theid'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
+	$aContent = HtmlToolKit::startTag('form', array( 'method' => 'get',
+                                                    'action' => 'bibindex.php',
+                                                    'class'  => 'f_default_form'));
+    $aContent .= HtmlToolKit::startTag('fieldset');
+    $aContent .= HtmlToolKit::tag('label',msg('BibTeX type:').'&nbsp;');
+    $aContent .= $listtypes;
+    $aContent .= HtmlToolKit::tagNoData('input', array('type' => 'hidden',
+                                                      'name' => 'action',
+                                                      'value'=> 'update_type'));
+    $aContent .= '&nbsp;'.HtmlToolKit::tagNoData('input', array('class'=>'submit',
+                                                               'type' =>'submit',
+                                                               'value'=> msg('Update')));
+    $aContent .= HtmlToolKit::tagNoData('input',array('type' =>'hidden',
+                                                     'name' =>'id',
+                                                     'value'=>$aId));
+    $aContent .= HtmlToolKit::closeTag('fieldset');
+    $aContent .= HtmlToolKit::closeTag('form');
 
     // form to update the bibtex key
-    $content .= "<form method='get' id='new_bibtex_key' action='bibindex.php' class='f_default_form' onsubmit='return validate_new_bibtex_key(\"".$_SESSION['language']."\")' >";
-    $content .= "<fieldset>";
-    $content .= "<label>".msg("BibTeX Key:")."</label>";
-    $content .= "&nbsp;<input name='bibtex_key' value='$theid'/>";
-    $content .= "<input type='hidden' name='action' value='update_key'/>";
-    $content .= "&nbsp;<input class='submit' type='submit' value='".msg("Update")."'/>";
-    $content .= "<input type='hidden' name='id' value='$theid'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
-    $content .= "<br/>";
+	$aContent .= HtmlToolKit::startTag('form', array( 'method' => 'get',
+                                                    'id'     => 'new_bibtex_key',
+                                                    'action' => 'bibindex.php',
+                                                    'class'  => 'f_default_form',
+                                                    'onsubmit' =>'return validate_new_bibtex_key("'.$_SESSION['i18n']->getLocale().'")'));
+    $aContent .= HtmlToolKit::startTag('fieldset');
+    $aContent .= HtmlToolKit::tag('label',msg('BibTeX Key:').'&nbsp;');
+    $aContent .= HtmlToolKit::tagNoData('input',array('name' =>'bibtex_key',
+                                                     'value'=>$aId));
+    $aContent .= HtmlToolKit::tagNoData('input',array('type'=>'hidden',
+                                                    'name' =>'action',
+                                                    'value'=>'update_key'));
+    $aContent .= '&nbsp;'.HtmlToolKit::tagNoData('input', array('class'=>'submit',
+                                                               'type' =>'submit',
+                                                               'value'=> msg('Update')));
+    $aContent .= HtmlToolKit::tagNoData('input',array('type'=>'hidden',
+                                                     'name' =>'id',
+                                                     'value'=>$aId));
+    $aContent .= HtmlToolKit::closeTag('fieldset');
+    $aContent .= HtmlToolKit::closeTag('form');
+    $aContent .= HtmlToolKit::tagNoData('br');
 
     // a tabbed interface
-    $content .= "<div>";
-    $content .= "<ul id='tabnav'>";
-    $content .= "<li><a id='tab_required_ref' class='active' href='javascript:toggle_tab_edit(\"required_ref\")'>".msg("BIBORB_OUTPUT_REQUIRED_FIELDS")."</a></li>";
-    $content .= "<li><a id='tab_optional_ref' href='javascript:toggle_tab_edit(\"optional_ref\")'>".msg("BIBORB_OUTPUT_OPTIONAL_FIELDS")."</a></li>";
-    $content .= "<li><a id='tab_additional_ref' href='javascript:toggle_tab_edit(\"additional_ref\")'>".msg("BIBORB_OUTPUT_ADDITIONAL_FIELDS")."</a></li>";
-    $content .= "</ul>";
-    $content .= "</div>";
+    $aContent .= HtmlToolKit::startTag('div');
+    $aContent .= HtmlToolKit::startTag('ul', array('id'=>'tabnav'));
+    $aContent .= HtmlToolKit::startTag('li');
+    $aContent .= HtmlToolKit::tag('a',msg('BIBORB_OUTPUT_REQUIRED_FIELDS'),
+                                 array('id'    =>'tab_required_ref',
+                                       'class' =>'active',
+                                       'href'  => 'javascript:toggle_tab_edit("required_ref")'));
+    $aContent .= HtmlToolKit::closeTag('li');
+    $aContent .= HtmlToolKit::startTag('li');
+    $aContent .= HtmlToolKit::tag('a', msg('BIBORB_OUTPUT_OPTIONAL_FIELDS'),
+                                 array('id'    =>'tab_optional_ref',
+                                       'href'  => 'javascript:toggle_tab_edit("optional_ref")'));
+    $aContent .= HtmlToolKit::closeTag('li');
+    $aContent .= HtmlToolKit::startTag('li');
+    $aContent .= HtmlToolKit::tag('a', msg('BIBORB_OUTPUT_ADDITIONAL_FIELDS'),
+                                 array('id'    =>'tab_additional_ref',
+                                       'href'  => 'javascript:toggle_tab_edit("additional_ref")'));
+    $aContent .= HtmlToolKit::closeTag('li');
+    $aContent .= HtmlToolKit::closeTag('ul');
+    $aContent .= HtmlToolKit::closeTag('div');
 
 
     // form to update the different fields
-    $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' name='fields' id='f_bibtex_entry'>";
-    $content .= eval_php($fields);
-    $content .= "<fieldset class='clean'>";
-    $content .= "<input class='submit' type='submit' name='cancel' value='".msg("Cancel")."'/>";
-    $content .= "<input type='hidden' name='action' value='update_entry'/>";
-    $content .= "&nbsp;<input class='submit' type='submit' name='ok' value='".msg("Update")."'/>";
-    $content .= "<input type='hidden' name='mode' value='operationresult'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
+	$aContent .= HtmlToolKit::startTag('form', array( 'method' => 'post',
+                                                      'action' => 'bibindex.php',
+                                                      'enctype'=> 'multipart/form-data',
+                                                      'name'   => 'fields',
+                                                      'id'     => 'f_bibtex_entry'));
+    $aContent .= eval_php($aFields);
+    $aContent .= HtmlToolKit::startTag('fieldset', array('class' => 'clean'));
+    $aContent .= HtmlToolKit::tagNoData('input', array('class'=> 'submit',
+                                                               'type' => 'submit',
+                                                               'name' => 'cancel',
+                                                               'value'=> msg('Cancel')));
+    $aContent .= HtmlToolKit::tagNoData('input', array('name'=>'action',
+                                                               'type' =>'hidden',
+                                                               'value'=> 'update_entry'));
+    $aContent .= '&nbsp;'.HtmlToolKit::tagNoData('input', array('class'=> 'submit',
+                                                               'type' => 'submit',
+                                                               'name' => 'ok',
+                                                               'value'=> msg('Update')));
+    $aContent .= HtmlToolKit::tagNoData('input', array('name' => 'mode',
+                                                      'type' => 'hidden',
+                                                      'value'=> 'operationresult'));    
+    $aContent .= HtmlToolKit::closeTag('fieldset');
+    $aContent .= HtmlToolKit::closeTag('form');
 
 	// create the HTML page
-	$html = bibheader("onload='javascript:toggle_element(\"additional\")'");
-	$html .= bibindex_menu($_SESSION['bibdb']->fullname());
-	$title = msg("BIBINDEX_UPDATE_ENTRY_TITLE");
-	$html .= main($title,$content);
-	$html .= html_close();
-	echo $html;
+	$aHtml = bibheader(array('onload'=>'javascript:toggle_element("additional")'));
+	$aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
+	$aTitle = msg('BIBINDEX_UPDATE_ENTRY_TITLE');
+	$aHtml .= main($aTitle,$aContent);
+	$aHtml .= html_close();
+	echo $aHtml;
 }
 
 /**
@@ -1248,48 +1376,48 @@ function bibindex_update_entry(){
  * Interface to import references (bibtex file or textfields)
  */
 function bibindex_import(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_IMPORT_TITLE");
 
     // general help message
-    $content = msg("BIBINDEX_IMPORT_HELP");
-    $content .= "<br/><br/>";
+    $aContent = msg("BIBINDEX_IMPORT_HELP");
+    $aContent .= "<br/><br/>";
 
     // import from a BibTeX file
-//    $content .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_FILE_TITLE")."</h3>";
-    $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data'>";
-    $content .= "<fieldset style='border:solid 1px navy;' title='".msg("File")."'>";
-    $content .= "<legend style='font-weight:bold;color:navy'>".msg("File")."</legend>";
-    $content .= "<div style='text-align:left;'>";
-    $content .= msg("BIBINDEX_IMPORT_FILE_DESC")."&nbsp;";
-    $content .= "<input type='file' name='bibfile'/>";
-    $content .= "<input type='hidden' name='mode' value='operationresult'/>";
-    $content .= "<input type='hidden' name='action' value='import'/>&nbsp;";
-    $content .= "<input class='submit' type='submit' value='".msg("Import")."'/>";
-    $content .= "</div>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
-    $content .= "<br/>";
+//    $aContent .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_FILE_TITLE")."</h3>";
+    $aContent .= "<form method='post' action='bibindex.php' enctype='multipart/form-data'>";
+    $aContent .= "<fieldset style='border:solid 1px navy;' title='".msg("File")."'>";
+    $aContent .= "<legend style='font-weight:bold;color:navy'>".msg("File")."</legend>";
+    $aContent .= "<div style='text-align:left;'>";
+    $aContent .= msg("BIBINDEX_IMPORT_FILE_DESC")."&nbsp;";
+    $aContent .= "<input type='file' name='bibfile'/>";
+    $aContent .= "<input type='hidden' name='mode' value='operationresult'/>";
+    $aContent .= "<input type='hidden' name='action' value='import'/>&nbsp;";
+    $aContent .= "<input class='submit' type='submit' value='".msg("Import")."'/>";
+    $aContent .= "</div>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
+    $aContent .= "<br/>";
 
     // import from a BibTeX string
-//    $content .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_TXT_TITLE")."</h3>";
-    $content .= "<form method='post' action='bibindex.php'>";
-    $content .= "<fieldset style='border:solid 1px navy;text-align:center;' title='BibTeX'>";
-    $content .= "<legend style='font-weight:bold;color:navy'>BibTeX</legend>";
-    $content .= "<div style='text-align:left'>".msg("BIBINDEX_IMPORT_TXT_DESC")."</div>";
-    $content .= "<textarea name='bibval' cols='55' rows='15'></textarea>";
-    $content .= "<input type='hidden' name='mode' value='operationresult'/>";
-    $content .= "<div style='text-align:center'>";
-    $content .= "<input type='hidden' name='action' value='import'/>";
-    $content .= "<input class='submit' type='submit' value='".msg("Import")."'/>";
-    $content .= "</div>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
+//    $aContent .= "<h3 style='padding:0;margin:0'>".msg("BIBINDEX_IMPORT_TXT_TITLE")."</h3>";
+    $aContent .= "<form method='post' action='bibindex.php'>";
+    $aContent .= "<fieldset style='border:solid 1px navy;text-align:center;' title='BibTeX'>";
+    $aContent .= "<legend style='font-weight:bold;color:navy'>BibTeX</legend>";
+    $aContent .= "<div style='text-align:left'>".msg("BIBINDEX_IMPORT_TXT_DESC")."</div>";
+    $aContent .= "<textarea name='bibval' cols='55' rows='15'></textarea>";
+    $aContent .= "<input type='hidden' name='mode' value='operationresult'/>";
+    $aContent .= "<div style='text-align:center'>";
+    $aContent .= "<input type='hidden' name='action' value='import'/>";
+    $aContent .= "<input class='submit' type='submit' value='".msg("Import")."'/>";
+    $aContent .= "</div>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
 
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
+    $aHtml .= main($title,$aContent);
+    $aHtml .= html_close();
+    echo $aHtml;
 }
 
 
@@ -1299,29 +1427,29 @@ function bibindex_import(){
  */
 function bibindex_export_basket()
 {
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_EXPORT_BASKET");
-    $content = "<span class='emphit'>".msg("")."</span>";
+    $aContent = "<span class='emphit'>".msg("")."</span>";
     // create the form to select which fields to export
-    $content .= "<form action='bibindex.php' method='post'>";
-    $content .= "<fieldset style='border:none;'>";
-    $content .= "<div style='text-align:center'>";
-    $content .= msg("Select an export format:")."&nbsp;";
-    $content .= "<select size='1' name='export_format'>";
-    $content .= "<option value='bibtex'>BibTeX</option>";
-    $content .= "<option value='ris'>RIS</option>";
-    $content .= "<option value='html'>HTML</option>";
-    $content .= "<option value='docbook'>DocBook</option>";
-    $content .= "</select>";
-    $content .= "<input type='hidden' name='action' value='export_basket'/>";
-    $content .= "<input type='submit' value='".msg("Select")."'/>";
-    $content .= "</div>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
+    $aContent .= "<form action='bibindex.php' method='post'>";
+    $aContent .= "<fieldset style='border:none;'>";
+    $aContent .= "<div style='text-align:center'>";
+    $aContent .= msg("Select an export format:")."&nbsp;";
+    $aContent .= "<select size='1' name='export_format'>";
+    $aContent .= "<option value='bibtex'>BibTeX</option>";
+    $aContent .= "<option value='ris'>RIS</option>";
+    $aContent .= "<option value='html'>HTML</option>";
+    $aContent .= "<option value='docbook'>DocBook</option>";
+    $aContent .= "</select>";
+    $aContent .= "<input type='hidden' name='action' value='export_basket'/>";
+    $aContent .= "<input type='submit' value='".msg("Select")."'/>";
+    $aContent .= "</div>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
+    $aHtml .= main($title,$aContent);
+    $aHtml .= html_close();
+    echo $aHtml;
 }
 
 
@@ -1330,31 +1458,31 @@ function bibindex_export_basket()
  * bibindex_export_basket_to_bibtex
  */
 function bibindex_export_basket_to_bibtex(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_EXPORT_TO_BIBTEX_TITLE");
-    $content = "<span class='emphit'>".msg("Select fields to include in the exported BibTeX:")."</span>";
+    $aContent = "<span class='emphit'>".msg("Select fields to include in the exported BibTeX:")."</span>";
     // create the form to select which fields to export
-    $content .= "<form action='bibindex.php' method='post'>";
-    $content .= "<fieldset style='border:solid 1px navy;'>";
-    $content .= "<legend style='font-weight:bold;color:navy;'>".msg("Available BibTeX fields")."</legend>";
-    $content .= "<table>";
-    $content .= "<tbody>";
+    $aContent .= "<form action='bibindex.php' method='post'>";
+    $aContent .= "<fieldset style='border:solid 1px navy;'>";
+    $aContent .= "<legend style='font-weight:bold;color:navy;'>".msg("Available BibTeX fields")."</legend>";
+    $aContent .= "<table>";
+    $aContent .= "<tbody>";
     $cpt = 0;
     for($i=0;$i<count($GLOBALS['bibtex_entries']);$i++){
         if(strcmp($GLOBALS['bibtex_entries'][$i],'id') != 0){
             $field = $GLOBALS['bibtex_entries'][$i];
             if($cpt == 0){
-                $content .= "<tr>";
+                $aContent .= "<tr>";
             }
-            $content .= "<td title='$field'><input type='checkbox' name='$field'";
+            $aContent .= "<td title='$field'><input type='checkbox' name='$field'";
             if(!(array_search($field,$GLOBALS['fields_to_export']) === false)){
-                $content .= " checked='checked' ";
+                $aContent .= " checked='checked' ";
             }
-            $content .= " />".msg($field)."</td>";
+            $aContent .= " />".msg($field)."</td>";
             $cpt++;
             if($cpt == 6){
-                $content .= "</tr>";
+                $aContent .= "</tr>";
                 $cpt = 0;
             }
         }
@@ -1362,22 +1490,22 @@ function bibindex_export_basket_to_bibtex(){
     if($cpt != 0){
         while($cpt != 6){
             $cpt++;
-            $content .= "<td/>";
+            $aContent .= "<td/>";
         }
-        $content .= "</tr>";
+        $aContent .= "</tr>";
     }
 
-    $content .= "</tbody>";
-    $content .= "</table>";
-    $content .= "<div style='text-align:center'>";
-    $content .= "<input type='hidden' name='action' value='export'/>";
-    $content .= "<input type='submit' value='".msg("Export")."'/>";
-    $content .= "</div>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
+    $aContent .= "</tbody>";
+    $aContent .= "</table>";
+    $aContent .= "<div style='text-align:center'>";
+    $aContent .= "<input type='hidden' name='action' value='export'/>";
+    $aContent .= "<input type='submit' value='".msg("Export")."'/>";
+    $aContent .= "</div>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
+    $aHtml .= main($title,$aContent);
+    $aHtml .= html_close();
+    echo $aHtml;
 }
 
 /**
@@ -1388,23 +1516,23 @@ function bibindex_export_basket_to_html(){
 	if($_SESSION['basket']->count_items() != 0){
 		// basket not empty -> processing
 		// get entries
-		$entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
+		$entries = $_SESSION['bibdb']->getEntriesWithIds($_SESSION['basket']->items);
 
 		// xslt transformation
 		$xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-		$param = $GLOBALS['xslparam'];
+		$aParam = $GLOBALS['xslparam'];
 		// hide basket actions
-		$param['display_basket_actions'] = 'no';
+		$aParam['display_basket_actions'] = 'no';
 		// hide edition/delete
-		$param['mode'] = 'user';
-		$content = $xsltp->transform($entries,load_file("./xsl/simple_html_output.xsl"),$param);
+		$aParam['mode'] = 'user';
+		$aContent = $xsltp->transform($entries,load_file("./xsl/simple_html_output.xsl"),$aParam);
 		$xsltp->free();
 
 		// HTML output
-		$html = html_header(null,CSS_FILE,null);
-		$html .= $content;
-		$html .= html_close();
-		echo $html;
+		$aHtml = html_header(null,CSS_FILE,null);
+		$aHtml .= $aContent;
+		$aHtml .= html_close();
+		echo $aHtml;
 	}
 	else{
 		echo bibindex_display_basket();
@@ -1417,54 +1545,54 @@ function bibindex_export_basket_to_html(){
 */
 function bibindex_display_xpath_search()
 {
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_XPATH_SEARCH_TITLE");
 
     //tabs
-    $content = "<div id='search_tabs'>";
-    $content .= "<ul id='tabnav'>";
-    $content .= "<li><a href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
-    $content .= "<li><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
-    $content .= "<li><a class='active' href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
-    $content .= "</ul>";
-    $content .= "</div>";
-    $content .= "<div class='search_content'>";
-    $content .= "<h4 class='tool_name'>".msg("TOOL_XPATH_TITLE")."</h4>";
-    $content .= "<div class='tool_help'>";
-    $content .= msg("TOOL_XPATH_HELP");
-    $content .= "</div>";
-    $content .= "<form class='tool_form' method='get' action='bibindex.php' id='xpath_form' onsubmit='return validate_xpath_form(\"".$_SESSION['language']."\")'>";
-    $content .= "<fieldset>";
-    $content .= "<textarea cols='50' rows='5' name='xpath_query'>";
+    $aContent = "<div id='search_tabs'>";
+    $aContent .= "<ul id='tabnav'>";
+    $aContent .= "<li><a href='bibindex.php?mode=displaysearch'>".msg("Simple Search")."</a></li>";
+    $aContent .= "<li><a href='bibindex.php?mode=displayadvancedsearch'>".msg("Advanced Search")."</a></li>";
+    $aContent .= "<li><a class='active' href='bibindex.php?mode=displayxpathsearch'>".msg("XPath Search")."</a></li>";
+    $aContent .= "</ul>";
+    $aContent .= "</div>";
+    $aContent .= "<div class='search_content'>";
+    $aContent .= "<h4 class='tool_name'>".msg("TOOL_XPATH_TITLE")."</h4>";
+    $aContent .= "<div class='tool_help'>";
+    $aContent .= msg("TOOL_XPATH_HELP");
+    $aContent .= "</div>";
+    $aContent .= "<form class='tool_form' method='get' action='bibindex.php' id='xpath_form' onsubmit='return validate_xpath_form(\"".$_SESSION['i18n']->getLocale()."\")'>";
+    $aContent .= "<fieldset>";
+    $aContent .= "<textarea cols='50' rows='5' name='xpath_query'>";
     if(array_key_exists('xpath_query',$_GET)){
-        $content .= $_GET['xpath_query'];
+        $aContent .= $_GET['xpath_query'];
     }
     else{
-        $content .= "contains(*/bibtex:author, 'someone') and */bibtex:year=2004";
+        $aContent .= "contains(*/bibtex:author, 'someone') and */bibtex:year=2004";
     }
-    $content .= "</textarea><br/>";
-    $content .= "<input type='hidden' name='mode' value='displayxpathsearch'/>";
-    $content .= "<input type='submit' class='submit' value='".msg("Search")."'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
-    $content .= "</div>";
+    $aContent .= "</textarea><br/>";
+    $aContent .= "<input type='hidden' name='mode' value='displayxpathsearch'/>";
+    $aContent .= "<input type='submit' class='submit' value='".msg("Search")."'/>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
+    $aContent .= "</div>";
 
     // execute an Xpath query
     if(array_key_exists("xpath_query",$_GET)){
         // store the ids in session if we come from an other page.
         if(!isset($_GET['page'])){
-            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->ids_for_xpath_search(htmlentities($_GET['xpath_query'])),$GLOBALS['max_ref']);
+            $_SESSION['ids'] = array_chunk($_SESSION['bibdb']->getIdsForXpathSearch($_GET['xpath_query']),$GLOBALS['max_ref']);
             $_GET['page'] = 0;
         }
         $flatids = flatten_array($_SESSION['ids']);
         if(count($flatids)>0){
-            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+            $entries = $_SESSION['bibdb']->getEntriesWithIds($_SESSION['ids'][$_GET['page']]);
 
             $nb = count($flatids);
-            $param = $GLOBALS['xslparam'];
-            $param['bibindex_mode'] = "displayxpathsearch";
-            $param['basketids'] = $_SESSION['basket']->items_to_string();
+            $aParam = $GLOBALS['xslparam'];
+            $aParam['bibindex_mode'] = "displayxpathsearch";
+            $aParam['basketids'] = $_SESSION['basket']->items_to_string();
             $extraparam = "xpath_query=".urlencode($_GET['xpath_query']);
             $extraparam .= "&page=".$_GET['page'];
             // add all
@@ -1473,23 +1601,23 @@ function bibindex_display_xpath_search()
             $start .= "</div>";
             // create a nav bar to display entries
             $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),"displayxpathsearch",$extraparam);
-            $param['extra_get_param'] = $extraparam;
+            $aParam['extra_get_param'] = $extraparam;
             if($nb==1){
-                $content .= msg("One match.").$start;
-                $content .= biborb_html_render($entries,$param);
+                $aContent .= msg("One match.").$start;
+                $aContent .= biborb_html_render($entries,$aParam);
             }
             else if($nb>1) {
-                $content .= sprintf(msg("%d matches."),$nb).$start;
-                $content .= biborb_html_render($entries,$param);
+                $aContent .= sprintf(msg("%d matches."),$nb).$start;
+                $aContent .= biborb_html_render($entries,$aParam);
             }
         }
         else{
-            $content .= msg("No match.");
+            $aContent .= msg("No match.");
         }
     }
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
+    $aHtml .= main($title,$aContent);
+    $aHtml .= html_close();
+    echo $aHtml;
 }
 
 
@@ -1497,167 +1625,167 @@ function bibindex_display_xpath_search()
  * Display the Tool page. Mis functions over the current bibliographies.
  */
 function bibindex_display_tools(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_TOOLS_TITLE");
 
     // Export the whole bibliography
-    $content = "<h4 class='tool_name'>".msg("TOOL_EXPORT_TITLE")."</h4>";
-    $content .= "<div class='tool_help'>";
-    $content .= msg("TOOL_EXPORT_HELP");
-    $content .= "</div>";
-    $content .= "<form class='tool_form' method='post' ' action='bibindex.php'  id='export_form'>";
-    $content .= "<fieldset>";
-    $content .= "<select size='1' name='export_format'>";
-    $content .= "<option value='bibtex'>BibTeX</option>";
-    $content .= "<option value='ris'>RIS</option>";
-    $content .= "<option value='docbook'>DocBook</option>";
-    $content .= "</select>";
-    $content .= "<input type='hidden' name='action' value='export_all'/>";
-    $content .= "<input type='submit' value='".msg("Select")."'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
+    $aContent = "<h4 class='tool_name'>".msg("TOOL_EXPORT_TITLE")."</h4>";
+    $aContent .= "<div class='tool_help'>";
+    $aContent .= msg("TOOL_EXPORT_HELP");
+    $aContent .= "</div>";
+    $aContent .= "<form class='tool_form' method='post' ' action='bibindex.php'  id='export_form'>";
+    $aContent .= "<fieldset>";
+    $aContent .= "<select size='1' name='export_format'>";
+    $aContent .= "<option value='bibtex'>BibTeX</option>";
+    $aContent .= "<option value='ris'>RIS</option>";
+    $aContent .= "<option value='docbook'>DocBook</option>";
+    $aContent .= "</select>";
+    $aContent .= "<input type='hidden' name='action' value='export_all'/>";
+    $aContent .= "<input type='submit' value='".msg("Select")."'/>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
 
 
     // Get BibTeX references according to a .aux LaTeX file.
-    $content .= "<h4 class='tool_name'>".msg("TOOL_AUX2BIBTEX_TITLE")."</h4>";
-    $content .= "<div class='tool_help'>";
-    $content .= msg("TOOL_AUX2BIBTEX_HELP");
-    $content .= "</div>";
+    $aContent .= "<h4 class='tool_name'>".msg("TOOL_AUX2BIBTEX_TITLE")."</h4>";
+    $aContent .= "<div class='tool_help'>";
+    $aContent .= msg("TOOL_AUX2BIBTEX_HELP");
+    $aContent .= "</div>";
     $aLocale = $_SESSION['i18n']->getLocale();
-    $content .= "<form class='tool_form' method='post' enctype='multipart/form-data' action='bibindex.php'  onsubmit='return validate_bibtex2aux_form(\"{$aLocale}\")' id='bibtex2aux_form'>";
-    $content .= "<fieldset>";
-    $content .= "<input type='file' name='aux_file'/>";
-    $content .= "<input type='hidden' name='action' value='bibtex_from_aux'/>";
-    $content .= "&nbsp;<input type='submit' class='submit' value='".msg("Download")."'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
+    $aContent .= "<form class='tool_form' method='post' enctype='multipart/form-data' action='bibindex.php'  onsubmit='return validate_bibtex2aux_form(\"{$aLocale}\")' id='bibtex2aux_form'>";
+    $aContent .= "<fieldset>";
+    $aContent .= "<input type='file' name='aux_file'/>";
+    $aContent .= "<input type='hidden' name='action' value='bibtex_from_aux'/>";
+    $aContent .= "&nbsp;<input type='submit' class='submit' value='".msg("Download")."'/>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
 
     // Get a full copy of the bibliography (references + attached documents)
-    $content .= "<h4 class='tool_name'>".msg("TOOL_GET_ARCHIVE_TITLE")."</h4>";
-    $content .= "<div class='tool_help'>";
-    $content .= msg("TOOL_GET_ARCHIVE_HELP");
-    $content .= "</div>";
-    $content .= "<form class='tool_form' method='post' action='bibindex.php'>";
-    $content .= "<fieldset>";
-    $content .= "<input type='hidden' name='action' value='get_archive'/>";
-    $content .= "<input type='submit' class='submit' value='".msg("Download")."'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
+    $aContent .= "<h4 class='tool_name'>".msg("TOOL_GET_ARCHIVE_TITLE")."</h4>";
+    $aContent .= "<div class='tool_help'>";
+    $aContent .= msg("TOOL_GET_ARCHIVE_HELP");
+    $aContent .= "</div>";
+    $aContent .= "<form class='tool_form' method='post' action='bibindex.php'>";
+    $aContent .= "<fieldset>";
+    $aContent .= "<input type='hidden' name='action' value='get_archive'/>";
+    $aContent .= "<input type='submit' class='submit' value='".msg("Download")."'/>";
+    $aContent .= "</fieldset>";
+    $aContent .= "</form>";
 
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
+    $aHtml .= main($title,$aContent);
+    $aHtml .= html_close();
+    echo $aHtml;
 }
 
 /**
  * Browse the bibliography using filters
  */
 function bibindex_browse(){
-    $html = bibheader();
-    $html .= bibindex_menu($_SESSION['bibdb']->fullname());
+    $aHtml = bibheader();
+    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $title = msg("BIBINDEX_BROWSE_TITLE");
 
     // filter history
-    $content = "<div class='browse_history'>";
-    $content .= " &nbsp;&#187;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=0'>Start</a>";
+    $aContent = "<div class='browse_history'>";
+    $aContent .= " &nbsp;&#187;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=0'>Start</a>";
     if(array_key_exists('browse_history',$_SESSION)){
         $cpt = 1;
         foreach($_SESSION['browse_history'] as $hist){
-            $content .= "&nbsp;&#187;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=$cpt'>".$hist['value']."</a>";
+            $aContent .= "&nbsp;&#187;&nbsp;<a href='./bibindex.php?mode=browse&amp;start=$cpt'>".$hist['value']."</a>";
         }
     }
-    $content .= "</div>";
+    $aContent .= "</div>";
     if(!isset($_GET['type']))
         $_GET['type'] = 'year';
 
     // filters available
-    $content .= "<div class='browse'>";
-    $content .= "<ul id='tabnav'>";
-    $content .= "<li><a id='tab_years' ".($_GET['type'] == 'year' ? "class='active'": "")." href=\"javascript:display_browse('years');\">".msg("Years")."</a></li>";
-    $content .= "<li><a id='tab_authors' ".($_GET['type'] == 'authors' ? "class='active'": "")." href=\"javascript:display_browse('authors');\">".msg("Authors")."</a></li>";
-    $content .= "<li><a id='tab_series' ".($_GET['type'] == 'series' ? "class='active'": "")." href=\"javascript:display_browse('series');\">".msg("Series")."</a></li>";
-    $content .= "<li><a id='tab_journals' ".($_GET['type'] == 'journals' ? "class='active'": "")." href=\"javascript:display_browse('journals');\">".msg("Journals")."</a></li>";
-    $content .= "<li><a id='tab_groups' ".($_GET['type'] == 'groups' ? "class='active'": "")." href=\"javascript:display_browse('groups');\">".msg("Groups")."</a></li>";
-    $content .= "</ul>";
-    $content .= "</div>";
+    $aContent .= "<div class='browse'>";
+    $aContent .= "<ul id='tabnav'>";
+    $aContent .= "<li><a id='tab_years' ".($_GET['type'] == 'year' ? "class='active'": "")." href=\"javascript:display_browse('years');\">".msg("Years")."</a></li>";
+    $aContent .= "<li><a id='tab_authors' ".($_GET['type'] == 'authors' ? "class='active'": "")." href=\"javascript:display_browse('authors');\">".msg("Authors")."</a></li>";
+    $aContent .= "<li><a id='tab_series' ".($_GET['type'] == 'series' ? "class='active'": "")." href=\"javascript:display_browse('series');\">".msg("Series")."</a></li>";
+    $aContent .= "<li><a id='tab_journals' ".($_GET['type'] == 'journals' ? "class='active'": "")." href=\"javascript:display_browse('journals');\">".msg("Journals")."</a></li>";
+    $aContent .= "<li><a id='tab_groups' ".($_GET['type'] == 'groups' ? "class='active'": "")." href=\"javascript:display_browse('groups');\">".msg("Groups")."</a></li>";
+    $aContent .= "</ul>";
+    $aContent .= "</div>";
 
-    $content .= "<div class='browse_items'>";
+    $aContent .= "<div class='browse_items'>";
 
     // years
     // years are listed by decades
-    $content .= "<ul id='years' style='display:".($_GET['type'] != 'year' ? "none": "block").";'>".msg("Existing years:");
+    $aContent .= "<ul id='years' style='display:".($_GET['type'] != 'year' ? "none": "block").";'>".msg("Existing years:");
     for($i=0;$i<count($_SESSION['misc']['years']);$i++){
         $year = $_SESSION['misc']['years'][$i];
         if(!isset($oldyear)){
             $oldyear = $year;
-            $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=year&value=$year'>$year</a>";
+            $aContent .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=year&value=$year'>$year</a>";
         }
         else{
             if( floor($oldyear/10) != floor($year/10)){
-                $content .= "</li><li>";
+                $aContent .= "</li><li>";
             }
             else{
-                $content .= ", ";
+                $aContent .= ", ";
             }
-            $content .= "<a href='bibindex.php?mode=browse&action=add_browse_item&type=year&value=$year'>$year</a>";
+            $aContent .= "<a href='bibindex.php?mode=browse&action=add_browse_item&type=year&value=$year'>$year</a>";
         }
         $oldyear = $year;
         if($i==count($_SESSION['misc']['years'])-1){
-            $content .= "</li>";
+            $aContent .= "</li>";
         }
 
     }
-    $content .= "</ul>";
+    $aContent .= "</ul>";
 
     // authors are listed by alphabetic order
     // one list item by letter of the alphabet
-    $content .= "<ul id='authors' style='display:".($_GET['type'] != 'authors' ? "none": "block").";'>".msg("Existing authors:");
+    $aContent .= "<ul id='authors' style='display:".($_GET['type'] != 'authors' ? "none": "block").";'>".msg("Existing authors:");
 
     for($i=0;$i<count($_SESSION['misc']['authors']);$i++){
         $author = remove_accents($_SESSION['misc']['authors'][$i]);
         if(!isset($oldauthor)){
             $oldauthor = $author;
-            $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=author&value=$author'>$author</a>";
+            $aContent .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=author&value=$author'>$author</a>";
         }
         else{
             if($author[0] != $oldauthor[0]){
-                $content .= "</li><li>";
+                $aContent .= "</li><li>";
             }
             else{
-                $content .= ", ";
+                $aContent .= ", ";
             }
-            $content .= "<a href='bibindex.php?mode=browse&action=add_browse_item&type=author&value=$author'>$author</a>";
+            $aContent .= "<a href='bibindex.php?mode=browse&action=add_browse_item&type=author&value=$author'>$author</a>";
             $oldauthor = $author;
         }
 
         if($i == count($_SESSION['misc']['authors'])-1){
-            $content .= "</li>";
+            $aContent .= "</li>";
         }
     }
-    $content .= "</ul>";
+    $aContent .= "</ul>";
 
     // series
-    $content .= "<ul id='series' style='display:".($_GET['type'] != 'series' ? "none": "block").";'>".msg("Existing series:");
+    $aContent .= "<ul id='series' style='display:".($_GET['type'] != 'series' ? "none": "block").";'>".msg("Existing series:");
     foreach($_SESSION['misc']['series'] as $serie){
-        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=series&value=$serie'>$serie</a></li>";
+        $aContent .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=series&value=$serie'>$serie</a></li>";
     }
-    $content .= "</ul>";
+    $aContent .= "</ul>";
 
     // journal
-    $content .= "<ul id='journals' style='display:".($_GET['type'] != 'journals' ? "none": "block").";'>".msg("Existing journals:");
+    $aContent .= "<ul id='journals' style='display:".($_GET['type'] != 'journals' ? "none": "block").";'>".msg("Existing journals:");
     foreach($_SESSION['misc']['journals'] as $journal){
-        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=journal&value=$journal'>$journal</a></li>";
+        $aContent .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=journal&value=$journal'>$journal</a></li>";
     }
-    $content .= "</ul>";
+    $aContent .= "</ul>";
 
     // groups
-    $content .= "<ul id='groups' style='display:".($_GET['type'] != 'groups' ? "none": "block")."';>".msg("Existing groups:");
+    $aContent .= "<ul id='groups' style='display:".($_GET['type'] != 'groups' ? "none": "block")."';>".msg("Existing groups:");
     foreach($_SESSION['misc']['groups'] as $group){
-        $content .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=group&value=$group'>$group</a></li>";
+        $aContent .= "<li><a href='bibindex.php?mode=browse&action=add_browse_item&type=group&value=$group'>$group</a></li>";
     }
-    $content .= "</ul>";
-    $content .= "</div>";
+    $aContent .= "</ul>";
+    $aContent .= "</div>";
 
     // store the ids in session if we come from an other page.
     // the bibtex keys are retreived from the database the first time that display_all is called
@@ -1673,13 +1801,13 @@ function bibindex_browse(){
     if(isset($_GET['page']) || $_GET['start']>0){
         if(count($flatids)>0){
             // get the data of the references to display
-            $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['ids'][$_GET['page']]);
+            $entries = $_SESSION['bibdb']->getEntriesWithIds($_SESSION['ids'][$_GET['page']]);
             // set up XSLT parameters
-            $param = $GLOBALS['xslparam'];
-            $param['bibindex_mode'] = $_GET['mode'];
-            $param['basketids'] = $_SESSION['basket']->items_to_string();
-            $param['extra_get_param'] = "page=".$_GET['page'];
-            $html_content = biborb_html_render($entries,$param);
+            $aParam = $GLOBALS['xslparam'];
+            $aParam['bibindex_mode'] = $_GET['mode'];
+            $aParam['basketids'] = $_SESSION['basket']->items_to_string();
+            $aParam['extra_get_param'] = "page=".$_GET['page'];
+            $aHtml_content = biborb_html_render($entries,$aParam);
 
             // create the header: sort function + add all to basket
             $start = "<div class='result_header'>";
@@ -1691,18 +1819,18 @@ function bibindex_browse(){
 
             // create a nav bar to display entries
             $start .= create_nav_bar($_GET['page'],count($_SESSION['ids']),"browse","sort=".$GLOBALS['sort']."&amp;sort_order=".$GLOBALS['sort_order']."page=".$_GET['page']);
-            $content .= $start.$html_content;
+            $aContent .= $start.$aHtml_content;
         }
         else{
-            $content .= msg("No entries.");
+            $aContent .= msg("No entries.");
         }
     }
 
 
 
-    $html .= main($title,$content);
-    $html .= html_close();
-    echo $html;
+    $aHtml .= main($title,$aContent);
+    $aHtml .= html_close();
+    echo $aHtml;
 }
 
 /**
@@ -1717,11 +1845,11 @@ function biborb_html_render($entries,$options)
     // interpret LaTeX code in HTML
     $entries = latex_macro_to_html($entries);
     // do the transformation
-    $content = $xsltp->transform($entries,FileToolKit::getContent("./xsl/biborb_output_sorted_by_id.xsl"),$options);
+    $aContent = $xsltp->transform($entries,FileToolKit::getContent("./xsl/biborb_output_sorted_by_id.xsl"),$options);
     // replace localized string
-    $_SESSION['i18n']->localizeBiborbString($content);
+    $_SESSION['i18n']->localizeBiborbString($aContent);
     $xsltp->free();
-    return $content;
+    return $aContent;
 }
 
 
