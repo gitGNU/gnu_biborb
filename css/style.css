@@ -74,13 +74,15 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 /**
  * Style for the table recording available databases (index.php)
  */
-#available_bibliographies {border-collapse:collapse;margin:auto;border:solid 1px #aaa;}
-#available_bibliographies thead {border-bottom:3px solid #444;margin:2px;background-color:#ccc;}
-#available_bibliographies tr:hover {background-color:#ccc;}
-#available_bibliographies td {padding:0.5em;border:dashed 1px #aaa;}
-#available_bibliographies a.download, a:visited.download {color:blue;text-decoration:none;text-align:center;display:block;}
-#available_bibliographies a.bibname, a:visited.bibname {text-decoration:none;color:navy;font-weight:bold;display:block;}
-#available_bibliographies .bib_description {font-style:italic;min-width:150px;display:block;}
+.available_bibliographies table {border-collapse:collapse;border:solid 1px #aaa;margin-bottom:1em}
+.available_bibliographies form {border:none;}
+fieldset.available_bibliographies {border:none;}
+.available_bibliographies thead {border-bottom:3px solid #444;margin:2px;background-color:#ccc;}
+.available_bibliographies tr:hover {background-color:#ddd;}
+.available_bibliographies td {padding:0.5em;border:dashed 1px #aaa;}
+.available_bibliographies a.download, a:visited.download {color:blue;text-decoration:none;text-align:center;display:block;}
+.available_bibliographies a.bibname, a:visited.bibname {text-decoration:none;color:navy;font-weight:bold;display:block;}
+.available_bibliographies tr.selected {background-color:#ddd;}
 
 /**
  * Style for the form to choose a database
@@ -113,11 +115,20 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 /**
  * Style for add database form
  */
-#f_bib_creation {margin:auto;width:350px;}
-#f_bib_creation fieldset {border:none;text-align:center;margin:0;padding:0;}
-#f_bib_creation label {text-align:right;width:100px;float:left;padding-top:0.3em;margin:0;font-weight:bold;font-style:italic;}
-#f_bib_creation input {width:200px;margin:3px;padding:0;border:solid 1px black;}
-#f_bib_creation input.submit {margin:3px;padding:0;width:auto;}
+#formAddBib {}
+#formAddBib fieldset {border:solid 1px gray;}
+#formAddBib legend {font-weight:bold;}
+#formAddBib label {width:100px;float:left;padding-top:0.3em;margin:0;}
+#formAddBib input {width:400px;margin:3px;padding:0;border:solid 1px black;}
+#formAddBib input.submit {margin:3px;padding:0;width:auto;}
+
+/**
+ * Style for delete database form
+ */
+#f_delete_bibliographies {}
+#f_delete_bibliographies fieldset {border:solid 1px gray;}
+#f_delete_bibliographies legend {font-weight:bold;}
+
 
 /**
  * Style for delete database form
@@ -130,10 +141,14 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
  * Style for biborb tabs
  */
 #tabnav {height:20px;margin:0;padding-left:10px;background:url(tab_bottom.gif) repeat-x bottom;}
-#tabnav li {margin:0;padding:0;display:inline;list-style-type:none;}
-#tabnav a, #tabnav a:visited {float:left;background:#ddd;font-size:10px;line-height:14px;font-weight:bold;padding:2px 10px 2px 10px;margin-right:4px;border:solid 1px navy;text-decoration:none;color:#666;}
-#tabnav a.active, #tabnavavisited.active{border-bottom:solid 1px #ddf;background:#ddf;color:navy;}
+#tabnav ul {list-style:none;margin:0;padding:0}
+#tabnav li {margin:0;padding:2px 2px 2px 2px;display:inline;border:solid 1px navy;}
+#tabnav li.active {border-bottom:solid 1px #ddf;background:#ddf;color:navy;}
+#tabnav a {text-decoration:none;font-weight:bold;color:#666;}
 #tabnav a:hover {color:navy;}
+#tabnav #tab_required_ref a { color:red; }
+#tabnav #tab_optional_ref a { color:navy; }
+#tabnav #tab_additional_ref a { color:green; }
 
 /**
  * Style for search container
@@ -193,21 +208,20 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 /**
  * Style for the form to edit entry
  */
-#f_bibtex_entry {margin:0;padding:0;border:solid 1px navy;padding-bottom:1em;padding-top:1em;border-top:none;background-color:#ddf;}
-#f_bibtex_entry fieldset.clean {margin:0;padding:0;border:none;text-align:center;}
-#f_bibtex_entry .required {color:red;font-weight:bold;}
-#f_bibtex_entry fieldset.required {border:dotted 1px red;}
-#f_bibtex_entry .required label {color:red;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
-#f_bibtex_entry .required input {width:80%;margin:0.1em;}
-#f_bibtex_entry .optional {color:navy;font-weight:bold;}
-#f_bibtex_entry fieldset.optional {border:dotted 1px navy;display:none;}
-#f_bibtex_entry .optional label {color:navy;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
-#f_bibtex_entry .optional input {width:80%;margin:0.1em;}
-#f_bibtex_entry .additional {color:green;font-weight:bold;}
-#f_bibtex_entry fieldset.additional {border:dotted 1px green;display:none;}
-#f_bibtex_entry .additional label {color:green;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
-#f_bibtex_entry .additional input {width:80%;margin:0.1em;}
-#f_bibtex_entry .additional textarea {height:165px;width:80%;margin:0.1em;}
+#formAddReference {margin:0;padding:0;border:solid 1px navy;padding-bottom:1em;padding-top:1em;border-top:none;background-color:#ddf;}
+#formAddReference fieldset {margin:0 0 0 0;padding:0 0 10px 10px;border:none;text-align:right;}
+#formAddReference fieldset.required {color:red;font-weight:bold;text-align:left}
+#formAddReference .required label {color:red;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
+#formAddReference .required input {width:80%;margin:0.1em;}
+#formAddReference .optional {color:navy;font-weight:bold;}
+#formAddReference fieldset.optional {display:none;text-align:left}
+#formAddReference .optional label {color:navy;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
+#formAddReference .optional input {width:80%;margin:0.1em;}
+#formAddReference .additional {color:green;font-weight:bold;}
+#formAddReference fieldset.additional {display:none;text-align:left}
+#formAddReference .additional label {color:green;font-weight:bold;font-size:11px;width:90px;float:left;margin-top:0.3em;height:11px;}
+#formAddReference .additional input {width:80%;margin:0.1em;}
+#formAddReference .additional textarea {height:165px;width:80%;margin:0.1em;}
 
 
 /**
@@ -265,6 +279,22 @@ body {font-family:"Gill Sans",Verdana,sans-serif;background-color:white;color:bl
 a.cleanref, a:hover.cleanref, a:visited.cleanref {color:navy;text-decoration:none;}
 a.admin, a.admin:visited, a.admin:hover {color:red;text-decoration:none;}
 .fieldset-bordered {border: dotted 1px navy;text-align:center;margin:0;padding:1em;}
-input {border:solid 1px #999;font-size:inherit;}
+
+input
+{
+  border:solid 1px #999;
+  font-size:inherit;
+}
 select {font-size:inherit;}
 textarea {border:solid 1px #999;font-size:inherit;}
+
+input:focus
+{  
+  background-color: #cddefd;
+  border:1px solid #248;
+  color:#f00;
+}
+
+
+fieldset {border:solid 1px gray;}
+legend {font-weight:bold;}

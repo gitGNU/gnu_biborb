@@ -11,17 +11,26 @@ function toggle_element(id){
 // Added if not already present.
 function addGroup()
 {
-    var groups = document.forms['f_bibtex_entry'].elements['groups'];
-    var groupslist = document.forms['f_bibtex_entry'].elements['groupslist'];
+    var groups = document.forms['formAddReference'].elements['groups'];
+    var groupslist = document.forms['formAddReference'].elements['listOfGroups'];
     var groupArray = groups.value.split(",");
-    var addGroup = groupslist.options[groupslist.selectedIndex].value;
+    var addGroup = trim(groupslist.options[groupslist.selectedIndex].value);
 
-    found = false;
-    for(i=0;i<groupArray.length && !found; i++){
+    // exit if there is no group
+    if(addGroup == '')
+        return;
+
+    // look if group already present
+    // if not, add it
+    found = false;    
+    for(i=0;i<groupArray.length && !found; i++)
+    {
         found = (groupArray[i] == addGroup);
     }
-    if(!found){
-        if(groups.value != ""){
+    if(!found)
+    {
+        if(groups.value != "")
+        {
             groups.value += ",";
         }
         groups.value += addGroup;
@@ -43,27 +52,92 @@ function changeLangForIndex(name){
 ////////////////////////////////////////////////////////////////////////////////
 // check forms
 
-// new bibliography creation
-// check the name is not empty
-function validate_bib_creation(lang){
-	var msg;
-	var name = document.forms['f_bib_creation'].elements['database_name'].value;
 
-	if(lang == 'fr_FR'){
-		msg = "Nom de bibliographie vide!";
-	}
-	else if(lang == 'en_US'){
-		msg = "Empty bibliography name!";
-	}
-
-	if(trim(name) == ""){
-		alert(msg);
+/**
+ * Validate the form adding bibliographies
+ */
+function checkAddBib(bibs, lang)
+{
+    var aElement = document.forms['formAddBib'].elements['database_name'];
+    var aValue = trim(aElement.value);
+    
+    
+	if( aValue == "" )
+    {
+		alert("Bibliography name is not set!");
+        aElement.focus();
 		return false;
 	}
-    else{
+    else
+    {
+        for (i in bibs)
+        {
+            if (bibs[i] == aValue)
+            {
+                aElement.focus();
+                alert("This bilbiography already exists!");
+                return false;
+            }
+        }
+        document.forms['formAddBib'].submit();        
         return true;
     }
 }
+
+/**
+ * Validate the form deleting bibliographies
+ */
+function checkDeleteBibs(lang)
+{
+    var aElements = document.forms['formDeleteBibs'].elements;
+    var aBibSelected = false;
+    
+    for (var i=0;i<aElements.length && !aBibSelected;i++)
+    {
+        if (aElements[i].name == "bibs[]")
+        {
+            aBibSelected = aElements[i].checked;
+        }
+    }
+    if (aBibSelected)
+    {
+        document.forms['formDeleteBibs'].submit();
+        return true;
+    }
+    else
+    {
+        alert("No bibliographies selected!");
+        return false;
+    }
+    
+
+}
+
+
+/**
+ * Validate the form deleting bibliographies
+ */
+function checkAddRefForm(lang,requiredElements)
+{
+    var aElements = document.forms['f_bibtex_entry'].elements;
+    var aMissingData = false;
+    
+    for (var i=0;i<aElements.length && !aMissingData;i++)
+    {
+        if ( requiredElements.find(aElements[i].name) )
+        {
+            aMissingData = trim(aElements[i].value) == "";            
+        }
+    }
+    if (aMissingData)
+    {
+        alert("Missing value for" + aElements[i-1].name);
+    }
+    return false;
+    
+}
+
+            
 
 // check if group is not empty
 function validate_add_group(lang){
@@ -210,7 +284,7 @@ function display_browse(str)
     document.getElementById('tab_groups').className = (str != 'groups' ? '' : 'active');
 }
 
-function toggle_tab_edit(str)
+function toggleTabEdit(str)
 {
     document.getElementById('required_ref').style.display = (str != 'required_ref' ? 'none' : 'block');
     document.getElementById('tab_required_ref').className = (str != 'required_ref' ? '' : 'active');
@@ -220,3 +294,26 @@ function toggle_tab_edit(str)
     document.getElementById('tab_additional_ref').className = (str != 'additional_ref' ? '' : 'active');
 }
 
+
+
+/**
+ * Function to highlight a row of a table containing a checkbox
+ */
+function setRowColor(checkBox, styleClass)
+{
+    var theRow = document.getElementById(checkBox.value);
+    if(theRow != null)
+        theRow.className = checkBox.checked? styleClass:"none";
+}
+/*
+Array.find = function(ary, element)
+{
+	for(var i=0; i<ary.length; i++)
+    {
+		if(ary[i] == element)
+        {
+			return i;
+		}
+	}
+	return -1;
+    }*/

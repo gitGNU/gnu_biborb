@@ -53,6 +53,7 @@ function biborb_error_handler($iErrNo, $iErrStr, $iErrFile, $iErrLine)
 	switch ($iErrNo)
 	{
         case E_USER_NOTICE:
+            /*
             $aHtmlHeaderData = array( 'title' => 'Biborb',
                                       'stylesheet' => CSS_FILE,
                                       'javascript' => './biborb.js');
@@ -74,8 +75,10 @@ Go Back to <a href='index.php'>BibORB</a>
 EOT;
             $aHtml .= HtmlToolKit::htmlClose();
             echo $aHtml;
-            //print_r($_SESSION['errorManager']);
-            exit(1);
+            print_r($_SESSION['errorManager']);
+            exit(1);*/
+            break;
+            
 		case ERROR:
 		case FATAL:
 		case E_ALL:
@@ -110,22 +113,60 @@ class ErrorManager
 {
     var $_errorStack;
     var $_warningStack;
+    var $_noticeStack;
 
 
     function ErrorManager()
     {
         $this->_errorStack = array();
         $this->_warningStack = array();
+        $this->_noticeStack = array();
     }
 
+    function hasErrors()
+    {
+        return !empty($this->_errorStack);
+    }
+
+    function hasWarnings()
+    {
+        return !empty($this->_warningStack);
+    }
+
+    function hasNotices()
+    {
+        return !empty($this->_noticeStack);
+    }
+
+    function purgeAll()
+    {
+        $this->purgeErrors();
+        $this->purgeWarnings();
+        $this->purgeNotices();
+    }
+
+    function purgeErrors()
+    {
+        $this->_errorStack = array();
+    }
+
+    function purgeWarnings()
+    {
+        $this->_warningStack = array();
+    }
+
+    function purgeNotices()
+    {
+        $this->_noticeStack = array();
+    }
     /**
      * Trigger a new warning
      *
      */
-    function triggerWarning($iString, $iContext)
+    function triggerWarning($iString, $iContext, $iGoTo = null)
     {
-        $this->_warningStack[] = array($iString, $iContext, E_USER_NOTICE);
-        trigger_error($iString, E_USER_NOTICE);
+        $this->_warningStack[] = array('string'=>$iString, 'context'=>$iContext, 'level'=>E_USER_WARNING);
+//        header('Location:index.php');
     }
 
     
@@ -133,11 +174,50 @@ class ErrorManager
      * Trigger a new error
      *
      */
-    function triggerError($iString, $iContext)
+    function triggerError($iString, $iContext, $iGoTo = null)
     {
-        $this->_errorStack[] = array($iString, $iContext, E_USER_ERROR);
-        trigger_error($iString, E_USER_ERROR);
+        $this->_errorStack[] = array('string'=>$iString, 'context'=>$iContext, 'level'=>E_USER_ERROR);
+        if (isset($iGoTo))
+        {
+            header("Location:${iGoTo}");
+            die();
+        }
     }
+
+    /**
+     * Display all warnings
+     */
+    function outputWarnings()
+    {
+        $aHtmlContent = "";
+        foreach ($this->_warningStack as $aWarning)
+        {
+            $aHtmlContent .= "Warning:";
+            $aHtmlContent .= HtmlToolKit::tag('pre',$aWarning['string']);
+            $aHtmlContent .= HtmlToolKit::tag('pre',print_r($aWarning['context'],true));
+            $aHtmlContent .= HtmlToolKit::tagNoData('br');
+        }
+        return $aHtmlContent;
+    }
+
+    /**
+     * Display all warnings
+     */
+    function outputErrors()
+    {
+        
+        $aHtmlContent = HtmlToolKit::startTag('div',array('id'=>'error'));
+        foreach ($this->_errorStack as $aError)
+        {
+            $aHtmlContent .= "Error:";
+            $aHtmlContent .= HtmlToolKit::tag('pre',$aError['string']);
+            $aHtmlContent .= HtmlToolKit::tag('pre',print_r($aError['context'],true));
+        }
+        $aHtmlContent .= HtmlToolKit::closeTag('div');
+        
+        return $aHtmlContent;
+    }
+            
 }
 
 ?>

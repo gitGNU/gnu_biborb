@@ -96,58 +96,43 @@ function index_welcome()
 }
 
 /**
- * Create the page to add a new bibliography.
+ * Create a form to add a new bibliography.
  */
-function index_add_database()
+function guiAddDatabase($availableBibs)
 {
-    $aHtml = indexHeader();
-    $aTitle = msg("INDEX_CREATE_BIB_TITLE");
-    // create the form to create a new bibliography
-    $aLocale = $_SESSION['i18n']->getLocale();
-    $aContent = "<form method='get' action='index.php' id='f_bib_creation' onsubmit='return validate_bib_creation(\"{$aLocale}\")'>";
-    $aContent .= "<fieldset>";
-    $aContent .= "<input type='hidden' name='mode' value='result'/>";
-    $aContent .= "<label for='database_name'>".msg("INDEX_CREATE_BIBNAME").":</label>";
-    $aContent .= "<input type='text' name='database_name' id='database_name'/><br/>";
-    $aContent .= "<label for='description'>".msg("INDEX_CREATE_DESCRIPTION").":</label>";
-    $aContent .= "<input type='text' name='description' id='description'/><br/>";
-    $aContent .= "<input type='hidden' name='action' value='create'/>";
-    $aContent .= "<input class='submit' type='submit' value='".msg("Create")."'/>";
-    $aContent .= "</fieldset>";
-    $aContent .= "</form>";
-
-    $aHtml .= index_menu();
-    $aHtml .= HtmlToolKit::main($aTitle,$aContent);
-    $aHtml .= HtmlToolKit::htmlClose();
-
-    return $aHtml;
-}
-
-/**
- * Display the bibliographies in a combo box to select which one to delete.
- */
-function index_delete_database()
-{
-    $aHtml = indexHeader();
-    $aTitle = msg("INDEX_DELETE_BIB_TITLE");
-    // get all bibliographies and create a form to select which one to delete
-    $aDatabases = $_SESSION['DbManager']->getDbNames();
-
-    $aContent = "<form method='get' action='index.php' id='f_delete_database'>";
-    $aContent .= "<fieldset>";
-    $aContent .= "<input type='hidden' name='mode' value='result'/>";
-    $aContent .= HtmlToolKit::selectTag(array('name' =>' database_name'),
-                                        $aDatabases);
-    $aContent .= "<input type='hidden' name='action' value='delete'/>";
-    $aContent .= "&nbsp;<input class='submit' type='submit' value='".msg("Delete")."'/>";
-    $aContent .= "</fieldset>";
-    $aContent .= "</form>";
-
-    $aHtml .= index_menu();
-    $aHtml .= HtmlToolKit::main($aTitle,$aContent);
-    $aHtml .= HtmlToolKit::htmlClose();
-
-    return $aHtml;
+    $aJsArray = 'new Array(';
+    $aIsFirstElem = true;
+    foreach($availableBibs as $key => $name)
+    {
+        if (!$aIsFirstElem)
+        {    
+            $aJsArray .= ',';
+        }
+        
+        $aJsArray .= '"'.$key.'"';
+        $aIsFirstElem = false;
+    }
+    $aJsArray .= ')';        
+        
+    $aFormData = array('method'   => 'post',
+                       'action'   => _PHP_SELF_,
+                       'id'       => 'formAddBib');
+    $aContent = HtmlToolKit::startTag('form',$aFormData);
+    $aContent .= HtmlToolKit::startTag('fieldset');
+    $aContent .= HtmlToolKit::tag('legend',msg('INDEX_CREATE_BIB_TITLE'));
+    $aContent .= HtmlToolKit::tag('label',msg("INDEX_CREATE_BIBNAME"),array('for'=>'database_name'));
+    $aContent .= HtmlToolKit::tagNoData('input',array('type'=>'text','name'=>'database_name','id'=>'database_name'));
+    $aContent .= HtmlToolKit::tagNoData('br');
+    $aContent .= HtmlToolKit::tag('label',msg("INDEX_CREATE_DESCRIPTION"),array('for'=>'description'));
+    $aContent .= HtmlToolKit::tagNoData('input',array('type'=>'text','name'=>'description','id'=>'description'));
+    $aContent .= HtmlToolKit::tagNoData('br');
+    $aContent .= HtmlToolKit::tagNoData('input',array('type'=>'hidden','name'=>'mode','value'=>'select'));
+    $aContent .= HtmlToolKit::tagNoData('input',array('type'=>'hidden','name'=>'action','value'=>'create'));
+    $aContent .= HtmlToolKit::tagNoData('input',array('type'=>'button','value'=>msg('Create'),'class'=>'submit','onclick'=> 'return checkAddBib('.$aJsArray.',"'.$_SESSION['i18n']->getLocale().'")'));
+    $aContent .= HtmlToolKit::closeTag('fieldset');
+    $aContent .= HtmlToolKit::closeTag('form');
+    
+    return $aContent;
 }
 
 /**
@@ -182,41 +167,123 @@ function index_result()
 }
 
 /**
- * List of available bibliographies.
+ * HTML gui to display the list of available bibliographies.
+ * If the current user is an administrator, output is enriched with
+ * elements to create and delete bibliographies.
+ *
+ * @param availableBibs An array of bibliographies ('shortName'=>'description')
  */
-function index_select()
+function guiAvailableBibs($availableBibs)
 {
-    $aHtml = indexHeader();
-    $aTitle = msg("INDEX_AVAILABLE_BIBS_TITLE");
-    $aHtml .= index_menu();
+    $aContent = '';
 
-    // get all bibliographies and create an array
-    $aDatabaseNames = $_SESSION['DbManager']->getDbNames();
-    $aContent = HtmlToolKit::startTag('table',array('id' => 'available_bibliographies'));
+    // if the user is admin, put everything in a form
+    if ($_SESSION['user']->isAdmin())
+    {
+        $aFormData = array('method'=> 'post',
+                           'action' => _PHP_SELF_,
+                           'class' => 'available_bibliographies',
+                           'id'    => 'formDeleteBibs');
+        $aContent .= HtmlToolKit::startTag('form',$aFormData);
+        $aContent .= HtmlToolKit::startTag('fieldset',array('class' => 'available_bibliographies'));
+    };
+
+    // header of the table
+    // table content is   shortName | description  ( | checkbox)
+    $aContent .= HtmlToolKit::startTag('table',array('class' => 'available_bibliographies'));
     $aContent .= HtmlToolKit::startTag('thead');
     $aContent .= HtmlToolKit::startTag('tr');
-    $aContent .= HtmlToolKit::tag('th',msg("INDEX_AVAILABLE_BIBS_COL_BIBNAME"));
-    $aContent .= HtmlToolKit::tag('th',msg("INDEX_AVAILABLE_BIBS_COL_BIBDESCRIPTION"));
+    $aContent .= HtmlToolKit::tag('th',msg('INDEX_AVAILABLE_BIBS_COL_BIBNAME'));
+    $aContent .= HtmlToolKit::tag('th',msg('INDEX_AVAILABLE_BIBS_COL_BIBDESCRIPTION'));
+    
+    if ($_SESSION['user']->isAdmin())
+    {
+        // add a checkbox to select bibliographies for batch process
+        $aContent .= HtmlToolKit::tagNoData('th');
+    }
+    
     $aContent .= HtmlToolKit::closeTag('tr');
     $aContent .= HtmlToolKit::closeTag('thead');
     $aContent .= HtmlToolKit::startTag('tbody');
 
-    foreach($aDatabaseNames as $aName => $aFullName)
+    foreach($availableBibs as $aName => $aFullName)
     {
         $aDescription = FileToolKit::getContent("./bibs/{$aName}/description.txt");
-        $aContent .= HtmlToolKit::startTag('tr');
+        $aContent .= HtmlToolKit::startTag('tr',array('id'=>$aName));
         $aContent .= HtmlToolKit::startTag('td');
         $aContent .= HtmlToolKit::tag('a',$aFullName,array('class'=>'bibname',
-                                                           'href' => './bibindex.php?mode=welcome&amp;bibname='.$aName));
+                                                           'href' => './biborb.php?mode=bib&amp;bibname='.$aName));
         $aContent .= HtmlToolKit::closeTag('a');
         $aContent .= HtmlToolKit::closeTag('td');
         $aContent .= HtmlToolKit::startTag('td');
         $aContent .= HtmlToolKit::tag('span',$aDescription,array('class'=>'bib_description'));
         $aContent .= HtmlToolKit::closeTag('td');
+        if ($_SESSION['user']->isAdmin())
+        {
+            $aContent .= HtmlToolKit::startTag('td');
+            $aContent .= HtmlToolKit::tagNoData('input',array('type'=>'checkbox','name'=>'bibs[]','value'=>$aName,
+                                                              'onclick'=>'setRowColor(this,"selected")'));
+            $aContent .= HtmlToolKit::closeTag('td');
+        }
         $aContent .= HtmlToolKit::closeTag('tr');
     }
     $aContent .= HtmlToolKit::closeTag('tbody');
     $aContent .= HtmlToolKit::closeTag('table');
+
+    if ($_SESSION['user']->isAdmin())
+    {
+        // config to delete selected bibliographies
+        $aContent .= HtmlToolKit::tagNoData('input', array('type'=>'hidden','value'=>'delete','name'=>'action'));
+        $aContent .= HtmlToolKit::tagNoData('input',array('type'=>'hidden','name'=>'mode','value'=>'select'));
+        $aContent .= HtmlToolKit::closeTag('fieldset');
+        $aContent .= HtmlToolKit::startTag('fieldset',array('id'=>'f_delete_bibliographies'));
+        $aContent .= HtmlToolKit::tag('legend',msg("Delete bibliographies"));
+        $aContent .= HtmlToolKit::tagNoData('input', array('type'=>'button',
+                                                           'value'=> msg("Delete selected bibliographies"),
+                                                           'onclick' => 'return checkDeleteBibs("'.$_SESSION['i18n']->getLocale().'")'));
+        $aContent .= HtmlToolKit::closeTag('fieldset');
+        $aContent .= HtmlToolKit::closeTag('form');
+    }
+    
+    return $aContent;
+}
+
+
+/**
+ * List of available bibliographies.
+ */
+function guiBibsManager()
+{
+    $aHtml = indexHeader();
+    $aTitle = msg("INDEX_AVAILABLE_BIBS_TITLE");
+    $aHtml .= index_menu();
+
+    $aContent = '';
+    if ($_SESSION['errorManager']->hasErrors())
+    {   
+        $aContent .= $_SESSION['errorManager']->outputErrors() ;
+    }
+
+    $aDbNames = $_SESSION['DbManager']->getDbNames();
+    if (!empty($aDbNames))
+    {        
+        $aContent .= guiAvailableBibs($aDbNames);
+    }
+    else
+    {
+        $aContent .= msg("No bibliographies defined.");
+    }
+    
+        
+    if ($_SESSION['user']->isAdmin())
+    {
+        $aContent .= guiAddDatabase();
+    }
+    if ($_SESSION['errorManager']->hasWarnings())
+    {
+        $aContent .= $_SESSION['errorManager']->outputWarnings();
+    }
+    
     $aHtml .= HtmlToolKit::main($aTitle,$aContent);
     $aHtml .= HtmlToolKit::htmlClose();
     return $aHtml;
@@ -254,16 +321,17 @@ function index_menu()
     if(!DISABLE_AUTHENTICATION && !array_key_exists('user',$_SESSION)){
         $html .= "<li><a title=\"".msg("INDEX_MENU_LOGIN_HELP")."\" href='index.php?mode=login'>".msg("INDEX_MENU_LOGIN")."</a></li>";
     }
-    if($_SESSION['user_is_admin']){
-        $html .= "<li><a title='".msg("INDEX_MENU_ADD_BIB_HELP")."' class='admin' href='index.php?mode=add_database'>".msg("INDEX_MENU_ADD_BIB")."</a></li>";
-        $html .= "<li><a title='".msg("INDEX_MENU_DELETE_BIB_HELP")."' class='admin' href='index.php?mode=delete_database'>".msg("INDEX_MENU_DELETE_BIB")."</a></li>";
-    }
-    if(array_key_exists('user',$_SESSION)){
+//    if($_SESSION['user_is_admin']){
+//        $html .= "<li><a title='".msg("INDEX_MENU_ADD_BIB_HELP")."' class='admin' href='index.php?mode=add_database'>".msg("INDEX_MENU_ADD_BIB")."</a></li>";
+//        $html .= "<li><a title='".msg("INDEX_MENU_DELETE_BIB_HELP")."' class='admin' href='index.php?mode=delete_database'>".msg("INDEX_MENU_DELETE_BIB")."</a></li>";
+//    }
+    if(!DISABLE_AUTHENTICATION && array_key_exists('user',$_SESSION)){
         $html .= "<li>";
         $html .= "<a href='index.php?mode=preferences' title='".msg("INDEX_MENU_PREFERENCES_HELP")."' >".msg("INDEX_MENU_PREFERENCES")."</a>";
         $html .= "</li>";
     }
-    if(!DISABLE_AUTHENTICATION && array_key_exists('user',$_SESSION)){
+    if ( !DISABLE_AUTHENTICATION && array_key_exists('user',$_SESSION))
+    {
         $html .= "<li><a title='".msg("INDEX_MENU_LOGOUT_HELP")."' href='index.php?mode=welcome&amp;action=logout'>".msg("INDEX_MENU_LOGOUT")."</a></li>";
     }
     $html .= "</ul>";

@@ -296,6 +296,7 @@ function bibindex_welcome()
     $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
     $aTitle = 'BibORB: '. $_SESSION['bibdb']->getFullName();
     $aContent = '';
+    
     //$content = msg('This is the bibliography').': <strong>'.$_SESSION['bibdb']->name().'</strong>.<br/>';
     if(array_key_exists('user',$_SESSION) && !DISABLE_AUTHENTICATION){
         $content .= msg('You are logged as').': <em>'.$_SESSION['user'].'</em>.';
@@ -325,7 +326,7 @@ function bibindex_welcome()
     $aContent  .= HtmlToolKit::closeTag('tbody');
     $aContent  .= HtmlToolKit::closeTag('table');    
 
-    $aHtml .= main($aTitle,$aContent);
+    $aHtml .= HtmlToolKit::main($aTitle,$aContent);
     $aHtml .= HtmlToolKit::htmlClose();
     
     return $aHtml;
@@ -1148,82 +1149,152 @@ function bibindex_manager_help(){
 }
 
 /**
- * bibindex_entry_to_add
- * display the page to select which type of entry to add
+ * guiSelectReferenceType
+ * get the form to select the reference type to add
  */
-function bibindex_entry_to_add(){
-    $aHtml = bibheader();
-    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
-    $title = msg("BIBINDEX_SELECT_NEW_ENTRY_TITLE");
-    $types = xhtml_select('type',1,$_SESSION['bibdb']->entry_types(),"");
-	$content = "<form id='select_entry_type' method='get' action='bibindex.php'>";
-	$content .= "<fieldset>";
-	$content .= "<label for='mode'>".msg("Select an entry type: ")."</label>".$types;
-    $content .= "&nbsp;<input class='submit' type='submit' name='mode' id='mode' value='".msg("Select")."'/>";
-    $content .= "</fieldset>";
-    $content .= "</form>";
+function guiSelectReferenceType()
+{
+    $aTypes = $_SESSION['DbManager']->getReferenceTypes();
+    
+    $content = HtmlToolKit::startTag('form',
+                                     array('id' => 'formSelectReferenceType',
+                                           'method' => 'post',
+                                           'action' => _PHP_SELF_));
+    $content .= HtmlToolKit::startTag('fieldset');
+    $content .= HtmlToolKit::tag('legend',msg('Type of reference'));
+	$content .= HtmlToolKit::tag('label', msg("Select a reference type: "), array('for' => 'referenceType'));
+    $content .= HtmlToolKit::selectTag(array('name'=>'referenceType'),
+                                       array_combine($aTypes,$aTypes));
+    $content .= HtmlToolKit::tagNoData('input', array('type' => 'hidden',
+                                                      'name' => 'mode',
+                                                      'value'=> 'addReference'));
+    $content .= HtmlToolKit::tagNoData('input', array('class' => 'submit',
+                                                      'type' => 'submit',
+                                                      'value'=>msg("Select")));
+    $content .= HtmlToolKit::closeTag('fieldset');
+    $content .= HtmlToolKit::closeTag('form');
 
-    $aHtml .= main($title,$content);
-    $aHtml .= html_close();
-    return $aHtml;
+    return $content;
 }
 
 /**
  * bibindex_add_entry
  * Display a form to edit the value of each BibTeX fields
  */
-function bibindex_add_entry($type)
+function guiAddReference($type)
 {
 
-    // xslt transformation
-    $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
-    $aParam = $GLOBALS['xslparam'];
-    $xml_content = file_get_contents("./xsl/model.xml");
-    $xsl_content = file_get_contents("./xsl/model.xsl");
-    $aParam = array("typeentry"=>$type);
-    $fields = $xsltp->transform($xml_content,$xsl_content,$aParam);
-    $xsltp->free();
-
-    // get the list of available groups
-    $glist = $_SESSION['bibdb']->groups();
-    array_push($glist,"");
-    $groups=xhtml_select("groupslist",1,$glist,"","addGroup()");
-	$fields = str_replace("#XHTMLGROUPSLIST",$groups,$fields);
+    // locale
+    $aLocale = $_SESSION['i18n']->getLocale();
+    
+    // get the list of fields for this type
+    $aFields = Reference::getFieldsForType($type);
+    
 
     // read status and ownership
-    $readstatus = read_status_html_select("read","notread");
-    $ownership = ownership_html_select("own","notown");
-    $fields = str_replace("#XHTMLREADSTATUS",$readstatus,$fields);
-    $fields = str_replace("#XHTMLOWNERSHIP",$ownership,$fields);
-
-    $aHtml = bibheader("");
-    $aHtml .= bibindex_menu($_SESSION['bibdb']->getFullName());
-    $title = msg("BIBINDEX_ADD_ENTRY_TITLE");
+//    $readstatus = read_status_html_select("read","notread");
+//    $ownership = ownership_html_select("own","notown");
+//    $fields = str_replace("#XHTMLREADSTATUS",$readstatus,$fields);
+//    $fields = str_replace("#XHTMLOWNERSHIP",$ownership,$fields);
+    
 // a tabbed interface
-    $content = "<div>";
-    $content .= "<ul id='tabnav'>";
-    $content .= "<li><a id='tab_required_ref' class='active' href='javascript:toggle_tab_edit(\"required_ref\")'>".msg("BIBORB_OUTPUT_REQUIRED_FIELDS")."</a></li>";
-    $content .= "<li><a id='tab_optional_ref' href='javascript:toggle_tab_edit(\"optional_ref\")'>".msg("BIBORB_OUTPUT_OPTIONAL_FIELDS")."</a></li>";
-    $content .= "<li><a id='tab_additional_ref' href='javascript:toggle_tab_edit(\"additional_ref\")'>".msg("BIBORB_OUTPUT_ADDITIONAL_FIELDS")."</a></li>";
-    $content .= "</ul>";
-    $content .= "</div>";
-    $aLocale = $_SESSION['i18n']->getLocale();
-    $content .= "<form method='post' action='bibindex.php' enctype='multipart/form-data' onsubmit='return validate_new_entry_form(\"{$aLocale}\")' id='f_bibtex_entry'>";
-	$content .= "<fieldset class='clean'>";
-	$content .= "<input name='___type' value='$type' type='hidden'/>";
-    $content .= "</fieldset>";
-	$content .= eval_php($fields);
-	$content .= "<fieldset class='clean'>";
-	$content .= "<input type='hidden' name='mode' value='operationresult'/>";
-	$content .= "<input class='submit' type='submit' name='cancel' value='".msg("Cancel")."'/>&nbsp;";
-	$content .= "<input class='submit' type='submit' name='ok' value='".msg("Add")."'/>";
-    $content .= "<input type='hidden' name='action' value='add_entry'/>";
-	$content .= "</fieldset>";
-	$content .= "</form>";
+    $content = HtmlToolKit::startTag('div', array('id'=>'tabnav'));
+    $content .= HtmlToolKit::startTag('ul');
+    $content .= HtmlToolKit::startTag('li',array('class'=>'active','id' => 'tab_required_ref'));
+    $content .= HtmlToolKit::tag('a',
+                                 msg("BIBORB_OUTPUT_REQUIRED_FIELDS"),
+                                 array('href'=>'javascript:toggleTabEdit("required_ref")'));
+    $content .= HtmlToolKit::closeTag('li');
+	$content .= HtmlToolKit::startTag('li', array('id' => 'tab_optional_ref'));
+    $content .= HtmlToolKit::tag('a',
+                                 msg("BIBORB_OUTPUT_OPTIONAL_FIELDS"),
+                                 array('href'=>'javascript:toggleTabEdit("optional_ref")'));
+    $content .= HtmlToolKit::closeTag('li');
+	$content .= HtmlToolKit::startTag('li',array('id'=>'tab_additional_ref'));
+    $content .= HtmlToolKit::tag('a',
+                                 msg("BIBORB_OUTPUT_ADDITIONAL_FIELDS"),
+                                 array('href'=>'javascript:toggleTabEdit("additional_ref")'));
+    $content .= HtmlToolKit::closeTag('li');
+    $content .= HtmlToolKit::closeTag('ul');
+    $content .= HtmlToolKit::closeTag('div');
+	// beginning of the form
+    $content .= HtmlToolKit::startTag('form',
+                                      array('method'  => 'post',
+                                            'action'  => 'bibindex.php',
+                                            'enctype' => 'multipart/form-data',
+                                            'onsubmit' => 'return validate_new_entry_form('.$aLocale.')',
+                                            'id' => 'formAddReference'));
+    $content .= HtmlToolKit::startTag('fieldset');			
+	$content .= HtmlToolKit::tagNoData('input',array('name'=>'___type',
+                                                     'value'=> $type,
+                                                     'type'=>'hidden'));
+    $content .= HtmlToolKit::tagNoData('input', array('type'  => 'hidden',
+                                                      'name'  => 'mode',
+                                                      'value' => 'operationresult'));
+	$content .= HtmlToolKit::tagNoData('input', array('class' => 'submit',
+                                                      'type'  => 'submit',
+                                                      'name'  => 'cancel',
+                                                      'value' => msg("Cancel")));
+    $content .= HtmlToolKit::tagNoData('input', array('type' => 'button',
+                                                      'name' => 'ok',
+                                                      'value' => msg("Add"),
+                                                      'onclick' => 'return checkAddRefForm("'.$_SESSION['i18n']->getLocale().'")'));
+    $content .= HtmlToolKit::tagNoData('input', array('type'  =>'hidden',
+                                                      'name'  =>'action',
+                                                      'value' => 'add_entry'));
+    $content .= HtmlToolKit::closeTag('fieldset');
+    
+	// add the input to be filled by the user
+    foreach ($aFields as $type => $fields)
+    {
+        $content .= HtmlToolKit::startTag('fieldset', array('class' => $type,
+                                                            'id' => "${type}_ref"));
+        foreach ($fields as $field)
+        {
+            $content .= HtmlToolKit::tag('label',msg($field), array('for' => $field));
+            $aProperties = array('name' => $field);
+            if ($field == 'abstract' || $field == 'longnotes')
+            {
+                $content .= HtmlToolKit::tag('textarea', '' , array('name' => $field,
+                                                                    'rows' => 5,
+                                                                    'cols' => 80));
+            }
+            else if ($field == 'url' || $field == 'pdf' || $field == 'urlzip')
+            {
+                $content .= HtmlToolKit::tagNoData('input', array('name' => 'up_'.$field,
+                                                                  'type' => 'file'));
+            }
+            else if ($field == 'groups')
+            {
+                // get the list of available groups
+                $glist = $_SESSION['bibdb']->getGroups();
+                array_push($glist,"");
+                array_push($glist,"g1");
+                array_push($glist,"g2");
+                $content .= HtmlToolKit::tagNoData('input', array('name'=>$field));
+                $content .= HtmlToolKit::tagNoData('br');
+                $content .= HtmlToolKit::tag('label','', array('for' => 'listOfGroups'));
+                $content .= HtmlToolKit::selectTag(array('name'=> 'listOfGroups',
+                                                         'onchange' => 'addGroup()'),
+                                                   array_combine($glist,$glist), '');
+                $content .= HtmlToolKit::tagNoData('br');
+                
+            }                
+            else
+            {
+                $content .= HtmlToolKit::tagNoData('input', array('name'=>$field));
+            }
+            
+        }
+        $content .= HtmlToolKit::closeTag('fieldset');
+	}    
 
-    $aHtml .= main($title,$content);
-    $aHtml .= html_close();
-    return $aHtml;
+	$content .= HtmlToolKit::startTag('fieldset');
+    $content .= HtmlToolKit::tagNoData('br');
+
+    $content .= HtmlToolKit::closeTag('form');    
+    
+    return $content;
 }
 
 /**
