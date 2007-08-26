@@ -31,12 +31,27 @@
  *
  */
 
+include('./php/utilities.php');
 
-/*
-	Set the default time zone.
-	Only available to php >= 5.1.0
-*/
-if ( version_compare(phpversion(), "5.1.0", ">=") ) {
+/**
+ *  Set the default time zone.
+ *  Only available to php >= 5.1.0
+ */
+if ( version_compare(phpversion(), "5.1.0", ">=") )
+{
 	date_default_timezone_set(BIBORB_TZ);
 }
+
+/**
+ * Stripslashes
+ */
+if (get_magic_quotes_gpc())
+{
+   $_GET     = undoMagicQuotes($_GET);
+   $_POST    = undoMagicQuotes($_POST);
+   $_COOKIE  = undoMagicQuotes($_COOKIE);
+   $_REQUEST = undoMagicQuotes($_REQUEST);
+}
+
+define("_PHP_SELF_",$_SERVER['PHP_SELF']);
 ?>
