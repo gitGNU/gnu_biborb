@@ -68,16 +68,16 @@ class DbManager
     function loadDbNames()
     {
         myUnset($this->_databases);
-        $this->databases = array();        
+        $this->_databases = array();        
         $aDbDir = dir("bibs");
         while ( ($aFile = $aDbDir->read()) !== false)
-        {
+        {   
             if ( is_dir('bibs/'.$aFile) &&
                  $aFile[0] != '.')
             {
                 $this->_databases[$aFile] = FileToolKit::getContent('bibs/'.$aFile.'/fullname.txt');
             }
-        }        
+        }
     }
 
     /**
@@ -88,69 +88,70 @@ class DbManager
      */
     function createDb($iName, $iDescription)
     {
-        // array to store messages or errors
-        $aResArray = array('message' => null,
-                           'error' => null);
+        // break if $iName is null
+        if ($iName == null)
+        {
+            $_SESSION['errorManager']->triggerError(msg("BIB_EMPTY_NAME"),"bibname => $iName","mode=select");
+            return array(0, $aResArray);
+        }
+
+        // Create the new bibliography if it doesn't exist.
+        if (in_array($iName, array_values($this->_databases)))
+        {
+            $aResArray['error'] = msg("BIB_EXISTS");
+            $_SESSION['errorManager']->triggerError(msg("BIB_EXISTS"),"bibname => $iName","mode=select");
+            return array(0, $aResArray);
+        }
+        
         $aFullname = $iName;
+        
         // check it is not a pathname
         if (!ereg('^[^./][^/]*$', $iName))
         {
             $aResArray['error'] = msg("Invalid name for bibliography!");
+            return array(0, $aResArray);
         }
-        else if ($iName != null)
+        
+        $aName = remove_accents($iName);
+        $aName = str_replace(array(' ','\'','"','\\'),'_',$aName);
+        umask(DMASK);
+        // create directory
+        if (mkdir("./bibs/$aName"))
         {
-            // Create the new bibliography if it doesn't exist.
-            if (!in_array($iName, array_values($this->_databases)))
-            {
-                $aName = remove_accents($iName);
-                $aName = str_replace(array(' ','\'','"','\\'),'_',$aName);
-                umask(DMASK);
-                // create directory
-                if (mkdir("./bibs/$aName"))
-                {
-                    $aResArray['message'] = msg("BIB_CREATION_SUCCESS");
-                }
-                else
-                {
-                    $aResArray['message'] = msg("BIB_CREATION_ERROR");
-                }
-                // papers directory
-                mkdir("./bibs/$aName/papers");
-                
-                // xml and bibtex files
-                umask(UMASK);
-                copy("./data/template/template.bib","./bibs/$aName/$aName.bib");
-                copy("./data/template/template.xml","./bibs/$aName/$aName.xml");
-                
-                // description
-                $aFp = fopen("./bibs/$aName/description.txt","w");
-                fwrite($aFp, $iDescription);
-                fclose($aFp);
-                
-                // full-name
-                $aFp = fopen("./bibs/$aName/fullname.txt","a+");
-                fwrite($aFp,$aFullname);
-                fclose($aFp);
-                
-                // init xml file
-                $aXml = FileToolKit::getContent("./bibs/$aName/$aName.xml");
-                $aXml = str_replace("template",$aName,$aXml);
-                $aFp = fopen("./bibs/$aName/$aName.xml","w");
-                fwrite($aFp,$aXml);
-                fclose($aFp);
-
-                $this->_databases[$aName] = $aFullname;                
-            }
-            else
-            {
-                $aResArray['error'] = msg("BIB_EXISTS");
-            }
+            $aResArray['message'] = msg("BIB_CREATION_SUCCESS");
         }
         else
         {
-            $aResArray['error'] = msg("BIB_EMPTY_NAME");
+            $aResArray['message'] = msg("BIB_CREATION_ERROR");
         }
-        return $aResArray;
+        // papers directory
+        mkdir("./bibs/$aName/papers");
+        
+        // xml and bibtex files
+        umask(UMASK);
+        copy("./data/template/template.bib","./bibs/$aName/$aName.bib");
+        copy("./data/template/template.xml","./bibs/$aName/$aName.xml");
+        
+        // description
+        $aFp = fopen("./bibs/$aName/description.txt","w");
+        fwrite($aFp, $iDescription);
+        fclose($aFp);
+        
+        // full-name
+        $aFp = fopen("./bibs/$aName/fullname.txt","a+");
+        fwrite($aFp,$aFullname);
+        fclose($aFp);
+        
+        // init xml file
+        $aXml = FileToolKit::getContent("./bibs/$aName/$aName.xml");
+        $aXml = str_replace("template",$aName,$aXml);
+        $aFp = fopen("./bibs/$aName/$aName.xml","w");
+        fwrite($aFp,$aXml);
+        fclose($aFp);
+        
+        $this->_databases[$aName] = $aFullname;
+        
+        return array(1,$aResArray);
     }
 
     /**
@@ -175,7 +176,7 @@ class DbManager
         rename("bibs/$name","bibs/.trash/$name-".date("Ymd")) or trigger_error("Error while moving $fullname to .trash folder",ERROR);
         // result message
         $res = sprintf(msg("Database %s moved to trash."),$fullname)."<br/>";
-        $res .= sprintf(msg("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>");
+        $res .= sprintf(msg("Remove %s to definitively delete it."),"<code>./bibs/.trash/$name-".date("Ymd")."</code>").'<br/>';
         unset($this->_databases[$name]);
         return $res;
     }
@@ -183,9 +184,18 @@ class DbManager
     /**
      * Return a list of available types of references
      */
-    function getEntryTypes()
+    function getReferenceTypes()
     {
         return $this->_entryTypes;
     }
+
+    /**
+     * Does a given bibliography exists?
+     */
+    function exists($iDbName)
+    {   
+        return in_array($iDbName,array_keys($this->_databases));
+    }
+    
 }
 ?>

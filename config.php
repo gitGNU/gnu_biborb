@@ -229,4 +229,5 @@ $valid_upload_extensions = array('ps','pdf','gz','bz2','zip');
  * Set the timezone
  */
 define("BIBORB_TZ", "Europe/Paris");
+
 ?>

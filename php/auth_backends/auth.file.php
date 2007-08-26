@@ -67,7 +67,13 @@ class Auth
         $this->f_users = "./data/auth_files/bib_users.txt";
         $this->f_access = "./data/auth_files/bib_access.txt";
     }
+
+    function fillPermissionsForUser($aUser)
+    {
+        
+    }
     
+        
     /**
      * Is the login/password valid?
      * Returns TRUE/FALSE

@@ -80,12 +80,29 @@ function upload_file($bibname,$type,$id)
 function main($title,$content,$error = null,$message = null)
 {
   $html = "<div id='main'>";
-  if($title != null){$html .= "<h2 id='main_title'>$title</h2>";}
-  if($error){$html .= "<div id='error'>$error</div>";}
-  if($message){$html .= "<div id='message'>$message</div>";}
-  if($content != null) {$html .= "<div id='content'>$content</div>";}
-  $html .= "</div>";
-  return $html;
+  if (is_array($error))
+  {   
+      print_r($error);
+
+      if($title != null){$html .= "<h2 id='main_title'>$title</h2>";}
+      if($error[0] == 0){$html .= "<div id='error'>".$error[1]['error']."</div>";}
+      if($error[0] == 1){$html .= "<div id='message'>".$error[1]['message']."</div>";}
+      if($content != null) {$html .= "<div id='content'>$content</div>";}
+      $html .= "</div>";
+  }
+  else
+  {
+            print_r($error);
+      
+      if($title != null){$html .= "<h2 id='main_title'>$title</h2>";}
+      if($error){$html .= "<div id='error'>$error</div>";}
+      if($message){$html .= "<div id='message'>$message</div>";}
+      if($content != null) {$html .= "<div id='content'>$content</div>";}
+      $html .= "</div>";
+  }
+  return '';
+  
+//  return $html;
 }
 
 

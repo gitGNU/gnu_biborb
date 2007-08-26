@@ -41,7 +41,6 @@
 
 require_once("config.php");          // load configuration variables
 require_once("config.misc.php");
-require_once("php/utilities.php");
 require_once("php/proxyDbManager.php");    // load the db manager
 require_once("php/interface-index.php");   // load function to generate the interface
 require_once("php/auth.php");        // load authentication class
@@ -49,6 +48,9 @@ require_once("php/i18nToolKit.php");        // load i18n functions
 require_once("php/error.php");       // load biborb error handler
 require_once("php/HtmlToolKit.php");
 require_once("php/FileToolKit.php");
+require_once("php/functions.php");
+require_once("php/User.php");
+
 
 //require_once("php/third_party/Cache/Lite/Output.php"); // cache system
 
@@ -61,18 +63,38 @@ session_cache_limiter('nocache');
 session_name("SID");
 session_start();
 
-// Set the error_handler for biborb
 //set_error_handler("biborb_error_handler");
 
 /**
- * stripslashes
+ * Set the user
  */
-if (get_magic_quotes_gpc())
+if ( !isset($_SESSION['user']) ||
+     !is_object($_SESSION['user']))
 {
-    $_POST = array_map('stripslashes_deep', $_POST);
-    $_GET = array_map('stripslashes_deep', $_GET);
-    $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
+    $_SESSION['user'] = new User();
+    if (!$_SESSION['user']->isSetPermissions())
+    {
+        $aAuthenticationBackend = new Auth();
+        $aAuthenticationBackendÃ->fillPermissionsForUser($_SESSION['user']);
+    }
+    if (!$_SESSION['user']->isSetPreferences())
+    {
+        if (empty($aAuthenticationBackend))
+            $aAuthenticationBackend = new Auth();
+        $aAuthenticationBackendÃ-fillPreferencesForUser($_SESSION['user']);;
+    }
 }
+    
+
+/**
+ * Set the errorManager
+ */
+if ( !isset($_SESSION['errorManager']) ||
+     !is_object($_SESSION['errorManager']))
+{
+    $_SESSION['errorManager'] = new ErrorManager();
+}
+
 
 /**
  * Set the DbManager object.
@@ -90,16 +112,7 @@ if ( !isset($_SESSION['DbManager']) ||
 if ( !isset($_SESSION['i18n']) ||
      !is_object($_SESSION['i18n']))
 {
-    $aPrefLang = i18nToolKit::getPreferedLanguage();
-    $_SESSION['i18n'] = new i18nToolKit($aPrefLang, DEFAULT_LANG);
-}
-
-/**
- * Change the local if asked to.
- */
-if (isset($_GET['language']))
-{
-    $_SESSION['i18n']->loadLocale($_GET['language']);
+    $_SESSION['i18n'] = new i18nToolKit($_SESSION['user']->getPreference('language'), DEFAULT_LANG);
 }
 
 /**
@@ -113,7 +126,15 @@ $error_or_message = array('error' => null,
  * If not in $_GET, receive null
  * The 'mode' variable sets which page to display
  */
-$mode = isset($_GET['mode']) ? $_GET['mode'] : null;
+$mode = null;
+if ( isset($_GET['mode']) )
+{
+    $mode = $_GET['mode'];
+}
+else if ( isset($_POST['mode']) )
+{
+    $mode = $_POST['mode'];
+}
 
 /**
  * Set the access level
@@ -150,25 +171,26 @@ switch ($aAction)
         /* Create a database  */
     case 'create':
         // check we have the authorization to modify
-        if (!array_key_exists('user_is_admin',$_SESSION) ||
-            !$_SESSION['user_is_admin'])
+        if ( !$_SESSION['user']->isAdmin() )
         {
             trigger_error("You are not authorized to create bibliographies!",ERROR);
         }
         
-        $error_or_message = $_SESSION['DbManager']->createDb($_GET['database_name'],
-                                                             $_GET['description']);
+        $res = $_SESSION['DbManager']->createDb($_POST['database_name'],
+                                                $_POST['description']);
         break;
         
         /* Delete a database  */
     case 'delete':
         // check we have the authorization to modify
-        if (!array_key_exists('user_is_admin',$_SESSION) ||
-           !$_SESSION['user_is_admin'])
+        if ( !$_SESSION['user']->isAdmin() )
         {
             trigger_error("You are not authorized to delete bibliographies!",ERROR);
         }
-        $error_or_message['message'] = $_SESSION['DbManager']->deleteDb($_GET['database_name']);
+        foreach($_POST['bibs'] as $aBibName)
+        {    
+            $error_or_message['message'] .= $_SESSION['DbManager']->deleteDb($aBibName);
+        }
         break;
         
         /*  Logout  */
@@ -249,13 +271,13 @@ switch($mode)
     case 'welcome': echo index_welcome(); break;
 
 	// List of available bibliograpies
-    case 'select': echo index_select(); break;
+    case 'select': echo guiBibsManager(); break;
 
     // Add a new bibliography
-    case 'add_database': echo index_add_database(); break;
+//    case 'add_database': echo guiAddDatabase(); break;
 
 	// Delete a bibliography
-    case 'delete_database': echo index_delete_database(); break;
+//    case 'delete_database': echo index_delete_database(); break;
 
 	// Little help on what is available for the administrator mode
     case 'manager_help': echo index_manager_help(); break;
@@ -272,5 +294,5 @@ switch($mode)
 	// By default, load the welcome page
     default: echo index_welcome(); break;
 }
-
+$_SESSION['errorManager']->purgeAll();
 ?>

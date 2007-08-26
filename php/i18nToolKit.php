@@ -204,7 +204,7 @@ class i18nToolKit
                 return $aLocale[0].'_'.strtoupper($aLocale[1]);
             }
         }
-        return FALSE;
+        return null;
     }
 
     /**

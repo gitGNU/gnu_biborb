@@ -69,7 +69,6 @@
 
 include('./config.php'); // globals definitions
 include('./config.misc.php');
-include('./php/utilities.php');
 include('./php/bibtex.php');
 include('./php/functions.php'); // functions
 include('./php/basket.php'); // basket functions
@@ -90,14 +89,6 @@ session_start();
 
 // Set the error_handler
 //set_error_handler("biborb_error_handler");
-
-// remove slashes from variables
-if (get_magic_quotes_gpc())
-{
-    $_POST = array_map('stripslashes_deep', $_POST);
-    $_GET = array_map('stripslashes_deep', $_GET);
-    $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
-}
 
 /**
  * Set the DbManager object.
