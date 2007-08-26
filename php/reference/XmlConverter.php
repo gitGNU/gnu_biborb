@@ -94,15 +94,8 @@ class XmlConverter /* implements BaseConverter */
 
             $aReferences[] = $aReference;
         }
-
-        if (count($aReferences) > 1)
-        {
-            return $aReferences;
-        }
-        else
-        {
-            return $aReferences[0];
-        }
+        
+        return $aReferences;
     }
 
 
