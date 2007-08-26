@@ -124,14 +124,29 @@ function xhtml_select($name,$size,$tab,$selected,$onchange=null,$style=null,$cla
     return $result;
 }
 
-
 /**
- * Apply stripslashes to a variable or an array and returns the result. If $value is an
- * array, stripslashes is recursively called for each element of the array.
+ * Remove slashes in a variable (both keys/values)
+ * Ref: http://php.net/manual/en/security.magicquotes.disabling.php
  */
-function stripslashes_deep($value){
-    $value = is_array($value) ? array_map('stripslashes_deep', $value) : stripslashes($value);
-    return $value;
+function undoMagicQuotes($array, $topLevel=true)
+{
+    $newArray = array();
+    foreach($array as $key => $value)
+    {
+        if (!$topLevel)
+        {
+            $key = stripslashes($key);
+        }
+        if (is_array($value))
+        {
+            $newArray[$key] = undoMagicQuotes($value, false);
+        }
+        else
+        {
+            $newArray[$key] = stripslashes($value);
+        }
+    }
+    return $newArray;
 }
 
 /**
