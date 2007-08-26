@@ -115,6 +115,33 @@ class Reference
     }
 
 
+    /* static */ function getFieldsForType($iType)
+    {
+        $fieldsArray = array('required'   => array(),
+                             'optional'   => array(),
+                             'additional' =>array());
+        
+        $fields = str_replace("\n",'',file_get_contents('./xsl/model.xml'));
+
+        if (preg_match("/<entry type=\"$iType\">(.*)<\/entry>/U",$fields,$matches))
+        {
+            foreach ($fieldsArray as $type => $value)
+            {                
+                if (preg_match("/<$type>(.*)<\/$type>/U",$matches[1],$required))
+                {
+                    if (preg_match_all("/<(.*)\/>/U",$required[1],$tags))
+                    {                    
+                        foreach($tags[1] as $field)
+                        {
+                            $fieldsArray[$type][] = $field;
+                        }
+                    }
+                }
+            }
+        }
+        return $fieldsArray;        
+    }
+    
 }
 
 
