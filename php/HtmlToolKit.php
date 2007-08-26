@@ -196,6 +196,7 @@ EOT;
     /* static */ function main($iTitle, $iContent, $iError = null, $iMessage = null)
     {
         $aHtml = "\n<div id='main'>";
+        
         if (isset($iTitle))
             $aHtml .= "\n<h2 id='main_title'>{$iTitle}</h2>";
         if (isset($iError))
@@ -204,9 +205,24 @@ EOT;
             $aHtml .= "\n<div id='message'>{$iMessage}</div>";
         if (isset($iContent))
             $aHtml .= "\n<div id='content'>{$iContent}</div>";
-        $aHtml .= "\n</div>";            
+        $aHtml .= "\n</div>";
+        
         return $aHtml;
     }
+
+    /**
+     *
+     */
+    /* static */ function getFormParameter($iKey)
+    {
+        if (isset($_GET[$iKey]))
+            return $_GET[$iKey];
+        if (isset($_POST[$iKey]))
+            return $_POST[$iKey];
+        
+        return null;
+    }
+        
             
 }
 ?>
