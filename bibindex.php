@@ -2,36 +2,36 @@
 /**
  *
  * This file is part of BibORB
- *
- * Copyright (C) 2003-2007  Guillaume Gardey (glinmac@gmail.com)
- *
+ * 
+ * Copyright (C) 2003-2005  Guillaume Gardey (ggardey@club-internet.fr)
+ * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- *
+ * 
  * BibORB is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  */
 
 /**
- *
+ * 
  * File: bibindex.php
- * Author: Guillaume Gardey (glinmac@gmail.com)
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Licence: GPL
- *
+ * 
  * Description:
- *
+ * 
  *      The aim of bibindex.php is to allows the consultation of a given bibliography.
  *
- *      If the user has not the adminstrator status (not logged in), he is only
+ *      If the user has not the adminstrator status (not logged in), he is only 
  *  able to consult the bibliography. Otherwise, he may edit, add or modify entries
  *  in the bibliography.
  *
@@ -45,19 +45,19 @@
  *          * display all entries belonging to a given group,
  *          * basic search engine (one word) over authors, titles, and keywords.
  *
- *      BibORB may be used to create a new bibliography, but also support importation of a
+ *      BibORB may be used to create a new bibliography, but also support importation of a 
  *  well-formed BibTeX bibliography (update from BibTeX in the manager menu).
  *
  *      BibORB also support access to a given article in a given bibliography directly:
  *  'bibindex.php?mode=details&abstract=1&menu=0&bibname=example&id=idA', will display the
- *  article of ID idA of the bibliography 'example'. The article will be displayed with its
+ *  article of ID idA of the bibliography 'example'. The article will be displayed with its 
  *  abstract if defined and the BibORB menu will not be displayed.
- *
+ *  
  *
  *      Concerning the method that is used to manipulate the bibliography, everything is done
  *  using XML/XSLT. Each time a modification is performed, the BibTeX file is updated by converting
- *  the XML file into BibTeX. For XSLT experts, there are some 'curious' XSLT stylesheet. This is
- *  mainly because I encountered problems using some transformations (xsl:copy and namespace) with
+ *  the XML file into BibTeX. For XSLT experts, there are some 'curious' XSLT stylesheet. This is 
+ *  mainly because I encountered problems using some transformations (xsl:copy and namespace) with 
  *  the PHP XSLT processor, and also because I have not currently the time to investigate more. Any
  *  comments, solutions to deal with this will be welcomed...
  *
@@ -67,18 +67,16 @@
  * loads some functions
  */
 
-include('./config.php'); // globals definitions
-include('./config.misc.php');
-include('./php/bibtex.php');
-include('./php/functions.php'); // functions
-include('./php/basket.php'); // basket functions
-include('./php/proxyDbManager.php');
-include('./php/biborbdb.php'); // database
-include('./php/interface-bibindex.php'); // generate interface
-include('./php/auth.php'); // authentication
-include('./php/third_party/Tar.php'); // Create a tar.gz archive
-include('./php/error.php'); // error handling
-include('./php/i18nToolKit.php');       // load i18n functions
+require_once("config.php"); // globals definitions
+require_once("php/functions.php"); // functions
+require_once("php/basket.php"); // basket functions
+require_once("php/biborbdb.php"); // database
+require_once("php/xslt_processor.php"); // xslt processing
+require_once("php/interface-bibindex.php"); // generate interface
+require_once("php/auth.php"); // authentication
+require_once("php/third_party/Tar.php"); // Create a tar.gz archive
+require_once("php/error.php"); // error handling
+require_once("php/i18n.php");       // load i18n functions
 
 /**
  * Session
@@ -88,45 +86,27 @@ session_name("SID");
 session_start();
 
 // Set the error_handler
-//set_error_handler("biborb_error_handler");
+set_error_handler("biborb_error_handler");
+
+// remove slashes from variables
+if(get_magic_quotes_gpc()) {
+    $_POST = array_map('stripslashes_deep', $_POST);
+    $_GET = array_map('stripslashes_deep', $_GET);
+    $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
+}
+
 
 /**
- * Set the DbManager object.
+ * i18n, choose default lang if not set up
+ * Try to detect it from the session, browser or fallback to default.
  */
-if ( !isset($_SESSION['DbManager']) ||
-     !is_object($_SESSION['DbManager']))
-{
-    $_SESSION['DbManager'] = new DbManager();
-}
-
-/**
- * Set the errorManager
- */
-if ( !isset($_SESSION['errorManager']) ||
-     !is_object($_SESSION['errorManager']))
-{
-    $_SESSION['errorManager'] = new ErrorManager();
-}
-$_SESSION['errorManager']->_warningStack = array();
-
-/*
-    i18n, choose default lang if not set up
-    Try to detect it from the session, browser or fallback to default.
- */
-if ( !isset($_SESSION['i18n']) ||
-     !is_object($_SESSION['i18n']))
-{
-    $aPrefLang = i18nToolKit::getPreferedLanguage();
-    $_SESSION['i18n'] = new i18nToolKit($aPrefLang, DEFAULT_LANG);
-}
-
-/*
-    Load the locale if asked to change it.
- */
-if (isset($_GET['language']) &&
-    $_GET['language'] != $_SESSION['i18n']->getLocale())
-{
-    $_SESSION['i18n']->loadLocale($_GET['language']);
+if(!array_key_exists('language',$_SESSION)){
+    if( ($prefLang = get_pref_lang()) !== FALSE){
+        if(!array_key_exists($prefLang,$available_locales))
+            $prefLang = DEFAULT_LANG;
+    }
+    $_SESSION['language'] = $prefLang;
+    load_i18n_config($_SESSION['language']);
 }
 
 /*
@@ -147,14 +127,28 @@ if(!array_key_exists('bibdb',$_SESSION) && !array_key_exists('bibname',$_GET)){
  */
 if(!isset($_SESSION['basket'])){
     $_SESSION['basket'] = new Basket();
-}
+} 
 
 /*
-    If the session variable 'bibdb' is not set, get the bibliography name from
+    If the session variable 'bibdb' is not set, get the bibliography name from 
     GET variables and create a new Biborb_Database.
  */
 $update_auth = FALSE;
 if(!array_key_exists('update_authorizations',$_SESSION)){
+    $update_auth = TRUE;
+}
+
+if(array_key_exists('bibname',$_GET)){
+    if(!array_key_exists('bibdb',$_SESSION)){
+        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],GEN_BIBTEX);
+        $_SESSION['bibdb']->set_BibORB_fields($GLOBALS['bibtex_entries']);
+        $_SESSION['basket']->reset();
+    }
+    else if($_SESSION['bibdb']->name()!=$_GET['bibname']){
+        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],GEN_BIBTEX);
+        $_SESSION['bibdb']->set_BibORB_fields($GLOBALS['bibtex_entries']);
+        $_SESSION['basket']->reset();
+    }
     $update_auth = TRUE;
 }
 
@@ -163,13 +157,13 @@ if(!array_key_exists('update_authorizations',$_SESSION)){
  */
 if(!DISABLE_AUTHENTICATION){
     if(!array_key_exists('auth',$_SESSION)){
-        $_SESSION['auth'] = new Auth();
+        $_SESSION['auth'] = new Auth(AUTH_CRYPT);
     }
 
     if($update_auth){
         if(!array_key_exists('user',$_SESSION)){
             $_SESSION['user_is_admin'] = FALSE;
-        }
+        } 
         else{
             $_SESSION['user_is_admin'] = $_SESSION['auth']->is_admin_user($_SESSION['user']);
         }
@@ -179,14 +173,14 @@ if(!DISABLE_AUTHENTICATION){
         else{
             $_SESSION['user_can_add'] = $_SESSION['auth']->can_add_entry($_SESSION['user'],$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
         }
-
+        
         if(!array_key_exists('user',$_SESSION)){
             $_SESSION['user_can_delete'] = $_SESSION['auth']->can_delete_entry("",$_SESSION['bibdb']->name());
         }
         else{
             $_SESSION['user_can_delete'] = $_SESSION['auth']->can_delete_entry($_SESSION['user'],$_SESSION['bibdb']->name()) || $_SESSION['user_is_admin'];
         }
-
+        
         if(!array_key_exists('user',$_SESSION)){
             $_SESSION['user_can_modify'] = $_SESSION['auth']->can_modify_entry("",$_SESSION['bibdb']->name());
         }
@@ -230,53 +224,15 @@ $sort_order = DEFAULT_SORT_ORDER;
 if(array_key_exists('user_pref',$_SESSION)){$display_sort = $_SESSION['user_pref']['display_sort'];}
 // sort ID
 if(array_key_exists('sort',$_GET)){$sort = $_GET['sort'];}
-if(array_key_exists('sort',$_POST)){$sort = $_POST['sort'];}
+else if(array_key_exists('sort',$_POST)){$sort = $_POST['sort'];}
 else if(array_key_exists('user_pref',$_SESSION)){$sort = $_SESSION['user_pref']['default_sort'];}
 // sort order
-
-if(array_key_exists('sort_order',$_POST)){$sort_order = $_POST['sort_order'];}
+if(array_key_exists('sort_order',$_GET)){$sort_order = $_GET['sort_order'];}
+else if(array_key_exists('sort_order',$_POST)){$sort_order = $_POST['sort_order'];}
 else if(array_key_exists('user_pref',$_SESSION)){$sort_order = $_SESSION['user_pref']['default_sort_order'];}
 
-
-/**
- * Create the bibdb object if necessary
- */
-if (isset($_GET['bibname']) || !isset($_SESSION['bibdb']) || !is_object($_SESSION['bibdb']))
-{
-    if (!isset($_SESSION['bibdb']) || !is_object($_SESSION['bibdb']))
-    {
-        // new db
-        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],GEN_BIBTEX);
-        $_SESSION['bibdb']->set_BibORB_fields($GLOBALS['bibtex_entries']);
-        $_SESSION['bibdb']->setSortMethod($sort);
-        $_SESSION['bibdb']->setSortOrder($sort_order);
-        $_SESSION['basket']->reset();
-    }
-    else if ($_SESSION['bibdb']->getName() != $_GET['bibname'])
-    {
-        $_SESSION['bibdb'] = new BibORB_Database($_GET['bibname'],GEN_BIBTEX);
-        $_SESSION['bibdb']->set_BibORB_fields($GLOBALS['bibtex_entries']);
-        $_SESSION['basket']->reset();
-    }
-    $update_auth = TRUE;
-}
-
-// Update the sort method if necessary
-if (isset($_GET['sort']) && $_GET['sort'] != $_SESSION['bibdb']->getSortMethod())
-{   
-    $_SESSION['bibdb']->setSortMethod($_GET['sort']);
-    unset($_GET['page']);// to force reload of ids
-}
-if (isset($_GET['sort_order']) && $_GET['sort_order'] != $_SESSION['bibdb']->getSortOrder())
-{
-    $_SESSION['bibdb']->setSortOrder($_GET['sort_order']);
-    unset($_GET['page']); // to force reload of ids
-}
-
-
-
-
-
+$_SESSION['bibdb']->set_sort($sort);
+$_SESSION['bibdb']->set_sort_order($sort_order);
 
 $display_images = DISPLAY_IMAGES;
 $display_txt = DISPLAY_TEXT;
@@ -288,14 +244,14 @@ if(array_key_exists('user_pref',$_SESSION)){
 }
 
 // global XSL parameters
-$xslparam = array(  'bibname' => $_SESSION['bibdb']->getName(),
-                    'bibnameurl' => $_SESSION['bibdb']->getXmlFileName(),
+$xslparam = array(  'bibname' => $_SESSION['bibdb']->name(),
+                    'bibnameurl' => $_SESSION['bibdb']->xml_file(),
                     'display_images' => $display_images,
                     'display_text' => $display_txt,
                     'abstract' => $abst,
                     'display_add_all'=> 'true',
-                    'sort' => $_SESSION['bibdb']->getSortMethod(),
-                    'sort_order' => $_SESSION['bibdb']->getSortOrder(),
+                    'sort' => $sort,
+                    'sort_order' => $sort_order,
                     'can_modify' => $_SESSION['user_can_modify'] || $_SESSION['user_is_admin'],
                     'can_delete' => $_SESSION['user_can_delete'] || $_SESSION['user_is_admin'],
                     'shelf-mode' => $display_shelf_actions,
@@ -309,7 +265,7 @@ $xslparam = array(  'bibname' => $_SESSION['bibdb']->getName(),
 // GET action
 if(isset($_GET['action'])){
     switch($_GET['action']){
-
+        
         /*
             Select the GUI language
          */
@@ -317,7 +273,7 @@ if(isset($_GET['action'])){
             $_SESSION['language'] = $_GET['lang'];
             load_i18n_config($_SESSION['language']);
             break;
-
+        
         /*
             Add an item to the basket
          */
@@ -329,7 +285,7 @@ if(isset($_GET['action'])){
                 $_SESSION['basket']->add_items(explode("*",$_GET['id']));
             }
         break;
-
+	
         /*
             Delete an entry from the basket
          */
@@ -341,75 +297,65 @@ if(isset($_GET['action'])){
                 $_SESSION['basket']->remove_item($_GET['id']);
             }
             break;
-
+	
         /*
             Reset the basket
          */
         case 'resetbasket':
             $_SESSION['basket']->reset();
             break;
-
+        
         /*
             Delete an entry from the database
          */
         case 'delete':
-
-            $aId = isset($_GET['id']) ? $_GET['id'] : null;
-
             // check that there is an id
-            if (!$aId)
-            {
-                trigger_error('BibTeX key not set. Can not remove a reference from the database.',ERROR);
-            }
-
+            if(!isset($_GET['id'])){
+                trigger_error("BibTeX key not set. Can not remove a reference from the database.",ERROR);
+            } 
             // check we have the authorization to delete
-            if (!array_key_exists('user_can_delete',$_SESSION) || !$_SESSION['user_can_delete'])
-            {
-                trigger_error('You are not authorized to delete references!',ERROR);
+            if(!array_key_exists('user_can_delete',$_SESSION) || !$_SESSION['user_can_delete']){
+                trigger_error("You are not authorized to delete references!",ERROR);
             }
-
             $confirm = FALSE;
-            if (array_key_exists('confirm_delete',$_GET))
-            {
-                $confirm = (strcmp($_GET['confirm_delete'],msg('Yes')) == 0);
+            if(array_key_exists('confirm_delete',$_GET)){
+                $confirm = (strcmp($_GET['confirm_delete'],msg("Yes")) == 0);
             }
-
-            $aXsltp = new XSLT_Processor('file://'.BIBORB_PATH,'UTF-8');
+        
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");		
             // save the bibtex entry to show which entry was deleted
-            $aXml = $_SESSION['bibdb']->getEntryWithId($aId);
-            $aBibtex = $aXsltp->transform($aXml,FileToolKit::getContent('./xsl/xml2bibtex.xsl'));
-            if (!WARN_BEFORE_DELETING || $confirm)
-            {
+            $xml_content = $_SESSION['bibdb']->entry_with_id($_GET['id']);
+            $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
+            if(!WARN_BEFORE_DELETING || $confirm){		    
                 // delete it
-                $_SESSION['bibdb']->deleteEntry($aId);
+                $_SESSION['bibdb']->delete_entry($_GET['id']);
                 // update message
-                $message = sprintf(msg('The following entry was deleted: <pre>%s</pre>'),$aBibtex);
+                $message = sprintf(msg("The following entry was deleted: <pre>%s</pre>"),$bibtex);
                 // if present, remvove entries from the basket
-                $_SESSION['basket']->remove_item($aId);
-                $_GET['mode'] = 'operationresult';
+                $_SESSION['basket']->remove_item($_GET['id']);
+                $_GET['mode'] = "operationresult";
             }
-            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],msg('No')) == 0)
-            {
-                $_GET['mode'] = 'welcome';
+            else if(array_key_exists('confirm_delete',$_GET) && strcmp($_GET['confirm_delete'],msg("No")) == 0){
+                $_GET['mode'] = "welcome";
             }
-            else
-            {
-                $message = sprintf(msg('Delete this entry? <pre>%s</pre>'),$aBibtex);
+            else {
+                $theid = $_GET['id'];
+                $message = sprintf(msg("Delete this entry? <pre>%s</pre>"),$bibtex);
                 $message .= "<form action='bibindex.php' method='get' style='margin:auto;'>";
                 $message .= "<fieldset style='border:none;text-align:center'>";
                 $message .= "<input type='hidden' name='action' value='delete'/>";
-                $message .= "<input type='hidden' name='id' value='$aId'/>";
-                $message .= "<input type='submit' name='confirm_delete' value='".msg('No')."'/>";
+                $message .= "<input type='hidden' name='id' value='$theid'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='".msg("No")."'/>";
                 $message .= "&nbsp;";
-                $message .= "<input type='submit' name='confirm_delete' value='".msg('Yes')."'/>";
+                $message .= "<input type='submit' name='confirm_delete' value='".msg("Yes")."'/>";
                 $message .= "</fieldset>";
                 $message .= "</form>";
 
-                $_GET['mode'] = 'operationresult';
+                $_GET['mode'] = "operationresult";
             }
-            $aXsltp->free();
+            $xsltp->free();		
             break;
-
+	
         /*
             Add entries in the basket to a given group
          */
@@ -453,14 +399,13 @@ if(isset($_GET['action'])){
 
         /*
          * Change the BibTeX type of an entry
-         */
+         */ 
         case 'update_type':
             // check we have the authorization to modify
-            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify'])
-            {
+            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
                 trigger_error("You are not authorized to modify references!",ERROR);
             }
-            $_SESSION['bibdb']->changeType($_GET['id'],$_GET['bibtex_type']);
+            $_SESSION['bibdb']->change_type(htmlentities($_GET['id']),htmlentities($_GET['bibtex_type']));
             $_GET['mode']='update';
             break;
 
@@ -469,24 +414,21 @@ if(isset($_GET['action'])){
          */
         case 'update_key': // update the BibTeX key of a reference
             // check we have the authorization to modify
-            if (!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify'])
-            {
-                trigger_error('You are not authorized to modify references!',ERROR);
+            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
+                trigger_error("You are not authorized to modify references!",ERROR);
             }
-            $aOldId = $_GET['id'];
-            $aNewId = $_GET['bibtex_key'];
-            if (!$_SESSION['bibdb']->is_bibtex_key_present($aNewId))
-            {
-                $_SESSION['bibdb']->changeId($aOldId,$aNewId);
+            $oldid = htmlentities($_GET['id']);
+            $newid = htmlentities($_GET['bibtex_key']);
+            if(!$_SESSION['bibdb']->is_bibtex_key_present($newid)){
+                $_SESSION['bibdb']->change_id($oldid,$newid);
                 $_GET['mode'] = 'update';
-                $_GET['id'] = $aNewId;
+                $_GET['id'] = $newid;
                 // change the value in the basket
-                $_SESSION['basket']->remove_item($aOldId);
-                $_SESSION['basket']->add_item($aNewId);
+                $_SESSION['basket']->remove_item($oldid);
+                $_SESSION['basket']->add_item($newid);
             }
-            else
-            {
-                $error = sprintf(msg('BibTeX key <code>%s</code> already exists.'),$aNewId);
+            else{
+                $error = sprintf(msg("BibTeX key <code>%s</code> already exists."),$newid);
                 $_GET['mode'] = 'operationresult';
             }
             break;
@@ -503,13 +445,13 @@ if(isset($_GET['action'])){
                 $confirm = (strcmp($_GET['confirm_delete'],msg("Yes"))==0);
             }
             $ids_to_remove = $_SESSION['basket']->items;
-            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"UTF-8");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
             $xml_content = $_SESSION['bibdb']->entries_with_ids($ids_to_remove);
-
+        
             if(!WARN_BEFORE_DELETING || $confirm){
                 $_SESSION['bibdb']->delete_entries($ids_to_remove);
                 // update message
-                $bibtex = $xsltp->transform($xml_content,FileToolKit::getFileContents("./xsl/xml2bibtex.xsl"));
+                $bibtex = $xsltp->transform($xml_content,load_file("./xsl/xml2bibtex.xsl"));
                 $message = sprintf(msg("The following entries were deleted: <pre>%s</pre>"),$bibtex);
                 $_SESSION['basket']->reset();
                 $_GET['mode'] = "operationresult";
@@ -532,99 +474,85 @@ if(isset($_GET['action'])){
             }
             $xsltp->free();
             break;
-
+        
         /*
             Shelf mode: update the owner ship
          */
         case 'update_ownership':
             // check we have the authorization to modify
-            if (!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify'])
-            {
-                trigger_error('You are not authorized to modify references!',ERROR);
+            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
+                trigger_error("You are not authorized to modify references!",ERROR);
             }
-            $_SESSION['bibdb']->changeOwnership($_GET['id'], $_GET['ownership']);
+            $_SESSION['bibdb']->change_ownership($_GET['id'], $_GET['ownership']);
             break;
-
+            
         /*
             Shelf mode: update the read status of a reference
          */
         case 'update_readstatus':
             // check we have the authorization to modify
-            if (!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify'])
-            {
+            if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
                 trigger_error("You are not authorized to modify references!",ERROR);
             }
-            $_SESSION['bibdb']->changeReadStatus($_GET['id'], $_GET['readstatus']);
+            $_SESSION['bibdb']->change_readstatus($_GET['id'], $_GET['readstatus']);
             break;
-
+            
         /*
             Add a browse item.
-        */
+         */
         case 'add_browse_item':
-            if ( isset($_GET['type']) && isset($_GET['value']))
-            {
-                $aType = $_GET['type'];
-                $aValue = $_GET['value'];
-                $aFound = false;
-                $aCpt = 0;
-                if (isset($_SESSION['browse_history']))
-                {
-                    for ($aCpt=0; $aCpt< count($_SESSION['browse_history']) && !$aFound; $aCpt++)
-                    {
-                        $aFound = $_SESSION['browse_history'][$aCpt]['type'] == $aType;
+            if(array_key_exists('type',$_GET) && array_key_exists('value',$_GET)){
+                $theType = htmlentities($_GET['type']);
+                $theValue = htmlentities($_GET['value']);
+                $found = false;
+                $cpt = 0;
+                if(array_key_exists('browse_history',$_SESSION)){
+                    for($cpt=0;$cpt<count($_SESSION['browse_history']) && !$found; $cpt++){
+                        $found = $_SESSION['browse_history'][$cpt]['type'] == $theType;
                     }
                 }
-
-                if($aFound)
-                {
-                    $_SESSION['browse_history'][$aCpt-1]['value'] = $aValue;
-                    $_GET['start'] = $aCpt;
-                    array_splice($_SESSION['browse_history'],$aCpt);
+                
+                if($found){
+                    $_SESSION['browse_history'][$cpt-1]['value'] = $theValue;
+                    $_GET['start'] = $cpt;
+                    array_splice($_SESSION['browse_history'],$cpt);
                     /*for($i=$cpt;$i<count($_SESSION['browse_history']);$i++){
                         unset($_SESSION['browse_history'][$i]);
                     }*/
-                    $_SESSION['browse_ids'] = $_SESSION['bibdb']->getAllIds();
-                    for ($i=0; $i < count($_SESSION['browse_history']); $i++)
-                    {
-                        $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$aType,$aValue);
+                    $_SESSION['browse_ids'] = $_SESSION['bibdb']->all_bibtex_ids();
+                    for($i=0;$i<count($_SESSION['browse_history']);$i++){
+                        $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$theType,$theValue);
                     }
                 }
-                else
-                {
-                    $_SESSION['browse_history'][] = array('type'=>$aType,'value'=>$aValue);
-                    $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$aType,$aValue);
+                else{
+                    $_SESSION['browse_history'][] = array('type'=>$theType,'value'=>$theValue);
+                    $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$theType,$theValue);
                 }
                 $_GET['start'] = count($_SESSION['browse_history']);
             }
             break;
-
+            
         default:
             break;
     }
 }
 
 // analyse POST
-if (isset($_POST['action']))
-{
-    switch($_POST['action'])
-    {
+if(isset($_POST['action'])){
+    switch($_POST['action']){
         /*
-            Add an entry to the database
+         * Add an entry to the database
          */
-        case 'add_entry':
+        case 'add_entry': 
             // check we have the authorization to modify
-            if(!array_key_exists('user_can_add',$_SESSION) || !$_SESSION['user_can_add'])
-            {
+            if(!array_key_exists('user_can_add',$_SESSION) || !$_SESSION['user_can_add']){
                 trigger_error("You are not authorized to add references!",ERROR);
             }
-            if (isset($_POST['ok']))
-            {
+            if(isset($_POST['ok'])){
                 $res = $_SESSION['bibdb']->add_new_entry($_POST);
-
-                if($res['added'])
-                {
+                if($res['added']){
                     $message = msg("ENTRY_ADDED_SUCCESS")."<br/>";
-                    $entry = $_SESSION['bibdb']->getEntryWithId($res['id']);
+                    $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
                     $param = $GLOBALS['xslparam'];
                     $param['bibindex_mode'] = "displaybasket";
                     $param['mode'] = "user";
@@ -639,40 +567,35 @@ if (isset($_POST['action']))
                 $_GET['mode'] = 'welcome';
             }
             break;
-
+            
         /*
          * Update a reference
          */
         case 'update_entry':
-            if (isset($_POST['ok']))
-            {
+            if(isset($_POST['ok'])){
                 // check we have the authorization to modify
-                if (!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify'])
-                {
+                if(!array_key_exists('user_can_modify',$_SESSION) || !$_SESSION['user_can_modify']){
                     trigger_error("You are not authorized to modify references!",ERROR);
                 }
-                $aRes = $_SESSION['bibdb']->updateEntry($_POST);
-                if ($aRes['updated'])
-                {
-                    $message = msg('The following entry was updated:').'<br/>';
-                    $aEntry = $_SESSION['bibdb']->getEntryWithId($aRes['id']);
-                    $aParam = $GLOBALS['xslparam'];
-                    $aParam['bibindex_mode'] = 'displaybasket';
-                    $aParam['mode'] = 'user';
-                    $message .= biborb_html_render($aEntry,$aParam);
-                    $error = $aRes['message'];
+                $res = $_SESSION['bibdb']->update_entry($_POST);
+                if($res['updated']){
+                    $message = msg("The following entry was updated:")."<br/>";
+                    $entry = $_SESSION['bibdb']->entry_with_id($res['id']);
+                    $param = $GLOBALS['xslparam'];
+                    $param['bibindex_mode'] = "displaybasket";
+                    $param['mode'] = "user";
+                    $message .= biborb_html_render($entry,$param);
+                    $error = $res['message'];
                 }
-                else
-                {
-                    $error = $aRes['message'];
+                else{
+                    $error = $res['message'];
                 }
             }
-            else
-            {
+            else{
                 $_GET['mode'] = 'welcome';
             }
             break;
-
+	
         /*
             Import bibtex entries.
         */
@@ -694,10 +617,10 @@ if (isset($_POST['action']))
                     $bibtex_data= file($_FILES['bibfile']['tmp_name']);
                 }
                 // add the new entry
-                $res = $_SESSION['bibdb']->addBibtexEntries($bibtex_data);
-
+                $res = $_SESSION['bibdb']->add_bibtex_entries($bibtex_data);
+                
                 if(count($res['added']) > 0 && count($res['added']) <= 20){
-                    $entries = $_SESSION['bibdb']->getEntriesWithIds($res['added']);
+                    $entries = $_SESSION['bibdb']->entries_with_ids($res['added']);
                     $param = $GLOBALS['xslparam'];
                     $param['bibindex_mode'] = "displaybasket";
                     $param['mode'] = "admin";
@@ -713,8 +636,8 @@ if (isset($_POST['action']))
                 else{
                     $message .= sprintf(msg("%d entries were added to the database."),count($res['added']));
                 }
-
-
+                
+                
                 if(count($res['notadded']) != 0){
                     $error = msg("Some entries were not imported. Their BibTeX keys were already present in the bibliography. ");
                     $error .= "<br/>";
@@ -727,7 +650,7 @@ if (isset($_POST['action']))
                 }
             }
             break;
-
+	
         /*
             Login
         */
@@ -754,7 +677,7 @@ if (isset($_POST['action']))
                 }
             }
             break;
-
+	
         /*
          * Export the basket to bibtex
          */
@@ -767,7 +690,6 @@ if (isset($_POST['action']))
                         $bibtex_fields[] = $field;
                     }
                 }
-
 
                 // basket not empty -> processing
                 // get entries
@@ -810,10 +732,10 @@ if (isset($_POST['action']))
              * Export all references.
              */
         case 'export_all':
-            $bt = new BibTeX_Tools();
+            $bt = new BibTeX_Tools();   
             $_GET['mode'] = "displaytools";
-            $entries = $bt->xml_to_bibtex_array($_SESSION['bibdb']->getAllEntries());
-            $filename = $_SESSION['bibdb']->getName();
+            $entries = $bt->xml_to_bibtex_array($_SESSION['bibdb']->all_entries());
+            $filename = $_SESSION['bibdb']->name();
             switch($_POST['export_format']){
                 case 'bibtex':
                     $filename .= ".bib";
@@ -834,23 +756,27 @@ if (isset($_POST['action']))
             header("Content-Type:text/plain");
             header("Content-Disposition:attachment;filename=$filename");
             echo $content;
-            break;
+            die();
 
         /*
          * Get BibTeX references from .aux LaTeX file.
-         */
+         */ 
         case 'bibtex_from_aux':
             $bibtex_keys = bibtex_keys_from_aux($_FILES['aux_file']['tmp_name']);
             $xmldata = $_SESSION['bibdb']->entries_with_ids($bibtex_keys);
-            $bt = new BibTeX_Tools();
-            header("Content-disposition: attachment; filename=".$_FILES['aux_file']['name'].".bib");
+            $xsltp = new XSLT_Processor("file://".BIBORB_PATH,"ISO-8859-1");
+            $param = $GLOBALS['xslparam'];
+            $param['fields_to_export'] = implode(".",$fields_to_export);
+            
+            header("Content-disposition: attachment; filename=".$_FILES['aux_file']['name'].".bib"); 
             header("Content-Type: application/force-download");
-            echo $bt->array_to_bibtex_string($bt->xml_to_bibtex_array($xmldata),$fields_to_export);
+            echo $xsltp->transform($xmldata,load_file("./xsl/xml2bibtex_advanced.xsl"),$param);
+            $xsltp->free();
             die();
-
-       /*
-           Create an archive of a given bibliography.
-        */
+ 
+            /*
+                Create an archive of a given bibliography.
+             */
         case 'get_archive':
             // move to bibs
             chdir("./bibs");
@@ -866,7 +792,7 @@ if (isset($_POST['action']))
             header("Content-Type: application/octed-stream");
             readfile($tar_name);
             die();
-
+            
         default:
             break;
     }
@@ -892,30 +818,30 @@ else {
 switch($mode) {
     // Welcome page
     case 'welcome': echo bibindex_welcome(); break;
-
+     
     // Generice page to display operations results
     case 'operationresult': echo bibindex_operation_result(); break;
-
+    
     // Help on the display menu item
     case 'display': echo bibindex_display_help(); break;
-
+    
     // Display all entries
     case 'displayall': echo bibindex_display_all(); break;
-
+    
     // Display by group
     case 'displaybygroup': echo bibindex_display_by_group(); break;
-
+    
     // Display search page
     case 'displaysearch': echo bibindex_display_search(); break;
     case 'displayadvancedsearch': echo bibindex_display_advanced_search(); break;
     case 'displayxpathsearch': echo bibindex_display_xpath_search();break;
-
+        
     // Help on the basket menu item
     case 'basket': echo bibindex_basket_help(); break;
-
+    
     // Display the basket
     case 'displaybasket': echo bibindex_display_basket(); break;
-
+    
     // Display the page to modify groups of entries in the basket
     case 'groupmodif':
         if($_SESSION['basket']->count_items() != 0){
@@ -925,41 +851,41 @@ switch($mode) {
             echo bibindex_display_basket();
         }
         break;
-
+        
     // Help on the Manager Menu
     case 'manager': echo bibindex_manager_help(); break;
-
-    // Add a new entry
+    
+    // Add a new entry 
     case 'addentry':echo bibindex_entry_to_add(); break;
-
+    
     // Select the type of the new entry to add
     case msg("Select"):
         echo bibindex_add_entry($_GET['type']); break;
-
+    
     // Update an entry
     case 'update': echo bibindex_update_entry(); break;
-
+    
     // Login page
     case 'login': echo bibindex_login(); break;
-
-    // Logout
+    
+    // Logout 
     case 'logout': echo bibindex_logout(); break;
-
+    
     // Update the XML file according to values present in the BibTeX file.
     case 'update_xml_from_bibtex':
         $_SESSION['bibdb']->reload_from_bibtex();
         echo bibindex_welcome();
         break;
-
+    
     // Mode to access directly to an article
     case 'details': echo bibindex_details(); break;
-
+    
     // Import references
     case 'import': echo bibindex_import(); break;
-
+    
     // Export the basket to bibtex
     case 'exportbaskettobibtex': echo bibindex_export_basket_to_bibtex(); break;
-
+        
     // Page to select which export
     case 'exportbasket':
         // Display export selection form if some entries in the basket
@@ -970,7 +896,7 @@ switch($mode) {
             echo bibindex_display_basket();
         }
         break;
-
+    
     // Export the basket to RIS format
     case 'exportbaskettoris':
         $bt = new BibTeX_Tools();
@@ -979,7 +905,7 @@ switch($mode) {
         header("Content-Type: text/plain");
         echo $bt->array_to_RIS($tab);
         break;
-
+        
     case 'exportbaskettodocbook':
         $bt = new BibTeX_Tools();
         $entries = $_SESSION['bibdb']->entries_with_ids($_SESSION['basket']->items);
@@ -987,56 +913,49 @@ switch($mode) {
         header("Content-Type: text/plain");
         echo $bt->array_to_DocBook($tab);
         break;
-
+        
     // bibtex of a given entry
     case 'bibtex':
         $bt = new BibTeX_Tools();
-        $entries = $_SESSION['bibdb']->getEntryWithId($_GET['id']);
+        $entries = $_SESSION['bibdb']->entry_with_id($_GET['id']);
         $tab = $bt->xml_to_bibtex_array($entries);
         header("Content-Type: text/plain");
         echo $bt->array_to_bibtex_string($tab,$GLOBALS['fields_to_export']);
         break;
-
+    
     // Export the basket to html
     case 'exportbaskettohtml': echo bibindex_export_basket_to_html();break;
-
-
+    
+        
     // Display Tools
     case 'displaytools': echo bibindex_display_tools();break;
-
+    
     // Browse mode
-    case 'browse':
-        if (isset($_GET['start']))
-        {
-            if ($_GET['start'] == 0)
-            {
+    case 'browse': 
+        if(isset($_GET['start'])){
+            if($_GET['start'] == 0){
                 unset($_SESSION['ids']);
                 unset($_SESSION['browse_history']);
-                $_SESSION['browse_ids'] = $_SESSION['bibdb']->getAllIds();
+                $_SESSION['browse_ids'] = $_SESSION['bibdb']->all_bibtex_ids();
                 // extract values from the database
                 // save them into session
-                $_SESSION['misc']['years'] = $_SESSION['bibdb']->getAllValuesFor('year');
-                $_SESSION['misc']['groups'] = $_SESSION['bibdb']->getAllValuesFor('group');
-                $_SESSION['misc']['series'] = $_SESSION['bibdb']->getAllValuesFor('series');
-                $_SESSION['misc']['journals'] = $_SESSION['bibdb']->getAllValuesFor('journal');
-                $_SESSION['misc']['authors'] = $_SESSION['bibdb']->getAllValuesFor('author');
+                $_SESSION['misc']['years'] = $_SESSION['bibdb']->get_values_for('year');
+                $_SESSION['misc']['groups'] = $_SESSION['bibdb']->get_values_for('group');
+                $_SESSION['misc']['series'] = $_SESSION['bibdb']->get_values_for('series');
+                $_SESSION['misc']['journals'] = $_SESSION['bibdb']->get_values_for('journal');
+                $_SESSION['misc']['authors'] = $_SESSION['bibdb']->get_values_for('author');
             }
-
-            if (isset($_SESSION['browse_history']))
-            {
-                for($i=0;$i<$_GET['start'];$i++)
-                {
+            if(isset($_SESSION['browse_history'])){
+                for($i=0;$i<$_GET['start'];$i++){
                     $_SESSION['browse_ids'] = $_SESSION['bibdb']->filter($_SESSION['browse_ids'],$_SESSION['browse_history'][$i]['type'],$_SESSION['browse_history'][$i]['value']);
                 }
-                
-                for($i=$_GET['start'];$i<count($_SESSION['browse_history']);$i++)
-                {
+                for($i=$_GET['start'];$i<count($_SESSION['browse_history']);$i++){
                     unset($_SESSION['browse_history'][$i]);
                 }
             }
         }
         echo bibindex_browse();break;
-
+        
     // By default
     default: echo bibindex_welcome(); break;
 }
