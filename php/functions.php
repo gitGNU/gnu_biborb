@@ -24,7 +24,7 @@
 /**
  *
  * File: functions.php
- * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Author: Guillaume Gardey (glinmac@gmail.com)
  * Year: 2003
  * Licence: GPL
  *

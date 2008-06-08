@@ -2,7 +2,7 @@
 /**
  * This file is part of BibORB
  *
- * Copyright (C) 2003-2007  Guillaume Gardey (ggardey@club-internet.fr)
+ * Copyright (C) 2003-2007  Guillaume Gardey (glinmac@gmail.com)
  *
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@
 
 /**
  * File: index.php
- * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Author: Guillaume Gardey (glinmac@gmail.com)
  * Licence: GPL
  *
  * Description:
@@ -75,13 +75,13 @@ if ( !isset($_SESSION['user']) ||
     if (!$_SESSION['user']->isSetPermissions())
     {
         $aAuthenticationBackend = new Auth();
-        $aAuthenticationBackendÃ->fillPermissionsForUser($_SESSION['user']);
+        $aAuthenticationBackendï¿½->fillPermissionsForUser($_SESSION['user']);
     }
     if (!$_SESSION['user']->isSetPreferences())
     {
         if (empty($aAuthenticationBackend))
             $aAuthenticationBackend = new Auth();
-        $aAuthenticationBackendÃ-fillPreferencesForUser($_SESSION['user']);;
+        $aAuthenticationBackendï¿½-fillPreferencesForUser($_SESSION['user']);;
     }
 }
     

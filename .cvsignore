@@ -1,3 +1,5 @@
 bibs
 bibs/*
 */*.cache
+.project
+.settings

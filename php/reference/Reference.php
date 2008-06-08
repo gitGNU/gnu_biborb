@@ -23,7 +23,7 @@
 
 /**
  * File: Reference.php
- * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Author: Guillaume Gardey (glinmac@gmail.com)
  * Licence: GPL
  *
  * Description:

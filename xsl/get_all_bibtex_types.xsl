@@ -21,7 +21,7 @@
 -->
 <!--
  * File: get_all_bibtex_types.xsl
- * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Author: Guillaume Gardey (glinmac@gmail.com)
  * Licence: GPL
  *
  * Description:

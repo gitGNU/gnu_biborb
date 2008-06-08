@@ -3,7 +3,7 @@
  *
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2007  Guillaume Gardey (ggardey@club-internet.fr)
+ * Copyright (C) 2003-2007  Guillaume Gardey (glinmac@gmail.com)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,7 +23,7 @@
 
 /**
  * File: basket.php
- * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Author: Guillaume Gardey (glinmac@gmail.com)
  * Licence: GPL
  *
  * Description:
