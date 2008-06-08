@@ -21,7 +21,7 @@
 -->
 <!--
  * File: search_entry.xsl
- * Author: Guillaume Gardey (glinmac@gmail.com)
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Licence: GPL
  *
  * Description:
@@ -34,7 +34,7 @@
     xmlns:bibtex="http://bibtexml.sf.net/"
     version="1.0">
   
-    <xsl:output method="txt"/>
+    <xsl:output method="text" encoding="UTF-8"/>
     
     <!-- include generic parameters -->
 	<xsl:include href="xsl/parameters.xsl"/>
