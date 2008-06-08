@@ -21,7 +21,7 @@
 -->
 <!--
  * File: simple_html_output.xsl
- * Author: Guillaume Gardey (glinmac@gmail.com)
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
  * Licence: GPL
  *
  * Description:
@@ -33,7 +33,9 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:bibtex="http://bibtexml.sf.net/"
     version="1.0">
-
+    
+    <xsl:output method="xml" encoding="UTF-8"/>
+     
 	<xsl:include href="./xsl/parameters.xsl"/>
 	
 	<xsl:template match="/">
