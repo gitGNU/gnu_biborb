@@ -123,11 +123,11 @@ class PARSECREATORS
 				$prefix[] = $value;
 			else
 			{
-				$surname[] = $value;
+				$surnameArray[] = $value;
 				$noPrefix = TRUE;
 			}
 		}
-		$surname = join(" ", $surname);
+		$surname = join(" ", $surnameArray);
 		if(isset($prefix))
 		{
 			$prefix = join(" ", $prefix);
