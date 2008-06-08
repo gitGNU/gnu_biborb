@@ -2,7 +2,7 @@
 <!--
  * This file is part of BibORB
  * 
- * Copyright (C) 2003-2007  Guillaume Gardey (ggardey@club-internet.fr)
+ * Copyright (C) 2003-2008  Guillaume Gardey (glinmac@gmail.com)
  * 
  * BibORB is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 -->
 <!--
  * File: biborb_output_model_for_table.xsl
- * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Author: Guillaume Gardey (glinmac@gmail.com)
  * Licence: GPL
  *
  * Description:
@@ -72,7 +72,7 @@
 						the abstract by default we display a small button
 					-->
 					<xsl:if test=".//bibtex:abstract and $abstract != 'true'">
-						<xsl:call-template name="abstract">
+						<xsl:call-template name="bibtex:abstract">
 							<xsl:with-param name="id" select="@id"/>
 						</xsl:call-template>
 					</xsl:if>
@@ -98,7 +98,7 @@
 					</xsl:call-template>
                     <!-- longnotes. Same behavior as abstract. -->
                     <xsl:if test=".//bibtex:longnotes">
-						<xsl:call-template name="longnotes">
+						<xsl:call-template name="bibtex:longnotes">
 							<xsl:with-param name="id" select="@id"/>
 						</xsl:call-template>
 					</xsl:if>
@@ -383,7 +383,7 @@
 		-->
         <tr>
             <td class="bibtex_abstract">
-                <xsl:call-template name="bibtex:abstract">
+                <xsl:call-template name="abstract_txt">
                     <xsl:with-param name="id" select="@id"/>
                 </xsl:call-template>
             </td>
@@ -403,7 +403,7 @@
         -->
         <tr>
             <td class="bibtex_longnotes">
-                <xsl:call-template name="bibtex:longnotes">
+                <xsl:call-template name="longnotes_txt">
                     <xsl:with-param name="id" select="@id"/>
                 </xsl:call-template>
             </td>
@@ -574,7 +574,7 @@
 		the abstract of the given entry.
 		If supported, clicking on the abstract link will (un)hide the abstract.
     -->
-    <xsl:template name="abstract">
+    <xsl:template name="bibtex:abstract">
 		<!-- pass the id to know to which entry apply the javascript -->
         <xsl:param name="id"/>
 		
@@ -621,7 +621,7 @@
 		the longnotes of the given entry.
 		If supported, clicking on the longnotes link will (un)hide the longnotes.
     -->
-    <xsl:template name="longnotes">
+    <xsl:template name="bibtex:longnotes">
 		<!-- pass the id to know to which entry apply the javascript -->
         <xsl:param name="id"/>
 		
@@ -686,14 +686,14 @@
 		Template for the abstract field.
 		Display the abstract, preserving empty lines.
 	-->
-    <xsl:template name="bibtex:abstract">
-		<!-- the bibtex id -->
+    <xsl:template name="abstract_txt">
+		<!-- the bibtex id --> 
         <xsl:param name="id"/>
         <xsl:choose>
-			<!-- display the abstract if abstract should always be present -->
-            <xsl:when test="$abstract != ''">
+			<!-- display the abstract if abstract should always be present --> 
+            <xsl:when test="$abstract != ''"> 
                 <span id="abs_{$id}">
-					<!-- replacing text empty lines with HTML empty lines -->
+					<!-- replacing text empty lines with HTML empty lines --> 
                     <xsl:call-template name="string-replace">
                         <xsl:with-param name="string" select="translate(string(.//bibtex:abstract),'&#xD;','@#xA;')"/>
                         <xsl:with-param name="from" select="'&#xA;'" />
@@ -701,10 +701,10 @@
                     </xsl:call-template>
                 </span>
             </xsl:when>
-			<!-- create the abstract but hide it  -->
-            <xsl:otherwise>
+			<!-- create the abstract but hide it -->  
+           <xsl:otherwise>
                 <span id="abs_{$id}" style="display:none;">
-					<!-- replacing text empty lines with HTML empty lines -->
+					<!-- replacing text empty lines with HTML empty lines --> 
                     <xsl:call-template name="string-replace">
                         <xsl:with-param name="string" select="translate(string(.//bibtex:abstract),'&#xD;','@#xA;')"/>
                         <xsl:with-param name="from" select="'&#xA;'" />
@@ -719,10 +719,10 @@
 		Template for the longnotes field.
 		Display the longnotes, preserving empty lines.
 	-->
-    <xsl:template name="bibtex:longnotes">
+    <xsl:template name="longnotes_txt">
 		<!-- the bibtex id -->
         <xsl:param name="id"/>
-        <!-- create the longnotes but hide it  -->
+        <!-- create the longnotes but hide it -->
         <span id="longnotes_{$id}" style="display:none;">
             <!-- replacing text empty lines with HTML empty lines -->
             <xsl:call-template name="string-replace">
